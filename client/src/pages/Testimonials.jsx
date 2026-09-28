@@ -3,6 +3,7 @@ import { Star, MessageCircle, MapPin, CheckCircle2 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import { Link } from 'react-router-dom';
 import AnimatedCounter from '../components/AnimatedCounter';
+import GoogleReviewsWidget from '../components/GoogleReviewsWidget';
 import './Testimonials.css';
 
 const REVIEWS = [
@@ -133,21 +134,10 @@ const Testimonials = () => {
         </div>
       </section>
 
-      {/* Google Reviews Banner */}
+      {/* Live Google Reviews Widget */}
       <section className="section pb-0 text-center">
-        <ScrollReveal className="google-review-banner glass-3d glow-border" style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', borderRadius: '50px' }}>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" style={{ width: '30px' }} />
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ display: 'flex', gap: '4px', color: '#fbbc05' }}>
-              <Star size={16} fill="currentColor" />
-              <Star size={16} fill="currentColor" />
-              <Star size={16} fill="currentColor" />
-              <Star size={16} fill="currentColor" />
-              <Star size={16} fill="currentColor" />
-            </div>
-            <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>4.9/5 Rating on Google</span>
-          </div>
-          <span style={{ color: 'var(--color-secondary)', fontSize: '0.85rem', marginLeft: '1rem' }}><CheckCircle2 size={16} style={{ display: 'inline', verticalAlign: 'text-bottom' }} /> 150+ Verified Reviews</span>
+        <ScrollReveal>
+          <GoogleReviewsWidget placeId="ChIJ..." />
         </ScrollReveal>
       </section>
 

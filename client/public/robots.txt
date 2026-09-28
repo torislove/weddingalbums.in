@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://weddingalbums.in/sitemap.xml
+
+# Block admin and API
+Disallow: /api/
+Disallow: /admin/

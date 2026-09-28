@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, ImageIcon, ShoppingCart, Users, Briefcase, Activity } from 'lucide-react';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -9,7 +12,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const res = await fetch('http://localhost:4000/api/admin/stats', {
+        const res = await fetch(`${API}/api/admin/stats`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {

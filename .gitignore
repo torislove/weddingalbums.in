@@ -33,5 +33,9 @@ Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
+
+# SQLite database files
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

@@ -3,6 +3,9 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import '../pages/OrderAlbum.css';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const LoginModal = ({ isOpen, onClose, defaultRole, onSuccess }) => {
   const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -24,7 +27,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole, onSuccess }) => {
     const payload = isLogin ? { email: formData.email, password: formData.password } : formData;
 
     try {
-      const res = await fetch(`http://localhost:4000${endpoint}`, {
+      const res = await fetch(`${API}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

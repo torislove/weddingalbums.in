@@ -5,6 +5,9 @@ import BeforeAfter from '../components/BeforeAfter';
 import { UploadCloud, Scissors, BookOpen, Truck, CheckCircle2, Layers, ShieldCheck, Star } from 'lucide-react';
 import './B2B.css';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const B2B = () => {
   const [sheetCount, setSheetCount] = useState(30);
   const [sheetTypes, setSheetTypes] = useState([]);
@@ -13,7 +16,7 @@ const B2B = () => {
   useEffect(() => {
     const fetchConfigs = async () => {
       try {
-        const res = await fetch('http://localhost:4000/api/admin/configs');
+        const res = await fetch(`${API}/api/admin/configs`);
         const data = await res.json();
         const types = data.find(c => c.key === 'sheet_types')?.options || [];
         setSheetTypes(types);

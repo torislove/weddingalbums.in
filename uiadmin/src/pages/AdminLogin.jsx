@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Sparkles, Lock, Mail, ArrowRight } from 'lucide-react';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const AdminLogin = ({ setToken }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +16,7 @@ const AdminLogin = ({ setToken }) => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:4000/api/login', {
+      const res = await fetch(`${API}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

@@ -1,0 +1,38 @@
+.culling-page {
+  min-height: 100vh;
+}
+
+.culling-workspace {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-box {
+  transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: var(--color-primary);
+}
+
+.stat-card {
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin: 0;
+}

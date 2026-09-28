@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 const TaskQueue = () => {
   const [tasks, setTasks] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -11,7 +13,7 @@ const TaskQueue = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch('http://localhost:4000/api/tasks');
+      const res = await fetch(`${API}/api/tasks`);
       const data = await res.json();
       setTasks(data);
     } catch (err) {
@@ -21,7 +23,7 @@ const TaskQueue = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('http://localhost:4000/api/orders');
+      const res = await fetch(`${API}/api/orders`);
       const data = await res.json();
       setOrders(data);
     } catch (err) {
@@ -31,7 +33,7 @@ const TaskQueue = () => {
 
   const updateTaskStatus = async (id, newStatus) => {
     try {
-      await fetch(`http://localhost:4000/api/tasks/${id}`, {
+      await fetch(`${API}/api/tasks/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })

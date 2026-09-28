@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Plus, Edit2, Trash2, ArrowUpDown, Tag, Save, X, EyeOff, Eye } from 'lucide-react';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const PricingManager = () => {
   const [packages, setPackages] = useState([]);
   const [configs, setConfigs] = useState([]);
@@ -33,8 +36,8 @@ const PricingManager = () => {
   const fetchData = async () => {
     try {
       const [pkgRes, confRes] = await Promise.all([
-        fetch('http://localhost:4000/api/admin/packages'),
-        fetch('http://localhost:4000/api/admin/configs')
+        fetch(`${API}/api/admin/packages`),
+        fetch(`${API}/api/admin/configs`)
       ]);
       const pkgData = await pkgRes.json();
       const confData = await confRes.json();
@@ -49,7 +52,7 @@ const PricingManager = () => {
 
   const handleSeed = async () => {
     try {
-      await fetch('http://localhost:4000/api/admin/seed-packages', { method: 'POST' });
+      await fetch(`${API}/api/admin/seed-packages`, { method: 'POST' });
       fetchData();
       alert('Packages seeded successfully!');
     } catch (err) {
@@ -60,8 +63,8 @@ const PricingManager = () => {
   const handleSave = async () => {
     try {
       const url = editingPkg 
-        ? `http://localhost:4000/api/admin/packages/${editingPkg._id}`
-        : `http://localhost:4000/api/admin/packages`;
+        ? `${API}/api/admin/packages/${editingPkg._id}`
+        : `${API}/api/admin/packages`;
         
       const method = editingPkg ? 'PUT' : 'POST';
       
@@ -85,7 +88,7 @@ const PricingManager = () => {
 
   const saveConfig = async (key, options) => {
     try {
-      await fetch(`http://localhost:4000/api/admin/configs/${key}`, {
+      await fetch(`${API}/api/admin/configs/${key}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ options })
@@ -101,7 +104,7 @@ const PricingManager = () => {
     if (!window.confirm('Are you sure you want to delete this package?')) return;
     
     try {
-      await fetch(`http://localhost:4000/api/admin/packages/${id}`, { method: 'DELETE' });
+      await fetch(`${API}/api/admin/packages/${id}`, { method: 'DELETE' });
       fetchData();
     } catch (err) {
       console.error('Error deleting', err);
@@ -110,7 +113,7 @@ const PricingManager = () => {
 
   const toggleStatus = async (pkg) => {
     try {
-      await fetch(`http://localhost:4000/api/admin/packages/${pkg._id}`, {
+      await fetch(`${API}/api/admin/packages/${pkg._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !pkg.isActive })

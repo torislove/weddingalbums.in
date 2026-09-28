@@ -6,6 +6,9 @@ import { useContent } from '../context/ContentContext';
 import Toast from '../components/Toast';
 import './Contact.css';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const Contact = () => {
   const { content } = useContent();
   const settings = content?.global?.siteSettings || {
@@ -40,7 +43,7 @@ const Contact = () => {
     e.preventDefault();
 
     try {
-      await fetch('http://localhost:4000/api/contact', {
+      await fetch(`${API}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

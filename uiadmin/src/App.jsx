@@ -6,12 +6,8 @@ import GlobalEditor from './pages/GlobalEditor';
 import PushNotificationEditor from './pages/PushNotificationEditor';
 import CalendarEditor from './pages/CalendarEditor';
 import MediaLibrary from './pages/MediaLibrary';
-import TaskQueue from './pages/TaskQueue';
-import PricingManager from './pages/PricingManager';
 import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
-import CustomerManager from './pages/CustomerManager';
-import AlbumsManager from './pages/AlbumsManager';
 import Toast from './components/Toast';
 import { useAdminContent } from './hooks/useAdminContent';
 
@@ -25,11 +21,7 @@ const Sidebar = ({ isDirty, saveContent, saving }) => {
     { name: 'Portfolio Page', path: '/pages/portfolio', icon: FileText },
     { name: 'Testimonials', path: '/pages/testimonials', icon: FileText },
     { name: 'Contact Page', path: '/pages/contact', icon: FileText },
-    { name: 'Pricing & Packages', path: '/pricing', icon: FileText },
     { name: 'Booking Calendar', path: '/calendar', icon: LayoutDashboard },
-    { name: 'Customer Directory', path: '/customers', icon: LayoutDashboard },
-    { name: 'Production Tasks', path: '/tasks', icon: LayoutDashboard },
-    { name: 'Albums & Proofing', path: '/albums-manager', icon: ImageIcon },
     { name: 'Push Notifications', path: '/push', icon: Bell },
     { name: 'Global Elements', path: '/global', icon: Settings },
     { name: 'Image Library', path: '/images', icon: ImageIcon },
@@ -136,12 +128,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/pages/:pageId" element={<PageEditor adminState={adminState} />} />
-            <Route path="/tasks" element={<TaskQueue />} />
-            <Route path="/customers" element={<CustomerManager />} />
-            <Route path="/albums-manager" element={<AlbumsManager />} />
             <Route path="/calendar" element={<CalendarEditor adminState={adminState} />} />
             <Route path="/push" element={<PushNotificationEditor adminState={adminState} />} />
-            <Route path="/pricing" element={<PricingManager />} />
             <Route path="/global" element={<GlobalEditor adminState={adminState} />} />
             <Route path="/images" element={<MediaLibrary />} />
             <Route path="*" element={<div className="p-10 text-center text-gray-500 mt-20">This section is currently under construction.</div>} />

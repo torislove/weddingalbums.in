@@ -17,7 +17,7 @@ const ReviewsBar = () => {
           
           <div className="reviews-score">
             <div className="google-badge">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="24" height="24" />
+              <img src="/images/google-g.svg" alt="Google" width="24" height="24" />
               <span>Reviews</span>
             </div>
             <div className="score-number">4.9</div>

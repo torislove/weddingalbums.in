@@ -3,6 +3,9 @@ import { ArrowRight, Loader } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import './PackageSection.css';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const PACKAGE_TABS = [
   { id: 'combo', label: 'Combo Packages' },
   { id: 'photo', label: 'Photo Editing' },
@@ -19,7 +22,7 @@ const PackageSection = ({ type = 'b2c' }) => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/api/packages?type=${type}`);
+        const res = await fetch(`${API}/api/packages?type=${type}`);
         if (!res.ok) throw new Error('Failed to fetch packages');
         const data = await res.json();
         setPackages(data);

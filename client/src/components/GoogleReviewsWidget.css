@@ -1,0 +1,89 @@
+.google-reviews-container {
+  margin: 2rem 0;
+  padding: 2rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reviews-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.reviews-header h3 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: #fff;
+}
+
+.reviews-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  margin: 4px 0;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.review-card {
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.review-author img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-author h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.review-author span {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.review-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.8rem;
+}
+
+.review-text {
+  font-size: 0.95rem;
+  color: #ddd;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.reviews-loader {
+  text-align: center;
+  padding: 2rem;
+  color: #d4af37;
+  font-weight: 500;
+}

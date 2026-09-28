@@ -1,0 +1,68 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { LayoutDashboard, Users, CreditCard, ClipboardList, Briefcase } from 'lucide-react';
+
+import UserManager from './pages/UserManager';
+import TaskBoard from './pages/TaskBoard';
+import PricingEngine from './pages/PricingEngine';
+import OrderManager from './pages/OrderManager';
+
+const Sidebar = () => {
+  const location = useLocation();
+  const menu = [
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Customers & Users', path: '/users', icon: Users },
+    { name: 'Orders & Payments', path: '/orders', icon: CreditCard },
+    { name: 'Production Tasks', path: '/tasks', icon: ClipboardList },
+    { name: 'Pricing & Packages', path: '/pricing', icon: Briefcase },
+  ];
+
+  return (
+    <div className="w-[260px] bg-[#111] border-r border-white/10 h-screen fixed flex flex-col z-50">
+      <div className="p-6 border-b border-white/10 text-center">
+        <h2 className="text-xl font-bold tracking-widest text-white">SYS<span className="text-blue-500">ADMIN</span></h2>
+        <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">Business Operations</p>
+      </div>
+      <nav className="flex-1 overflow-y-auto py-4">
+        {menu.map(item => {
+          const active = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+          return (
+            <Link key={item.name} to={item.path} className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${active ? 'text-blue-400 bg-blue-500/10 border-r-4 border-blue-500' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+              <item.icon size={18} />
+              {item.name}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
+};
+
+const Dashboard = () => (
+  <div className="p-10">
+    <h1 className="text-3xl font-bold text-white mb-6">Business Dashboard</h1>
+    <p className="text-gray-400">Welcome to the core operations portal. Select an item from the sidebar to manage users, orders, and pricing.</p>
+  </div>
+);
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div className="flex min-h-screen text-gray-200 bg-[#0a0a0a]">
+        <Sidebar />
+        <main className="flex-1 ml-[260px] relative h-screen overflow-auto">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<UserManager />} />
+            <Route path="/orders" element={<OrderManager />} />
+            <Route path="/tasks" element={<TaskBoard />} />
+            <Route path="/pricing" element={<PricingEngine />} />
+            <Route path="*" element={<div className="p-10 text-center text-gray-500 mt-20">Page not found</div>} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;

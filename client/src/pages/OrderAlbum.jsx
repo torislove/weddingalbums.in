@@ -5,6 +5,9 @@ import LoginModal from '../components/LoginModal';
 import { ShoppingCart, CheckCircle2, Package, Image, Video, UploadCloud, Truck } from 'lucide-react';
 import './OrderAlbum.css';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+
 const OrderAlbum = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
@@ -51,8 +54,8 @@ const OrderAlbum = () => {
     const loadData = async () => {
       try {
         const [pkgRes, confRes] = await Promise.all([
-          fetch('http://localhost:4000/api/packages?type=b2c'),
-          fetch('http://localhost:4000/api/admin/configs')
+          fetch(`${API}/api/packages?type=b2c`),
+          fetch(`${API}/api/admin/configs`)
         ]);
         
         const pkgData = await pkgRes.json();

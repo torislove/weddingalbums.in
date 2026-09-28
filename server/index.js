@@ -1,16 +1,41 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import CloudinaryStorage from 'multer-storage-cloudinary';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import crypto from 'crypto';
+import Razorpay from 'razorpay';
+import { sendEmailNotification, generateInvoicePDF, sendWhatsAppMessage } from './utils.js';
+
+
+import {
+  autoSeedDatabase,
+  User,
+  PayoutRequest,
+  Project,
+  Order,
+  Task,
+  Package,
+  Config,
+  ContactLead
+} from './db_business.js';
+
+import { Content, Media } from './db_content.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -18,88 +43,26 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
 
 app.use(cors({ origin: ['https://weddingalbums.in', 'http://localhost:5173', 'http://localhost:5174'] }));
 app.use(express.json({ limit: '50mb' }));
+app.use(helmet({ contentSecurityPolicy: false })); // Security headers
 
-// Basic Rate Limiting Mock for Login
-const loginRateLimiter = (req, res, next) => {
-  // In production, use express-rate-limit
-  next();
-};
+// Initialize and auto-seed SQLite database
+await autoSeedDatabase();
+console.log('⚡ SQLite Database initialized and ready!');
 
-// =======================
-// MONGODB CONNECTION
-// =======================
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/studio_db';
-mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 2000 })
-  .then(() => console.log('Connected to MongoDB cleanly!'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
-// =======================
-// MONGOOSE MODELS
-// =======================
-const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true },
-  wallet_balance: { type: Number, default: 0 },
-  
-  // Extra fields for registration
-  phone: { type: String },
-  city: { type: String },
-  studioName: { type: String }, // B2B
-  gstNumber: { type: String }, // B2B
-  coupleNames: { type: String }, // B2C
-  weddingDate: { type: Date }, // B2C
-  portfolioLink: { type: String }, // Editor
-  specialization: { type: String } // Editor
-}, { timestamps: true });
-const User = mongoose.model('User', UserSchema);
-
-const PayoutRequestSchema = new mongoose.Schema({
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  amount: { type: Number, required: true },
-  status: { type: String, default: 'Pending' }
-}, { timestamps: true });
-const PayoutRequest = mongoose.model('PayoutRequest', PayoutRequestSchema);
-
-const Project = mongoose.model('Project', new mongoose.Schema({}, { strict: false, timestamps: true }));
-const Order = mongoose.model('Order', new mongoose.Schema({}, { strict: false, timestamps: true }));
-const Task = mongoose.model('Task', new mongoose.Schema({ status: { type: String, default: 'Pending' } }, { strict: false, timestamps: true }));
-const Content = mongoose.model('Content', new mongoose.Schema({ key: String, data: mongoose.Schema.Types.Mixed }));
-const Media = mongoose.model('Media', new mongoose.Schema({ url: String, type: String }, { timestamps: true }));
-
-const PackageSchema = new mongoose.Schema({
-  tier: { type: String, required: true },
-  category: { type: String, required: true }, // 'photo', 'video', 'albums', 'flex', 'combo'
-  price: { type: String, required: true },
-  suffix: { type: String },
-  features: { type: [String], default: [] },
-  popular: { type: Boolean, default: false },
-  isActive: { type: Boolean, default: true },
-  sortOrder: { type: Number, default: 0 },
-  b2bOrB2c: { type: String, required: true, enum: ['b2b', 'b2c', 'both'] },
-  color: { type: String, default: '#9E9E9E' }
-}, { timestamps: true });
-const Package = mongoose.model('Package', PackageSchema);
-
-const ConfigSchema = new mongoose.Schema({
-  key: { type: String, required: true, unique: true }, // e.g., 'album_sizes', 'sheet_types'
-  options: { type: mongoose.Schema.Types.Mixed, default: [] }
-}, { timestamps: true });
-const Config = mongoose.model('Config', ConfigSchema);
-
-const contactSchema = new mongoose.Schema({
-  name: String,
-  phone: String,
-  city: String,
-  eventType: String,
-  date: String,
-  venue: String,
-  budget: String,
-  message: String,
-  createdAt: { type: Date, default: Date.now }
+// Real rate limiter for login endpoint
+const loginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // max 10 login attempts per window
+  message: { error: 'Too many login attempts. Please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false
 });
-const ContactLead = mongoose.model('ContactLead', contactSchema);
+
+// Razorpay config
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_mock_key',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'rzp_test_mock_secret',
+});
 
 // =======================
 // CLOUDINARY STORAGE
@@ -122,29 +85,19 @@ const upload = multer({ storage: storage });
 // =======================
 // CONTENT API (Replaces content.json)
 // =======================
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 app.get('/api/content', async (req, res) => {
   try {
-    // If MongoDB is not connected, skip straight to fallback for zero latency
-    if (mongoose.connection.readyState === 1) {
-      const contentDoc = await Content.findOne({ key: 'main_site' }).maxTimeMS(2000);
-      if (contentDoc && contentDoc.data && Object.keys(contentDoc.data).length > 0) {
-        return res.json(contentDoc.data);
-      }
+    const contentDoc = await Content.findOne({ key: 'main_site' });
+    if (contentDoc && contentDoc.data && Object.keys(contentDoc.data).length > 0) {
+      return res.json(contentDoc.data);
     }
     
-    // Fallback to local file if DB is empty or disconnected
+    // Fallback to local file if DB is empty
     const localContentPath = path.join(__dirname, '../client/public/content.json');
     const raw = await fs.readFile(localContentPath, 'utf-8');
     res.json(JSON.parse(raw));
   } catch (err) {
-    console.error('MongoDB query failed, falling back to local file:', err.message);
+    console.error('Content query failed, falling back to local file:', err.message);
     try {
       const localContentPath = path.join(__dirname, '../client/public/content.json');
       const raw = await fs.readFile(localContentPath, 'utf-8');
@@ -158,21 +111,13 @@ app.get('/api/content', async (req, res) => {
 
 app.post('/api/content', async (req, res) => {
   try {
-    if (mongoose.connection.readyState === 1) {
-      await Content.findOneAndUpdate(
-        { key: 'main_site' },
-        { key: 'main_site', data: req.body },
-        { upsert: true, new: true, maxTimeMS: 2000 }
-      );
-      return res.json({ success: true });
-    }
-    
-    // Fallback to local file if DB is disconnected
-    const localContentPath = path.join(__dirname, '../client/public/content.json');
-    await fs.writeFile(localContentPath, JSON.stringify(req.body, null, 2));
-    res.json({ success: true, message: 'Saved to local file fallback (DB Disconnected)' });
+    await Content.findOneAndUpdate(
+      { key: 'main_site' },
+      { key: 'main_site', data: req.body }
+    );
+    return res.json({ success: true });
   } catch (err) {
-    console.error('MongoDB save failed, falling back to local file:', err.message);
+    console.error('Content save failed, falling back to local file:', err.message);
     try {
       const localContentPath = path.join(__dirname, '../client/public/content.json');
       await fs.writeFile(localContentPath, JSON.stringify(req.body, null, 2));
@@ -218,7 +163,8 @@ app.post('/api/register', async (req, res) => {
   const { 
     name, email, password, role, 
     phone, city, studioName, gstNumber, 
-    coupleNames, weddingDate, portfolioLink, specialization 
+    coupleNames, weddingDate, portfolioLink, specialization,
+    referredByEmail // New: Referral Program
   } = req.body;
   
   if (!name || !email || !password || !role) return res.status(400).json({ error: 'All fields required' });
@@ -231,8 +177,18 @@ app.post('/api/register', async (req, res) => {
     const user = await User.create({ 
       name, email, password: hashedPassword, role,
       phone, city, studioName, gstNumber, 
-      coupleNames, weddingDate, portfolioLink, specialization 
+      coupleNames, weddingDate, portfolioLink, specialization,
+      wallet_balance: referredByEmail ? 500 : 0 // Rs 500 joining bonus
     });
+    
+    // Reward the referrer
+    if (referredByEmail) {
+      const referrer = await User.findOne({ email: referredByEmail });
+      if (referrer) {
+        referrer.wallet_balance = (referrer.wallet_balance || 0) + 1000; // Rs 1000 referral bonus
+        await referrer.save();
+      }
+    }
     
     const token = jwt.sign({ id: user._id, name, email, role }, JWT_SECRET, { expiresIn: '24h' });
     res.json({ token, user: { id: user._id, name, email, role, wallet_balance: user.wallet_balance } });
@@ -282,6 +238,45 @@ const authenticateAdmin = (req, res, next) => {
     next();
   });
 };
+
+// =======================
+// CONTACT LEADS API
+// =======================
+app.post('/api/contact', async (req, res) => {
+  const { name, phone, city, eventType, date, venue, budget, message } = req.body;
+  if (!name || !phone) return res.status(400).json({ error: 'Name and phone are required' });
+  
+  try {
+    await ContactLead.create({ name, phone, city, eventType, date, venue, budget, message });
+    
+    // Send email notification to admin
+    await sendEmailNotification(
+      'admin@weddingalbums.in',
+      'New Inquiry Received',
+      `<h3>New Lead</h3><p>Name: ${name}</p><p>Phone: ${phone}</p><p>Event: ${eventType}</p><p>Message: ${message}</p>`
+    );
+    
+    // Send WhatsApp notification
+    await sendWhatsAppMessage(
+      phone,
+      `Hi ${name}, thank you for contacting WeddingAlbums.in! We have received your inquiry for ${eventType} and will call you shortly.`
+    );
+    
+    res.json({ success: true, message: 'Lead received. We will contact you soon!' });
+  } catch (err) {
+    console.error('Contact lead save failed:', err);
+    res.status(500).json({ error: 'Failed to save inquiry' });
+  }
+});
+
+app.get('/api/admin/leads', authenticateAdmin, async (req, res) => {
+  try {
+    const leads = await ContactLead.find().sort({ createdAt: -1 });
+    res.json(leads);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch leads' });
+  }
+});
 
 app.get('/api/wallet', authenticateToken, async (req, res) => {
   try {
@@ -334,7 +329,7 @@ app.get('/api/packages', async (req, res) => {
 });
 
 // Admin routes for packages
-app.get('/api/admin/packages', async (req, res) => {
+app.get('/api/admin/packages', authenticateAdmin, async (req, res) => {
   try {
     const packages = await Package.find().sort({ b2bOrB2c: 1, category: 1, sortOrder: 1 });
     res.json(packages);
@@ -488,22 +483,54 @@ const sendWhatsApp = async (phone, template, params) => {
 // =======================
 app.post('/api/pay/create-order', authenticateToken, async (req, res) => {
   const { amount } = req.body;
-  // Mock Razorpay Order Creation
-  res.json({
-    id: `order_${Math.random().toString(36).substring(7)}`,
-    amount: amount * 100, // in paise
-    currency: 'INR'
-  });
+  try {
+    const options = {
+      amount: amount * 100, // amount in smallest currency unit (paise)
+      currency: 'INR',
+      receipt: `receipt_${Math.random().toString(36).substring(7)}`
+    };
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+  } catch (err) {
+    console.error('Razorpay Error:', err);
+    res.status(500).json({ error: 'Failed to create payment order' });
+  }
 });
 
 app.post('/api/pay/verify', authenticateToken, async (req, res) => {
-  // Mock verification
-  const { paymentId, orderId } = req.body;
-  res.json({ success: true, paymentId });
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSign = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'rzp_test_mock_secret')
+      .update(sign.toString())
+      .digest("hex");
+
+    if (razorpay_signature === expectedSign) {
+      res.json({ success: true, message: 'Payment verified successfully', paymentId: razorpay_payment_id });
+    } else {
+      res.status(400).json({ success: false, error: 'Invalid signature' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Payment verification failed' });
+  }
 });
 
 app.get('/api/orders/:id/invoice', async (req, res) => {
-  res.json({ url: `https://weddingalbums.in/invoices/${req.params.id}.pdf` });
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    
+    const invoicesDir = path.join(process.cwd(), 'invoices');
+    await fs.mkdir(invoicesDir, { recursive: true });
+    
+    const filePath = path.join(invoicesDir, `${req.params.id}.pdf`);
+    await generateInvoicePDF(order, filePath);
+    
+    res.download(filePath, `Invoice_${req.params.id}.pdf`);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to generate invoice' });
+  }
 });
 
 app.post('/api/projects', async (req, res) => {
@@ -520,11 +547,13 @@ app.get('/api/admin/stats', authenticateAdmin, async (req, res) => {
   try {
     const totalOrders = await Order.countDocuments();
     const totalTasks = await Task.countDocuments();
-    const pendingTasks = await Task.countDocuments({ status: { $ne: 'Completed' } });
+    const allTasks = await Task.find();
+    const pendingTasks = allTasks.filter(t => (t.status || t.data?.status) !== 'Completed').length;
     const totalProjects = await Project.countDocuments();
     const totalUsers = await User.countDocuments();
-    const b2bUsers = await User.countDocuments({ role: 'studio' });
-    const editors = await User.countDocuments({ role: 'editor' });
+    const allUsers = await User.find();
+    const b2bUsers = allUsers.filter(u => u.role === 'studio').length;
+    const editors = allUsers.filter(u => u.role === 'editor').length;
 
     res.json({
       orders: totalOrders,
@@ -549,6 +578,20 @@ app.get('/api/orders', async (req, res) => {
 app.post('/api/orders', async (req, res) => {
   try {
     const order = await Order.create(req.body);
+    // Send email notification on new order
+    await sendEmailNotification(
+      req.body.userEmail || 'admin@weddingalbums.in',
+      'Order Confirmation - WeddingAlbums.in',
+      `<h3>Order Received!</h3><p>Your order ID is ${order._id}. We will process it shortly.</p>`
+    );
+    
+    if (req.body.phone) {
+      await sendWhatsAppMessage(
+        req.body.phone,
+        `Hi! Your order with WeddingAlbums.in has been confirmed. Order ID: ${order._id}. We will keep you updated on the progress.`
+      );
+    }
+    
     res.json(order);
   } catch(err) { res.status(500).json({error: 'Failed to create'}); }
 });

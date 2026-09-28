@@ -24,6 +24,9 @@ import AlbumsShowcase from './pages/AlbumsShowcase';
 import OrderTracking from './pages/OrderTracking';
 import BookingPage from './pages/BookingPage';
 import ForgotPassword from './pages/ForgotPassword';
+import Blog from './pages/Blog';
+import PhotoCulling from './pages/PhotoCulling';
+
 import { AuthProvider } from './context/AuthContext';
 import CustomCursor from './components/CustomCursor';
 import PushNotification from './components/PushNotification';
@@ -58,6 +61,8 @@ function App() {
                   <Route path="/b2b" element={<B2B />} />
                   <Route path="/b2c" element={<B2C />} />
                   <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/tools/ai-culling" element={<PhotoCulling />} />
                   <Route path="/careers" element={<Careers />} />
                   <Route path="/login" element={<PortalLogin />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
