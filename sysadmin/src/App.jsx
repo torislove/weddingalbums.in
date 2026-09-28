@@ -1,11 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, CreditCard, ClipboardList, Briefcase } from 'lucide-react';
+import { LayoutDashboard, Users, CreditCard, ClipboardList, Briefcase, Scissors, ShieldCheck, IndianRupee } from 'lucide-react';
 
 import UserManager from './pages/UserManager';
 import TaskBoard from './pages/TaskBoard';
 import PricingEngine from './pages/PricingEngine';
 import OrderManager from './pages/OrderManager';
+import Editors from './pages/Editors';
+import JobQC from './pages/JobQC';
+import Payouts from './pages/Payouts';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -15,6 +18,9 @@ const Sidebar = () => {
     { name: 'Orders & Payments', path: '/orders', icon: CreditCard },
     { name: 'Production Tasks', path: '/tasks', icon: ClipboardList },
     { name: 'Pricing & Packages', path: '/pricing', icon: Briefcase },
+    { name: 'Editor Network', path: '/editors', icon: Scissors },
+    { name: 'Quality Control (QC)', path: '/qc', icon: ShieldCheck },
+    { name: 'Editor Payouts', path: '/payouts', icon: IndianRupee },
   ];
 
   return (
@@ -45,7 +51,21 @@ const Dashboard = () => (
   </div>
 );
 
+import AdminLogin from './pages/AdminLogin';
+
 function App() {
+  const [token, setToken] = React.useState(localStorage.getItem('token'));
+
+  if (!token) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<AdminLogin setToken={setToken} />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
   return (
     <BrowserRouter>
       <div className="flex min-h-screen text-gray-200 bg-[#0a0a0a]">
@@ -57,6 +77,9 @@ function App() {
             <Route path="/orders" element={<OrderManager />} />
             <Route path="/tasks" element={<TaskBoard />} />
             <Route path="/pricing" element={<PricingEngine />} />
+            <Route path="/editors" element={<Editors />} />
+            <Route path="/qc" element={<JobQC />} />
+            <Route path="/payouts" element={<Payouts />} />
             <Route path="*" element={<div className="p-10 text-center text-gray-500 mt-20">Page not found</div>} />
           </Routes>
         </main>

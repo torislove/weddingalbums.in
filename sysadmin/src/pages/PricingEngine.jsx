@@ -1,33 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Plus, Edit2, Trash2, ArrowUpDown, Tag, Save, X, EyeOff, Eye } from 'lucide-react';
+import { Package, Plus, Edit2, Trash2, Tag, Save, X, EyeOff, Layers, Settings, Image as ImageIcon } from 'lucide-react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-
-const PricingManager = () => {
-  const [packages, setPackages] = useState([]);
-  const [configs, setConfigs] = useState([]);
+const PricingEngine = () => {
+  const [activeTab, setActiveTab] = useState('services'); // services, sheets, packages
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('b2c'); // b2c, b2b, or cart_options
-  const [categoryTab, setCategoryTab] = useState('combo');
-  
+
+  // Data Stores
+  const [services, setServices] = useState([]);
+  const [sheets, setSheets] = useState([]);
+  const [packages, setPackages] = useState([]);
+
+  // Modals & Forms
   const [showModal, setShowModal] = useState(false);
-  const [editingPkg, setEditingPkg] = useState(null);
-  
-  const initialFormState = {
-    tier: '',
-    category: 'combo',
-    price: '',
-    suffix: '',
-    features: [''],
-    popular: false,
-    isActive: true,
-    sortOrder: 0,
-    b2bOrB2c: 'b2c',
-    color: '#9E9E9E'
-  };
-  
-  const [formData, setFormData] = useState(initialFormState);
+  const [editingItem, setEditingItem] = useState(null);
+
+  // Forms states
+  const initService = { category: 'Photography', name: '', basePrice: '', estimatedDaysToDeliver: 1 };
+  const initSheet = { name: '', pricePerSheet: '', premiumCoverSurcharge: 0 };
+  const initPackage = { tier: '', category: 'combo', priceType: 'fixed', price: '', priceMax: '', suffix: '', includedServiceIds: [], features: [], popular: false, isActive: true, b2bOrB2c: 'b2c', color: '#9E9E9E' };
+
+  const [formData, setFormData] = useState({});
+  const [coverImageFile, setCoverImageFile] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -35,464 +30,376 @@ const PricingManager = () => {
 
   const fetchData = async () => {
     try {
-      const [pkgRes, confRes] = await Promise.all([
-        fetch(`${API}/api/admin/packages`),
-        fetch(`${API}/api/admin/configs`)
+      const token = localStorage.getItem('token');
+      const headers = { 'Authorization': `Bearer ${token}` };
+      
+      const [srvRes, shtRes, pkgRes] = await Promise.all([
+        fetch(`${API}/api/builder/services`),
+        fetch(`${API}/api/builder/sheets`),
+        fetch(`${API}/api/admin/packages`, { headers })
       ]);
-      const pkgData = await pkgRes.json();
-      const confData = await confRes.json();
-      setPackages(pkgData);
-      setConfigs(confData);
+      setServices(await srvRes.json());
+      setSheets(await shtRes.json());
+      setPackages(await pkgRes.json());
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching data', err);
+      console.error('Error fetching pricing data', err);
       setLoading(false);
     }
   };
 
-  const handleSeed = async () => {
-    try {
-      await fetch(`${API}/api/admin/seed-packages`, { method: 'POST' });
-      fetchData();
-      alert('Packages seeded successfully!');
-    } catch (err) {
-      console.error('Seed error', err);
+  const openModal = (item = null) => {
+    setEditingItem(item);
+    setCoverImageFile(null);
+    if (item) {
+      setFormData(item);
+    } else {
+      if (activeTab === 'services') setFormData(initService);
+      if (activeTab === 'sheets') setFormData(initSheet);
+      if (activeTab === 'packages') setFormData(initPackage);
     }
+    setShowModal(true);
   };
 
   const handleSave = async () => {
     try {
-      const url = editingPkg 
-        ? `${API}/api/admin/packages/${editingPkg._id}`
-        : `${API}/api/admin/packages`;
-        
-      const method = editingPkg ? 'PUT' : 'POST';
-      
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          features: formData.features.filter(f => f.trim() !== '') // remove empty
-        })
-      });
-      
-      if (res.ok) {
-        setShowModal(false);
-        fetchData();
-      }
-    } catch (err) {
-      console.error('Error saving package', err);
-    }
-  };
+      const token = localStorage.getItem('token');
+      let endpoint = '';
+      if (activeTab === 'services') endpoint = `${API}/api/admin/builder/services`;
+      if (activeTab === 'sheets') endpoint = `${API}/api/admin/builder/sheets`;
+      if (activeTab === 'packages') endpoint = `${API}/api/admin/packages`;
 
-  const saveConfig = async (key, options) => {
-    try {
-      await fetch(`${API}/api/admin/configs/${key}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ options })
-      });
+      const method = editingItem ? 'PUT' : 'POST';
+      const url = editingItem ? `${endpoint}/${editingItem._id}` : endpoint;
+
+      let body, headers = { 'Authorization': `Bearer ${token}` };
+
+      if (activeTab === 'packages') {
+        const payload = { ...formData };
+        if (!payload.includedServiceIds) payload.includedServiceIds = [];
+        
+        const fData = new FormData();
+        Object.keys(payload).forEach(key => {
+          if (key === 'features' || key === 'includedServiceIds') {
+            fData.append(key, JSON.stringify(payload[key]));
+          }
+          else fData.append(key, payload[key]);
+        });
+        if (coverImageFile) fData.append('coverImage', coverImageFile);
+        body = fData;
+        // Don't set Content-Type for FormData, browser sets it with boundary automatically
+      } else {
+        headers['Content-Type'] = 'application/json';
+        body = JSON.stringify(formData);
+      }
+
+      await fetch(url, { method, headers, body });
+      setShowModal(false);
       fetchData();
-      alert('Cart options saved successfully!');
     } catch (err) {
-      console.error('Error saving config', err);
+      console.error('Error saving', err);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this package?')) return;
-    
+    if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      await fetch(`${API}/api/admin/packages/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('token');
+      let endpoint = '';
+      if (activeTab === 'services') endpoint = `${API}/api/admin/builder/services`;
+      if (activeTab === 'sheets') endpoint = `${API}/api/admin/builder/sheets`;
+      if (activeTab === 'packages') endpoint = `${API}/api/admin/packages`;
+
+      await fetch(`${endpoint}/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       fetchData();
     } catch (err) {
       console.error('Error deleting', err);
     }
   };
 
-  const toggleStatus = async (pkg) => {
-    try {
-      await fetch(`${API}/api/admin/packages/${pkg._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isActive: !pkg.isActive })
-      });
-      fetchData();
-    } catch (err) {
-      console.error('Error toggling status', err);
-    }
-  };
-
-  const handleFeatureChange = (index, value) => {
-    const newFeatures = [...formData.features];
-    newFeatures[index] = value;
-    setFormData({ ...formData, features: newFeatures });
-  };
-
-  const addFeatureRow = () => {
-    setFormData({ ...formData, features: [...formData.features, ''] });
-  };
-  
-  const removeFeatureRow = (index) => {
-    const newFeatures = formData.features.filter((_, i) => i !== index);
-    setFormData({ ...formData, features: newFeatures });
-  };
-
-  const openModal = (pkg = null) => {
-    if (pkg) {
-      setEditingPkg(pkg);
-      setFormData({
-        ...pkg,
-        features: pkg.features.length ? pkg.features : ['']
-      });
-    } else {
-      setEditingPkg(null);
-      setFormData({ ...initialFormState, b2bOrB2c: activeTab, category: categoryTab });
-    }
-    setShowModal(true);
-  };
-
-  const categories = [
-    { id: 'combo', label: 'Combo Packages' },
-    { id: 'photo', label: 'Photo Editing' },
-    { id: 'video', label: 'Video Editing' },
-    { id: 'albums', label: 'Albums' },
-    { id: 'flex', label: 'Flex & Hoardings' }
-  ];
-
-  const filteredPackages = packages.filter(
-    p => p.b2bOrB2c === activeTab && p.category === categoryTab
-  );
+  if (loading) return <div className="p-10 text-white">Loading Engine...</div>;
 
   return (
-    <div className="p-10 max-w-6xl mx-auto animate-slide-up h-full overflow-y-auto custom-scrollbar">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-10 min-h-screen bg-[#0a0a0a]">
+      <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-6">
         <div>
-          <h1 className="text-3xl font-serif text-white mb-2 flex items-center gap-3">
-            <Tag className="text-[#D4AF37]" /> Pricing & Packages
+          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+            <Settings className="text-blue-500" /> Dynamic Pricing Engine
           </h1>
-          <p className="text-gray-400">Manage your packages, prices, and features for B2C and B2B clients.</p>
+          <p className="text-gray-400 mt-2">Manage your A La Carte services, Print Lab sheets, and pre-built bundles.</p>
         </div>
-        <div className="flex gap-4">
-          <button onClick={handleSeed} className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition">
-            Reset to Defaults
-          </button>
-          <button onClick={() => openModal()} className="px-4 py-2 bg-[#D4AF37] text-black font-medium rounded-lg hover:bg-[#F3E5AB] transition flex items-center gap-2">
-            <Plus size={18} /> Add Package
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-6 flex gap-4 border-b border-white/10 pb-4">
-        <button 
-          onClick={() => setActiveTab('b2c')}
-          className={`px-6 py-2 rounded-full font-medium transition ${activeTab === 'b2c' ? 'bg-white/10 text-white border border-white/20' : 'text-gray-500 hover:text-gray-300'}`}
-        >
-          B2C Packages (Couples)
-        </button>
-        <button 
-          onClick={() => setActiveTab('b2b')}
-          className={`px-6 py-2 rounded-full font-medium transition ${activeTab === 'b2b' ? 'bg-white/10 text-white border border-white/20' : 'text-gray-500 hover:text-gray-300'}`}
-        >
-          B2B Packages (Studios)
-        </button>
-        <button 
-          onClick={() => setActiveTab('cart_options')}
-          className={`px-6 py-2 rounded-full font-medium transition ${activeTab === 'cart_options' ? 'bg-[#D4AF37] text-black border border-[#D4AF37]' : 'text-[#D4AF37]/70 hover:text-[#D4AF37]'}`}
-        >
-          Cart Builder Options
+        <button onClick={() => openModal()} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition">
+          <Plus size={18} /> Add {activeTab === 'services' ? 'Service' : activeTab === 'sheets' ? 'Sheet Type' : 'Bundle'}
         </button>
       </div>
 
-      {activeTab !== 'cart_options' && (
-        <div className="flex gap-2 mb-8">
-          {categories.map(cat => (
-            <button 
-              key={cat.id}
-              onClick={() => setCategoryTab(cat.id)}
-              className={`px-4 py-1.5 rounded-md text-sm transition ${categoryTab === cat.id ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30' : 'bg-transparent text-gray-400 hover:bg-white/5 border border-transparent'}`}
-            >
-              {cat.label}
-            </button>
+      <div className="flex gap-4 mb-8">
+        {[
+          { id: 'services', label: 'A La Carte Services', icon: Layers },
+          { id: 'sheets', label: 'Print Lab Options', icon: Tag },
+          { id: 'packages', label: 'Pre-Bundled Packages', icon: Package }
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-6 py-3 rounded-lg flex items-center gap-2 font-medium transition ${
+              activeTab === tab.id ? 'bg-blue-600 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'
+            }`}
+          >
+            <tab.icon size={18} /> {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'services' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map(s => (
+            <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group">
+              <div className="text-xs uppercase tracking-widest text-blue-400 mb-2">{s.category}</div>
+              <h3 className="text-xl font-bold text-white mb-2">{s.name}</h3>
+              <div className="text-2xl font-bold text-gray-200 mb-4">₹{s.basePrice}</div>
+              <div className="text-sm text-gray-400">ETA: {s.estimatedDaysToDeliver} Days</div>
+              
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+                <button onClick={() => openModal(s)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
+                <button onClick={() => handleDelete(s._id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
+              </div>
+            </div>
           ))}
+          {services.length === 0 && <p className="text-gray-500 col-span-full">No a la carte services configured.</p>}
         </div>
       )}
 
-      {loading ? (
-        <div className="text-center py-20 text-gray-500">Loading data...</div>
-      ) : activeTab === 'cart_options' ? (
-        <div className="space-y-8">
-          {configs.map(config => (
-            <div key={config.key} className="bg-[#111] border border-white/10 rounded-xl overflow-hidden p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-white uppercase tracking-wider">{config.key.replace('_', ' ')}</h3>
-                <button 
-                  onClick={() => saveConfig(config.key, config.options)}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-md text-sm flex items-center gap-2 transition"
-                >
-                  <Save size={14} /> Save {config.key}
-                </button>
-              </div>
+      {activeTab === 'sheets' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sheets.map(s => (
+            <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group">
+              <h3 className="text-xl font-bold text-white mb-2">{s.name}</h3>
+              <div className="text-2xl font-bold text-gray-200 mb-1">₹{s.pricePerSheet} <span className="text-sm font-normal text-gray-500">/ sheet</span></div>
+              {s.premiumCoverSurcharge > 0 && <div className="text-sm text-yellow-500 mt-2">+ ₹{s.premiumCoverSurcharge} Cover Surcharge</div>}
               
-              <div className="grid grid-cols-4 gap-4 mb-4 font-medium text-gray-500 text-sm px-4">
-                <div className="col-span-2">Label</div>
-                <div>Value Code</div>
-                <div>Price (₹)</div>
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+                <button onClick={() => openModal(s)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
+                <button onClick={() => handleDelete(s._id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
+            </div>
+          ))}
+          {sheets.length === 0 && <p className="text-gray-500 col-span-full">No sheet types configured.</p>}
+        </div>
+      )}
+
+      {activeTab === 'packages' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {packages.map(pkg => (
+            <div key={pkg._id} className="bg-[#111] rounded-xl border relative group overflow-hidden" style={{ borderColor: pkg.color }}>
+              {pkg.coverImage && (
+                <div className="h-40 w-full bg-cover bg-center" style={{ backgroundImage: `url(${pkg.coverImage})` }} />
+              )}
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="px-3 py-1 rounded-full text-xs font-bold bg-white/10">{pkg.b2bOrB2c.toUpperCase()} • {pkg.category}</div>
+                  {!pkg.isActive && <span className="text-red-500 text-xs font-bold flex items-center gap-1"><EyeOff size={14}/> Hidden</span>}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-1">{pkg.tier}</h3>
+                
+                <div className="text-xl text-gray-300 font-medium mb-4">
+                  {pkg.priceType === 'starting_at' && <span className="text-sm text-gray-500 block">Starting at</span>}
+                  {pkg.price} {pkg.priceType === 'range' ? `- ${pkg.priceMax}` : ''} {pkg.suffix}
+                </div>
+
+                <ul className="space-y-2 mb-6">
+                  {pkg.features.map((f, i) => <li key={i} className="text-sm text-gray-400 flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0"/>{f}</li>)}
+                </ul>
+                
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+                  <button onClick={() => openModal(pkg)} className="p-2 bg-black/50 hover:bg-black/80 text-white rounded-lg backdrop-blur-sm"><Edit2 size={16} /></button>
+                  <button onClick={() => handleDelete(pkg._id)} className="p-2 bg-red-500/50 hover:bg-red-500/80 text-red-500 rounded-lg backdrop-blur-sm"><Trash2 size={16} /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {packages.length === 0 && <p className="text-gray-500 col-span-full">No bundled packages found.</p>}
+        </div>
+      )}
+
+      {/* Dynamic Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4 overflow-y-auto">
+          <div className="bg-[#111] border border-white/10 w-full max-w-2xl rounded-2xl p-8 relative my-10 max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-white"><X size={24} /></button>
+            <h2 className="text-2xl font-bold text-white mb-6">{editingItem ? 'Edit' : 'Add New'} {activeTab === 'services' ? 'Service' : activeTab === 'sheets' ? 'Sheet Type' : 'Bundle'}</h2>
+
+            <div className="space-y-4">
               
-              <div className="space-y-3">
-                {config.options.map((opt, i) => (
-                  <div key={i} className="grid grid-cols-4 gap-4 items-center bg-white/5 p-4 rounded-lg border border-white/5">
-                    <div className="col-span-2 flex items-center gap-3">
-                      <input 
-                        type="text" 
-                        value={opt.label}
-                        onChange={(e) => {
-                          const newOpts = [...config.options];
-                          newOpts[i].label = e.target.value;
-                          const newConfigs = configs.map(c => c.key === config.key ? { ...c, options: newOpts } : c);
-                          setConfigs(newConfigs);
-                        }}
-                        className="w-full bg-black/40 border border-white/10 rounded px-3 py-1.5 text-white" 
-                      />
+              {/* Form Fields for Services */}
+              {activeTab === 'services' && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Category</label>
+                      <select 
+                        className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white"
+                        value={formData.category || 'Photography'}
+                        onChange={e => setFormData({...formData, category: e.target.value})}
+                      >
+                        <option>Photography</option>
+                        <option>Video</option>
+                        <option>Editing</option>
+                        <option>Printing</option>
+                        <option>Invitations</option>
+                      </select>
                     </div>
                     <div>
-                      <input 
-                        type="text" 
-                        value={opt.value}
-                        onChange={(e) => {
-                          const newOpts = [...config.options];
-                          newOpts[i].value = e.target.value;
-                          const newConfigs = configs.map(c => c.key === config.key ? { ...c, options: newOpts } : c);
-                          setConfigs(newConfigs);
-                        }}
-                        className="w-full bg-black/40 border border-white/10 rounded px-3 py-1.5 text-gray-400 font-mono text-sm" 
-                      />
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
-                        <input 
-                          type="number" 
-                          value={opt.price}
-                          onChange={(e) => {
-                            const newOpts = [...config.options];
-                            newOpts[i].price = Number(e.target.value);
-                            const newConfigs = configs.map(c => c.key === config.key ? { ...c, options: newOpts } : c);
-                            setConfigs(newConfigs);
-                          }}
-                          className="w-full bg-black/40 border border-white/10 rounded pl-7 pr-3 py-1.5 text-white" 
-                        />
-                      </div>
-                      <label className="flex items-center gap-1 text-xs text-gray-400 cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          checked={opt.isFree}
-                          onChange={(e) => {
-                            const newOpts = [...config.options];
-                            newOpts[i].isFree = e.target.checked;
-                            if (e.target.checked) newOpts[i].price = 0;
-                            const newConfigs = configs.map(c => c.key === config.key ? { ...c, options: newOpts } : c);
-                            setConfigs(newConfigs);
-                          }}
-                          className="accent-[#D4AF37]" 
-                        />
-                        Free
-                      </label>
-                      <button 
-                        onClick={() => {
-                          const newOpts = config.options.filter((_, idx) => idx !== i);
-                          const newConfigs = configs.map(c => c.key === config.key ? { ...c, options: newOpts } : c);
-                          setConfigs(newConfigs);
-                        }}
-                        className="text-red-400 hover:bg-red-400/10 p-1.5 rounded"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <label className="block text-sm text-gray-400 mb-1">Service Name</label>
+                      <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="e.g. Drone Footage" />
                     </div>
                   </div>
-                ))}
-                
-                <button 
-                  onClick={() => {
-                    const newOpts = [...config.options, { label: 'New Option', value: 'new_opt', price: 0, isFree: false }];
-                    const newConfigs = configs.map(c => c.key === config.key ? { ...c, options: newOpts } : c);
-                    setConfigs(newConfigs);
-                  }}
-                  className="mt-2 text-sm text-[#D4AF37] hover:text-[#F3E5AB] flex items-center gap-1 px-4 py-2"
-                >
-                  <Plus size={14} /> Add new option to {config.key}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPackages.length === 0 && (
-            <div className="col-span-full text-center py-20 text-gray-500 bg-white/5 rounded-xl border border-white/5">
-              No packages found in this category.
-            </div>
-          )}
-          
-          {filteredPackages.map((pkg) => (
-            <div key={pkg._id} className={`bg-[#111] border rounded-xl overflow-hidden flex flex-col ${pkg.isActive ? 'border-white/10' : 'border-red-900/30 opacity-70'}`}>
-              <div className="p-6 flex-1 relative">
-                {!pkg.isActive && (
-                  <div className="absolute top-0 right-0 bg-red-900/50 text-red-200 text-xs px-3 py-1 rounded-bl-lg flex items-center gap-1">
-                    <EyeOff size={12} /> Hidden
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Base Price (₹)</label>
+                      <input type="number" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.basePrice || ''} onChange={e => setFormData({...formData, basePrice: Number(e.target.value)})} placeholder="e.g. 5000" />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Estimated Days to Deliver</label>
+                      <input type="number" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.estimatedDaysToDeliver || 1} onChange={e => setFormData({...formData, estimatedDaysToDeliver: Number(e.target.value)})} placeholder="e.g. 3" />
+                    </div>
                   </div>
-                )}
-                
-                <div className="flex justify-between items-start mb-4">
+                </>
+              )}
+
+              {/* Form Fields for Sheets */}
+              {activeTab === 'sheets' && (
+                <>
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-1" style={{ color: pkg.color }}>{pkg.tier}</h3>
-                    {pkg.popular && <span className="inline-block bg-[#D4AF37]/20 text-[#D4AF37] text-xs px-2 py-0.5 rounded-full mt-1">⭐ Popular</span>}
+                    <label className="block text-sm text-gray-400 mb-1">Sheet Market Name</label>
+                    <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="e.g. Velvet (Feather Touch)" />
                   </div>
-                </div>
-                
-                <div className="mb-6">
-                  <span className="text-3xl font-bold text-white">{pkg.price}</span>
-                  {pkg.suffix && <span className="text-gray-400 text-sm ml-1">{pkg.suffix}</span>}
-                </div>
-                
-                <ul className="space-y-2 mb-6">
-                  {pkg.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                      <span className="text-green-500 mt-0.5">✓</span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="border-t border-white/10 p-4 bg-white/5 flex justify-between items-center">
-                <button 
-                  onClick={() => toggleStatus(pkg)} 
-                  className={`text-sm flex items-center gap-1 ${pkg.isActive ? 'text-yellow-500 hover:text-yellow-400' : 'text-green-500 hover:text-green-400'}`}
-                >
-                  {pkg.isActive ? <><EyeOff size={14}/> Hide</> : <><Eye size={14}/> Show</>}
-                </button>
-                <div className="flex gap-3">
-                  <button onClick={() => openModal(pkg)} className="text-blue-400 hover:text-blue-300 transition" title="Edit">
-                    <Edit2 size={16} />
-                  </button>
-                  <button onClick={() => handleDelete(pkg._id)} className="text-red-400 hover:text-red-300 transition" title="Delete">
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Package Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-[#111] border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
-              <h2 className="text-xl font-bold text-white">{editingPkg ? 'Edit Package' : 'Add New Package'}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white">
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-5">
-              <div className="grid grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Package Name / Tier</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                    value={formData.tier} onChange={e => setFormData({...formData, tier: e.target.value})} placeholder="e.g. Starter Memories" />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Theme Color</label>
-                  <div className="flex gap-3 h-10">
-                    <input type="color" className="h-full w-12 rounded cursor-pointer bg-transparent border-0 p-0" 
-                      value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} />
-                    <input type="text" className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                      value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Price</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                    value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} placeholder="e.g. ₹5,000" />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Suffix (Optional)</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                    value={formData.suffix} onChange={e => setFormData({...formData, suffix: e.target.value})} placeholder="e.g. /wedding or /photo" />
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Target Audience</label>
-                  <select className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                    value={formData.b2bOrB2c} onChange={e => setFormData({...formData, b2bOrB2c: e.target.value})}>
-                    <option value="b2c">B2C (Couples)</option>
-                    <option value="b2b">B2B (Studios)</option>
-                    <option value="both">Both</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Category</label>
-                  <select className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                    value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
-                    {categories.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-400 mb-2">Features (Bullet Points)</label>
-                <div className="space-y-2">
-                  {formData.features.map((feature, idx) => (
-                    <div key={idx} className="flex gap-2">
-                      <input type="text" className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" 
-                        value={feature} onChange={e => handleFeatureChange(idx, e.target.value)} placeholder="Feature description" />
-                      <button onClick={() => removeFeatureRow(idx)} className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition">
-                        <Trash2 size={18} />
-                      </button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Price Per Sheet (₹)</label>
+                      <input type="number" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.pricePerSheet || ''} onChange={e => setFormData({...formData, pricePerSheet: Number(e.target.value)})} placeholder="e.g. 150" />
                     </div>
-                  ))}
-                </div>
-                <button onClick={addFeatureRow} className="mt-2 text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                  <Plus size={14} /> Add Feature
-                </button>
-              </div>
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Premium Surcharge (₹)</label>
+                      <input type="number" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.premiumCoverSurcharge || 0} onChange={e => setFormData({...formData, premiumCoverSurcharge: Number(e.target.value)})} placeholder="e.g. 500" />
+                    </div>
+                  </div>
+                </>
+              )}
 
-              <div className="flex gap-6 pt-4 border-t border-white/10">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 accent-[#D4AF37]" 
-                    checked={formData.popular} onChange={e => setFormData({...formData, popular: e.target.checked})} />
-                  <span className="text-gray-300">Mark as "Popular"</span>
-                </label>
-                
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 accent-[#D4AF37]" 
-                    checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} />
-                  <span className="text-gray-300">Active (Visible on site)</span>
-                </label>
-              </div>
+              {/* Form Fields for Packages */}
+              {activeTab === 'packages' && (
+                <>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Cover Image</label>
+                    <div className="flex items-center gap-4">
+                      {formData.coverImage && !coverImageFile && (
+                        <img src={formData.coverImage} alt="Cover" className="h-16 w-16 object-cover rounded-lg border border-white/10" />
+                      )}
+                      <input type="file" accept="image/*" onChange={e => setCoverImageFile(e.target.files[0])} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-white/10 file:text-white hover:file:bg-white/20"/>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Package Name / Tier</label>
+                      <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.tier || ''} onChange={e => setFormData({...formData, tier: e.target.value})} placeholder="e.g. Starter Memories" />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Audience</label>
+                      <select className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.b2bOrB2c || 'b2c'} onChange={e => setFormData({...formData, b2bOrB2c: e.target.value})}>
+                        <option value="b2c">B2C (Couples)</option>
+                        <option value="b2b">B2B (Studios)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Price Strategy</label>
+                      <select className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.priceType || 'fixed'} onChange={e => setFormData({...formData, priceType: e.target.value})}>
+                        <option value="fixed">Fixed Price</option>
+                        <option value="starting_at">Starting At</option>
+                        <option value="range">Price Range</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Base Price / Min</label>
+                      <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.price || ''} onChange={e => setFormData({...formData, price: e.target.value})} placeholder="e.g. ₹50,000" />
+                    </div>
+                    {formData.priceType === 'range' && (
+                      <div>
+                        <label className="block text-sm text-gray-400 mb-1">Max Price</label>
+                        <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.priceMax || ''} onChange={e => setFormData({...formData, priceMax: e.target.value})} placeholder="e.g. ₹80,000" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1">Theme Color</label>
+                    <input type="color" className="w-full h-[40px] bg-[#1a1a1a] border border-white/10 rounded-lg p-1" value={formData.color || '#9E9E9E'} onChange={e => setFormData({...formData, color: e.target.value})} />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Included Services (Click to Add/Remove)</label>
+                    <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2">
+                      {services.map(s => {
+                        const isSelected = (formData.includedServiceIds || []).includes(s._id);
+                        return (
+                          <div 
+                            key={s._id} 
+                            onClick={() => {
+                              const arr = formData.includedServiceIds || [];
+                              if (isSelected) {
+                                setFormData({...formData, includedServiceIds: arr.filter(id => id !== s._id)});
+                              } else {
+                                setFormData({...formData, includedServiceIds: [...arr, s._id]});
+                              }
+                            }}
+                            className={`p-2 rounded-lg text-sm cursor-pointer transition flex items-center gap-2 border ${isSelected ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-[#1a1a1a] border-white/10 text-gray-400 hover:bg-white/5'}`}
+                          >
+                            <div className={`w-3 h-3 rounded-full ${isSelected ? 'bg-blue-500' : 'bg-gray-600'}`}></div>
+                            <div className="truncate">{s.name}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2 flex justify-between">Extra Text Features (Optional) <button type="button" onClick={() => setFormData({...formData, features: [...(formData.features || []), '']})} className="text-blue-500 hover:text-blue-400 text-xs flex items-center gap-1"><Plus size={12}/> Add</button></label>
+                    {(formData.features || []).map((f, i) => (
+                      <div key={i} className="flex gap-2 mb-2">
+                        <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={f} onChange={e => {
+                          const arr = [...formData.features];
+                          arr[i] = e.target.value;
+                          setFormData({...formData, features: arr});
+                        }} placeholder="Feature description" />
+                        <button type="button" onClick={() => {
+                          const arr = [...formData.features];
+                          arr.splice(i, 1);
+                          setFormData({...formData, features: arr});
+                        }} className="p-3 bg-red-500/10 text-red-500 rounded-lg"><Trash2 size={16}/></button>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-4 pt-2">
+                    <label className="flex items-center gap-2 text-white cursor-pointer"><input type="checkbox" checked={formData.popular || false} onChange={e => setFormData({...formData, popular: e.target.checked})} className="w-5 h-5 rounded accent-blue-500" /> Mark as "Popular"</label>
+                    <label className="flex items-center gap-2 text-white cursor-pointer"><input type="checkbox" checked={formData.isActive !== false} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="w-5 h-5 rounded accent-blue-500" /> Active on Website</label>
+                  </div>
+                </>
+              )}
+
             </div>
-            
-            <div className="p-5 border-t border-white/10 bg-black/40 flex justify-end gap-3">
-              <button onClick={() => setShowModal(false)} className="px-5 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 transition">
-                Cancel
-              </button>
-              <button onClick={handleSave} disabled={!formData.tier || !formData.price} 
-                className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#996515] text-black font-bold hover:brightness-110 transition disabled:opacity-50 flex items-center gap-2">
-                <Save size={18} /> {editingPkg ? 'Update Package' : 'Create Package'}
-              </button>
+
+            <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-white/10">
+              <button onClick={() => setShowModal(false)} className="px-5 py-2 text-gray-400 hover:text-white transition">Cancel</button>
+              <button onClick={handleSave} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center gap-2 transition"><Save size={18} /> Save</button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };
 
-export default PricingManager;
+export default PricingEngine;

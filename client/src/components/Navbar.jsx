@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -7,6 +9,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
+  const { cartItems, toggleCart } = useCart();
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -93,6 +96,14 @@ const Navbar = () => {
             <Link to="/login" className="btn btn-outline" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
               Client Portal
             </Link>
+            <button onClick={toggleCart} className="cart-toggle-btn" style={{ background: 'transparent', border: 'none', color: '#D4AF37', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <ShoppingBag size={24} />
+              {cartItems?.length > 0 && (
+                <span style={{ position: 'absolute', top: '-5px', right: '-8px', background: '#ef4444', color: 'white', fontSize: '0.7rem', fontWeight: 'bold', width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
             <Link to="/contact" className="btn btn-gold-3d nav-cta">Book Now</Link>
           </div>
 

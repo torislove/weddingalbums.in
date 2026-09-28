@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import CloudinaryStorage from 'multer-storage-cloudinary';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -27,8 +25,12 @@ import {
   Task,
   Package,
   Config,
-  ContactLead
+  ContactLead,
+  Service,
+  SheetType,
+  Cart
 } from './db_business.js';
+import db from './db_business.js';
 
 import { Content, Media } from './db_content.js';
 
@@ -41,9 +43,13 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
 
-app.use(cors({ origin: ['https://weddingalbums.in', 'http://localhost:5173', 'http://localhost:5174'] }));
+app.use(cors({ origin: ['https://weddingalbums.in', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'] }));
 app.use(express.json({ limit: '50mb' }));
-app.use(helmet({ contentSecurityPolicy: false })); // Security headers
+app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: false })); // Security headers
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Initialize and auto-seed SQLite database
 await autoSeedDatabase();
@@ -65,22 +71,27 @@ const razorpay = new Razorpay({
 });
 
 // =======================
-// CLOUDINARY STORAGE
+// LOCAL FILE STORAGE
 // =======================
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+fs.mkdir(uploadsDir, { recursive: true }).catch(console.error);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  }
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'studio_uploads',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif']
-  },
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB max file size
 });
-const upload = multer({ storage: storage });
 
 // =======================
 // CONTENT API (Replaces content.json)
@@ -130,16 +141,20 @@ app.post('/api/content', async (req, res) => {
 });
 
 // =======================
-// UPLOAD API (Cloudinary)
+// UPLOAD API (Local Storage)
 // =======================
 app.post('/api/upload', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
   
-  const imageUrl = req.file.path; // Cloudinary URL
+  // Create relative URL path (e.g. /uploads/image-1234.jpg)
+  // For production, you may want to prefix with process.env.VITE_API_URL or similar 
+  // depending on your exact domain setup, but relative to the backend port is typical.
+  const API_URL = process.env.VITE_API_URL || 'http://localhost:4000';
+  const imageUrl = `${API_URL}/uploads/${req.file.filename}`;
   
-  // Save reference in MongoDB so we can list them later
+  // Save reference in database so we can list them later
   await Media.create({ url: imageUrl, type: 'image' });
   
   res.json({ url: imageUrl });
@@ -278,6 +293,139 @@ app.get('/api/admin/leads', authenticateAdmin, async (req, res) => {
   }
 });
 
+// =======================
+// DYNAMIC PACKAGE BUILDER APIs
+// =======================
+
+app.get('/api/builder/services', async (req, res) => {
+  try {
+    const services = await Service.find();
+    res.json(services);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch services' });
+  }
+});
+
+app.post('/api/admin/builder/services', authenticateAdmin, async (req, res) => {
+  try {
+    const newService = await Service.create(req.body);
+    res.json(newService);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create service' });
+  }
+});
+
+app.put('/api/admin/builder/services/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const updated = await Service.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update service' });
+  }
+});
+
+app.delete('/api/admin/builder/services/:id', authenticateAdmin, async (req, res) => {
+  try {
+    await Service.delete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete service' });
+  }
+});
+
+app.get('/api/builder/sheets', async (req, res) => {
+  try {
+    const sheets = await SheetType.find();
+    res.json(sheets);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch sheet types' });
+  }
+});
+
+app.post('/api/admin/builder/sheets', authenticateAdmin, async (req, res) => {
+  try {
+    const newSheet = await SheetType.create(req.body);
+    res.json(newSheet);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create sheet' });
+  }
+});
+
+app.put('/api/admin/builder/sheets/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const updated = await SheetType.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update sheet' });
+  }
+});
+
+app.delete('/api/admin/builder/sheets/:id', authenticateAdmin, async (req, res) => {
+  try {
+    await SheetType.delete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete sheet' });
+  }
+});
+
+// Sync Cart
+app.post('/api/cart', authenticateToken, async (req, res) => {
+  try {
+    const { items, totalAmount, estimatedDeliveryEta } = req.body;
+    const cart = await Cart.findOneAndUpdate(
+      { userId: req.user.id },
+      { items, totalAmount, estimatedDeliveryEta }
+    );
+    res.json({ success: true, cart });
+  } catch (err) {
+    console.error('Cart sync failed:', err);
+    res.status(500).json({ error: 'Failed to sync cart' });
+  }
+});
+
+app.get('/api/cart', authenticateToken, async (req, res) => {
+  try {
+    let cart = await Cart.findOne({ userId: req.user.id });
+    if (!cart) {
+      cart = { items: [], totalAmount: 0, estimatedDeliveryEta: null };
+    }
+    res.json(cart);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch cart' });
+  }
+});
+
+// Calculate ETA based on selected services
+app.post('/api/builder/calculate-eta', async (req, res) => {
+  try {
+    const { serviceIds } = req.body; // Array of IDs
+    if (!serviceIds || serviceIds.length === 0) {
+      return res.json({ estimatedDays: 0, etaDate: new Date() });
+    }
+
+    const allServices = await Service.find();
+    const selected = allServices.filter(s => serviceIds.includes(s.id));
+    
+    // Delivery takes as long as the longest individual service, plus 1 day buffer
+    let maxDays = 0;
+    selected.forEach(s => {
+      if (s.estimatedDaysToDeliver > maxDays) {
+        maxDays = s.estimatedDaysToDeliver;
+      }
+    });
+    
+    const totalDays = maxDays + 1; // 1 day QA buffer
+    const etaDate = new Date();
+    etaDate.setDate(etaDate.getDate() + totalDays);
+
+    res.json({ estimatedDays: totalDays, etaDate });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to calculate ETA' });
+  }
+});
+
+
 app.get('/api/wallet', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -338,18 +486,52 @@ app.get('/api/admin/packages', authenticateAdmin, async (req, res) => {
   }
 });
 
-app.post('/api/admin/packages', authenticateAdmin, async (req, res) => {
+app.post('/api/admin/packages', authenticateAdmin, upload.single('coverImage'), async (req, res) => {
   try {
-    const newPkg = await Package.create(req.body);
+    const data = { ...req.body };
+    if (data.features && typeof data.features === 'string') {
+      try { data.features = JSON.parse(data.features); } catch(e) {}
+    }
+    if (data.includedServiceIds && typeof data.includedServiceIds === 'string') {
+      try { data.includedServiceIds = JSON.parse(data.includedServiceIds); } catch(e) {}
+    }
+    if (data.popular === 'true' || data.popular === true) data.popular = true;
+    if (data.popular === 'false') data.popular = false;
+    if (data.isActive === 'true' || data.isActive === true) data.isActive = true;
+    if (data.isActive === 'false') data.isActive = false;
+
+    if (req.file) {
+      const API_URL = process.env.VITE_API_URL || 'http://localhost:4000';
+      data.coverImage = `${API_URL}/uploads/${req.file.filename}`;
+    }
+
+    const newPkg = await Package.create(data);
     res.json(newPkg);
   } catch (err) {
     res.status(500).json({ error: 'Failed to create package', details: err.message });
   }
 });
 
-app.put('/api/admin/packages/:id', authenticateAdmin, async (req, res) => {
+app.put('/api/admin/packages/:id', authenticateAdmin, upload.single('coverImage'), async (req, res) => {
   try {
-    const updatedPkg = await Package.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const data = { ...req.body };
+    if (data.features && typeof data.features === 'string') {
+      try { data.features = JSON.parse(data.features); } catch(e) {}
+    }
+    if (data.includedServiceIds && typeof data.includedServiceIds === 'string') {
+      try { data.includedServiceIds = JSON.parse(data.includedServiceIds); } catch(e) {}
+    }
+    if (data.popular === 'true' || data.popular === true) data.popular = true;
+    if (data.popular === 'false') data.popular = false;
+    if (data.isActive === 'true' || data.isActive === true) data.isActive = true;
+    if (data.isActive === 'false') data.isActive = false;
+
+    if (req.file) {
+      const API_URL = process.env.VITE_API_URL || 'http://localhost:4000';
+      data.coverImage = `${API_URL}/uploads/${req.file.filename}`;
+    }
+
+    const updatedPkg = await Package.findByIdAndUpdate(req.params.id, data, { new: true });
     res.json(updatedPkg);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update package' });
@@ -629,6 +811,62 @@ app.get('/api/muhurtham', async (req, res) => {
   } catch (error) {
     const fallbackDates = ["2026-10-12", "2026-10-18", "2026-10-26", "2026-11-04", "2026-11-12", "2026-11-18", "2026-12-06", "2026-12-11", "2026-12-21"];
     res.json({ dates: fallbackDates, source: 'fallback_error' });
+  }
+});
+
+// =======================
+// PHASE 2 & 3: B2B & EDITOR APIs
+// =======================
+app.post('/api/b2b/jobs', authenticateToken, (req, res) => {
+  try {
+    const id = crypto.randomUUID();
+    const stmt = db.prepare(`
+      INSERT INTO b2b_jobs (id, studio_user_id, job_type, client_name, event_date, event_type, design_style, instructions, raw_files_link, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    stmt.run(id, req.user.id, req.body.job_type, req.body.client_name, req.body.event_date, req.body.event_type || 'Wedding', req.body.design_style, req.body.instructions, req.body.raw_files_link, new Date().toISOString(), new Date().toISOString());
+    res.json({ success: true, id });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create job' });
+  }
+});
+
+app.get('/api/b2b/jobs', authenticateToken, (req, res) => {
+  try {
+    const jobs = db.prepare('SELECT * FROM b2b_jobs WHERE studio_user_id = ? ORDER BY createdAt DESC').all(req.user.id);
+    res.json(jobs);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch jobs' });
+  }
+});
+
+app.get('/api/editor/available-jobs', authenticateToken, (req, res) => {
+  try {
+    const jobs = db.prepare('SELECT * FROM b2b_jobs WHERE status = "Pending" ORDER BY createdAt ASC').all();
+    res.json(jobs);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch available jobs' });
+  }
+});
+
+app.post('/api/editor/claim-job/:id', authenticateToken, (req, res) => {
+  try {
+    const stmt = db.prepare('UPDATE b2b_jobs SET status = "InProgress", editor_id = ?, updatedAt = ? WHERE id = ?');
+    stmt.run(req.user.id, new Date().toISOString(), req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to claim job' });
+  }
+});
+
+app.post('/api/editor/payout', authenticateToken, (req, res) => {
+  try {
+    const id = crypto.randomUUID();
+    const stmt = db.prepare('INSERT INTO editor_payouts (id, editor_id, amount, upi_id, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
+    stmt.run(id, req.user.id, req.body.amount, req.body.upi_id, new Date().toISOString(), new Date().toISOString());
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to request payout' });
   }
 });
 

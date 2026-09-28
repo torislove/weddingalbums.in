@@ -64,6 +64,10 @@ db.exec(`
     sortOrder INTEGER DEFAULT 0,
     b2bOrB2c TEXT NOT NULL,
     color TEXT DEFAULT '#9E9E9E',
+    coverImage TEXT,
+    priceType TEXT DEFAULT 'fixed',
+    priceMax TEXT,
+    includedServiceIds TEXT DEFAULT '[]',
     createdAt TEXT,
     updatedAt TEXT
   );
@@ -97,16 +101,31 @@ db.exec(`
     updatedAt TEXT
   );
 
-  CREATE TABLE IF NOT EXISTS media (
+  CREATE TABLE IF NOT EXISTS services (
     id TEXT PRIMARY KEY,
-    url TEXT NOT NULL,
-    type TEXT DEFAULT 'image',
-    createdAt TEXT
+    category TEXT NOT NULL,
+    name TEXT NOT NULL,
+    basePrice REAL NOT NULL,
+    estimatedDaysToDeliver INTEGER DEFAULT 1,
+    createdAt TEXT,
+    updatedAt TEXT
   );
 
-  CREATE TABLE IF NOT EXISTS contents (
-    key TEXT PRIMARY KEY,
-    data TEXT NOT NULL,
+  CREATE TABLE IF NOT EXISTS sheet_types (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    pricePerSheet REAL NOT NULL,
+    premiumCoverSurcharge REAL DEFAULT 0,
+    createdAt TEXT,
+    updatedAt TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS carts (
+    id TEXT PRIMARY KEY,
+    userId TEXT,
+    items TEXT DEFAULT '[]',
+    totalAmount REAL DEFAULT 0,
+    estimatedDeliveryEta TEXT,
     updatedAt TEXT
   );
 
@@ -122,7 +141,75 @@ db.exec(`
     message TEXT,
     createdAt TEXT
   );
+
+  CREATE TABLE IF NOT EXISTS b2b_jobs (
+    id TEXT PRIMARY KEY,
+    studio_user_id TEXT NOT NULL,
+    job_type TEXT NOT NULL,         -- 'photo', 'video', 'album', 'flex', 'print'
+    client_name TEXT,
+    event_date TEXT,
+    event_type TEXT DEFAULT 'Wedding',
+    album_size TEXT,
+    num_pages INTEGER,
+    design_style TEXT,
+    instructions TEXT,
+    raw_files_link TEXT,
+    status TEXT DEFAULT 'Pending',  -- Pending, Assigned, InProgress, QC, Completed, Rejected
+    editor_id TEXT,
+    editor_type TEXT,               -- 'photo', 'video', 'album'
+    deadline_date TEXT,
+    is_rush INTEGER DEFAULT 0,
+    output_link TEXT,
+    rating INTEGER,
+    feedback TEXT,
+    price_charged REAL,
+    createdAt TEXT,
+    updatedAt TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS editor_payouts (
+    id TEXT PRIMARY KEY,
+    editor_id TEXT NOT NULL,
+    amount REAL NOT NULL,
+    upi_id TEXT,
+    bank_account TEXT,
+    status TEXT DEFAULT 'Pending',  -- Pending, Approved, Paid, Rejected
+    approved_by TEXT,
+    paid_at TEXT,
+    createdAt TEXT,
+    updatedAt TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS coupons (
+    id TEXT PRIMARY KEY,
+    code TEXT UNIQUE NOT NULL,
+    discount_type TEXT,             -- 'percent' or 'flat'
+    discount_value REAL,
+    min_order_value REAL DEFAULT 0,
+    max_uses INTEGER DEFAULT 100,
+    used_count INTEGER DEFAULT 0,
+    valid_until TEXT,
+    applicable_to TEXT DEFAULT 'both', -- 'b2b', 'b2c', 'both'
+    createdAt TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS referrals (
+    id TEXT PRIMARY KEY,
+    referrer_user_id TEXT NOT NULL,
+    referred_user_id TEXT,
+    referred_email TEXT,
+    status TEXT DEFAULT 'Pending',
+    reward_given INTEGER DEFAULT 0,
+    createdAt TEXT
+  );
 `);
+
+// Add new columns to users if they don't exist
+try { db.exec("ALTER TABLE users ADD COLUMN editor_type TEXT;"); } catch (e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN editor_rating REAL DEFAULT 5.0;"); } catch (e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN editor_completed_jobs INTEGER DEFAULT 0;"); } catch (e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN b2b_studio_tier TEXT DEFAULT 'standard';"); } catch (e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN b2b_monthly_volume INTEGER DEFAULT 0;"); } catch (e) {}
 
 // ==========================================
 // QUERY THENABLE ADAPTER (Supports .sort(...))
@@ -197,7 +284,8 @@ function formatPackage(row) {
     _id: row.id,
     popular: Boolean(row.popular),
     isActive: Boolean(row.isActive),
-    features: typeof row.features === 'string' ? JSON.parse(row.features || '[]') : (row.features || [])
+    features: typeof row.features === 'string' ? JSON.parse(row.features || '[]') : (row.features || []),
+    includedServiceIds: typeof row.includedServiceIds === 'string' ? JSON.parse(row.includedServiceIds || '[]') : (row.includedServiceIds || [])
   };
 }
 
@@ -346,10 +434,11 @@ export const Package = {
     const id = generateId();
     const now = nowIso();
     const featuresStr = JSON.stringify(Array.isArray(data.features) ? data.features : []);
+    const serviceIdsStr = JSON.stringify(Array.isArray(data.includedServiceIds) ? data.includedServiceIds : []);
     const stmt = db.prepare(`
       INSERT INTO packages (
-        id, tier, category, price, suffix, features, popular, isActive, sortOrder, b2bOrB2c, color, createdAt, updatedAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        id, tier, category, price, suffix, features, popular, isActive, sortOrder, b2bOrB2c, color, coverImage, priceType, priceMax, includedServiceIds, createdAt, updatedAt
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     stmt.run(
       id,
@@ -363,6 +452,10 @@ export const Package = {
       data.sortOrder || 0,
       data.b2bOrB2c,
       data.color || '#9E9E9E',
+      data.coverImage || null,
+      data.priceType || 'fixed',
+      data.priceMax || null,
+      serviceIdsStr,
       now,
       now
     );
@@ -375,11 +468,12 @@ export const Package = {
 
     const merged = { ...existing, ...data };
     const featuresStr = JSON.stringify(Array.isArray(merged.features) ? merged.features : []);
+    const serviceIdsStr = JSON.stringify(Array.isArray(merged.includedServiceIds) ? merged.includedServiceIds : []);
     const now = nowIso();
 
     const stmt = db.prepare(`
       UPDATE packages 
-      SET tier = ?, category = ?, price = ?, suffix = ?, features = ?, popular = ?, isActive = ?, sortOrder = ?, b2bOrB2c = ?, color = ?, updatedAt = ?
+      SET tier = ?, category = ?, price = ?, suffix = ?, features = ?, popular = ?, isActive = ?, sortOrder = ?, b2bOrB2c = ?, color = ?, coverImage = ?, priceType = ?, priceMax = ?, includedServiceIds = ?, updatedAt = ?
       WHERE id = ?
     `);
     stmt.run(
@@ -393,6 +487,10 @@ export const Package = {
       merged.sortOrder || 0,
       merged.b2bOrB2c,
       merged.color || '#9E9E9E',
+      merged.coverImage || null,
+      merged.priceType || 'fixed',
+      merged.priceMax || null,
+      serviceIdsStr,
       now,
       id
     );
@@ -559,57 +657,84 @@ export const Project = {
   }
 };
 
-export const Media = {
-  find(filter = {}) {
+export const Service = {
+  find() {
     return new Query(() => {
-      let sql = 'SELECT * FROM media';
-      const params = [];
-      if (filter.type) {
-        sql += ' WHERE type = ?';
-        params.push(filter.type);
-      }
-      sql += ' ORDER BY createdAt DESC';
-      const stmt = db.prepare(sql);
-      const rows = stmt.all(...params);
+      const rows = db.prepare('SELECT * FROM services ORDER BY category, name').all();
       return rows.map(r => ({ ...r, _id: r.id }));
     });
   },
-
   async create(data) {
     const id = generateId();
     const now = nowIso();
-    const stmt = db.prepare('INSERT INTO media (id, url, type, createdAt) VALUES (?, ?, ?, ?)');
-    stmt.run(id, data.url, data.type || 'image', now);
-    return { id, _id: id, ...data, createdAt: now };
+    const stmt = db.prepare('INSERT INTO services (id, category, name, basePrice, estimatedDaysToDeliver, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    stmt.run(id, data.category, data.name, data.basePrice, data.estimatedDaysToDeliver || 1, now, now);
+    return { id, _id: id, ...data, createdAt: now, updatedAt: now };
+  },
+  async findByIdAndUpdate(id, data) {
+    const now = nowIso();
+    const stmt = db.prepare('UPDATE services SET category=?, name=?, basePrice=?, estimatedDaysToDeliver=?, updatedAt=? WHERE id=?');
+    stmt.run(data.category, data.name, data.basePrice, data.estimatedDaysToDeliver || 1, now, id);
+    return { id, _id: id, ...data, updatedAt: now };
+  },
+  async delete(id) {
+    const stmt = db.prepare('DELETE FROM services WHERE id=?');
+    stmt.run(id);
+    return true;
   }
 };
 
-export const Content = {
-  async findOne({ key }) {
-    const stmt = db.prepare('SELECT * FROM contents WHERE key = ? LIMIT 1');
-    const row = stmt.get(key);
-    if (!row) return null;
-    let parsed = null;
-    try {
-      parsed = JSON.parse(row.data);
-    } catch(e) {}
-    return { key: row.key, data: parsed, _id: row.key };
+export const SheetType = {
+  find() {
+    return new Query(() => {
+      const rows = db.prepare('SELECT * FROM sheet_types ORDER BY pricePerSheet ASC').all();
+      return rows.map(r => ({ ...r, _id: r.id }));
+    });
   },
-
-  async findOneAndUpdate(filter, update, options = {}) {
-    const key = filter.key;
-    const dataStr = JSON.stringify(update.data || {});
+  async create(data) {
+    const id = generateId();
     const now = nowIso();
-    const existing = await this.findOne({ key });
+    const stmt = db.prepare('INSERT INTO sheet_types (id, name, pricePerSheet, premiumCoverSurcharge, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
+    stmt.run(id, data.name, data.pricePerSheet, data.premiumCoverSurcharge || 0, now, now);
+    return { id, _id: id, ...data, createdAt: now, updatedAt: now };
+  },
+  async findByIdAndUpdate(id, data) {
+    const now = nowIso();
+    const stmt = db.prepare('UPDATE sheet_types SET name=?, pricePerSheet=?, premiumCoverSurcharge=?, updatedAt=? WHERE id=?');
+    stmt.run(data.name, data.pricePerSheet, data.premiumCoverSurcharge || 0, now, id);
+    return { id, _id: id, ...data, updatedAt: now };
+  },
+  async delete(id) {
+    const stmt = db.prepare('DELETE FROM sheet_types WHERE id=?');
+    stmt.run(id);
+    return true;
+  }
+};
 
+export const Cart = {
+  async findOne({ userId }) {
+    const stmt = db.prepare('SELECT * FROM carts WHERE userId = ? LIMIT 1');
+    const row = stmt.get(userId);
+    if (!row) return null;
+    return { ...row, _id: row.id, items: JSON.parse(row.items) };
+  },
+  async findOneAndUpdate(filter, update, options = {}) {
+    const userId = filter.userId;
+    const itemsStr = JSON.stringify(update.items || []);
+    const totalAmount = update.totalAmount || 0;
+    const eta = update.estimatedDeliveryEta || null;
+    const now = nowIso();
+    
+    const existing = await this.findOne({ userId });
     if (existing) {
-      const stmt = db.prepare('UPDATE contents SET data = ?, updatedAt = ? WHERE key = ?');
-      stmt.run(dataStr, now, key);
+      const stmt = db.prepare('UPDATE carts SET items = ?, totalAmount = ?, estimatedDeliveryEta = ?, updatedAt = ? WHERE userId = ?');
+      stmt.run(itemsStr, totalAmount, eta, now, userId);
     } else {
-      const stmt = db.prepare('INSERT INTO contents (key, data, updatedAt) VALUES (?, ?, ?)');
-      stmt.run(key, dataStr, now);
+      const id = generateId();
+      const stmt = db.prepare('INSERT INTO carts (id, userId, items, totalAmount, estimatedDeliveryEta, updatedAt) VALUES (?, ?, ?, ?, ?, ?)');
+      stmt.run(id, userId, itemsStr, totalAmount, eta, now);
     }
-    return this.findOne({ key });
+    return this.findOne({ userId });
   }
 };
 
@@ -656,41 +781,73 @@ export async function autoSeedDatabase() {
       console.log('✅ SQLite: Default Super Admin created (admin@weddingalbums.in / admin123)');
     }
 
-    // 2. Seed Packages if empty
+    // 2. Seed Services if empty
+    const serviceCount = db.prepare('SELECT COUNT(*) as count FROM services').get().count;
+    let seededServices = [];
+    if (serviceCount === 0) {
+      const seedServices = [
+        { category: 'Photography', name: 'Traditional Photography (Per Day)', basePrice: 15000, estimatedDaysToDeliver: 1 },
+        { category: 'Photography', name: 'Candid Photography (Per Day)', basePrice: 25000, estimatedDaysToDeliver: 3 },
+        { category: 'Photography', name: 'Pre-Wedding Shoot (Outdoor)', basePrice: 35000, estimatedDaysToDeliver: 5 },
+        { category: 'Videography', name: 'Traditional Videography (Per Day)', basePrice: 15000, estimatedDaysToDeliver: 2 },
+        { category: 'Videography', name: 'Cinematic 1-Min Teaser', basePrice: 8000, estimatedDaysToDeliver: 4 },
+        { category: 'Videography', name: 'Cinematic 10-Min Highlights', basePrice: 20000, estimatedDaysToDeliver: 7 },
+        { category: 'Videography', name: '1 to 4 Hour Long Video Edit', basePrice: 25000, estimatedDaysToDeliver: 10 },
+        { category: 'Drone', name: 'Drone Coverage (Per Day)', basePrice: 12000, estimatedDaysToDeliver: 1 },
+        { category: 'Live', name: 'Live Streaming Setup (Youtube)', basePrice: 15000, estimatedDaysToDeliver: 0 },
+        { category: 'Editing', name: 'Pro Color Grading (300 pics)', basePrice: 5000, estimatedDaysToDeliver: 3 },
+        { category: 'Editing', name: 'Full Wedding Film Editing (Outsource)', basePrice: 15000, estimatedDaysToDeliver: 7 },
+      ];
+      for (const s of seedServices) {
+        seededServices.push(await Service.create(s));
+      }
+      console.log('✅ SQLite: Initial services seeded successfully');
+    } else {
+      seededServices = (await Service.find())._executor();
+    }
+
+    // 3. Seed Packages if empty
     const packageCount = db.prepare('SELECT COUNT(*) as count FROM packages').get().count;
     if (packageCount === 0) {
-      const seedPackages = [
-        // B2C Packages
-        { tier: 'Starter Memories', category: 'combo', price: '₹2,000', features: ['10x10 Album (10 pages)', 'Basic Color Editing', 'Matte Cover'], popular: false, b2bOrB2c: 'b2c', color: '#9E9E9E' },
-        { tier: 'Classic Wedding', category: 'combo', price: '₹9,000', features: ['12x12 Album (30 pages)', 'Advanced Editing (200 photos)', 'Acrylic Cover', 'Layflat Paper'], popular: true, b2bOrB2c: 'b2c', color: '#D4AF37' },
-        { tier: 'Premium Cinematic', category: 'combo', price: '₹15,000', features: ['12x18 Album (40 pages)', '3-min Cinematic Teaser Video', 'Pro Editing (300 photos)', 'Leather Cover'], popular: false, b2bOrB2c: 'b2c', color: '#780016' },
-        { tier: 'Royal Elite', category: 'combo', price: '₹25,000', features: ['12x18 Flush Mount Album', 'Full Wedding Film (30 min)', '3 Instagram Reels', '500 photos edited'], popular: false, b2bOrB2c: 'b2c', color: '#780016' },
-        
-        { tier: 'Basic Retouch', category: 'photo', price: '₹99', suffix: '/photo', features: ['Skin smoothing', 'Blemish removal', 'Basic color & brightness fix', '24-hour turnaround'], popular: false, b2bOrB2c: 'b2c', color: '#9E9E9E' },
-        { tier: 'Advanced Edit', category: 'photo', price: '₹199', suffix: '/photo', features: ['Full frequency separation', 'Background replacement', 'High-end compositing', 'Subject extraction'], popular: true, b2bOrB2c: 'b2c', color: '#D4AF37' },
-        { tier: 'Social Reel', category: 'video', price: '₹2,500', suffix: '/reel', features: ['60-second vertical reel', 'Trending audio sync', 'Cinematic color grade', 'Title cards & transitions'], popular: false, b2bOrB2c: 'b2c', color: '#9E9E9E' },
-        { tier: 'Teaser Film', category: 'video', price: '₹8,000', suffix: '/film', features: ['3–5 minute cinematic teaser', 'Full DaVinci color grade', 'Professional audio mix', 'Beat-synced cuts'], popular: true, b2bOrB2c: 'b2c', color: '#D4AF37' },
-        
-        { tier: 'Standard', category: 'albums', price: '₹7,500', features: ['12x12 Size', 'Matte Cover', 'Glossy Paper', 'Up to 30 Pages', 'Free Delivery'], popular: false, b2bOrB2c: 'b2c', color: '#9E9E9E' },
-        { tier: 'Premium', category: 'albums', price: '₹12,000', features: ['12x18 Cinematic Size', 'Acrylic Glass Cover', 'Layflat Paper (No Crease)', 'Custom Design Spreads', 'Premium Box'], popular: true, b2bOrB2c: 'b2c', color: '#D4AF37' },
-        
-        { tier: 'Welcome Board', category: 'flex', price: '₹1,500', features: ['3x4 ft Standard Size', 'Custom Telugu Typography', 'Photo Integration', 'Print-ready CMYK PDF', '1 Revision'], popular: false, b2bOrB2c: 'b2c', color: '#9E9E9E' },
-        { tier: 'Mandap Backdrop', category: 'flex', price: '₹4,500', features: ['Up to 10x20 ft Size', 'Traditional Motif Design', 'High-Res Photo Retouching', 'Unlimited Revisions', 'Fast 24h Delivery'], popular: true, b2bOrB2c: 'b2c', color: '#D4AF37' },
+      const getSrvIds = (names) => seededServices.filter(s => names.includes(s.name)).map(s => s._id);
 
-        // B2B Packages
-        { tier: 'Studio Basic', category: 'combo', price: '₹2,500', suffix: '/wedding', features: ['Photo editing only (up to 200 photos)', '3-day TAT', 'White-label guarantee'], popular: false, b2bOrB2c: 'b2b', color: '#9E9E9E' },
-        { tier: 'Studio Standard', category: 'combo', price: '₹3,500', suffix: '/wedding', features: ['300 photos edited', 'Basic album design', '4-day TAT', 'White-label guarantee'], popular: true, b2bOrB2c: 'b2b', color: '#D4AF37' },
-        { tier: 'Studio Pro', category: 'combo', price: '₹6,000', suffix: '/wedding', features: ['500 photos', '1 Cinematic Teaser', 'Album design', '5-day TAT'], popular: false, b2bOrB2c: 'b2b', color: '#780016' },
-        { tier: 'Studio Elite', category: 'combo', price: '₹10,000', suffix: '/wedding', features: ['Full post-production', 'Editing + Full Film', 'Album + Flex design', 'VIP Priority'], popular: false, b2bOrB2c: 'b2b', color: '#780016' },
-        
-        { tier: 'Batch Edit', category: 'photo', price: '₹2,000', suffix: '/300 pics', features: ['Global color correction', 'Cinematic LUT grading', 'Exposure balancing', 'Delivery in 3 days'], popular: true, b2bOrB2c: 'b2b', color: '#D4AF37' },
-        { tier: 'Wholesale Album', category: 'albums', price: '₹5,000', suffix: '/album', features: ['12x18 Size', 'Acrylic Cover', 'Layflat Paper', 'Drop-shipped to your client'], popular: true, b2bOrB2c: 'b2b', color: '#D4AF37' },
+      const seedPackages = [
+        { 
+          tier: 'The Haldi & Mehendi Mini-Shoot', category: 'combo', price: '₹30,000', priceMax: '₹45,000', priceType: 'range', 
+          features: ['Candid Photography', '1 Videographer', '50-page small album', 'Edited Reels'], 
+          includedServiceIds: getSrvIds(['Candid Photography (Per Day)', 'Traditional Videography (Per Day)', 'Cinematic 1-Min Teaser']),
+          popular: false, b2bOrB2c: 'b2c', color: '#f59e0b', coverImage: ''
+        },
+        { 
+          tier: 'Traditional Telugu Muhurtham', category: 'combo', price: '₹85,000', priceType: 'starting_at', 
+          features: ['2 Traditional Photographers', '1 Traditional Videographer', 'LED Screens Setup', 'Basic Album (12x15)'], 
+          includedServiceIds: getSrvIds(['Traditional Photography (Per Day)', 'Traditional Videography (Per Day)', 'Live Streaming Setup (Youtube)']),
+          popular: true, b2bOrB2c: 'b2c', color: '#D4AF37', coverImage: ''
+        },
+        { 
+          tier: 'The Premium Cinematic Story', category: 'combo', price: '₹1,50,000', priceType: 'starting_at', 
+          features: ['Candid + Traditional Photo', 'Cinematic Drone Coverage', '5-min Cinematic Teaser', 'Full Story Film', 'Premium Acrylic Album'], 
+          includedServiceIds: getSrvIds(['Candid Photography (Per Day)', 'Traditional Photography (Per Day)', 'Drone Coverage (Per Day)', 'Cinematic 10-Min Highlights', '1 to 4 Hour Long Video Edit']),
+          popular: true, b2bOrB2c: 'b2c', color: '#10b981', coverImage: ''
+        },
+        { 
+          tier: 'The Destination Royal Elite', category: 'combo', price: '₹3,00,000', priceMax: '₹5,00,000', priceType: 'range', 
+          features: ['Full 3-Day Coverage', 'Sangeet, Haldi, Wedding, Reception', 'Reels/Shorts Edit', 'Same-Day Edit Video', 'Multiple Leather Albums'], 
+          includedServiceIds: getSrvIds(['Candid Photography (Per Day)', 'Traditional Photography (Per Day)', 'Drone Coverage (Per Day)', 'Cinematic 10-Min Highlights', 'Cinematic 1-Min Teaser', '1 to 4 Hour Long Video Edit', 'Live Streaming Setup (Youtube)']),
+          popular: false, b2bOrB2c: 'b2c', color: '#780016', coverImage: ''
+        },
+        { 
+          tier: 'B2B: Studio Edit Outsource', category: 'combo', price: '₹6,000', priceType: 'starting_at', 
+          features: ['500 Photos Culling & Color Correction', '1 Cinematic Teaser', 'Album Design (30 sheets)', 'White-label guarantee', '5-day TAT'], 
+          includedServiceIds: getSrvIds(['Pro Color Grading (300 pics)', 'Cinematic 1-Min Teaser']),
+          popular: true, b2bOrB2c: 'b2b', color: '#3b82f6', coverImage: ''
+        }
       ];
       await Package.insertMany(seedPackages);
       console.log('✅ SQLite: Initial packages seeded successfully');
     }
 
-    // 3. Seed Configs if empty
+    // 4. Seed Configs if empty
     const configCount = db.prepare('SELECT COUNT(*) as count FROM configs').get().count;
     if (configCount === 0) {
       const seedConfig = [
@@ -721,16 +878,16 @@ export async function autoSeedDatabase() {
       console.log('✅ SQLite: Initial configs seeded successfully');
     }
 
-    // 4. Seed Content from content.json if empty
-    const mainContent = await Content.findOne({ key: 'main_site' });
-    if (!mainContent || !mainContent.data || Object.keys(mainContent.data).length === 0) {
-      const localContentPath = path.join(__dirname, '../client/public/content.json');
-      if (fs.existsSync(localContentPath)) {
-        const raw = fs.readFileSync(localContentPath, 'utf-8');
-        const parsed = JSON.parse(raw);
-        await Content.findOneAndUpdate({ key: 'main_site' }, { key: 'main_site', data: parsed });
-        console.log('✅ SQLite: Initial site content populated from content.json');
-      }
+
+
+    // 5. Seed Market Album Sheets if empty
+    const sheetCount = db.prepare('SELECT COUNT(*) as count FROM sheet_types').get().count;
+    if (sheetCount === 0) {
+      await SheetType.create({ name: 'Standard Matte/Glossy', pricePerSheet: 100, premiumCoverSurcharge: 0 });
+      await SheetType.create({ name: 'NT (Non-Tearable)', pricePerSheet: 150, premiumCoverSurcharge: 0 });
+      await SheetType.create({ name: 'Velvet (Feather Touch)', pricePerSheet: 250, premiumCoverSurcharge: 500 });
+      await SheetType.create({ name: 'Metallic (3D Shimmer)', pricePerSheet: 200, premiumCoverSurcharge: 0 });
+      console.log('✅ SQLite: Initial market album sheets seeded successfully');
     }
   } catch (err) {
     console.error('SQLite seeding error:', err);

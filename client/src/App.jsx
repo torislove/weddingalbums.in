@@ -12,6 +12,7 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import Testimonials from './pages/Testimonials';
 import OrderAlbum from './pages/OrderAlbum';
+import MuhurthamCalendar from './pages/MuhurthamCalendar';
 import PhotographerDashboard from './pages/PhotographerDashboard';
 import ClientProofing from './pages/ClientProofing';
 import PortalLogin from './pages/PortalLogin';
@@ -28,6 +29,7 @@ import Blog from './pages/Blog';
 import PhotoCulling from './pages/PhotoCulling';
 
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import CustomCursor from './components/CustomCursor';
 import PushNotification from './components/PushNotification';
 import LeadCaptureModal from './components/LeadCaptureModal';
@@ -35,6 +37,14 @@ import ScrollToTop from './components/ScrollToTop';
 import MobileBookingBar from './components/MobileBookingBar';
 import PageTransition from './components/PageTransition';
 import IntroScreen from './components/IntroScreen';
+import CartDrawer from './components/CartDrawer';
+import ProtectedRoute from './components/ProtectedRoute';
+import ClientDashboard from './pages/ClientDashboard';
+import OrderHistory from './pages/OrderHistory';
+import AlbumProofGallery from './pages/AlbumProofGallery';
+import ProfileSettings from './pages/ProfileSettings';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 function App() {
   const isIframe = window.self !== window.top;
@@ -42,13 +52,15 @@ function App() {
   return (
     <ContentProvider>
       <AuthProvider>
-        <Router>
+        <CartProvider>
+          <Router>
           {!isIframe && <ScrollToTop />}
           <CustomCursor />
           <IntroScreen />
           <div className="app-container">
             <PushNotification />
             <Navbar />
+            <CartDrawer />
             <main>
               <PageTransition>
                 <Routes>
@@ -73,6 +85,16 @@ function App() {
                   <Route path="/albums" element={<AlbumsShowcase />} />
                   <Route path="/track" element={<OrderTracking />} />
                   <Route path="/booking" element={<BookingPage />} />
+                  <Route path="/muhurtham" element={<MuhurthamCalendar />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route element={<ProtectedRoute allowedRoles={['b2c', 'admin']} />}>
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/client" element={<ClientDashboard />}>
+                      <Route path="orders" element={<OrderHistory />} />
+                      <Route path="proofs" element={<AlbumProofGallery />} />
+                      <Route path="settings" element={<ProfileSettings />} />
+                    </Route>
+                  </Route>
                 </Routes>
               </PageTransition>
             </main>
@@ -86,7 +108,8 @@ function App() {
               </>
             )}
           </div>
-        </Router>
+          </Router>
+        </CartProvider>
       </AuthProvider>
     </ContentProvider>
   );
