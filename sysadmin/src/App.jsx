@@ -9,6 +9,7 @@ import OrderManager from './pages/OrderManager';
 import Editors from './pages/Editors';
 import JobQC from './pages/JobQC';
 import Payouts from './pages/Payouts';
+import Logo from './components/Logo';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -24,10 +25,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-[260px] bg-[#111] border-r border-white/10 h-screen fixed flex flex-col z-50">
-      <div className="p-6 border-b border-white/10 text-center">
-        <h2 className="text-xl font-bold tracking-widest text-white">SYS<span className="text-blue-500">ADMIN</span></h2>
-        <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">Business Operations</p>
+    <div className="hidden md:flex w-[260px] bg-[#111] border-r border-white/10 h-screen fixed flex-col z-50">
+      <div className="p-6 border-b border-white/10 flex items-center justify-center">
+        <Logo size={35} showText={true} />
       </div>
       <nav className="flex-1 overflow-y-auto py-4">
         {menu.map(item => {
@@ -70,7 +70,7 @@ function App() {
     <BrowserRouter>
       <div className="flex min-h-screen text-gray-200 bg-[#0a0a0a]">
         <Sidebar />
-        <main className="flex-1 ml-[260px] relative h-screen overflow-auto">
+        <main className="flex-1 md:ml-[260px] w-full relative h-screen overflow-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/users" element={<UserManager />} />

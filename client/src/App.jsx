@@ -13,6 +13,8 @@ import About from './pages/About';
 import Testimonials from './pages/Testimonials';
 import OrderAlbum from './pages/OrderAlbum';
 import MuhurthamCalendar from './pages/MuhurthamCalendar';
+import Terms from './pages/Terms';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import PhotographerDashboard from './pages/PhotographerDashboard';
 import ClientProofing from './pages/ClientProofing';
 import PortalLogin from './pages/PortalLogin';
@@ -66,6 +68,8 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
                   <Route path="/services" element={<Services />} />
                   <Route path="/portfolio" element={<Portfolio />} />
                   <Route path="/testimonials" element={<Testimonials />} />

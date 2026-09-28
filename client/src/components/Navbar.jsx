@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import Logo from './Logo';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -43,32 +44,8 @@ const Navbar = () => {
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Logo */}
-          <Link to="/" className="nav-logo">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg" style={{ animation: 'spin 20s linear infinite' }}>
-              <circle cx="16" cy="16" r="14" stroke="url(#goldGradient)" strokeWidth="1.5" />
-              <circle cx="16" cy="16" r="8" stroke="url(#goldGradient)" strokeWidth="1" strokeDasharray="4 2" />
-              <circle cx="16" cy="16" r="4" fill="url(#goldGradient)" />
-              {/* aperture blades */}
-              {[0,60,120,180,240,300].map((a,i)=>{
-                const r = (a * Math.PI) / 180;
-                const x1 = 16 + 8 * Math.cos(r);
-                const y1 = 16 + 8 * Math.sin(r);
-                const x2 = 16 + 13 * Math.cos(r + Math.PI/6);
-                const y2 = 16 + 13 * Math.sin(r + Math.PI/6);
-                return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="url(#goldGradient)" strokeWidth="1" opacity="0.8" />;
-              })}
-              <defs>
-                <linearGradient id="goldGradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop offset="0%" stopColor="#bf953f" />
-                  <stop offset="50%" stopColor="#fcf6ba" />
-                  <stop offset="100%" stopColor="#aa771c" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="logo-text">
-              <span className="logo-name liquid-gold-text">weddingalbums.in</span>
-              <span className="logo-tagline liquid-gold-text">India</span>
-            </div>
+          <Link to="/" className="nav-logo" style={{ textDecoration: 'none' }}>
+            <Logo size={40} />
           </Link>
 
           {/* Desktop Nav */}

@@ -9,6 +9,7 @@ import MediaLibrary from './pages/MediaLibrary';
 import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 import Toast from './components/Toast';
+import Logo from './components/Logo';
 import { useAdminContent } from './hooks/useAdminContent';
 
 const Sidebar = ({ isDirty, saveContent, saving }) => {
@@ -28,17 +29,10 @@ const Sidebar = ({ isDirty, saveContent, saving }) => {
   ];
 
   return (
-    <div className="w-[260px] bg-[#050505] border-r border-white/10 h-screen fixed flex flex-col z-50 shadow-2xl transition-all">
+    <div className="hidden md:flex w-[260px] bg-[#050505] border-r border-white/10 h-screen fixed flex-col z-50 shadow-2xl transition-all">
       {/* Brand Header */}
-      <div className="p-5 border-b border-white/10 flex items-center gap-3 bg-black/40 backdrop-blur-md">
-        <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#996515] shadow-lg shadow-yellow-900/20">
-          <Sparkles size={16} className="text-black" />
-        </div>
-        <div>
-          <h1 className="text-lg font-serif text-transparent bg-clip-text bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] leading-none">
-            weddingalbums.in
-          </h1>
-        </div>
+      <div className="p-5 border-b border-white/10 flex items-center justify-center bg-black/40 backdrop-blur-md">
+        <Logo size={35} showText={true} />
       </div>
 
       {/* Navigation */}
@@ -124,7 +118,7 @@ function App() {
     <BrowserRouter>
       <div className="flex min-h-screen text-gray-200 overflow-hidden bg-[#050505]">
         <Sidebar isDirty={adminState.isDirty} saveContent={handleSave} saving={adminState.saving} setToken={setToken} />
-        <main className="flex-1 ml-[260px] relative h-screen">
+        <main className="flex-1 md:ml-[260px] w-full relative h-screen">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/pages/:pageId" element={<PageEditor adminState={adminState} />} />

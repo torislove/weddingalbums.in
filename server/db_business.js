@@ -163,6 +163,7 @@ db.exec(`
     rating INTEGER,
     feedback TEXT,
     price_charged REAL,
+    region TEXT DEFAULT 'Hyderabad',
     createdAt TEXT,
     updatedAt TEXT
   );

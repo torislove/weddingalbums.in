@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Info } from 'lucide-react';
-import axios from 'axios';
 
 const MuhurthamCalendar = () => {
   const [dates, setDates] = useState([]);
@@ -9,8 +8,9 @@ const MuhurthamCalendar = () => {
   useEffect(() => {
     const fetchDates = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/muhurtham');
-        setDates(response.data.dates);
+        const response = await fetch('http://localhost:4000/api/muhurtham');
+        const data = await response.json();
+        setDates(data.dates || []);
       } catch (err) {
         console.error('Failed to fetch muhurtham dates', err);
         setDates(["2026-10-12", "2026-10-18", "2026-10-26", "2026-11-04"]); // Fallback

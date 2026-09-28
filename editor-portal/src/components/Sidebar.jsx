@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Scissors, Video, BookOpen, IndianRupee, Star, HelpCircle } from 'lucide-react';
+import Logo from './Logo';
 
 const Sidebar = () => {
   const navItems = [
@@ -15,12 +16,8 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-header">
-        <h2 style={{ fontSize: '1.4rem', margin: 0, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Scissors color="var(--accent-primary)" />
-          Creators Hub
-        </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>WeddingAlbums.in</p>
+      <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+        <Logo size={35} />
       </div>
       
       <nav className="sidebar-nav">

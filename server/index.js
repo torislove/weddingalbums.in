@@ -821,10 +821,10 @@ app.post('/api/b2b/jobs', authenticateToken, (req, res) => {
   try {
     const id = crypto.randomUUID();
     const stmt = db.prepare(`
-      INSERT INTO b2b_jobs (id, studio_user_id, job_type, client_name, event_date, event_type, design_style, instructions, raw_files_link, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO b2b_jobs (id, studio_user_id, job_type, client_name, event_date, event_type, design_style, instructions, raw_files_link, region, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    stmt.run(id, req.user.id, req.body.job_type, req.body.client_name, req.body.event_date, req.body.event_type || 'Wedding', req.body.design_style, req.body.instructions, req.body.raw_files_link, new Date().toISOString(), new Date().toISOString());
+    stmt.run(id, req.user.id, req.body.job_type, req.body.client_name, req.body.event_date, req.body.event_type || 'Wedding', req.body.design_style, req.body.instructions, req.body.raw_files_link, req.body.region || 'Hyderabad', new Date().toISOString(), new Date().toISOString());
     res.json({ success: true, id });
   } catch (err) {
     res.status(500).json({ error: 'Failed to create job' });
