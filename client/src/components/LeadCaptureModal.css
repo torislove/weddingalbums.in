@@ -1,0 +1,123 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: fadeIn 0.4s ease;
+}
+
+.modal-content {
+  background: var(--bg-dark);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  width: 100%;
+  max-width: 450px;
+  padding: 2.5rem;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUpFade 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 50;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.modal-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+  color: white;
+}
+
+.modal-header p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.lead-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-secondary);
+  pointer-events: none;
+}
+
+.lead-form input,
+.lead-form select {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.lead-form input:focus,
+.lead-form select:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.lead-form select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.lead-form option {
+  background: var(--bg-dark);
+  color: white;
+}
+
+.modal-submit {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

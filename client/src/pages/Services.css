@@ -1,0 +1,99 @@
+/* Sticky Tab Navigation */
+.services-nav {
+  position: sticky;
+  top: 60px;
+  z-index: 100;
+  background: rgba(4,4,4,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+.services-nav::-webkit-scrollbar { display: none; }
+
+.services-nav-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.services-nav-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+.services-nav-btn.active {
+  color: var(--color-secondary);
+  border-color: rgba(212,175,55,0.4);
+  background: rgba(212,175,55,0.08);
+}
+
+/* Service Cards */
+.service-card-v2 { padding: 2.5rem 2rem; border-radius: 20px; position: relative; overflow: hidden; }
+.card-accent-line {
+  position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(to bottom, var(--color-secondary), var(--color-primary));
+}
+.card-number {
+  position: absolute; top: 1rem; right: 1.5rem;
+  font-size: 3.5rem; font-weight: 800;
+  color: rgba(212,175,55,0.06);
+  font-family: 'Playfair Display', serif; line-height: 1;
+  pointer-events: none;
+}
+.service-card-v2 h3 { font-size: 1.25rem; color: white; margin-bottom: 0.3rem; }
+.telugu-label { font-size: 0.85rem; color: var(--color-secondary); display: block; margin-bottom: 1rem; }
+.service-card-v2 p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.75; }
+
+/* Packages */
+.package-card {
+  padding: 2.5rem 2rem; border-radius: 22px;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.package-card.popular {
+  border-color: rgba(212,175,55,0.4);
+  box-shadow: 0 0 40px rgba(212,175,55,0.1);
+}
+.popular-badge {
+  position: absolute; top: 0; right: 0;
+  background: linear-gradient(135deg, var(--color-secondary), #a07820);
+  color: #0a0a0a; font-size: 0.75rem; font-weight: 800;
+  padding: 0.4rem 1rem; border-radius: 0 20px 0 14px;
+  letter-spacing: 0.5px;
+}
+.pkg-tier {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem;
+}
+.pkg-price {
+  font-size: 2.5rem; font-weight: 800; color: white;
+  margin-bottom: 2rem;
+}
+.pkg-list {
+  list-style: none; display: flex; flex-direction: column; gap: 0.75rem; flex: 1;
+}
+.pkg-list li {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  color: var(--text-muted); font-size: 0.9rem;
+}
+.pkg-list li span { font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+
+/* CSS Perspective Card Pop Effect */
+.service-card {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.service-card:hover {
+  transform: perspective(800px) translateZ(25px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.2);
+  border-color: var(--color-primary);
+}

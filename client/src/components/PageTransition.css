@@ -1,0 +1,203 @@
+/* Realistic Tied Theater Velvet Curtain Transition */
+
+.curtain-container {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  pointer-events: none;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+}
+
+.curtain-left,
+.curtain-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51vw; 
+  background-color: #8c0014; /* Deep velvet red */
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0) 20%,
+    rgba(0, 0, 0, 0) 80%,
+    rgba(0, 0, 0, 0.6) 100%
+  ),
+  repeating-linear-gradient(
+    to right,
+    #5a000d 0%,
+    #a80018 5%,
+    #a80018 10%,
+    #5a000d 15%
+  );
+  box-shadow: 0 0 50px rgba(0,0,0,0.8);
+  transform-origin: top;
+}
+
+.curtain-left {
+  left: 0;
+  /* Start closed, pull into a tied shape, then exit */
+  animation: curtainTieLeft 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.curtain-right {
+  right: 0;
+  animation: curtainTieRight 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+/* The vertical glowing shutter line */
+.curtain-shutter-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-primary);
+  box-shadow: 0 0 20px var(--color-primary), 0 0 40px var(--color-primary);
+  animation: shutterPulse 1.4s ease-in-out forwards;
+  z-index: 10001;
+}
+
+/* Icons */
+.curtain-icons {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  z-index: 10002;
+  animation: iconsReveal 1.4s ease-in-out forwards;
+}
+
+.curtain-icon {
+  color: var(--color-primary);
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.8));
+}
+
+.icon-camera {
+  color: #fff;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+}
+
+/* Animations */
+
+/* Left Curtain: Closed -> Tied/Gathered -> Slide Out */
+@keyframes curtainTieLeft {
+  0% { 
+    transform: translateX(-100%); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+  }
+  20% { 
+    transform: translateX(0); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+  }
+  50% { 
+    transform: translateX(0); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+  }
+  65% { 
+    /* The rope pulls it left at the 60% vertical mark */
+    transform: translateX(0); 
+    clip-path: polygon(0 0, 100% 0, 30% 60%, 0 100%); 
+  }
+  100% { 
+    transform: translateX(-100%); 
+    clip-path: polygon(0 0, 100% 0, 0 60%, 0 100%); 
+  }
+}
+
+/* Right Curtain: Closed -> Tied/Gathered -> Slide Out */
+@keyframes curtainTieRight {
+  0% { 
+    transform: translateX(100%); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+  }
+  20% { 
+    transform: translateX(0); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+  }
+  50% { 
+    transform: translateX(0); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+  }
+  65% { 
+    /* The rope pulls it right at the 60% vertical mark */
+    transform: translateX(0); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 70% 60%); 
+  }
+  100% { 
+    transform: translateX(100%); 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 60%); 
+  }
+}
+
+@keyframes shutterPulse {
+  0% { opacity: 0; transform: scaleY(0); }
+  25% { opacity: 0; transform: scaleY(0); }
+  30% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1); }
+  55% { opacity: 0; transform: scaleY(0); }
+  100% { opacity: 0; }
+}
+
+@keyframes iconsReveal {
+  0% { opacity: 0; transform: scale(0.5); }
+  20% { opacity: 0; transform: scale(0.5); }
+  30% { opacity: 1; transform: scale(1.1); }
+  45% { opacity: 1; transform: scale(1); }
+  55% { opacity: 0; transform: scale(1.5); filter: blur(10px); }
+  100% { opacity: 0; }
+}
+.rope {
+  position: absolute;
+  top: 58%;
+  width: 15vw;
+  height: 16px;
+  background: repeating-linear-gradient(
+    45deg,
+    #d4af37,
+    #d4af37 4px,
+    #fcebb6 4px,
+    #fcebb6 8px
+  );
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 20px rgba(212, 175, 55, 0.8);
+  z-index: 10005;
+  opacity: 0;
+}
+.rope::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  width: 25px;
+  height: 36px;
+  background: radial-gradient(circle, #fcebb6 20%, #d4af37 80%);
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 0 0 10px #8a6a1c;
+}
+.rope-left {
+  left: 0;
+  transform-origin: left;
+  animation: ropeTieLeft 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+.rope-left::after { right: -5px; }
+
+.rope-right {
+  right: 0;
+  transform-origin: right;
+  animation: ropeTieRight 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+.rope-right::after { left: -5px; }
+
+@keyframes ropeTieLeft {
+  0%, 45% { opacity: 0; transform: scaleX(0); }
+  50% { opacity: 1; transform: scaleX(2.2); }
+  65% { opacity: 1; transform: scaleX(1.8); }
+  100% { opacity: 0; transform: scaleX(0); }
+}
+@keyframes ropeTieRight {
+  0%, 45% { opacity: 0; transform: scaleX(0); }
+  50% { opacity: 1; transform: scaleX(2.2); }
+  65% { opacity: 1; transform: scaleX(1.8); }
+  100% { opacity: 0; transform: scaleX(0); }
+}

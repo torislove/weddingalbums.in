@@ -1,0 +1,76 @@
+.music-toggle {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.3); /* Gold border */
+  color: var(--color-secondary); /* Gold icon */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.music-toggle:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.music-toggle .music-pulse {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid var(--color-secondary);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.music-toggle.playing .music-pulse {
+  animation: ripple 2s linear infinite;
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.music-tooltip {
+  position: absolute;
+  right: 80px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  transform: translateX(10px);
+}
+
+.music-toggle:hover .music-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.music-tooltip.force-show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  .music-toggle {
+    bottom: 150px; /* Above whatsapp button */
+    right: 20px;
+  }
+  .music-tooltip {
+    right: 70px;
+  }
+}

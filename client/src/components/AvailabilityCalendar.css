@@ -1,0 +1,54 @@
+.availability-calendar {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.calendar-legend {
+  display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+.legend-item { display: flex; align-items: center; gap: 0.5rem; color: #ccc; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-available { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+.dot-filling { background: rgba(212,175,55,0.2); border: 1px solid rgba(212,175,55,0.5); }
+.dot-booked { background: rgba(229,57,53,0.2); border: 1px solid rgba(229,57,53,0.5); }
+
+.calendar-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;
+}
+
+.calendar-month h4 { font-family: var(--font-serif); font-size: 1.2rem; color: white; margin-bottom: 1rem; }
+
+.days-grid-header {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;
+  text-align: center; color: #888; font-size: 0.75rem; margin-bottom: 0.5rem;
+}
+
+.days-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;
+}
+
+.calendar-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; font-size: 0.85rem; font-weight: 500;
+  transition: all 0.3s ease; position: relative;
+}
+.calendar-day.blank { background: transparent; border: none; }
+.day-available { background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
+.day-available:hover { background: rgba(255,255,255,0.1); }
+.day-filling { background: rgba(212,175,55,0.15); color: #D4AF37; border: 1px solid rgba(212,175,55,0.3); }
+.day-booked { background: rgba(229,57,53,0.15); color: #E53935; border: 1px solid rgba(229,57,53,0.3); opacity: 0.6; }
+
+.auspicious-star {
+  position: absolute; top: -6px; right: -6px; font-size: 10px;
+  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.8));
+  animation: pulse-star 2s infinite ease-in-out;
+}
+
+@keyframes pulse-star {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}

@@ -1,0 +1,44 @@
+.mobile-booking-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--bg-darker);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.mobile-bar-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.btn-call {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-wa {
+  background: var(--color-primary);
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .mobile-booking-bar {
+    display: flex;
+  }
+  
+  /* Add padding to bottom of app so content doesn't hide behind the bar */
+  body {
+    padding-bottom: 60px;
+  }
+}

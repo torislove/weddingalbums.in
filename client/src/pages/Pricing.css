@@ -1,0 +1,106 @@
+.pricing-page {
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.pricing-hero {
+  text-align: center;
+  padding: 80px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-ambient-glow {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0,0,0,0) 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.pricing-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #D4AF37;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.pricing-tab-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.ptab-btn {
+  padding: 12px 30px;
+  border-radius: 40px;
+  background: transparent;
+  color: #888;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.ptab-btn:hover {
+  color: #fff;
+}
+
+.ptab-btn.active {
+  background: #D4AF37;
+  color: #000;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.faq-card {
+  padding: 30px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.pricing-cta {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(120, 0, 22, 0.1) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 50px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+  .pricing-tab-switcher {
+    flex-direction: column;
+    width: 100%;
+    border-radius: 16px;
+  }
+  .ptab-btn {
+    width: 100%;
+    border-radius: 12px;
+  }
+}

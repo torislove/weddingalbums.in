@@ -1,0 +1,42 @@
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  padding: 1rem 0;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+}
+
+.marquee-track {
+  display: flex;
+  width: 200%; /* Contains two full sets of items */
+  will-change: transform;
+}
+
+.marquee-content {
+  display: flex;
+  width: 50%; /* Each set is exactly half the track width */
+  justify-content: space-around;
+  align-items: center;
+}
+
+.marquee-item {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.marquee-separator {
+  color: white;
+  opacity: 0.3;
+  margin: 0 2rem;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,87 @@
+.flipbook-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto;
+  perspective: 2000px;
+  position: relative;
+  z-index: 10;
+}
+
+.album-wrapper {
+  position: relative;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  background: #111;
+  padding: 10px; /* simulating cover overhang */
+}
+
+/* Hardcover Spine effect */
+.album-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 50%;
+  width: 40px;
+  transform: translateX(-50%);
+  background: linear-gradient(to right, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.1) 20%, 
+    rgba(0,0,0,0.6) 50%, 
+    rgba(255,255,255,0.1) 80%, 
+    rgba(255,255,255,0) 100%
+  );
+  z-index: 5;
+  border-radius: 4px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.demoPage {
+  background-color: #fdfbf7;
+  border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add page thickness on the outer edges */
+.demoPage.-left {
+  border-left: 6px solid #eae6de;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.demoPage.-right {
+  border-right: 6px solid #eae6de;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+/* Page inner shadow to simulate binding curve */
+.demoPage::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  pointer-events: none;
+}
+
+.demoPage.-left::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+}
+
+.demoPage.-right::after {
+  left: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+}
+
+/* Cover Styling */
+.demoPage.cover {
+  background: #1a1a1a;
+}
+.demoPage.cover img {
+  opacity: 0.9;
+}

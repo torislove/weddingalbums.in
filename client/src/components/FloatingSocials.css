@@ -1,0 +1,126 @@
+.floating-socials-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  z-index: 1000;
+}
+
+.floating-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
+  background-size: 200% auto;
+  margin-right: 5px; /* Aligns the 50px center with the 60px WhatsApp center when flex-end is used */
+}
+
+.floating-btn:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 2px 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+.youtube-btn {
+  background: linear-gradient(to right, #FF0000 0%, #CC0000 51%, #FF0000 100%);
+}
+.youtube-btn:hover { background-position: right center; }
+
+.instagram-btn {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+.instagram-btn:hover { background-position: right center; }
+
+
+/* WhatsApp button - Keeping its special wide expanding animation */
+.whatsapp-float-btn {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-color: #25D366;
+  color: #FFF;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 30px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.wa-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.wa-text {
+  position: absolute;
+  right: -150px;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.whatsapp-float-btn:hover {
+  width: 200px;
+  background-color: #1EBE5D;
+}
+
+.whatsapp-float-btn:hover .wa-icon-container {
+  transform: translateX(-65px);
+}
+
+.whatsapp-float-btn:hover .wa-text {
+  right: 25px;
+  opacity: 1;
+}
+
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background-color: #25D366;
+  border-radius: 50%;
+  z-index: 0;
+  animation: pulse-ring 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.pulse-ring.delay {
+  animation-delay: 1s;
+}
+
+@keyframes pulse-ring {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .floating-socials-container {
+    bottom: 80px; /* Above mobile booking bar */
+    right: 20px;
+  }
+}

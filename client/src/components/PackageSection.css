@@ -1,0 +1,58 @@
+.package-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.package-tab-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.package-tab-btn:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  color: var(--color-secondary);
+}
+
+.package-tab-btn.active {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-crimson));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(120, 0, 22, 0.4);
+}
+
+.package-grid {
+  margin-top: 3rem;
+  align-items: stretch; /* Make all cards equal height */
+}
+
+.pkg-price-wrap {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.pkg-suffix {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.package-btn {
+  width: 100%;
+  text-align: center;
+  margin-top: 2rem;
+}

@@ -1,0 +1,60 @@
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+.shutter-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  margin-left: -20px;
+  margin-top: -20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: difference;
+}
+
+.shutter-svg {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.aperture-lines {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform-origin: 16px 16px;
+}
+
+.inner-dashed {
+  transition: stroke-width 0.3s ease;
+}
+
+.center-dot {
+  transition: transform 0.3s ease;
+  transform-origin: 16px 16px;
+}
+
+/* Hover States */
+.shutter-cursor.hovering .shutter-svg {
+  transform: scale(0.7) rotate(90deg);
+}
+
+.shutter-cursor.hovering .aperture-lines {
+  transform: rotate(60deg) scale(1.1);
+  opacity: 1;
+}
+
+.shutter-cursor.hovering .inner-dashed {
+  stroke-width: 2;
+}
+
+.shutter-cursor.hovering .center-dot {
+  transform: scale(1.5);
+}

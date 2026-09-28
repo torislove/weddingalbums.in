@@ -1,0 +1,497 @@
+{
+  "pages": {
+    "about": [
+      {
+        "id": "block-about-hero",
+        "type": "PageHero",
+        "props": {
+          "eyebrow": "✦ 100% IN-HOUSE POST-PRODUCTION ✦",
+          "title": "The Cinematic Engine",
+          "subtitle": "We are your ultimate post-production partners. We handle high-end photo retouching, video editing, and premium album designing.",
+          "bgImage": "/kalamkari-bg.jpg"
+        }
+      },
+      {
+        "id": "block-about-pillars",
+        "type": "PillarsList",
+        "props": {
+          "pillars": [
+            {
+              "icon": "History",
+              "title": "12 Years of Legacy & Trust",
+              "desc": "With over a decade of experience, we have deep-rooted ties to studios and clients across every region. We know the Telugu wedding industry inside and out, bringing unparalleled editing expertise to your big day."
+            },
+            {
+              "icon": "Users",
+              "title": "20-Member In-House Editing Unit",
+              "desc": "We never outsource your precious moments to freelancers. Our dedicated 20-member team of full-time editors and designers handles everything from cinematic color grading to premium flex design with perfect coordination."
+            },
+            {
+              "icon": "Camera",
+              "title": "Zero-Delay Photo Editing",
+              "desc": "No more waiting months for your albums! We use industry-leading software in-house for flawless skin retouching, color correction, and premium album design, ensuring secure and on-time delivery."
+            },
+            {
+              "icon": "Film",
+              "title": "Cinematic Video Editing & Intros",
+              "desc": "Our dedicated video editors craft breathtaking cinematic wedding projects and jaw-dropping intros. We handle our own color grading and audio mixing for Netflix-grade storytelling."
+            },
+            {
+              "icon": "Smartphone",
+              "title": "End-to-End Solutions",
+              "desc": "From custom WhatsApp Video Invitations to large-scale Flexies and venue branding, our in-house team covers every single media requirement for your wedding."
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-about-cta",
+        "type": "SimpleCTA",
+        "props": {
+          "title": "Experience the Difference",
+          "subtitle": "See why hundreds of couples trust our 20-member team for their big day.",
+          "btnText": "View Our Work",
+          "btnLink": "/portfolio"
+        }
+      }
+    ],
+    "home": [
+      {
+        "id": "block-hero",
+        "type": "Hero",
+        "props": {
+          "eyebrow": "✦ weddingalbums.in ✦",
+          "titlePart1": "Cinematic Storytelling",
+          "titleScramble": "& Premium Post-Production",
+          "subtitle": "The trusted post-production engine for 500+ studios and thousands of couples. We craft heirloom-quality albums and cinematic films.",
+          "btn1Text": "I am a Studio",
+          "btn1Link": "/login?role=b2b",
+          "btn2Text": "I am a Couple",
+          "btn2Link": "/login?role=b2c",
+          "bgImage": "/kalamkari-bg.jpg"
+        }
+      },
+      {
+        "id": "block-marquee",
+        "type": "MarqueeTicker",
+        "props": {
+          "items": [
+            "Photo Retouching",
+            "Cinematic Video Editing",
+            "Premium Album Printing",
+            "Event Flex Designing",
+            "Digital Invitations",
+            "Telugu Wedding Edits",
+            "Hoarding Designs"
+          ],
+          "speed": 0.8
+        }
+      },
+      {
+        "id": "block-stats",
+        "type": "StatsBar",
+        "props": {
+          "stats": [
+            {
+              "target": 5000,
+              "suffix": "+",
+              "label": "Albums Printed"
+            },
+            {
+              "target": 25,
+              "suffix": "+",
+              "label": "In-House Staff"
+            },
+            {
+              "target": 12,
+              "suffix": "+",
+              "label": "Years of Excellence"
+            },
+            {
+              "target": 28,
+              "suffix": "",
+              "label": "Cities Across AP"
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-inhouse",
+        "type": "InHouseAdvantage",
+        "props": {
+          "eyebrow": "✦ The Undisputed Industry Leaders ✦",
+          "title": "India's #1 Video & Photo Editing Studio",
+          "subtitle": "We don't just edit; we set the industry standard. As the premier post-production house, we deliver unrivaled cinematic video grading and flawless photo retouching. Your memories deserve the absolute best, handled 100% in-house by elite professionals.",
+          "features": [
+            {
+              "icon": "📸",
+              "title": "World-Class Photo Retouching",
+              "desc": "Our elite full-time team delivers magazine-quality edits. We perform industry-leading skin smoothing, advanced lighting correction, and pixel-perfect traditional and candid enhancements."
+            },
+            {
+              "icon": "🖥️",
+              "title": "Dedicated Editing Studio",
+              "desc": "Simply upload your raw photos and footage. We ensure lightning-fast delivery with guaranteed data privacy."
+            },
+            {
+              "icon": "🕉️",
+              "title": "Deep Cultural Respect",
+              "desc": "We know every Telugu ritual intimately. From Mangala Snanam to Talambralu, we highlight the true essence of your Pelli in the edits."
+            },
+            {
+              "icon": "🎥",
+              "title": "Award-Winning Cinematic Video",
+              "desc": "We deliver Netflix-grade cinematic wedding films. Our industry-leading color grading and immersive audio mixing are simply unmatched."
+            },
+            {
+              "icon": "📖",
+              "title": "Premium Albums",
+              "desc": "Custom Karizma and Flush Mount albums designed in-house and printed to last for generations."
+            },
+            {
+              "icon": "💯",
+              "title": "100% Reliability",
+              "desc": "We have never missed an event or failed a delivery timeline in 12 years. Direct WhatsApp support always available."
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-aboutteaser",
+        "type": "AboutTeaser",
+        "props": {
+          "eyebrow": "✦ Our Story",
+          "title": "More Than Just Editing",
+          "subtitle": "Founded in Vijayawada over 12 years ago, we set out with one mission: to edit and print Telugu weddings with the cinematic grandeur and cultural reverence they truly deserve. We understand that an event is not just an event — it's a sacred convergence of two families, generations of traditions, and infinite love.",
+          "features": [
+            "Premium Cinematic Video Editing",
+            "Deep Understanding of All AP Rituals",
+            "High-End Custom Album Designs",
+            "Event Flex & Hoarding Design"
+          ],
+          "btnText": "Read Our Story",
+          "btnLink": "/about",
+          "image": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=900"
+        }
+      },
+      {
+        "id": "block-servicesteaser",
+        "type": "ServicesTeaser",
+        "props": {
+          "eyebrow": "✦ What We Do",
+          "title": "Post-Production & Design",
+          "subtitle": "From raw footage to breathtaking cinematic teasers, and from thousands of photos to a perfect layflat album.",
+          "btnText": "View All Services",
+          "btnLink": "/services",
+          "services": [
+            {
+              "icon": "Camera",
+              "title": "Photo Editing",
+              "sub": "Color Grading & Retouching",
+              "path": "/services#photo",
+              "color": "#E53935"
+            },
+            {
+              "icon": "Video",
+              "title": "Video Editing",
+              "sub": "Teasers & Highlights",
+              "path": "/services#video",
+              "color": "#7B1FA2"
+            },
+            {
+              "icon": "BookOpen",
+              "title": "Album Design",
+              "sub": "Layflat & Karizma",
+              "path": "/services#albums",
+              "color": "#1565C0"
+            },
+            {
+              "icon": "Gift",
+              "title": "Invitations",
+              "sub": "WhatsApp & Digital Invites",
+              "path": "/services#invitations",
+              "color": "#2E7D32"
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-kolam1",
+        "type": "KolamDivider",
+        "props": {}
+      },
+      {
+        "id": "block-celebrations",
+        "type": "RitualsScroll",
+        "props": {
+          "eyebrow": "✦ Events We Cover",
+          "title": "Beautiful Celebrations",
+          "rituals": [
+            {
+              "title": "Weddings",
+              "telugu": "పెళ్లి",
+              "desc": "Cinematic coverage and editing for your big day."
+            },
+            {
+              "title": "Pre-Wedding",
+              "telugu": "ప్రీ-వెడ్డింగ్",
+              "desc": "Romantic outdoor shoots and teasers."
+            },
+            {
+              "title": "Engagement",
+              "telugu": "నిశ్చితార్థం",
+              "desc": "Elegant ring ceremony and celebrations."
+            },
+            {
+              "title": "Maternity",
+              "telugu": "సీమంతం",
+              "desc": "Beautifully capturing the journey of motherhood."
+            },
+            {
+              "title": "Birthdays",
+              "telugu": "పుట్టినరోజు",
+              "desc": "Grand celebrations and milestone events."
+            },
+            {
+              "title": "Half Saree",
+              "telugu": "ఓణీ వేడుక",
+              "desc": "Coming-of-age traditional ceremonies."
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-kolam2",
+        "type": "KolamDivider",
+        "props": {
+          "color": "#780016"
+        }
+      },
+      {
+        "id": "block-gallery",
+        "type": "FeaturedGallery",
+        "props": {
+          "eyebrow": "✦ Our Work",
+          "title": "Recent Stories",
+          "btnText": "View All Gallery",
+          "btnLink": "/portfolio",
+          "images": [
+            {
+              "img": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=1200",
+              "tag": "wedding",
+              "title": "Traditional Pelli",
+              "location": "Vijayawada · విజయవాడ"
+            },
+            {
+              "img": "https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=800",
+              "tag": "prewedding",
+              "title": "Araku Valley",
+              "location": "Vizag · విశాఖపట్నం"
+            },
+            {
+              "img": "https://images.unsplash.com/photo-1530103862676-de8892b125f4?auto=format&fit=crop&q=80&w=800",
+              "tag": "birthday",
+              "title": "Grand 1st Birthday",
+              "location": "Guntur · గుంటూరు"
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-testimonials",
+        "type": "TestimonialsCarousel",
+        "props": {
+          "eyebrow": "✦ Client Love",
+          "title": "Words from Our Couples",
+          "btnText": "Read All Reviews",
+          "btnLink": "/testimonials",
+          "testimonials": [
+            {
+              "quote": "The way they edited our Talambralu video was pure magic. Every ritual frame felt like a painting. The event flex designs for our Vijayawada venue were absolutely breathtaking!",
+              "name": "Anjali & Karthik Reddy",
+              "event": "Pelli (Telugu Wedding) · Vijayawada"
+            },
+            {
+              "quote": "Our premium flush mount album is our most prized possession. Their deep respect for AP cultural rituals and the meticulous photo retouching quality was outstanding.",
+              "name": "Swathi & Ravi Varma",
+              "event": "Mangala Snanam & Reception · Vizag"
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-reviewsbar",
+        "type": "ReviewsBar",
+        "props": {}
+      },
+      {
+        "id": "block-ctabanner",
+        "type": "CTABanner",
+        "props": {
+          "eyebrow": "✦ Start Your Story ✦",
+          "titlePart1": "Book Your Date",
+          "titlePart2": "Before It's Gone",
+          "subtitle": "Our calendar fills up quickly, especially for wedding season. Reach out today to check your date availability.",
+          "btn1Text": "Request a Quote",
+          "btn1Link": "/contact",
+          "btn2Text": "WhatsApp Us",
+          "whatsappMessage": "Hi, I'd like to check availability"
+        }
+      }
+    ],
+    "services": []
+  },
+  "global": {
+    "navbar": {
+      "logoName": "Cinematic Weddings",
+      "logoTagline": "Vijayawada",
+      "ctaText": "Book Now",
+      "ctaLink": "/contact",
+      "links": [
+        {
+          "name": "Home",
+          "path": "/"
+        },
+        {
+          "name": "About",
+          "path": "/about"
+        },
+        {
+          "name": "Services",
+          "path": "/services"
+        },
+        {
+          "name": "Portfolio",
+          "path": "/portfolio"
+        },
+        {
+          "name": "Testimonials",
+          "path": "/testimonials"
+        },
+        {
+          "name": "Contact",
+          "path": "/contact"
+        }
+      ]
+    },
+    "footer": {
+      "companyName": "WeddingAlbums.in",
+      "description": "Your premium partner for post-production, editing, and luxury album printing in Andhra Pradesh. Specializing in Pelli, Nischitartham, and grand event flex designs.",
+      "address": "MG Road, Vijayawada, AP 520010",
+      "phone": "+91 98765 43210",
+      "email": "hello@cinematicweddings.in",
+      "marqueeText": "Vijayawada • Visakhapatnam • Guntur • Tirupati • Rajahmundry • Kurnool • Hyderabad • ",
+      "social": {
+        "instagram": "#",
+        "facebook": "#",
+        "youtube": "#"
+      },
+      "quickLinks": [
+        {
+          "name": "Home",
+          "path": "/"
+        },
+        {
+          "name": "About Us",
+          "path": "/about"
+        },
+        {
+          "name": "Services",
+          "path": "/services"
+        },
+        {
+          "name": "Portfolio",
+          "path": "/portfolio"
+        },
+        {
+          "name": "Testimonials",
+          "path": "/testimonials"
+        },
+        {
+          "name": "Contact",
+          "path": "/contact"
+        }
+      ]
+    },
+    "pushNotification": {
+      "isActive": true,
+      "title": "Dates filling up fast!",
+      "message": "September & October slots are almost gone. Secure your booking today.",
+      "icon": "Sparkles",
+      "buttons": [
+        {
+          "label": "Check your date",
+          "url": "/contact"
+        }
+      ]
+    },
+    "availability": {
+      "slotsPerDay": 2,
+      "bookings": {},
+      "auspiciousDates": [
+        "2026-10-12",
+        "2026-10-18",
+        "2026-10-26",
+        "2026-11-04",
+        "2026-11-12",
+        "2026-11-18",
+        "2026-12-06",
+        "2026-12-11",
+        "2026-12-21"
+      ]
+    },
+    "siteImages": {
+      "servicesHeroImage": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=2000",
+      "portfolioHeroImage": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=2000",
+      "b2cHeroImage": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000",
+      "flipbookCoverImage": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800",
+      "flipbookBackCoverImage": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800",
+      "careersImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+      "b2cGalleryImages": [
+        { "image": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800", "alt": "Wedding Couple" },
+        { "image": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800", "alt": "Rings" },
+        { "image": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", "alt": "Venue" },
+        { "image": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800", "alt": "Album Spread" },
+        { "image": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800", "alt": "Details" },
+        { "image": "https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80&w=800", "alt": "Decor" }
+      ],
+      "b2cFlipbookImages": [
+        "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600",
+        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600",
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600",
+        "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=600"
+      ],
+      "clientProofingImages": [
+        "https://images.unsplash.com/photo-1544641979-51478546b3f7",
+        "https://images.unsplash.com/photo-1583939003579-730e3918a45a",
+        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc"
+      ],
+      "portfolioItems": [
+        { "id": 1, "category": "wedding", "title": "Sacred Muhurtham", "city": "Vijayawada", "cityTel": "విజయవాడ", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=900" },
+        { "id": 2, "category": "pre-wedding", "title": "Araku Valley Romance", "city": "Vizag", "cityTel": "విశాఖపట్నం", "tag": "tag-prewedding", "image": "https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=900" },
+        { "id": 3, "category": "albums", "title": "Karizma Album Design", "city": "Guntur", "cityTel": "గుంటూరు", "tag": "tag-album", "image": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=900" },
+        { "id": 4, "category": "wedding", "title": "Talambralu Ritual", "city": "Tirupati", "cityTel": "తిరుపతి", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1621886292650-520f76c747d6?auto=format&fit=crop&q=80&w=900" },
+        { "id": 5, "category": "half-saree", "title": "Langa Voni Ceremony", "city": "Rajahmundry", "cityTel": "రాజమహేంద్రి", "tag": "tag-halfsaree", "image": "https://images.unsplash.com/photo-1583391733958-d25e07fac662?auto=format&fit=crop&q=80&w=900" },
+        { "id": 6, "category": "birthday", "title": "Grand 1st Birthday", "city": "Hyderabad", "cityTel": "హైదరాబాద్", "tag": "tag-birthday", "image": "https://images.unsplash.com/photo-1530103862676-de8892b125f4?auto=format&fit=crop&q=80&w=900" },
+        { "id": 7, "category": "wedding", "title": "Mangala Snanam", "city": "Kurnool", "cityTel": "కర్నూలు", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=900" },
+        { "id": 8, "category": "pre-wedding", "title": "RK Beach Golden Hour", "city": "Vizag", "cityTel": "విశాఖపట్నం", "tag": "tag-prewedding", "image": "https://images.unsplash.com/photo-1555529733-0e67056058e1?auto=format&fit=crop&q=80&w=900" },
+        { "id": 9, "category": "albums", "title": "Flush Mount Hardcover", "city": "Vijayawada", "cityTel": "విజయవాడ", "tag": "tag-album", "image": "https://images.unsplash.com/photo-1522715204671-e4aac94a7b7d?auto=format&fit=crop&q=80&w=900" },
+        { "id": 10, "category": "wedding", "title": "Bridal Elegance", "city": "Vizag", "cityTel": "విశాఖపట్నం", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=900" },
+        { "id": 11, "category": "half-saree", "title": "Silk Lehenga Portrait", "city": "Guntur", "cityTel": "గుంటూరు", "tag": "tag-halfsaree", "image": "https://images.unsplash.com/photo-1529024502020-3792eb5a54b1?auto=format&fit=crop&q=80&w=900" },
+        { "id": 12, "category": "birthday", "title": "Milestone 50th Birthday", "city": "Tirupati", "cityTel": "తిరుపతి", "tag": "tag-birthday", "image": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&q=80&w=900" },
+        { "id": 13, "category": "pre-wedding", "title": "Horsely Hills Adventure", "city": "Chittoor", "cityTel": "చిత్తూరు", "tag": "tag-prewedding", "image": "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&q=80&w=900" },
+        { "id": 14, "category": "albums", "title": "Wedding Hoarding Design", "city": "Kurnool", "cityTel": "కర్నూలు", "tag": "tag-album", "image": "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?auto=format&fit=crop&q=80&w=900" },
+        { "id": 15, "category": "wedding", "title": "Nischitartham Joy", "city": "Rajahmundry", "cityTel": "రాజమహేంద్రి", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=900" }
+      ]
+    },
+    "siteSettings": {
+      "brandName": "weddingalbums.in",
+      "phone": "+91 98765 43210",
+      "email": "hello@weddingalbums.in",
+      "whatsapp": "9876543210",
+      "youtube": "https://youtube.com/c/weddingalbumsin",
+      "instagram": "https://instagram.com/weddingalbumsin",
+      "address": "MG Road, Vijayawada, AP 520010"
+    }
+  }
+}

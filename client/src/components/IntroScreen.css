@@ -1,0 +1,66 @@
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: #050505;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 1s ease, visibility 1s ease;
+  background-image: url('/kalamkari-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+}
+
+.intro-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, #050505 100%);
+  pointer-events: none;
+}
+
+.intro-screen.leaving {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 2s ease;
+}
+
+.intro-mandala {
+  animation: spin 20s linear infinite;
+}
+
+.intro-title {
+  font-size: 3rem;
+  letter-spacing: 2px;
+}
+
+.intro-subtitle {
+  color: var(--color-primary);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.enter-btn {
+  animation: pulseButton 2s infinite;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+@keyframes pulseButton {
+  0% { transform: scale(1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(212, 175, 55, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+}
