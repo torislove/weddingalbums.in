@@ -15,14 +15,12 @@ import OrderAlbum from './pages/OrderAlbum';
 import MuhurthamCalendar from './pages/MuhurthamCalendar';
 import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import PhotographerDashboard from './pages/PhotographerDashboard';
 import ClientProofing from './pages/ClientProofing';
 import PortalLogin from './pages/PortalLogin';
 import B2B from './pages/B2B';
 import B2C from './pages/B2C';
 import Careers from './pages/Careers';
 import Pricing from './pages/Pricing';
-import EditorDashboard from './pages/EditorDashboard';
 import AlbumsShowcase from './pages/AlbumsShowcase';
 import OrderTracking from './pages/OrderTracking';
 import BookingPage from './pages/BookingPage';
@@ -83,8 +81,6 @@ function App() {
                   <Route path="/login" element={<PortalLogin />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/order" element={<OrderAlbum />} />
-                  <Route path="/photographer" element={<PhotographerDashboard />} />
-                  <Route path="/editor" element={<EditorDashboard />} />
                   <Route path="/proofing/:id" element={<ClientProofing />} />
                   <Route path="/albums" element={<AlbumsShowcase />} />
                   <Route path="/track" element={<OrderTracking />} />

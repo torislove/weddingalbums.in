@@ -1,235 +1,342 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Camera, Users, MonitorPlay, ArrowLeft, Sparkles, Eye, EyeOff } from 'lucide-react';
+import {
+  Camera, Users, ChevronRight, ArrowLeft,
+  Mail, Lock, Eye, EyeOff, AlertCircle, Heart, Palette
+} from 'lucide-react';
 import './PortalLogin.css';
+
+const ROLE_CONFIG = {
+  b2c: {
+    label: 'Couple Access',
+    badge: '💑 Client Vault',
+    description: 'View your album designs, approve proofs and track your order.',
+    icon: Heart,
+    color: '#d4af37',
+  },
+};
 
 const PortalLogin = () => {
   const [searchParams] = useSearchParams();
   const initialRole = searchParams.get('role');
-  
-  const [role, setRole] = useState(initialRole || null);
+
   const [isRegistering, setIsRegistering] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ 
-    name: '', email: '', password: '', 
-    phone: '', city: '', studioName: '', gstNumber: '', 
-    coupleNames: '', weddingDate: '', portfolioLink: '', specialization: '' 
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '', email: '', password: '',
+    phone: '', city: '',
+    coupleNames: '', weddingDate: '',
   });
   const [error, setError] = useState('');
-  
-  const { login, register, user, loading } = useAuth();
+
+  const { login, register, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && !loading) {
-      if (user.role === 'b2b') navigate('/photographer');
-      else if (user.role === 'b2c') navigate('/order');
-      else if (user.role === 'editor') navigate('/editor');
+    if (user && !authLoading) {
+      if (user.role === 'b2c' || user.role === 'admin') navigate('/client');
     }
-  }, [user, loading, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!formData.email || !formData.password || (isRegistering && !formData.name)) {
+    if (!formData.email || !formData.password) {
       setError('Please fill out all required fields.');
       return;
     }
+    if (isRegistering && !formData.name) {
+      setError('Please enter your full name.');
+      return;
+    }
 
+    setLoading(true);
     try {
       if (isRegistering) {
-        await register({ ...formData, role });
+        await register({ ...formData, role: 'b2c' });
       } else {
         await login(formData.email, formData.password);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const renderExtraFields = () => {
-    if (!isRegistering) return null;
-
-    return (
-      <div className="premium-extra-fields">
-        <div className="form-group premium-input-group">
-          <label>Phone Number <span className="req">*</span></label>
-          <input type="tel" name="phone" required placeholder="+91 98765 43210" value={formData.phone} onChange={handleChange} />
-        </div>
-        <div className="form-group premium-input-group">
-          <label>City <span className="req">*</span></label>
-          <input type="text" name="city" required placeholder="e.g. Hyderabad" value={formData.city} onChange={handleChange} />
-        </div>
-
-        {role === 'b2b' && (
-          <>
-            <div className="form-group premium-input-group">
-              <label>Studio Name <span className="req">*</span></label>
-              <input type="text" name="studioName" required placeholder="Dream Weddings Studio" value={formData.studioName} onChange={handleChange} />
-            </div>
-            <div className="form-group premium-input-group">
-              <label>GST Number <span className="text-muted text-sm">(Optional)</span></label>
-              <input type="text" name="gstNumber" placeholder="22AAAAA0000A1Z5" value={formData.gstNumber} onChange={handleChange} />
-            </div>
-          </>
-        )}
-
-        {role === 'b2c' && (
-          <>
-            <div className="form-group premium-input-group">
-              <label>Couple Names <span className="req">*</span></label>
-              <input type="text" name="coupleNames" required placeholder="Ram & Sita" value={formData.coupleNames} onChange={handleChange} />
-            </div>
-            <div className="form-group premium-input-group">
-              <label>Wedding Date <span className="req">*</span></label>
-              <input type="date" name="weddingDate" required value={formData.weddingDate} onChange={handleChange} />
-            </div>
-          </>
-        )}
-
-        {role === 'editor' && (
-          <>
-            <div className="form-group premium-input-group">
-              <label>Portfolio Link <span className="req">*</span></label>
-              <input type="url" name="portfolioLink" required placeholder="https://behance.net/portfolio" value={formData.portfolioLink} onChange={handleChange} />
-            </div>
-            <div className="form-group premium-input-group">
-              <label>Specialization <span className="req">*</span></label>
-              <select name="specialization" required value={formData.specialization} onChange={handleChange}>
-                <option value="">Select Specialization</option>
-                <option value="Color Grading">Color Grading</option>
-                <option value="Photo Retouching">Photo Retouching</option>
-                <option value="Album Designing">Album Designing</option>
-                <option value="Video Editing">Video Editing</option>
-              </select>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  };
-
   return (
-    <div className="premium-portal-container">
-      {/* Background Ambience */}
-      <div className="ambient-orbs">
-        <div className="orb orb-1"></div>
-        <div className="orb orb-2"></div>
-      </div>
-      
-      {/* Floating Particles Overlay */}
-      <div className="gold-dust-overlay"></div>
+    <div className="cpl-root">
+      {/* ── Left Visual Panel ── */}
+      <div className="cpl-visual">
+        <div className="cpl-visual-bg" />
 
-      <div className={`premium-portal-box ${isRegistering ? 'mode-register' : 'mode-login'}`}>
-        {!role ? (
-          <div className="role-selection-view fade-in-up">
-            <div className="portal-header text-center">
-              <h1 className="liquid-gold-text display-title">Welcome to the Portal</h1>
-              <p className="portal-subtitle">Select your access level to enter the secure environment.</p>
-            </div>
-            
-            <div className="premium-role-grid">
-              <div className="premium-role-card" onClick={() => setRole('b2b')}>
-                <div className="role-card-glow"></div>
-                <div className="role-icon-wrapper">
-                  <Camera size={36} strokeWidth={1.5} />
-                </div>
-                <h3>Studio Partner</h3>
-                <p>Access your B2B dashboard to submit editing jobs and request premium album prints.</p>
-                <div className="role-select-indicator">Select Portal</div>
-              </div>
+        {/* Bokeh orbs */}
+        <div className="cpl-orbs">
+          <div className="cpl-orb" />
+          <div className="cpl-orb" />
+          <div className="cpl-orb" />
+        </div>
 
-              <div className="premium-role-card" onClick={() => setRole('b2c')}>
-                <div className="role-card-glow"></div>
-                <div className="role-icon-wrapper">
-                  <Users size={36} strokeWidth={1.5} />
-                </div>
-                <h3>Couple Access</h3>
-                <p>Enter your private vault to select photos and review your album designs.</p>
-                <div className="role-select-indicator">Select Portal</div>
-              </div>
+        <div className="cpl-visual-content">
+          {/* Brand */}
+          <div className="cpl-brand">
+            <div className="cpl-brand-dot">💍</div>
+            <span className="cpl-brand-name">WeddingAlbums.in</span>
+          </div>
 
-              <div className="premium-role-card" onClick={() => setRole('editor')}>
-                <div className="role-card-glow"></div>
-                <div className="role-icon-wrapper">
-                  <MonitorPlay size={36} strokeWidth={1.5} />
-                </div>
-                <h3>Freelance Editor</h3>
-                <p>Join our elite post-production team and claim available editing jobs.</p>
-                <div className="role-select-indicator">Select Portal</div>
-              </div>
+          {/* Tagline */}
+          <div className="cpl-tagline-block">
+            <h2>
+              Your wedding,<br />
+              <em>preserved forever.</em>
+            </h2>
+            <p>
+              Access your private vault to view proofs, approve layouts
+              and track your album from design to delivery.
+            </p>
+            <div className="cpl-divider-lines">
+              <span /><span /><span />
             </div>
           </div>
-        ) : (
-          <form className="premium-form fade-in" onSubmit={handleSubmit}>
-            <div className="form-header">
-              <button type="button" className="back-link" onClick={() => { setRole(null); setIsRegistering(false); }}>
-                <ArrowLeft size={16} /> Back to Portals
+        </div>
+      </div>
+
+      {/* ── Right Form Panel ── */}
+      <div className="cpl-form-panel">
+        <div className="cpl-form-inner">
+          {/* Auth Form — B2C only */}
+          <div className="cpl-auth-screen">
+
+            {/* Back to site link */}
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <button className="cpl-back-btn" type="button">
+                <ArrowLeft size={14} /> Back to website
               </button>
-              <div className="form-title-wrapper">
-                <Sparkles className="title-icon" size={24} />
-                <h2 className="liquid-gold-text">
-                  {isRegistering ? 'Create Account' : 'Secure Login'}
-                </h2>
+            </Link>
+
+            <div className="cpl-auth-header">
+              <div className="cpl-portal-badge">
+                <Heart size={12} /> Client Portal
               </div>
-              <p className="role-badge">
-                {role === 'b2b' && 'Studio Partner Portal'}
-                {role === 'b2c' && 'Client Vault Portal'}
-                {role === 'editor' && 'Freelancer Portal'}
+              <h2>{isRegistering ? 'Create Your Vault' : 'Welcome Back'}</h2>
+              <p>
+                {isRegistering
+                  ? 'Set up your account to access your wedding album journey.'
+                  : 'Sign in to view your album proofs and order status.'}
               </p>
             </div>
-            
-            {error && <div className="premium-error-banner">{error}</div>}
 
-            <div className="form-fields-container">
+            {/* Login / Register tabs */}
+            <div className="cpl-tabs">
+              <button
+                type="button"
+                className={`cpl-tab${!isRegistering ? ' active' : ''}`}
+                onClick={() => { setIsRegistering(false); setError(''); }}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                className={`cpl-tab${isRegistering ? ' active' : ''}`}
+                onClick={() => { setIsRegistering(true); setError(''); }}
+              >
+                Create Account
+              </button>
+            </div>
+
+            {error && (
+              <div className="cpl-error">
+                <AlertCircle size={16} />
+                {error}
+              </div>
+            )}
+
+            <form className="cpl-form" onSubmit={handleSubmit}>
               {isRegistering && (
-                <div className="form-group premium-input-group">
-                  <label>Full Name / Contact Person <span className="req">*</span></label>
-                  <input type="text" name="name" required placeholder="Your Name" value={formData.name} onChange={handleChange} />
+                <div className="cpl-field">
+                  <label className="cpl-label">Full Name <span className="req">*</span></label>
+                  <div className="cpl-input-wrap">
+                    <Users size={16} />
+                    <input
+                      className="cpl-input"
+                      type="text"
+                      name="name"
+                      required
+                      placeholder="e.g. Priya Sharma"
+                      value={formData.name}
+                      onChange={handleChange}
+                      autoComplete="name"
+                    />
+                  </div>
                 </div>
               )}
-              
-              <div className="form-group premium-input-group">
-                <label>Email Address <span className="req">*</span></label>
-                <input type="email" name="email" required placeholder="hello@example.com" value={formData.email} onChange={handleChange} />
+
+              <div className="cpl-field">
+                <label className="cpl-label">Email Address <span className="req">*</span></label>
+                <div className="cpl-input-wrap">
+                  <Mail size={16} />
+                  <input
+                    className="cpl-input"
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="hello@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                  />
+                </div>
               </div>
 
-              <div className="form-group premium-input-group">
-                <label>Password <span className="req">*</span></label>
-                <div style={{ position: 'relative' }}>
-                  <input type={showPassword ? 'text' : 'password'} name="password" required placeholder="••••••••" value={formData.password} onChange={handleChange} style={{ width: '100%', paddingRight: '40px' }} />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#A0A0A0', cursor: 'pointer', padding: 0 }}>
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              <div className="cpl-field">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label className="cpl-label">Password <span className="req">*</span></label>
+                  {!isRegistering && (
+                    <Link to="/forgot-password" style={{ fontSize: '0.78rem', color: '#d4af37', textDecoration: 'none' }}>
+                      Forgot password?
+                    </Link>
+                  )}
+                </div>
+                <div className="cpl-input-wrap">
+                  <Lock size={16} />
+                  <input
+                    className="cpl-input"
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    required
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    autoComplete={isRegistering ? 'new-password' : 'current-password'}
+                    style={{ paddingRight: '44px' }}
+                  />
+                  <button
+                    type="button"
+                    className="cpl-eye-btn"
+                    onClick={() => setShowPassword(v => !v)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
 
-              {renderExtraFields()}
+              {/* Extra fields on register */}
+              {isRegistering && (
+                <>
+                  <div className="cpl-extra-divider" />
+                  <div className="cpl-field-grid">
+                    <div className="cpl-field">
+                      <label className="cpl-label">Couple Names <span className="req">*</span></label>
+                      <div className="cpl-input-wrap">
+                        <Heart size={16} />
+                        <input
+                          className="cpl-input"
+                          type="text"
+                          name="coupleNames"
+                          required
+                          placeholder="Ram & Sita"
+                          value={formData.coupleNames}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="cpl-field">
+                      <label className="cpl-label">Wedding Date <span className="req">*</span></label>
+                      <div className="cpl-input-wrap">
+                        <input
+                          className="cpl-input"
+                          style={{ paddingLeft: '14px' }}
+                          type="date"
+                          name="weddingDate"
+                          required
+                          value={formData.weddingDate}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="cpl-field">
+                      <label className="cpl-label">Phone Number</label>
+                      <div className="cpl-input-wrap">
+                        <input
+                          className="cpl-input"
+                          style={{ paddingLeft: '14px' }}
+                          type="tel"
+                          name="phone"
+                          placeholder="+91 98765 43210"
+                          value={formData.phone}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="cpl-field">
+                      <label className="cpl-label">City</label>
+                      <div className="cpl-input-wrap">
+                        <input
+                          className="cpl-input"
+                          style={{ paddingLeft: '14px' }}
+                          type="text"
+                          name="city"
+                          placeholder="Hyderabad"
+                          value={formData.city}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <button
+                type="submit"
+                className="cpl-submit"
+                disabled={loading}
+                style={{ marginTop: '8px' }}
+              >
+                {loading
+                  ? (isRegistering ? 'Creating Account…' : 'Signing in…')
+                  : (isRegistering ? 'Enter Your Vault' : 'Sign In')}
+              </button>
+            </form>
+
+            <div className="cpl-switch">
+              {isRegistering ? 'Already have an account?' : "Don't have an account?"}
+              <button
+                type="button"
+                onClick={() => { setIsRegistering(v => !v); setError(''); }}
+              >
+                {isRegistering ? 'Sign in' : 'Register here'}
+              </button>
             </div>
 
-            <div className="form-actions-wrapper">
-              <button type="submit" className="liquid-gold-button">
-                <span className="btn-text">{isRegistering ? 'Enter Portal' : 'Authenticate'}</span>
-                <span className="btn-shimmer"></span>
-              </button>
-
-              <div className="auth-switch">
-                <span className="text-muted">
-                  {isRegistering ? 'Already have access? ' : "Need to request access? "}
-                </span>
-                <button type="button" className="text-gold-link" onClick={() => setIsRegistering(!isRegistering)}>
-                  {isRegistering ? 'Login here' : 'Register here'}
-                </button>
+            {/* Redirect hints for other portals */}
+            <div style={{ marginTop: '40px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '600' }}>Other Portals</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <a href="http://localhost:5174" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.35)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#d4af37'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
+                >
+                  <Camera size={14} /> Photographer Studio Portal
+                </a>
+                <a href="http://localhost:5175" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.35)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#818cf8'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
+                >
+                  <Palette size={14} /> Editor &amp; Creator Portal
+                </a>
               </div>
             </div>
-          </form>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

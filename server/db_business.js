@@ -129,6 +129,25 @@ db.exec(`
     updatedAt TEXT
   );
 
+  CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    token_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    revoked INTEGER DEFAULT 0,
+    created_at TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS audit_logs (
+    id TEXT PRIMARY KEY,
+    user_id TEXT,
+    action TEXT NOT NULL,
+    resource TEXT,
+    details TEXT,
+    ip TEXT,
+    created_at TEXT
+  );
+
   CREATE TABLE IF NOT EXISTS contact_leads (
     id TEXT PRIMARY KEY,
     name TEXT,
@@ -375,6 +394,11 @@ export const User = {
     const stmt = db.prepare('SELECT COUNT(*) as count FROM users');
     const res = stmt.get();
     return res ? Number(res.count) : 0;
+  },
+
+  async updateWalletBalance(id, amountToAdd) {
+    const stmt = db.prepare('UPDATE users SET wallet_balance = wallet_balance + ?, updatedAt = ? WHERE id = ?');
+    stmt.run(amountToAdd, nowIso(), id);
   }
 };
 
@@ -388,6 +412,49 @@ export const PayoutRequest = {
     `);
     stmt.run(id, String(data.user_id), Number(data.amount), data.status || 'Pending', now, now);
     return { id, _id: id, ...data, createdAt: now, updatedAt: now };
+  }
+};
+
+export const RefreshToken = {
+  async create(data) {
+    const id = generateId();
+    const now = nowIso();
+    const stmt = db.prepare(`
+      INSERT INTO refresh_tokens (id, user_id, token_hash, expires_at, revoked, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    stmt.run(id, String(data.user_id), data.token_hash, data.expires_at, 0, now);
+    return { id, _id: id, ...data, created_at: now };
+  },
+  async findOne(filter = {}) {
+    if (filter.token_hash) {
+      const stmt = db.prepare('SELECT * FROM refresh_tokens WHERE token_hash = ? AND revoked = 0 LIMIT 1');
+      return stmt.get(filter.token_hash);
+    }
+    return null;
+  },
+  async revoke(token_hash) {
+    const stmt = db.prepare('UPDATE refresh_tokens SET revoked = 1 WHERE token_hash = ?');
+    stmt.run(token_hash);
+  }
+};
+
+export const AuditLog = {
+  async create(data) {
+    const id = generateId();
+    const now = nowIso();
+    const stmt = db.prepare(`
+      INSERT INTO audit_logs (id, user_id, action, resource, details, ip, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+    stmt.run(id, data.user_id || null, data.action, data.resource || null, data.details || null, data.ip || null, now);
+    return { id, _id: id, ...data, created_at: now };
+  },
+  find() {
+    return new Query(() => {
+      const stmt = db.prepare('SELECT * FROM audit_logs ORDER BY created_at DESC');
+      return stmt.all();
+    });
   }
 };
 
@@ -423,6 +490,10 @@ export const Package = {
       const rows = stmt.all(...params);
       return rows.map(formatPackage);
     });
+  },
+
+  async findAll(filter = {}) {
+    return this.find(filter);
   },
 
   async findById(id) {
@@ -562,12 +633,31 @@ export const Config = {
 };
 
 export const Order = {
-  find() {
+  find(filter = {}) {
     return new Query(() => {
       const stmt = db.prepare('SELECT * FROM orders ORDER BY createdAt DESC');
       const rows = stmt.all();
-      return rows.map(formatJsonDoc);
+      const docs = rows.map(formatJsonDoc);
+      if (filter.user_id) {
+        return docs.filter(d => d.user_id === filter.user_id || d.userId === filter.user_id);
+      }
+      return docs;
     });
+  },
+
+  async findAll(filter = {}) {
+    return this.find(filter);
+  },
+
+  async findById(id) {
+    const stmt = db.prepare('SELECT * FROM orders WHERE id = ? LIMIT 1');
+    const row = stmt.get(id);
+    return row ? formatJsonDoc(row) : null;
+  },
+
+  async findOne(filter = {}) {
+    const docs = await this.find(filter);
+    return docs[0] || null;
   },
 
   async create(data) {
@@ -664,6 +754,9 @@ export const Service = {
       const rows = db.prepare('SELECT * FROM services ORDER BY category, name').all();
       return rows.map(r => ({ ...r, _id: r.id }));
     });
+  },
+  async findAll() {
+    return this.find();
   },
   async create(data) {
     const id = generateId();
@@ -804,7 +897,7 @@ export async function autoSeedDatabase() {
       }
       console.log('✅ SQLite: Initial services seeded successfully');
     } else {
-      seededServices = (await Service.find())._executor();
+      seededServices = await Service.find();
     }
 
     // 3. Seed Packages if empty

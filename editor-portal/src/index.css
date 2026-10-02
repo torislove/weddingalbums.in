@@ -165,6 +165,27 @@ body {
 .badge-available { background: rgba(99, 102, 241, 0.1); color: #818cf8; }
 .badge-working { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
 
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+.form-control {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
 /* Mobile Responsiveness & 3D UI Enhancements */
 @media (max-width: 768px) {
   .app-layout {

@@ -8,7 +8,7 @@ const ALBUM_TYPES = [
     id: 'acrylic',
     name: 'Premium Acrylic Cover',
     desc: 'Crystal clear glass-like finish that makes colors pop. Edge-to-edge printing for a modern look.',
-    img: 'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800',
+    img: '/images/weddingalbums-layflat-album.png',
     tags: ['Best Seller', 'Modern']
   },
   {

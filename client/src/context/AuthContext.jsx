@@ -8,13 +8,21 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Validate on mount or refresh
   useEffect(() => {
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     
     if (token && savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        // Only allow b2c customers on this portal
+        if (parsedUser.role === 'b2c' || parsedUser.role === 'admin') {
+          setUser(parsedUser);
+        } else {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
       } catch (e) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -25,16 +33,22 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch(`${API}/api/login`, {
+      // Include credentials to send HttpOnly cookies for refresh token
+      const res = await fetch(`${API}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        credentials: 'include',
+        body: JSON.stringify({ email, password, portalRole: 'b2c' })
       });
       
       const data = await res.json();
       
       if (!res.ok) {
         throw new Error(data.error || 'Login failed');
+      }
+
+      if (data.user.role !== 'b2c' && data.user.role !== 'admin') {
+         throw new Error('Access denied to customer portal');
       }
 
       localStorage.setItem('token', data.token);
@@ -48,10 +62,11 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const res = await fetch(`${API}/api/register`, {
+      const res = await fetch(`${API}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
+        credentials: 'include',
+        body: JSON.stringify({ ...userData, role: 'b2c' })
       });
       
       const data = await res.json();
@@ -69,14 +84,34 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+    } catch (e) {}
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
   };
 
+  const refreshToken = async () => {
+    try {
+      const res = await fetch(`${API}/api/auth/refresh`, { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (res.ok && data.token) {
+        localStorage.setItem('token', data.token);
+        return data.token;
+      } else {
+        logout();
+        return null;
+      }
+    } catch (err) {
+      logout();
+      return null;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshToken }}>
       {!loading && children}
     </AuthContext.Provider>
   );

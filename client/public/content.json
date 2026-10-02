@@ -8,7 +8,7 @@
           "eyebrow": "✦ 100% IN-HOUSE POST-PRODUCTION ✦",
           "title": "The Cinematic Engine",
           "subtitle": "We are your ultimate post-production partners. We handle high-end photo retouching, video editing, and premium album designing.",
-          "bgImage": "/kalamkari-bg.jpg"
+          "bgImage": "/images/weddingalbums-home-hero.png"
         }
       },
       {
@@ -68,7 +68,7 @@
           "btn1Link": "/login?role=b2b",
           "btn2Text": "I am a Couple",
           "btn2Link": "/login?role=b2c",
-          "bgImage": "/kalamkari-bg.jpg"
+          "bgImage": "/images/weddingalbums-home-hero.png"
         }
       },
       {
@@ -171,7 +171,7 @@
           ],
           "btnText": "Read Our Story",
           "btnLink": "/about",
-          "image": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=900"
+          "image": "/images/weddingalbums-talambralu.png"
         }
       },
       {
@@ -277,22 +277,22 @@
           "btnLink": "/portfolio",
           "images": [
             {
-              "img": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=1200",
+              "img": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800",
               "tag": "wedding",
-              "title": "Traditional Pelli",
+              "title": "Sacred Muhurtham",
               "location": "Vijayawada · విజయవాడ"
             },
             {
-              "img": "https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=800",
-              "tag": "prewedding",
-              "title": "Araku Valley",
-              "location": "Vizag · విశాఖపట్నం"
+              "img": "https://images.unsplash.com/photo-1605663737330-9b63a9cf3181?auto=format&fit=crop&q=80&w=800",
+              "tag": "half-saree",
+              "title": "Langa Voni Ceremony",
+              "location": "Rajahmundry · రాజమహేంద్రి"
             },
             {
-              "img": "https://images.unsplash.com/photo-1530103862676-de8892b125f4?auto=format&fit=crop&q=80&w=800",
-              "tag": "birthday",
-              "title": "Grand 1st Birthday",
-              "location": "Guntur · గుంటూరు"
+              "img": "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800",
+              "tag": "corporate",
+              "title": "Grand Corporate Gala",
+              "location": "Vizag · విశాఖపట్నం"
             }
           ]
         }
@@ -441,25 +441,25 @@
       ]
     },
     "siteImages": {
-      "servicesHeroImage": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=2000",
-      "portfolioHeroImage": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=2000",
-      "b2cHeroImage": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000",
-      "flipbookCoverImage": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800",
-      "flipbookBackCoverImage": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800",
+      "servicesHeroImage": "/images/weddingalbums-home-hero.png",
+      "portfolioHeroImage": "/images/weddingalbums-layflat-album.png",
+      "b2cHeroImage": "/images/weddingalbums-home-hero.png",
+      "flipbookCoverImage": "/images/weddingalbums-layflat-album.png",
+      "flipbookBackCoverImage": "/images/weddingalbums-layflat-album.png",
       "careersImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
       "b2cGalleryImages": [
-        { "image": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800", "alt": "Wedding Couple" },
-        { "image": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800", "alt": "Rings" },
+        { "image": "/images/weddingalbums-talambralu.png", "alt": "Telugu wedding couple during Talambralu" },
+        { "image": "/images/weddingalbums-layflat-album.png", "alt": "Premium layflat wedding album" },
         { "image": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", "alt": "Venue" },
-        { "image": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800", "alt": "Album Spread" },
+        { "image": "/images/weddingalbums-layflat-album.png", "alt": "Premium wedding album spread" },
         { "image": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800", "alt": "Details" },
         { "image": "https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80&w=800", "alt": "Decor" }
       ],
       "b2cFlipbookImages": [
-        "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600",
-        "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=600"
+        "/images/weddingalbums-layflat-album.png",
+        "/images/weddingalbums-talambralu.png",
+        "/images/prewedding.jpg",
+        "/images/weddingalbums-home-hero.png"
       ],
       "clientProofingImages": [
         "https://images.unsplash.com/photo-1544641979-51478546b3f7",
@@ -467,10 +467,10 @@
         "https://images.unsplash.com/photo-1511285560929-80b456fea0bc"
       ],
       "portfolioItems": [
-        { "id": 1, "category": "wedding", "title": "Sacred Muhurtham", "city": "Vijayawada", "cityTel": "విజయవాడ", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=900" },
+        { "id": 1, "category": "wedding", "title": "Sacred Muhurtham", "city": "Vijayawada", "cityTel": "విజయవాడ", "tag": "tag-wedding", "image": "/images/weddingalbums-talambralu.png" },
         { "id": 2, "category": "pre-wedding", "title": "Araku Valley Romance", "city": "Vizag", "cityTel": "విశాఖపట్నం", "tag": "tag-prewedding", "image": "https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=900" },
-        { "id": 3, "category": "albums", "title": "Karizma Album Design", "city": "Guntur", "cityTel": "గుంటూరు", "tag": "tag-album", "image": "https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=900" },
-        { "id": 4, "category": "wedding", "title": "Talambralu Ritual", "city": "Tirupati", "cityTel": "తిరుపతి", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1621886292650-520f76c747d6?auto=format&fit=crop&q=80&w=900" },
+        { "id": 3, "category": "albums", "title": "Karizma Album Design", "city": "Guntur", "cityTel": "గుంటూరు", "tag": "tag-album", "image": "/images/weddingalbums-layflat-album.png" },
+        { "id": 4, "category": "wedding", "title": "Talambralu Ritual", "city": "Tirupati", "cityTel": "తిరుపతి", "tag": "tag-wedding", "image": "/images/weddingalbums-talambralu.png" },
         { "id": 5, "category": "half-saree", "title": "Langa Voni Ceremony", "city": "Rajahmundry", "cityTel": "రాజమహేంద్రి", "tag": "tag-halfsaree", "image": "https://images.unsplash.com/photo-1583391733958-d25e07fac662?auto=format&fit=crop&q=80&w=900" },
         { "id": 6, "category": "birthday", "title": "Grand 1st Birthday", "city": "Hyderabad", "cityTel": "హైదరాబాద్", "tag": "tag-birthday", "image": "https://images.unsplash.com/photo-1530103862676-de8892b125f4?auto=format&fit=crop&q=80&w=900" },
         { "id": 7, "category": "wedding", "title": "Mangala Snanam", "city": "Kurnool", "cityTel": "కర్నూలు", "tag": "tag-wedding", "image": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=900" },

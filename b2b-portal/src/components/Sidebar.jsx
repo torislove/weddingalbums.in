@@ -9,7 +9,8 @@ import {
   Wallet, 
   ShoppingBag,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  BarChart3
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -22,6 +23,7 @@ const Sidebar = () => {
     { name: 'Invoices', path: '/invoices', icon: FileText },
     { name: 'My Team', path: '/team', icon: Users },
     { name: 'Wallet & Payouts', path: '/wallet', icon: Wallet },
+    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
     { name: 'SLA Guarantees', path: '/sla', icon: Clock },
   ];
 
