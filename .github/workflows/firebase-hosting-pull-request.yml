@@ -13,7 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Dependencies
+        run: |
+          cd client && npm install --no-audit && cd ..
+          cd b2b-portal && npm install --no-audit && cd ..
+          cd editor-portal && npm install --no-audit && cd ..
+          cd sysadmin && npm install --no-audit && cd ..
+          cd uiadmin && npm install --no-audit && cd ..
+      - name: Build All Frontends
+        run: node build-all-unified.mjs
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
