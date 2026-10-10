@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileType, CheckCircle, ChevronRight, HardDrive, Video, BookOpen, Layers, UploadCloud, Film } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 const SubmitJob = () => {
   const [step, setStep] = useState(1);

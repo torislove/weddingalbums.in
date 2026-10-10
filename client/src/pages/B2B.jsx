@@ -5,7 +5,7 @@ import BeforeAfter from '../components/BeforeAfter';
 import { UploadCloud, Scissors, BookOpen, Truck, CheckCircle2, Layers, ShieldCheck, Star } from 'lucide-react';
 import './B2B.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 
 const B2B = () => {

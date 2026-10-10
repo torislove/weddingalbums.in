@@ -16,51 +16,149 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "hosting": {
-    "public": "dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/api/**",
-        "function": {
-          "functionId": "api"
+  "hosting": [
+    {
+      "target": "client",
+      "public": "client/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+        {
+          "source": "/studio{,/**}",
+          "destination": "https://weddingalbums-studio.web.app",
+          "type": 302
+        },
+        {
+          "source": "/creator{,/**}",
+          "destination": "https://weddingalbums-editor.web.app",
+          "type": 302
+        },
+        {
+          "source": "/editor{,/**}",
+          "destination": "https://weddingalbums-editor.web.app",
+          "type": 302
+        },
+        {
+          "source": "/ops{,/**}",
+          "destination": "https://weddingalbums-sysadmin.web.app",
+          "type": 302
+        },
+        {
+          "source": "/cms{,/**}",
+          "destination": "https://weddingalbums-uiadmin.web.app",
+          "type": 302
         }
-      },
-      {
-        "source": "/studio/**",
-        "destination": "/studio/index.html"
-      },
-      {
-        "source": "/creator/**",
-        "destination": "/creator/index.html"
-      },
-      {
-        "source": "/ops/**",
-        "destination": "/ops/index.html"
-      },
-      {
-        "source": "/cms/**",
-        "destination": "/cms/index.html"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "/firebase-messaging-sw.js",
-        "headers": [
-          {
-            "key": "Service-Worker-Allowed",
-            "value": "/"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": {
+            "functionId": "api"
           }
-        ]
-      }
-    ]
-  }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "/firebase-messaging-sw.js",
+          "headers": [
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "studio",
+      "public": "b2b-portal/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": {
+            "functionId": "api"
+          }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "editor",
+      "public": "editor-portal/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": {
+            "functionId": "api"
+          }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "sysadmin",
+      "public": "sysadmin/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": {
+            "functionId": "api"
+          }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "uiadmin",
+      "public": "uiadmin/dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": {
+            "functionId": "api"
+          }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
 }

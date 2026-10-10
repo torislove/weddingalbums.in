@@ -1,5 +1,27 @@
 {
   "projects": {
     "default": "weddingalbums-b4bcd"
-  }
+  },
+  "targets": {
+    "weddingalbums-b4bcd": {
+      "hosting": {
+        "client": [
+          "weddingalbums-b4bcd"
+        ],
+        "studio": [
+          "weddingalbums-studio"
+        ],
+        "editor": [
+          "weddingalbums-editor"
+        ],
+        "sysadmin": [
+          "weddingalbums-sysadmin"
+        ],
+        "uiadmin": [
+          "weddingalbums-uiadmin"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

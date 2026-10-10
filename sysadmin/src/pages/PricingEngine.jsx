@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Plus, Edit2, Trash2, Tag, Save, X, EyeOff, Layers, Settings, Image as ImageIcon } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 const PricingEngine = () => {
   const [activeTab, setActiveTab] = useState('services'); // services, sheets, packages

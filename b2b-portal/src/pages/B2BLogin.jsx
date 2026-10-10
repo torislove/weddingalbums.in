@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, MessageCircle, ArrowRight, AlertCircle, Camera, ChevronLeft } from 'lucide-react';
 import Logo from '../components/Logo';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 /* ── Inline CSS-in-JS styles for self-contained premium design ── */
 const S = {

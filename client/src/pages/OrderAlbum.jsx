@@ -5,7 +5,7 @@ import LoginModal from '../components/LoginModal';
 import { ShoppingCart, CheckCircle2, Package, Image, Video, UploadCloud, Truck, MonitorPlay, Printer, Film, Palette } from 'lucide-react';
 import './OrderAlbum.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 const OrderAlbum = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   Camera, Users, ChevronRight, ArrowLeft,
   Mail, Lock, Eye, EyeOff, AlertCircle, Heart, Palette,
-  Phone, KeyRound, CheckCircle2, X, RefreshCw
+  Phone, KeyRound, CheckCircle2, X, RefreshCw, Shield, Sliders
 } from 'lucide-react';
 import './PortalLogin.css';
 
@@ -603,18 +603,34 @@ const PortalLogin = () => {
             {/* Other Portals Links */}
             <div style={{ marginTop: '40px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '600' }}>Other Portals</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <a href="http://localhost:5174" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.35)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+                <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-studio.web.app' : 'http://localhost:5174'} 
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => e.currentTarget.style.color = '#d4af37'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
                 >
-                  <Camera size={14} /> Photographer Studio Portal
+                  <Camera size={14} /> Studio Portal
                 </a>
-                <a href="http://localhost:5175" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.35)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-editor.web.app' : 'http://localhost:5175'} 
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => e.currentTarget.style.color = '#818cf8'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
                 >
-                  <Palette size={14} /> Editor &amp; Creator Portal
+                  <Palette size={14} /> Editor Portal
+                </a>
+                <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-sysadmin.web.app' : 'http://localhost:5176'} 
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#38bdf8'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+                >
+                  <Shield size={14} /> Operations Panel
+                </a>
+                <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-uiadmin.web.app' : 'http://localhost:4001'} 
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#f59e0b'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+                >
+                  <Sliders size={14} /> CMS Admin
                 </a>
               </div>
             </div>

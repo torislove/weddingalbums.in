@@ -3,7 +3,7 @@
  * Automatically attaches the Bearer token and handles 401 → refresh flow.
  */
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const BASE = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 const getToken = () => localStorage.getItem('token');
 

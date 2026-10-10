@@ -15,7 +15,7 @@ const OrderHistory = () => {
     try {
       // In real implementation, this would fetch specific user orders: /api/client/orders
       // For now we'll simulate fetching from generic orders API and filtering
-      const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       const res = await fetch(`${API}/api/orders`);
       const data = await res.json();
       
@@ -73,7 +73,7 @@ const OrderHistory = () => {
 
               <div style={{ marginTop: '20px', display: 'flex', gap: '15px' }}>
                 <a 
-                  href={`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/orders/${order._id || order.id}/invoice`} 
+                  href={`${(typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'))}/api/orders/${order._id || order.id}/invoice`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="btn btn-outline"
