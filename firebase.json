@@ -1,0 +1,66 @@
+{
+  "functions": [
+    {
+      "source": "server",
+      "codebase": "server",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "uploads"
+      ]
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "function": {
+          "functionId": "api"
+        }
+      },
+      {
+        "source": "/studio/**",
+        "destination": "/studio/index.html"
+      },
+      {
+        "source": "/creator/**",
+        "destination": "/creator/index.html"
+      },
+      {
+        "source": "/ops/**",
+        "destination": "/ops/index.html"
+      },
+      {
+        "source": "/cms/**",
+        "destination": "/cms/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/firebase-messaging-sw.js",
+        "headers": [
+          {
+            "key": "Service-Worker-Allowed",
+            "value": "/"
+          }
+        ]
+      }
+    ]
+  }
+}

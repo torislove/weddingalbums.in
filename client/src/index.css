@@ -178,6 +178,12 @@ h3 { font-size: 1.15rem; }
 .grid-3 { grid-template-columns: 1fr; }
 .grid-4 { grid-template-columns: 1fr; }
 
+@media (max-width: 639px) {
+  .grid { gap: 1.25rem; } /* Tighter gap on mobile */
+  .section { padding: 3rem 0; }
+  .container { padding: 0 1.25rem; }
+}
+
 @media (min-width: 640px) {
   .grid-2 { grid-template-columns: repeat(2, 1fr); }
 }
@@ -246,13 +252,14 @@ h3 { font-size: 1.15rem; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.8rem;
-  border-radius: 50px;
-  font-weight: 800;
+  gap: 0.5rem; /* 8px */
+  height: 48px; /* Strict 48px height to match inputs exactly */
+  padding: 0 1.8rem;
+  border-radius: 8px; /* Changed from 50px to 8px to match inputs perfectly */
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-size: 0.8rem;
+  letter-spacing: 0.05em; /* Optical spacing */
+  font-size: 0.875rem; /* 14px */
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: none;
@@ -569,36 +576,46 @@ h3 { font-size: 1.15rem; }
 }
 
 /* ============================================================
-   GLOBAL FORM STYLES
+   GLOBAL FORM STYLES (Pixel Perfect Alignment)
    ============================================================ */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
+  gap: 0.5rem; /* Exactly 8px */
+  margin-bottom: 1.5rem; /* Exactly 24px */
 }
 
 .form-label {
   color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  padding-left: 0.125rem; /* Optical alignment with input text */
 }
 
 .form-input, .form-select, .form-textarea {
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 1rem;
-  border-radius: 10px;
+  height: 48px; /* Strict 48px height */
+  padding: 0 1rem;
+  border-radius: 8px; /* Standardized 8px radius */
   color: white;
   outline: none;
   width: 100%;
   font-family: inherit;
+  font-size: 0.95rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.form-textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 1rem;
+}
+
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
 }
 
 .form-select {
@@ -606,8 +623,8 @@ h3 { font-size: 1.15rem; }
   appearance: none;
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23D4AF37%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
   background-repeat: no-repeat, repeat;
-  background-position: right .7em top 50%, 0 0;
-  background-size: .65em auto, 100%;
+  background-position: right 1rem center, 0 0;
+  background-size: 0.65em auto, 100%;
 }
 
 .form-select option {

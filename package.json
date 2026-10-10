@@ -1,0 +1,27 @@
+{
+  "name": "weddingalbums-platform",
+  "version": "2.1.0",
+  "private": true,
+  "description": "WeddingAlbums.in - Enterprise Multi-Portal Post-Production Platform",
+  "scripts": {
+    "build": "node build-all-unified.mjs",
+    "build:all": "node build-all-unified.mjs",
+    "build:client": "npm --prefix client run build",
+    "deploy": "npm run build && firebase deploy --force",
+    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "start": "npm --prefix server start",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "dev": "powershell -ExecutionPolicy Bypass -File ./start-all.ps1",
+    "install:all": "powershell -ExecutionPolicy Bypass -File ./install-all.ps1"
+  },
+  "keywords": [
+    "weddingalbums",
+    "photography",
+    "album-design",
+    "firebase"
+  ],
+  "author": "WeddingAlbums.in",
+  "license": "UNLICENSED"
+}

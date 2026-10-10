@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PenTool, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight, FileText, Image, Settings } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API = import.meta.env.VITE_API_URL || '';
 
 /* ── Typewriter hook ── */
 const useTypewriter = (text, speed = 55) => {

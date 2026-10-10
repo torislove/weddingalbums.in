@@ -191,6 +191,15 @@ const ClientDashboard = () => {
       <main className="cdash-main">
         {isHome ? (
           <>
+            {user?.isGuest && (
+              <div style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', padding: '12px 16px', borderRadius: '12px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: '#d4af37' }}>
+                  <strong>Guest Mode Active:</strong> You are viewing a demo of the client dashboard.
+                </span>
+                <Link to="/login" style={{ fontSize: '0.8rem', color: '#fff', background: '#d4af37', padding: '6px 12px', borderRadius: '6px', textDecoration: 'none', fontWeight: 600 }}>Sign In</Link>
+              </div>
+            )}
+            
             {/* Page Header */}
             <div className="cdash-page-header">
               <div className="overline">Client Portal</div>

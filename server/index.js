@@ -23,13 +23,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || process.env.SERVER_PORT || 4000;
 
 // =======================
 // SECURITY & MIDDLEWARE
 // =======================
 const allowedOrigins = [
   'https://weddingalbums.in',
+  'https://weddingalbums-b4bcd.web.app',
+  'https://weddingalbums-b4bcd.firebaseapp.com',
   'https://studio.weddingalbums.in',
   'https://creator.weddingalbums.in',
   'https://ops.weddingalbums.in',
@@ -39,9 +41,20 @@ const allowedOrigins = [
   'http://localhost:5175',
   'http://localhost:5176',
   'http://localhost:5177',
+  'http://localhost:4000',
+  'http://localhost:4001',
 ];
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.web.app') || origin.endsWith('.firebaseapp.com')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS policy'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: false }));
@@ -73,11 +86,33 @@ app.use('/api/public', publicRouter);
 app.use('/api', contentRouter);
 app.use('/api', publicRouter);
 
+import { onRequest } from 'firebase-functions/v2/https';
+
 // =======================
-// START SERVER
+// START SERVER / EXPORT CLOUD FUNCTION
 // =======================
 await initDatabase();
 
-app.listen(PORT, () => {
-  console.log(`Clean Server running on http://localhost:${PORT}`);
-});
+// Export as Firebase 2nd-gen Cloud Function for serverless deployment
+export const api = onRequest({
+  cors: true,
+  memory: '512MiB',
+  timeoutSeconds: 60,
+  maxInstances: 10
+}, app);
+
+// Run local HTTP server only if executed standalone (not inside Firebase Functions runner)
+const isCloudFunction = Boolean(
+  process.env.FUNCTION_TARGET ||
+  process.env.FIREBASE_CONFIG ||
+  process.env.FUNCTIONS_EMULATOR ||
+  process.env.K_SERVICE ||
+  process.env.FUNCTION_NAME
+);
+
+if (!isCloudFunction) {
+  const standalonePort = process.env.SERVER_PORT || 4000;
+  app.listen(standalonePort, () => {
+    console.log(`Clean Server running on http://localhost:${standalonePort}`);
+  });
+}

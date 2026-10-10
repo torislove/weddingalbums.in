@@ -4,7 +4,9 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 import { User, RefreshToken, AuditLog } from '../db.js';
-import { loginRateLimiter } from '../middleware/rateLimit.js';
+import { loginRateLimiter, otpRateLimiter } from '../middleware/rateLimit.js';
+import { sendEmailOtp, sendPhoneOtp, verifyOtp } from '../otpService.js';
+import { verifyFirebaseToken } from '../firebaseAdmin.js';
 
 dotenv.config();
 
@@ -211,6 +213,235 @@ router.post('/logout', async (req, res) => {
   
   res.clearCookie('refreshToken');
   res.json({ success: true, message: 'Logged out successfully' });
+});
+
+// ==========================================
+// OTP & FIREBASE AUTHENTICATION ENDPOINTS
+// ==========================================
+
+// Send OTP to email or phone
+router.post('/send-otp', otpRateLimiter, async (req, res) => {
+  const { target, type = 'email', purpose = 'login' } = req.body;
+  if (!target) return res.status(400).json({ error: 'Target email or phone number is required' });
+
+  try {
+    if (purpose === 'forgot_password') {
+      const user = await User.findOne({ email: target });
+      if (!user) {
+        return res.status(404).json({ error: 'No account registered with this email address' });
+      }
+    }
+
+    if (type === 'email') {
+      const result = await sendEmailOtp(target, purpose);
+      return res.json({ success: true, message: 'Verification code sent to email', ...result });
+    } else {
+      const result = await sendPhoneOtp(target, purpose);
+      return res.json({ success: true, message: 'Verification code sent to phone', ...result });
+    }
+  } catch (err) {
+    console.error('send-otp error:', err);
+    res.status(500).json({ error: 'Failed to send verification code' });
+  }
+});
+
+// Verify OTP
+router.post('/verify-otp', async (req, res) => {
+  const { target, code, purpose = 'login' } = req.body;
+  if (!target || !code) return res.status(400).json({ error: 'Target and verification code are required' });
+
+  const result = verifyOtp(target, code, purpose);
+  if (!result.valid) {
+    return res.status(400).json({ error: result.error });
+  }
+  res.json({ success: true, message: 'Verification successful' });
+});
+
+// Login via Email OTP or Phone OTP
+router.post('/login-with-otp', loginRateLimiter, async (req, res) => {
+  const { target, code, portalRole } = req.body;
+  if (!target || !code) return res.status(400).json({ error: 'Target and verification code are required' });
+
+  const verification = verifyOtp(target, code, 'login');
+  if (!verification.valid) {
+    return res.status(400).json({ error: verification.error });
+  }
+
+  try {
+    let user = await User.findOne({ email: target });
+    if (!user) {
+      user = await User.findOne({ phone: target });
+    }
+
+    // Auto-create client user if logging into client portal
+    if (!user) {
+      const isEmail = target.includes('@');
+      user = await User.create({
+        name: isEmail ? target.split('@')[0] : `User ${target.slice(-4)}`,
+        email: isEmail ? target : `${target.replace(/[^0-9]/g, '')}@phone.weddingalbums.in`,
+        phone: !isEmail ? target : null,
+        password: await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10),
+        role: portalRole || 'b2c',
+        wallet_balance: 0
+      });
+    }
+
+    if (portalRole && user.role !== portalRole && user.role !== 'admin' && user.role !== 'sysadmin') {
+      return res.status(403).json({ error: 'Access denied to this portal' });
+    }
+
+    const { accessToken, refreshTokenValue, refreshTokenHash, expiresAt } = generateTokens(user);
+
+    await RefreshToken.create({
+      user_id: user._id || user.id,
+      token_hash: refreshTokenHash,
+      expires_at: expiresAt
+    });
+
+    await AuditLog.create({
+      user_id: user._id || user.id,
+      action: 'USER_LOGIN_OTP',
+      details: `Target: ${target}`,
+      ip: req.ip
+    });
+
+    res.cookie('refreshToken', refreshTokenValue, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.json({
+      token: accessToken,
+      user: { id: user._id || user.id, name: user.name, email: user.email, role: user.role, wallet_balance: user.wallet_balance }
+    });
+  } catch (err) {
+    console.error('login-with-otp error:', err);
+    res.status(500).json({ error: 'Server error during OTP login' });
+  }
+});
+
+// Firebase Token Login (Google Auth & Firebase Phone OTP)
+router.post('/firebase-login', async (req, res) => {
+  const { idToken, portalRole } = req.body;
+  if (!idToken) return res.status(400).json({ error: 'Firebase ID token is required' });
+
+  try {
+    const decoded = await verifyFirebaseToken(idToken);
+    const email = decoded.email || `${decoded.phone_number?.replace(/[^0-9]/g, '') || decoded.uid}@firebase.weddingalbums.in`;
+    const name = decoded.name || decoded.email?.split('@')[0] || 'Client User';
+    const phone = decoded.phone_number || null;
+
+    let user = await User.findOne({ email });
+    if (!user && phone) {
+      user = await User.findOne({ phone });
+    }
+
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        phone,
+        password: await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10),
+        role: portalRole || 'b2c',
+        wallet_balance: 0
+      });
+    }
+
+    if (portalRole && user.role !== portalRole && user.role !== 'admin' && user.role !== 'sysadmin') {
+      return res.status(403).json({ error: 'Access denied to this portal' });
+    }
+
+    const { accessToken, refreshTokenValue, refreshTokenHash, expiresAt } = generateTokens(user);
+
+    await RefreshToken.create({
+      user_id: user._id || user.id,
+      token_hash: refreshTokenHash,
+      expires_at: expiresAt
+    });
+
+    await AuditLog.create({
+      user_id: user._id || user.id,
+      action: 'USER_LOGIN_FIREBASE',
+      details: `Provider: ${decoded.firebase?.sign_in_provider || 'firebase'}`,
+      ip: req.ip
+    });
+
+    res.cookie('refreshToken', refreshTokenValue, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.json({
+      token: accessToken,
+      user: { id: user._id || user.id, name: user.name, email: user.email, role: user.role, wallet_balance: user.wallet_balance }
+    });
+  } catch (err) {
+    console.error('firebase-login error:', err.message);
+    res.status(401).json({ error: 'Invalid Firebase authentication token' });
+  }
+});
+
+// Forgot Password - Send OTP
+router.post('/forgot-password', otpRateLimiter, async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email address is required' });
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'No account registered with this email address' });
+    }
+
+    const result = await sendEmailOtp(email, 'forgot_password');
+    res.json({ success: true, message: 'Password reset code has been sent to your email', ...result });
+  } catch (err) {
+    console.error('forgot-password error:', err);
+    res.status(500).json({ error: 'Failed to send password reset code' });
+  }
+});
+
+// Reset Password - Verify OTP & Update Password
+router.post('/reset-password', loginRateLimiter, async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ error: 'Email, verification code, and new password are required' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+
+  const verification = verifyOtp(email, otp, 'forgot_password');
+  if (!verification.valid) {
+    return res.status(400).json({ error: verification.error });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    if (User.updatePassword) {
+      await User.updatePassword(user._id || user.id, hashedPassword);
+    } else if (User.updateOne) {
+      await User.updateOne({ _id: user._id || user.id }, { password: hashedPassword });
+    }
+
+    await AuditLog.create({
+      user_id: user._id || user.id,
+      action: 'PASSWORD_RESET',
+      ip: req.ip
+    });
+
+    res.json({ success: true, message: 'Password reset successfully. You can now sign in with your new password.' });
+  } catch (err) {
+    console.error('reset-password error:', err);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
 });
 
 export default router;

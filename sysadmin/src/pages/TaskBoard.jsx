@@ -73,6 +73,24 @@ const TaskQueue = () => {
                 <div className="bg-black/40 p-4 rounded-lg mb-4 text-sm text-gray-300">
                   <p className="font-semibold text-white mb-2 border-b border-white/10 pb-2">Job Specifications:</p>
                   <p>{task.details}</p>
+                  {task.raw_files_link && (
+                    <div className="mt-2 text-[#D4AF37] break-all">Media Link: <a href={task.raw_files_link} target="_blank" rel="noreferrer" className="underline">{task.raw_files_link}</a></div>
+                  )}
+                </div>
+
+                <div className="bg-black/20 p-4 rounded-lg border border-white/5 mb-4">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
+                  <div className="flex gap-2">
+                    <select className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]">
+                      <option value="">Unassigned</option>
+                      <option value="editor1">Suresh (In-House)</option>
+                      <option value="editor2">Rahul (Freelancer)</option>
+                      <option value="editor3">Divya (Video Dept)</option>
+                    </select>
+                    <button className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50" onClick={() => updateTaskStatus(task.id, 'Assigned')}>
+                      Dispatch
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex gap-2">
@@ -127,6 +145,32 @@ const TaskQueue = () => {
                       <p className="italic text-[#D4AF37]">"{order.instructions}"</p>
                     </div>
                   )}
+                  {order.cloudLink && (
+                    <div className="col-span-2 border-t border-white/10 pt-2 mt-2">
+                      <p className="text-gray-500 mb-1">Cloud Link Provided</p>
+                      <a href={order.cloudLink} target="_blank" rel="noreferrer" className="text-[#D4AF37] underline break-all">{order.cloudLink}</a>
+                    </div>
+                  )}
+                  {order.uploadPreference === 'physical' && (
+                    <div className="col-span-2 border-t border-white/10 pt-2 mt-2">
+                      <p className="text-gray-500 mb-1">Media Preference</p>
+                      <p className="text-[#D4AF37] font-bold">Waiting for Physical Hard Drive</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-black/20 p-4 rounded-lg border border-white/5 mb-4">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
+                  <div className="flex gap-2">
+                    <select className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]">
+                      <option value="">Unassigned</option>
+                      <option value="editor1">Suresh (In-House)</option>
+                      <option value="editor2">Rahul (Freelancer)</option>
+                    </select>
+                    <button className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50">
+                      Dispatch
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex justify-between items-center">

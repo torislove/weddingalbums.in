@@ -20,6 +20,13 @@
     grid-template-columns: 1fr;
   }
   .cpl-visual { display: none; }
+  .cpl-form-panel { padding: 40px 20px; } /* Improved tablet alignment */
+}
+
+@media (max-width: 500px) {
+  .cpl-form-panel { padding: 30px 16px; } /* Pixel perfect mobile alignment */
+  .cpl-auth-header h2 { font-size: 1.8rem; } /* Scale down heading */
+  .cpl-tabs { margin-bottom: 20px; }
 }
 
 /* ---- Left Visual Panel ---- */
@@ -588,4 +595,184 @@
 @keyframes cplFadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   OTP & GOOGLE & FORGOT PASSWORD ENHANCEMENTS
+   ============================================= */
+
+.cpl-method-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.cpl-method-tab {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+}
+
+.cpl-method-tab.active {
+  background: rgba(212,175,55,0.15);
+  color: #d4af37;
+  font-weight: 600;
+  border: 1px solid rgba(212,175,55,0.25);
+}
+
+.cpl-otp-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cpl-otp-row .cpl-input-wrap {
+  flex: 1;
+}
+
+.cpl-btn-secondary {
+  padding: 13px 18px;
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  color: #d4af37;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cpl-btn-secondary:hover:not(:disabled) {
+  background: rgba(212,175,55,0.2);
+  border-color: #d4af37;
+  transform: translateY(-1px);
+}
+
+.cpl-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cpl-divider-or {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 18px 0;
+  color: rgba(255,255,255,0.25);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cpl-divider-or::before,
+.cpl-divider-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+.cpl-google-btn {
+  width: 100%;
+  padding: 13px 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.cpl-google-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+
+.cpl-google-btn svg {
+  flex-shrink: 0;
+}
+
+.cpl-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #86efac;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+/* Modal for Forgot Password */
+.cpl-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: cplFadeUp 0.3s ease;
+}
+
+.cpl-modal-card {
+  width: 100%;
+  max-width: 440px;
+  background: #14110b;
+  border: 1px solid rgba(212,175,55,0.3);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 40px rgba(212,175,55,0.15);
+  border-radius: 20px;
+  padding: 32px 28px;
+  position: relative;
+}
+
+.cpl-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.cpl-modal-close:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
 }

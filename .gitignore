@@ -40,3 +40,6 @@ Thumbs.db
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+
+# Firebase local cache
+.firebase/

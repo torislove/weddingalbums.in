@@ -1,0 +1,17 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Albums raw photos, designs, and previews: allowed images/PDF up to 100MB
+    match /albums/{albumId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 100 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*|application/pdf');
+    }
+
+    // General user uploads
+    match /uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 50 * 1024 * 1024;
+    }
+  }
+}

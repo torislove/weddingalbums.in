@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public & client access to album proofs and reviews
+    match /albums/{albumId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if request.auth != null || request.resource.data.author != null;
+        allow update, delete: if request.auth != null;
+      }
+    }
+
+    // Order status tracking
+    match /orders/{orderId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // User accounts locked down to owner
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
