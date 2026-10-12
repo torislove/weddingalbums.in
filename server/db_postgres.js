@@ -100,23 +100,69 @@ const memStore = {
     }
   ],
   services: [
-    { id: 'srv-1', _id: 'srv-1', category: 'Photography', name: 'Traditional Photography (Per Day)', basePrice: 15000, estimatedDaysToDeliver: 1, isActive: true },
-    { id: 'srv-2', _id: 'srv-2', category: 'Photography', name: 'Candid Photography (Per Day)', basePrice: 25000, estimatedDaysToDeliver: 3, isActive: true },
-    { id: 'srv-3', _id: 'srv-3', category: 'Photography', name: 'Pre-Wedding Shoot (Outdoor)', basePrice: 35000, estimatedDaysToDeliver: 5, isActive: true },
-    { id: 'srv-4', _id: 'srv-4', category: 'Videography', name: 'Traditional Videography (Per Day)', basePrice: 15000, estimatedDaysToDeliver: 2, isActive: true },
-    { id: 'srv-5', _id: 'srv-5', category: 'Videography', name: 'Cinematic 1-Min Teaser', basePrice: 8000, estimatedDaysToDeliver: 4, isActive: true },
-    { id: 'srv-6', _id: 'srv-6', category: 'Videography', name: 'Cinematic 10-Min Highlights', basePrice: 20000, estimatedDaysToDeliver: 7, isActive: true },
-    { id: 'srv-7', _id: 'srv-7', category: 'Videography', name: '1 to 4 Hour Long Video Edit', basePrice: 25000, estimatedDaysToDeliver: 10, isActive: true },
-    { id: 'srv-8', _id: 'srv-8', category: 'Drone', name: 'Drone Coverage (Per Day)', basePrice: 12000, estimatedDaysToDeliver: 1, isActive: true },
-    { id: 'srv-9', _id: 'srv-9', category: 'Live', name: 'Live Streaming Setup (Youtube)', basePrice: 15000, estimatedDaysToDeliver: 0, isActive: true },
-    { id: 'srv-10', _id: 'srv-10', category: 'Editing', name: 'Pro Color Grading (300 pics)', basePrice: 5000, estimatedDaysToDeliver: 3, isActive: true },
-    { id: 'srv-11', _id: 'srv-11', category: 'Editing', name: 'Full Wedding Film Editing (Outsource)', basePrice: 15000, estimatedDaysToDeliver: 7, isActive: true }
+    { id: 'srv-pe-1', _id: 'srv-pe-1', category: 'Photo Editing', name: 'Telugu Pelli Skin Retouching & Beauty Clean-up', telugu: 'తెలుగు పెళ్లి స్కిన్ రీటచింగ్ & బ్యూటీ క్లీనప్', basePrice: 2500, estimatedDaysToDeliver: 2, processDescription: '1. RAW photo intake -> 2. Natural blemish removal & skin smoothing -> 3. Gold & silk jewellery pop -> 4. High-res delivery', features: ['Natural Skin Texture Retention', 'Bridal Jewellery Shine Boost', 'Pelli Bottu & Tilak Sharpening'], isActive: true },
+    { id: 'srv-pe-2', _id: 'srv-pe-2', category: 'Photo Editing', name: 'Traditional Karizma PSD Creative Designing', telugu: 'కరిజ్మా క్రియేటివ్ డిజైనింగ్ (PSD)', basePrice: 1200, estimatedDaysToDeliver: 3, processDescription: '1. Photo sequence review -> 2. Custom typography & Telugu shlokas -> 3. Storytelling multi-photo spread layout -> 4. Digital proofing', features: ['Custom Telugu Shlokas & Typography', 'Seamless 12x36 Spreads', 'Mandap & Jeelakarra Bellam Theme Frames'], isActive: true },
+    { id: 'srv-pe-3', _id: 'srv-pe-3', category: 'Photo Editing', name: 'AI Sky, Mandap & Lighting Background Enhancement', telugu: 'AI స్కై & మండపం బ్యాక్‌గ్రౌండ్ ఫిక్స్', basePrice: 1500, estimatedDaysToDeliver: 1, processDescription: '1. Unwanted background element removal -> 2. Mandap floral garland enhancement -> 3. Golden hour sky replacement -> 4. Color calibration', features: ['Floral Color Vibrancy Boost', 'Crowd / Wire Removal', 'Atmospheric Lighting Fix'], isActive: true },
+    { id: 'srv-pe-4', _id: 'srv-pe-4', category: 'Photo Editing', name: 'Vintage & Damaged Wedding Photo Restoration', telugu: 'పాత ఫొటోల రీస్టోరేషన్', basePrice: 800, estimatedDaysToDeliver: 2, processDescription: '1. High-resolution scan -> 2. Scratch, fold & water-stain repair -> 3. AI facial reconstruction -> 4. Vibrant colorization', features: ['Fold & Tear Repair', 'AI Face Feature Recovery', 'Full Natural Colorization'], isActive: true },
+    { id: 'srv-pe-5', _id: 'srv-pe-5', category: 'Photo Editing', name: 'RAW Photo Culling & Selection (1,000 photos)', telugu: 'రా ఫొటోల కల్లింగ్ & బెస్ట్ సెలక్షన్', basePrice: 1200, estimatedDaysToDeliver: 1, processDescription: '1. Ingest camera RAWs -> 2. Filter blinks, blur & repeats -> 3. Tag highlight moments -> 4. Export shortlisted XML/XMP', features: ['Blink & Blur Elimination', 'Best Expression Selection', 'Lightroom / Capture One Ready'], isActive: true },
+    { id: 'srv-pe-6', _id: 'srv-pe-6', category: 'Photo Editing', name: 'Pro Color Grading & Tone Matching (300 photos)', telugu: 'సినిమాటిక్ కలర్ గ్రేడింగ్', basePrice: 3000, estimatedDaysToDeliver: 2, processDescription: '1. Tone curve normalization -> 2. Warm Telugu wedding color LUTs -> 3. Consistent skin tonality across cameras -> 4. Batch export', features: ['Rich Haldi Warm Tones', 'Silk Saree Color Fidelity', 'Multi-Camera Uniformity'], isActive: true },
+
+    { id: 'srv-ve-1', _id: 'srv-ve-1', category: 'Video Editing', name: '4K Cinematic Wedding Teaser (1-3 min)', telugu: '4K సినిమాటిక్ టీజర్ (1-3 నిమిషాలు)', basePrice: 7500, estimatedDaysToDeliver: 4, processDescription: '1. Best cinematic moments cut -> 2. Emotion-driven background music score -> 3. 4K film color grading -> 4. Sound effects & dialogue master', features: ['4K Dolby Vision Color', 'Custom Telugu Film Score Mix', 'Vertical Reel Cut Included'], isActive: true },
+    { id: 'srv-ve-2', _id: 'srv-ve-2', category: 'Video Editing', name: 'Traditional Long-Form Video Edit (1 to 4 Hours)', telugu: 'ట్రెడిషనల్ ఫుల్ వీడియో ఎడిటింగ్ (1-4 గంటలు)', basePrice: 18000, estimatedDaysToDeliver: 7, processDescription: '1. Multi-camera timeline sync -> 2. Complete ritual chapters (Snanam, Talambralu, Kanyadanam) -> 3. Traditional songs & titles -> 4. Pendrive & Cloud delivery', features: ['Multi-Cam Ritual Sync', 'Ceremony Chapter Menus', 'Crystal Clear Audio Cleanup'], isActive: true },
+    { id: 'srv-ve-3', _id: 'srv-ve-3', category: 'Video Editing', name: 'Wedding Highlights Cinematic Reel (5-10 min)', telugu: 'వెడ్డింగ్ హైలైట్స్ రీల్ (5-10 నిమిషాలు)', basePrice: 12000, estimatedDaysToDeliver: 5, processDescription: '1. Narrative story arc crafting -> 2. Couple vow / audio voiceover sync -> 3. Slow motion & drone highlights -> 4. Full HD / 4K master export', features: ['Dynamic Story Pacing', 'Drone & Slow-Mo Integration', 'Audio Dialogue Sweetening'], isActive: true },
+    { id: 'srv-ve-4', _id: 'srv-ve-4', category: 'Video Editing', name: 'Same-Day Edit (SDE) Express for Reception Screen', telugu: 'సేమ్-డే ఎడిట్ (రిసెప్షన్ కోసం ఫాస్ట్ ట్రాక్)', basePrice: 10000, estimatedDaysToDeliver: 1, processDescription: '1. Rapid live ingest during muhurtham -> 2. 4-hour high-speed turnaround cut -> 3. Color grade & score -> 4. Playback file delivery for reception LED screen', features: ['4-6 Hour Guaranteed Delivery', 'Reception LED Ready Format', 'High Impact Emotional Cut'], isActive: true },
+    { id: 'srv-ve-5', _id: 'srv-ve-5', category: 'Video Editing', name: 'Instagram Reels / Shorts 5-Pack (9:16)', telugu: 'ఇన్‌స్టాగ్రామ్ రీల్స్ 5-ప్యాక్', basePrice: 4500, estimatedDaysToDeliver: 2, processDescription: '1. Viral trending music selection -> 2. 9:16 vertical crop & tracking -> 3. Beat-matched snappy cuts -> 4. Ready-to-post WhatsApp/IG export', features: ['5 High-Impact 9:16 Videos', 'Trending Audio Synchronized', 'Hook-Optimized Edits'], isActive: true },
+    { id: 'srv-ve-6', _id: 'srv-ve-6', category: 'Video Editing', name: 'Mangalasnanam & Traditional Music Sound Mastering', telugu: 'మంగళస్నానం & సంప్రదాయ ఆడియో మాస్టరింగ్', basePrice: 3000, estimatedDaysToDeliver: 2, processDescription: '1. Mic noise & mic feedback cleaning -> 2. Traditional Nadaswaram / Sannai Melam equalization -> 3. Mantra clarity enhancement -> 4. Master audio mixdown', features: ['Mantra Vocal Clarity', 'Purohit Audio De-Noise', 'Nadaswaram Harmonic Balance'], isActive: true },
+    { id: 'srv-ve-7', _id: 'srv-ve-7', category: 'Video Editing', name: 'Pre-Wedding Love Story Cinematic Film', telugu: 'ప్రీ-వెడ్డింగ్ లవ్ స్టోరీ ఫిలిం', basePrice: 15000, estimatedDaysToDeliver: 5, processDescription: '1. Romantic storyline editing -> 2. Dialogue interview overlays -> 3. Cinematic drone & outdoor color grade -> 4. 4K delivery', features: ['Romantic Color LUTs', 'Voiceover & Story Script Sync', 'YouTube 4K & Mobile Formats'], isActive: true },
+
+    { id: 'srv-pr-1', _id: 'srv-pr-1', category: 'Album Printing', name: 'Karizma 12×36 Lay-Flat Flush Mount Lab Printing', telugu: 'కరిజ్మా 12×36 లే-ఫ్లాట్ ప్రింటింగ్', basePrice: 4500, estimatedDaysToDeliver: 4, processDescription: '1. Color profile calibration -> 2. High-DPI thermal continuous tone print -> 3. Flush mount lay-flat creasing -> 4. Precision corner binding', features: ['100% Flat 180° Opening', 'Non-Fading 100-Year Lab Inks', 'Sturdy Thick Rigid Spine'], isActive: true },
+    { id: 'srv-pr-2', _id: 'srv-pr-2', category: 'Album Printing', name: '12×30 Grand Landscape Luxury Printing', telugu: '12×30 గ్రాండ్ ల్యాండ్‌స్కేప్ ప్రింటింగ్', basePrice: 4000, estimatedDaysToDeliver: 4, processDescription: '1. Pre-flight check -> 2. Silver halide print press -> 3. Matte thermal lamination -> 4. Padded hardcover binding', features: ['Wide Panoramic Format', 'Fingerprint Resistant', 'Padded Luxury Cover'], isActive: true },
+    { id: 'srv-pr-3', _id: 'srv-pr-3', category: 'Album Printing', name: '3D Acrylic Glass Crystal Cover Upgrade', telugu: '3D క్రిస్టల్ యాక్రిలిక్ గ్లాస్ కవర్', basePrice: 1500, estimatedDaysToDeliver: 2, processDescription: '1. High-gloss photo mounting -> 2. 5mm diamond-beveled acrylic bonding -> 3. Scratch-proof optical seal -> 4. Gold foil side trim', features: ['5mm Diamond-Polished Glass', 'Ultra-Deep 3D Pop Effect', 'Scratch Resistant Coating'], isActive: true },
+    { id: 'srv-pr-4', _id: 'srv-pr-4', category: 'Album Printing', name: 'Royal Leatherette Briefcase Box & Bag', telugu: 'రాయల్ లెథరెట్ బ్రీఫ్‌కేస్ బాక్స్', basePrice: 1800, estimatedDaysToDeliver: 2, processDescription: '1. Handcrafted wooden core box -> 2. Premium faux leatherette wrapping -> 3. Personalized couple name gold foil emboss -> 4. Velvet interior lining', features: ['Embossed Gold Foil Names', 'Heavy-Duty Brass Locks', 'Dust & Moisture Safe Protection'], isActive: true },
+    { id: 'srv-pr-5', _id: 'srv-pr-5', category: 'Album Printing', name: 'Parent Duplicate Album 6×18 (Pair of 2 Albums)', telugu: 'పేరెంట్ డూప్లికేట్ ఆల్బమ్స్ (2 కాపీలు 6×18)', basePrice: 3200, estimatedDaysToDeliver: 3, processDescription: '1. Auto-proportion scaled copy -> 2. Dual thermal press -> 3. Hardcover binding -> 4. Gift packaging for bride & groom parents', features: ['Exact Duplicate of Main Album', 'Perfect Compact Gift for Parents', 'Includes 2 Complete Albums'], isActive: true },
+
+    { id: 'srv-fl-1', _id: 'srv-fl-1', category: 'Flex & Banners', name: 'Grand Mandap Entrance Flex (10×8 ft Star Media)', telugu: 'మండపం ఎంట్రన్స్ ఫ్లెక్స్ (10×8 అడుగులు)', basePrice: 2400, estimatedDaysToDeliver: 1, processDescription: '1. Traditional welcome design with couple photo & Telugu text -> 2. High-res Star Flex printing -> 3. Hemming & brass eyelets punching -> 4. Courier roll dispatch', features: ['Heavy Star Flex 340 GSM', 'Tear-Proof Brass Eyelets', 'Waterproof Outdoor Inks'], isActive: true },
+    { id: 'srv-fl-2', _id: 'srv-fl-2', category: 'Flex & Banners', name: 'Roadside Wedding Hoarding (40×20 ft Heavy Duty)', telugu: 'రోడ్‌సైడ్ వెడ్డింగ్ హోర్డింగ్ (40×20 అడుగులు)', basePrice: 12000, estimatedDaysToDeliver: 2, processDescription: '1. Ultra-high visibility large font layout -> 2. Solvent wide-format press -> 3. Wind-resistant reinforced seams -> 4. Junction delivery / dispatch', features: ['40x20 ft Grand Scale', 'Vivid Visibility Day & Night', 'Reinforced Wind Slits'], isActive: true },
+    { id: 'srv-fl-3', _id: 'srv-fl-3', category: 'Flex & Banners', name: 'Retractable Welcome Roll-Up Standee (6×3 ft)', telugu: 'వెల్‌కమ్ రోల్-అప్ స్టాండీ (6×3 అడుగులు)', basePrice: 1800, estimatedDaysToDeliver: 1, processDescription: '1. Modern aesthetic welcome design -> 2. Non-tearable grey-back vinyl print -> 3. Anodized aluminum stand fitting -> 4. Padded carry bag packing', features: ['Sturdy Aluminum Retractor', 'Smooth Non-Curling Vinyl', 'Includes Free Carry Bag'], isActive: true },
+    { id: 'srv-fl-4', _id: 'srv-fl-4', category: 'Flex & Banners', name: 'Animated Telugu WhatsApp Video Invitation', telugu: 'యానిమేటెడ్ వాట్సాప్ వీడియో ఆహ్వానం', basePrice: 1999, studioBasePrice: 1200, estimatedDaysToDeliver: 1, processDescription: '1. Muhurtham details & family names collection -> 2. 2D/3D traditional animated temple & mandap motif -> 3. Auspicious nadaswaram BGM sync -> 4. Ultra-light WhatsApp MP4 delivery', features: ['Traditional Telugu Typography', 'Auspicious Sannai Melam BGM', 'Under 15MB WhatsApp Ready'], isActive: true },
+
+    { id: 'srv-cal-1', _id: 'srv-cal-1', category: 'Calendars & Keepsakes', name: 'Personalized 12-Month Tabletop Desk Calendar', telugu: '12-నెలల కపుల్ టేబుల్‌టాప్ డెస్క్ క్యాలెండర్', basePrice: 1200, studioBasePrice: 750, estimatedDaysToDeliver: 2, processDescription: '1. 12 month couple photo selection -> 2. Premium 300 GSM silk sheets print -> 3. Wooden easel / spiral stand mounting -> 4. Gift packaging', features: ['12 High-Res Selected Photos', 'Wooden Easel Stand Included', 'Telugu Tithi & Auspicious Muhurthams Marked'], isActive: true },
+    { id: 'srv-cal-2', _id: 'srv-cal-2', category: 'Calendars & Keepsakes', name: 'Grand Wall Hanging Poster Calendar (12×18 Metallic)', telugu: 'గ్రాండ్ వాల్ పోస్టర్ క్యాలెండర్ (12×18 మెటాలిక్)', basePrice: 650, studioBasePrice: 380, estimatedDaysToDeliver: 1, processDescription: '1. Couple portrait layout with annual calendar grid -> 2. High-gloss metallic film press -> 3. Metal rim hanger rimming -> 4. Protective tube pack', features: ['12x18 Inch Grand Poster Format', 'Metallic Pearl Lamination', 'Metal Rim Hanger Ready'], isActive: true },
+    { id: 'srv-cal-3', _id: 'srv-cal-3', category: 'Calendars & Keepsakes', name: 'Pocket Mini Calendars (Pack of 10 Copies)', telugu: 'పాకెట్ మినీ క్యాలెండర్లు (10 కాపీల సెట్)', basePrice: 990, studioBasePrice: 550, estimatedDaysToDeliver: 1, processDescription: '1. Wallet size couple photo + calendar card -> 2. Rounded corner die-cut -> 3. Waterproof thermal lamination -> 4. 10-pack delivery', features: ['Waterproof Wallet Card Format', 'Rounded Smooth Corners', '10 Identical Gift Keepsake Copies'], isActive: true },
+
+    { id: 'srv-sh-1', _id: 'srv-sh-1', category: 'Shoots & Drone', name: 'Traditional Photography (Per Day Coverage)', telugu: 'ట్రెడిషనల్ ఫోటోగ్రఫీ (రోజుకి)', basePrice: 15000, estimatedDaysToDeliver: 1, processDescription: '1. Full ceremony coverage with pro flash setup -> 2. Stage group photos & rituals -> 3. Same-night RAW backup -> 4. Full RAW catalog export', features: ['Senior Wedding Photographer', 'Full Day Coverage', 'All Family Stage Groups'], isActive: true },
+    { id: 'srv-sh-2', _id: 'srv-sh-2', category: 'Shoots & Drone', name: 'Candid Wedding Photography (Per Day Coverage)', telugu: 'క్యాండిడ్ వెడ్డింగ్ ఫోటోగ్రఫీ (రోజుకి)', basePrice: 25000, estimatedDaysToDeliver: 3, processDescription: '1. Natural unposed emotion & smile capture -> 2. Prime lens low-light mastery -> 3. Bride & groom aesthetic portraits -> 4. Curated highlight set', features: ['Artistic Natural Expressions', 'High-End Sony/Canon Prime Lenses', 'Magazine Style Portraits'], isActive: true },
+    { id: 'srv-sh-3', _id: 'srv-sh-3', category: 'Shoots & Drone', name: '4K Cinematic Videography (Per Day Coverage)', telugu: '4K సినిమాటిక్ వీడియోగ్రఫీ (రోజుకి)', basePrice: 20000, estimatedDaysToDeliver: 2, processDescription: '1. Gimbal stabilized 4K 10-bit shooting -> 2. Cinematic slow-motion rituals -> 3. Dedicated audio recorder at mandap -> 4. Multi-angle footage ingest', features: ['Ronin Gimbal Stabilization', 'Wireless Lapel Microphones', '120fps Slow-Motion B-Roll'], isActive: true },
+    { id: 'srv-sh-4', _id: 'srv-sh-4', category: 'Shoots & Drone', name: 'Dual Drone Aerial 4K Coverage (Per Day)', telugu: 'డ్రోన్ ఏరియల్ 4K కవరేజ్ (రోజుకి)', basePrice: 12000, estimatedDaysToDeliver: 1, processDescription: '1. DGCA licensed drone pilot -> 2. Baaraat & grand venue entrance bird-eye views -> 3. Talambralu overhead cinematic angle -> 4. Ultra-smooth 4K footage', features: ['DGCA Certified Pilot', 'Ultra 4K Overhead Angles', 'Mandap & Baaraat Flyovers'], isActive: true },
+    { id: 'srv-sh-5', _id: 'srv-sh-5', category: 'Shoots & Drone', name: 'Multi-Camera YouTube Live Streaming Setup', telugu: 'యూట్యూబ్ లైవ్ స్ట్రీమింగ్ సెటప్', basePrice: 15000, estimatedDaysToDeliver: 0, processDescription: '1. Multi-cam switcher with wireless video transmitters -> 2. High-speed bonded 4G/5G internet setup -> 3. Dedicated YouTube 1080p 60fps stream -> 4. Instant replay recording', features: ['Multi-Cam Live Mixing', 'Bonded Internet Reliability', 'Custom Telugu Wedding Frame Overlay'], isActive: true }
   ],
   sheetTypes: [
-    { id: 'sheet-1', _id: 'sheet-1', name: 'Non-Tearable Velvet Touch', multiplier: 1.0, description: 'Premium silky matte finish', isActive: true },
-    { id: 'sheet-2', _id: 'sheet-2', name: 'High-Gloss Metallic', multiplier: 1.25, description: 'Lustrous high-contrast sheen', isActive: true },
-    { id: 'sheet-3', _id: 'sheet-3', name: 'Royal Feather Touch Leatherette', multiplier: 1.4, description: 'Ultra luxury velvet touch texture', isActive: true },
-    { id: 'sheet-4', _id: 'sheet-4', name: 'HD Thermal Lamination', multiplier: 1.15, description: 'Waterproof scratch resistant', isActive: true }
+    { id: 'sheet-1', _id: 'sheet-1', name: 'Non-Tearable Velvet Touch', telugu: 'సిల్కీ వెల్వెట్ మ్యాట్ (వాటర్ ప్రూఫ్)', pricePerSheet: 65, studioPricePerSheet: 42, premiumCoverSurcharge: 1200, studioCoverSurcharge: 750, multiplier: 1.0, description: 'Ultra-smooth matte finish, 100% waterproof and tear-resistant. Soft luxury feather touch.', isActive: true },
+    { id: 'sheet-2', _id: 'sheet-2', name: 'High-Gloss Metallic', telugu: 'రాయల్ హై-గ్లాస్ మెటాలిక్', pricePerSheet: 85, studioPricePerSheet: 55, premiumCoverSurcharge: 1400, studioCoverSurcharge: 900, multiplier: 1.25, description: 'Lustrous high-contrast sheen that brings gold jewellery and wedding silks alive with breathtaking vibrancy.', isActive: true },
+    { id: 'sheet-3', _id: 'sheet-3', name: 'Royal Feather Touch Leatherette', telugu: 'రాయల్ ఫెదర్ టచ్ లెథరెట్', pricePerSheet: 110, studioPricePerSheet: 72, premiumCoverSurcharge: 1800, studioCoverSurcharge: 1150, multiplier: 1.4, description: 'Ultra-luxury textured sheets with genuine tactile grain and rich gold hot-stamping on edges.', isActive: true },
+    { id: 'sheet-4', _id: 'sheet-4', name: 'HD Thermal Lamination Matte', telugu: 'హై-డెఫినిషన్ థర్మల్ లామినేషన్', pricePerSheet: 50, studioPricePerSheet: 32, premiumCoverSurcharge: 800, studioCoverSurcharge: 500, multiplier: 1.15, description: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday studio handling and longevity.', isActive: true },
+    { id: 'sheet-5', _id: 'sheet-5', name: 'Silk Matte Pearl Lustre', telugu: 'సిల్క్ మ్యాట్ పెర్ల్ లస్టర్', pricePerSheet: 95, studioPricePerSheet: 62, premiumCoverSurcharge: 1500, studioCoverSurcharge: 950, multiplier: 1.3, description: 'Micro-pearlescent sheen with true-to-life skin tones and natural highlights without glare.', isActive: true },
+    { id: 'sheet-6', _id: 'sheet-6', name: 'Crystal High Gloss (Ultra Mirror)', telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్', pricePerSheet: 75, studioPricePerSheet: 48, premiumCoverSurcharge: 1000, studioCoverSurcharge: 650, multiplier: 1.2, description: 'Super-reflective mirror gloss. Vivid colors, high contrast deep blacks and saturated wedding reds.', isActive: true },
+    { id: 'sheet-7', _id: 'sheet-7', name: 'Silver Halide True Photographic (Fuji DP2)', telugu: 'సిల్వర్ హాలైడ్ ట్రూ ఫోటో పేపర్', pricePerSheet: 125, studioPricePerSheet: 82, premiumCoverSurcharge: 2000, studioCoverSurcharge: 1300, multiplier: 1.5, description: 'Continuous tone optical RGB exposure. 100-year archival rating without inkjet dot patterns.', isActive: true },
+    { id: 'sheet-8', _id: 'sheet-8', name: 'Embossed Canvas Texture Fine Art', telugu: 'కాన్వాస్ ఎంబోస్డ్ ఫైన్ ఆర్ట్ టెక్స్చర్', pricePerSheet: 105, studioPricePerSheet: 68, premiumCoverSurcharge: 1600, studioCoverSurcharge: 1050, multiplier: 1.35, description: 'Tactile painterly woven fabric texture with artistic micro-embossing for timeless heirloom portraiture.', isActive: true }
+  ],
+  albumSizes: [
+    // LANDSCAPE SIZES (హారిజాంటల్ / ల్యాండ్‌స్కేప్)
+    { id: 'size-1', _id: 'size-1', name: '12×36 Royal Spread (Panoramic)', dimensions: '12×36 inches', orientation: 'landscape', telugu: '12×36 రాయల్ పానోరమిక్ (ఆంధ్ర నెం.1 ఎంపిక ⭐)', basePrice: 9500, studioBasePrice: 6800, popular: true, description: '36 inch wide panoramic views. India\'s #1 wedding album choice.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-2', _id: 'size-2', name: '12×30 Classic Landscape', dimensions: '12×30 inches', orientation: 'landscape', telugu: '12×30 క్లాసిక్ ల్యాండ్‌స్కేప్', basePrice: 8500, studioBasePrice: 6000, popular: false, description: 'Traditional Telugu standard widescreen layout for mandap & stage spreads.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-3', _id: 'size-3', name: '12×24 Compact Landscape', dimensions: '12×24 inches', orientation: 'landscape', telugu: '12×24 కాంపాక్ట్ ల్యాండ్‌స్కేప్', basePrice: 7500, studioBasePrice: 5200, popular: false, description: 'Budget-friendly album with modern sleek aspect ratio.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-4', _id: 'size-4', name: '12×18 Traditional Landscape', dimensions: '12×18 inches', orientation: 'landscape', telugu: '12×18 ట్రెడిషనల్ ల్యాండ్‌స్కేప్', basePrice: 6500, studioBasePrice: 4500, popular: false, description: 'Traditional portrait-landscape balance, timeless design.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-5', _id: 'size-5', name: '10×24 Compact Feast Landscape', dimensions: '10×24 inches', orientation: 'landscape', telugu: '10×24 కాంపాక్ట్ ఫీస్ట్ ల్యాండ్‌స్కేప్', basePrice: 5800, studioBasePrice: 4000, popular: false, description: 'Lightweight easy-to-carry format for family functions.', isBundle: false, bundleDiscount: 0, isActive: true },
+    
+    // PORTRAIT SIZES (వర్టికల్ / పోర్ట్రెయిట్)
+    { id: 'size-6', _id: 'size-6', name: '18×12 Grand Vertical Portrait', dimensions: '18×12 inches', orientation: 'portrait', telugu: '18×12 గ్రాండ్ వర్టికల్ పోర్ట్రెయిట్ (రాయల్ మ్యాగజైన్)', basePrice: 9000, studioBasePrice: 6400, popular: true, description: 'Tall royal magazine format. Stunning full-length bridal silk & jewellery spreads.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-7', _id: 'size-7', name: '15×12 Classic Vertical Portrait', dimensions: '15×12 inches', orientation: 'portrait', telugu: '15×12 క్లాసిక్ వర్టికల్ పోర్ట్రెయిట్', basePrice: 8000, studioBasePrice: 5600, popular: false, description: 'Traditional vertical bridal album for stage portraits and couple framing.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-8', _id: 'size-8', name: '14×11 Fine Art Vertical Portrait', dimensions: '14×11 inches', orientation: 'portrait', telugu: '14×11 ఫైన్ ఆర్ట్ పోర్ట్రెయిట్', basePrice: 7200, studioBasePrice: 5000, popular: false, description: 'Editorial fashion photography format for candid contemporary stories.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-9', _id: 'size-9', name: '12×9 Compact Vertical Portrait', dimensions: '12×9 inches', orientation: 'portrait', telugu: '12×9 కాంపాక్ట్ వర్టికల్ పోర్ట్రెయిట్', basePrice: 5500, studioBasePrice: 3800, popular: false, description: 'Handy vertical book for intimate Haldi, Mehendi & Sangeet moments.', isBundle: false, bundleDiscount: 0, isActive: true },
+    { id: 'size-10', _id: 'size-10', name: '10×8 Family Gift Portrait', dimensions: '10×8 inches', orientation: 'portrait', telugu: '10×8 ఫ్యామిలీ గిఫ్ట్ పోర్ట్రెయిట్', basePrice: 4500, studioBasePrice: 3100, popular: false, description: 'Compact vertical keepsake gift album for parents and close relatives.', isBundle: false, bundleDiscount: 0, isActive: true },
+
+    // BUNDLES (బండిల్స్)
+    { id: 'size-11', _id: 'size-11', name: 'Royal Family Bundle (12×36 + 2x Parent 6×18)', dimensions: '12×36 + 2x 6×18', orientation: 'landscape', telugu: 'రాయల్ ఫ్యామిలీ బండిల్ (కపుల్ + 2 పేరెంట్ ఆల్బమ్స్)', basePrice: 11500, studioBasePrice: 8200, popular: true, description: 'Master 12×36 album for couple + 2 matching 6×18 parent duplicate albums!', isBundle: true, bundleDiscount: 2500, isActive: true }
   ],
   orders: [],
   tasks: [],
@@ -606,6 +652,47 @@ export const SheetType = {
   }
 };
 
+export const AlbumSize = {
+  async find(filter = {}) {
+    if (isPostgresLive) {
+      try {
+        const res = await query('SELECT * FROM album_sizes');
+        if (res?.rows?.length) return res.rows.map(r => ({ ...r, _id: r.id }));
+      } catch (e) {
+        // Fallback to memory
+      }
+    }
+    let list = [...(memStore.albumSizes || [])];
+    if (filter.isActive !== undefined) list = list.filter(s => s.isActive === Boolean(filter.isActive));
+    return list.map(s => ({ ...s, _id: s.id }));
+  },
+  async findById(id) {
+    const list = await this.find();
+    return list.find(s => s.id === id || s._id === id) || null;
+  },
+  async create(data) {
+    const id = generateId();
+    const size = { id, _id: id, ...data };
+    if (!memStore.albumSizes) memStore.albumSizes = [];
+    memStore.albumSizes.push(size);
+    return size;
+  },
+  async findByIdAndUpdate(id, data) {
+    const size = await this.findById(id);
+    if (!size) return null;
+    const merged = { ...size, ...data };
+    if (!memStore.albumSizes) memStore.albumSizes = [];
+    const idx = memStore.albumSizes.findIndex(s => s.id === id);
+    if (idx !== -1) memStore.albumSizes[idx] = merged;
+    return merged;
+  },
+  async findByIdAndDelete(id) {
+    if (!memStore.albumSizes) memStore.albumSizes = [];
+    memStore.albumSizes = memStore.albumSizes.filter(s => s.id !== id);
+    return { success: true };
+  }
+};
+
 export const Order = {
   async create(data) {
     const id = generateId();
@@ -889,7 +976,7 @@ export const Media = {
 };
 
 export default {
-  User, Package, Service, SheetType, Order, Task, Project,
+  User, Package, Service, SheetType, AlbumSize, Order, Task, Project,
   PayoutRequest, Config, Cart, RefreshToken, AuditLog, ContactLead,
   Content, Media,
   initDatabase, getPool, query, autoSeedDatabase

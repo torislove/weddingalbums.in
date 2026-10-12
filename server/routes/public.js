@@ -2,12 +2,12 @@
  * server/routes/public.js — Public, unprotected API
  */
 import express from 'express';
-import { Package, Service, SheetType, ContactLead, Order, Task } from '../db.js';
+import { Package, Service, SheetType, AlbumSize, ContactLead, Order, Task } from '../db.js';
 import crypto from 'crypto';
 
 const router = express.Router();
 
-/* ── Packages & Services & Sheets ──────────────────────────────────── */
+/* ── Packages & Services & Sheets & Album Sizes ─────────────────────── */
 router.get(['/packages', '/builder/packages'], async (req, res) => {
   try {
     const packages = await Package.find(req.query || {});
@@ -32,6 +32,15 @@ router.get(['/sheets', '/builder/sheets'], async (req, res) => {
     res.json(sheets || []);
   } catch (err) {
     res.status(500).json({ error: err.message, sheets: [] });
+  }
+});
+
+router.get(['/album-sizes', '/builder/album-sizes'], async (req, res) => {
+  try {
+    const sizes = await AlbumSize.find(req.query || {});
+    res.json(sizes || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, albumSizes: [] });
   }
 });
 

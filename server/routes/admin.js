@@ -5,7 +5,7 @@
 import express from 'express';
 import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
-import { User, Order, Task, PayoutRequest, Project, AuditLog, Package, Service, SheetType } from '../db.js';
+import { User, Order, Task, PayoutRequest, Project, AuditLog, Package, Service, SheetType, AlbumSize } from '../db.js';
 
 const router = express.Router();
 const adminOnly = requireRole(['admin', 'sysadmin', 'content_admin'], ['admin-portal', 'sysadmin-portal', 'uiadmin-portal']);
@@ -334,6 +334,43 @@ router.put(['/sheets/:id', '/builder/sheets/:id'], adminOnly, async (req, res) =
 router.delete(['/sheets/:id', '/builder/sheets/:id'], adminOnly, async (req, res) => {
   try {
     await SheetType.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Album Sizes & Bundles Management ────────────────────────────────── */
+router.get(['/album-sizes', '/builder/album-sizes'], adminOnly, async (req, res) => {
+  try {
+    const sizes = await AlbumSize.find(req.query || {});
+    res.json(sizes || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, albumSizes: [] });
+  }
+});
+
+router.post(['/album-sizes', '/builder/album-sizes'], adminOnly, async (req, res) => {
+  try {
+    const created = await AlbumSize.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put(['/album-sizes/:id', '/builder/album-sizes/:id'], adminOnly, async (req, res) => {
+  try {
+    const updated = await AlbumSize.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated || { success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete(['/album-sizes/:id', '/builder/album-sizes/:id'], adminOnly, async (req, res) => {
+  try {
+    await AlbumSize.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

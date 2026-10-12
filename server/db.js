@@ -10,6 +10,7 @@ export const {
   Package,
   Service,
   SheetType,
+  AlbumSize,
   Order,
   Task,
   Project,
