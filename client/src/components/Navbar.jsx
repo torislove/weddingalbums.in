@@ -15,19 +15,30 @@ const Navbar = () => {
   const { content } = useContent();
 
   const navData = content?.global?.navbar || {};
-  const navLinks = Array.isArray(navData.links) && navData.links.length > 0
-    ? navData.links
+  const [lang, setLang] = useState(() => localStorage.getItem('site_lang') || 'EN');
+
+  const defaultLinks = lang === 'TE' 
+    ? [
+        { name: 'హోమ్', path: '/' },
+        { name: 'సేవలు', path: '/services' },
+        { name: 'గ్యాలరీ', path: '/portfolio' },
+        { name: 'ధరలు', path: '/pricing' },
+        { name: 'ముహూర్తాలు', path: '/muhurtham' },
+      ]
     : [
         { name: 'Home', path: '/' },
         { name: 'Services', path: '/services' },
+        { name: 'Portfolio', path: '/portfolio' },
         { name: 'Pricing', path: '/pricing' },
-        { name: 'About', path: '/about' },
+        { name: 'Muhurtham Dates', path: '/muhurtham' },
       ];
 
-  const ctaText = navData.ctaText || 'Book Now';
-  const ctaLink = navData.ctaLink || '/contact';
-  
-  const [lang, setLang] = useState('EN');
+  const navLinks = Array.isArray(navData.links) && navData.links.length > 0
+    ? navData.links
+    : defaultLinks;
+
+  const ctaText = navData.ctaText || (lang === 'TE' ? 'ఆర్డర్ చేయండి' : 'Order Album');
+  const ctaLink = navData.ctaLink || '/order';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,9 +83,15 @@ const Navbar = () => {
 
           <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '15px', marginLeft: '20px' }}>
             <button 
-              onClick={() => setLang(lang === 'EN' ? 'TE' : 'EN')}
+              onClick={() => {
+                const next = lang === 'EN' ? 'TE' : 'EN';
+                setLang(next);
+                localStorage.setItem('site_lang', next);
+                window.dispatchEvent(new Event('languageChange'));
+              }}
               className="lang-toggle-btn"
-              style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
+              style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
+              title="తెలుగు / English"
             >
               {lang === 'EN' ? 'తెలుగు' : 'English'}
             </button>

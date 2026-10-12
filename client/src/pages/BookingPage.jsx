@@ -115,7 +115,7 @@ const BookingPage = () => {
         body: JSON.stringify({ items, totalAmount: grandTotal, estimatedDeliveryEta: new Date(Date.now() + (etaDays * 86400000)).toISOString() })
       });
       setToast('Cart saved! Proceeding to checkout...');
-      setTimeout(() => navigate('/orders'), 1500); // Or wherever checkout happens
+      setTimeout(() => navigate('/checkout'), 1200);
     } catch (err) {
       console.error(err);
       setToast('Failed to save cart.');

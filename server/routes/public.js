@@ -277,4 +277,156 @@ router.post('/contact', async (req, res) => {
   }
 });
 
+/* ── Turnaround / ETA Calculation ────────────────────────────────────── */
+router.post(['/calculate-eta', '/builder/calculate-eta'], async (req, res) => {
+  try {
+    const { serviceIds = [], speed = 'standard' } = req.body;
+    let days = 3;
+    if (Array.isArray(serviceIds) && serviceIds.length > 2) {
+      days += 1;
+    }
+    if (speed === 'express') {
+      days = Math.max(1, Math.round(days / 2));
+    } else if (speed === 'sameday') {
+      days = 1;
+    }
+
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + days);
+
+    res.json({
+      success: true,
+      estimatedDays: days,
+      deliveryDate: targetDate.toLocaleDateString('en-IN', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      })
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message, estimatedDays: 3 });
+  }
+});
+
+/* ── WhatsApp Lead Capture ───────────────────────────────────────────── */
+router.post('/whatsapp-lead', async (req, res) => {
+  try {
+    const { phone = '', name = '', service = 'General Inquiry', note = '' } = req.body;
+    if (phone || name) {
+      await ContactLead.create({
+        id: crypto.randomUUID(),
+        name: name || 'WhatsApp Inquirer',
+        email: '',
+        phone,
+        event_type: service,
+        message: note || 'Lead initiated via WhatsApp CTA',
+        status: 'whatsapp_lead',
+        created_at: new Date().toISOString()
+      });
+    }
+    res.json({ success: true, message: 'Lead captured' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Curated Portfolio & Testimonials Endpoints ──────────────────────── */
+router.get('/portfolio', async (req, res) => {
+  try {
+    const items = [
+      {
+        id: 'port-1',
+        title: 'Sita & Rama Krishna',
+        category: 'wedding',
+        location: 'Vijayawada',
+        albumType: 'Karizma Flush Mount',
+        imageUrl: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=900',
+        sheetCount: 40,
+        tag: 'Pelli & Reception'
+      },
+      {
+        id: 'port-2',
+        title: 'Ananya & Karthik',
+        category: 'wedding',
+        location: 'Visakhapatnam',
+        albumType: 'Velvet Royal Hardcover',
+        imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=900',
+        sheetCount: 50,
+        tag: 'Beach Wedding'
+      },
+      {
+        id: 'port-3',
+        title: 'Meghana & Sai',
+        category: 'engagement',
+        location: 'Guntur',
+        albumType: 'Artistic Matte Fine Art',
+        imageUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=900',
+        sheetCount: 30,
+        tag: 'Nischitartham'
+      },
+      {
+        id: 'port-4',
+        title: 'Grand Mandap Entrance Flex',
+        category: 'flex',
+        location: 'Tirupati',
+        albumType: 'Large Format High-Res Banner',
+        imageUrl: 'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=900',
+        sheetCount: 1,
+        tag: 'Flex & Hoarding'
+      },
+      {
+        id: 'port-5',
+        title: 'Harika Saree Ceremony',
+        category: 'birthday',
+        location: 'Rajahmundry',
+        albumType: 'Glossy Vibrant Photobook',
+        imageUrl: 'https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=900',
+        sheetCount: 25,
+        tag: 'Half Saree'
+      }
+    ];
+    res.json({ success: true, count: items.length, items });
+  } catch (err) {
+    res.status(500).json({ error: err.message, items: [] });
+  }
+});
+
+router.get('/testimonials', async (req, res) => {
+  try {
+    const reviews = [
+      {
+        id: 'rev-1',
+        name: 'Venkatesh & Supriya Rao',
+        city: 'Vijayawada',
+        rating: 5,
+        service: 'Karizma Album & Cinematic Film',
+        review: 'The album quality is pure royal gold. Our relatives from US were completely stunned by the crystal sheet quality and Telugu song score!',
+        date: '2 weeks ago'
+      },
+      {
+        id: 'rev-2',
+        name: 'Suresh Kumar (SK Photo Studio)',
+        city: 'Guntur',
+        rating: 5,
+        service: 'B2B Batch Editing & Printing',
+        review: 'We have been ordering 30+ albums every muhurtham season. Fastest delivery in AP and color correction matches our Sony RAW exactly.',
+        date: '1 month ago'
+      },
+      {
+        id: 'rev-3',
+        name: 'Divya & Praneeth',
+        city: 'Visakhapatnam',
+        rating: 5,
+        service: 'Flush Mount Album & Instagram Reels',
+        review: 'Same-day reels were delivered before our reception even started! Truly world-class post production service.',
+        date: '3 weeks ago'
+      }
+    ];
+    res.json({ success: true, count: reviews.length, reviews });
+  } catch (err) {
+    res.status(500).json({ error: err.message, reviews: [] });
+  }
+});
+
 export default router;
+

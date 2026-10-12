@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Serif+Telugu:wght@400;600;700&display=swap');
 
 /* ============================================================
    DESIGN TOKENS
@@ -68,7 +68,16 @@ a { text-decoration: none; color: inherit; }
 h1, h2, h3, h4, h5 { font-weight: 800; line-height: 1.2; }
 
 .font-serif { font-family: 'Playfair Display', serif; }
+.font-telugu { font-family: 'Noto Serif Telugu', 'Playfair Display', serif; }
 .font-light { font-weight: 300; }
+
+.telugu-sub {
+  font-family: 'Noto Serif Telugu', serif;
+  font-size: 0.88rem;
+  color: #D4AF37;
+  opacity: 0.9;
+  letter-spacing: 0.2px;
+}
 
 h1 { font-size: clamp(2.1rem, 6vw, 4.1rem); letter-spacing: -0.5px; }
 h2 { font-size: clamp(1.4rem, 3.5vw, 2.25rem); }

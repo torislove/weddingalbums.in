@@ -103,15 +103,68 @@ const ClientDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [wallet, setWallet] = useState(user?.wallet_balance ?? 0);
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) return;
-    fetch(`${API}/api/wallet`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d?.wallet_balance !== undefined) setWallet(d.wallet_balance); })
-      .catch(() => {});
-  }, []);
+    if (token) {
+      fetch(`${API}/api/wallet`, { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d?.wallet_balance !== undefined) setWallet(d.wallet_balance); })
+        .catch(() => {});
+    }
+
+    // Fetch user's orders
+    const fetchOrders = async () => {
+      try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await fetch(`${API}/api/orders`, { headers });
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list) && list.length > 0) {
+            // Filter by user email if available
+            const userOrders = list.filter(ord => {
+              if (!user?.email) return true;
+              const ordEmail = ord.email || ord.userEmail || ord.data?.userEmail;
+              return ordEmail ? ordEmail.toLowerCase() === user.email.toLowerCase() : true;
+            });
+
+            const mapped = (userOrders.length > 0 ? userOrders : list.slice(0, 3)).map(ord => {
+              const statusStr = (ord.status || 'Confirmed').toLowerCase();
+              let stepIdx = 0;
+              let color = '#3b82f6';
+              if (statusStr.includes('deliver')) { stepIdx = 6; color = '#22c55e'; }
+              else if (statusStr.includes('ship')) { stepIdx = 5; color = '#10b981'; }
+              else if (statusStr.includes('print')) { stepIdx = 4; color = '#a855f7'; }
+              else if (statusStr.includes('proof')) { stepIdx = 3; color = '#ec4899'; }
+              else if (statusStr.includes('edit')) { stepIdx = 2; color = '#3b82f6'; }
+              else if (statusStr.includes('receiv')) { stepIdx = 1; color = '#eab308'; }
+
+              return {
+                id: ord.id || ord.orderId || 'ORD-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
+                name: ord.name || ord.data?.services ? 'Wedding Post-Production Bundle' : 'Custom Wedding Album',
+                status: statusStr,
+                statusColor: color,
+                statusLabel: ord.status || 'Confirmed',
+                badgeBg: `${color}15`,
+                badgeColor: color,
+                date: new Date(ord.createdAt || ord.created_at || Date.now()).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }),
+                amount: `₹${(ord.total || ord.data?.total || 7500).toLocaleString('en-IN')}`,
+                currentStep: stepIdx
+              };
+            });
+            setOrders(mapped);
+          }
+        }
+      } catch (e) {
+        console.warn('Orders fetch error:', e);
+      } finally {
+        setLoadingOrders(false);
+      }
+    };
+    fetchOrders();
+  }, [user]);
 
   const handleLogout = async () => {
     await logout();
@@ -228,8 +281,13 @@ const ClientDashboard = () => {
 
             {/* Active Orders with Timeline */}
             <div className="cdash-section">
-              <div className="cdash-section-title">Your Orders</div>
-              {MOCK_ORDERS.map(order => <OrderCard key={order.id} order={order} />)}
+              <div className="cdash-section-title flex justify-between items-center">
+                <span>Your Orders ({orders.length > 0 ? orders.length : 2})</span>
+                <Link to="/order" className="text-xs text-[#D4AF37] font-semibold hover:underline">
+                  + New Custom Order
+                </Link>
+              </div>
+              {(orders.length > 0 ? orders : MOCK_ORDERS).map(order => <OrderCard key={order.id} order={order} />)}
             </div>
 
             {/* Quick Actions */}
@@ -237,15 +295,15 @@ const ClientDashboard = () => {
               <div className="cdash-section-title">Quick Actions</div>
               <div className="cdash-actions">
                 {[
-                  { label: 'New Order',      icon: ShoppingBag, to: '/order' },
-                  { label: 'View Proofs',    icon: ImageIcon,   to: '/client/proofs' },
-                  { label: 'Download Invoice', icon: Download,  to: '/client/orders' },
-                  { label: 'Call Support',   icon: Phone,       href: 'tel:+919999000001' },
-                  { label: 'Payment History',icon: CreditCard,  to: '/client/wallet' },
-                  { label: 'Refer & Earn',   icon: Heart,       to: '/client/referral' },
+                  { label: 'New Order',        icon: ShoppingBag, to: '/order' },
+                  { label: 'View Proofs',      icon: ImageIcon,   to: '/client/proofs' },
+                  { label: 'Download Invoice', icon: Download,    to: '/client/orders' },
+                  { label: 'WhatsApp Support', icon: Phone,       href: `https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను Client Portal (${user?.name || 'Customer'}) నుండి మాట్లాడుతున్నాను. నా ఆర్డర్ గురించి సహాయం కావాలి.`)}` },
+                  { label: 'Wallet & Credits', icon: CreditCard,  to: '/client/wallet' },
+                  { label: 'Refer & Earn',     icon: Heart,       to: '/client/referral' },
                 ].map((a, i) => (
                   a.href
-                    ? <a key={i} href={a.href} className="cdash-action-btn">
+                    ? <a key={i} href={a.href} target="_blank" rel="noopener noreferrer" className="cdash-action-btn">
                         <div className="cdash-action-icon"><a.icon size={20} color="#d4af37" /></div>
                         {a.label}
                       </a>
