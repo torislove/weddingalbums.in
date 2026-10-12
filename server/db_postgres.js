@@ -126,7 +126,9 @@ const memStore = {
   carts: new Map(),
   refreshTokens: [],
   auditLogs: [],
-  contactLeads: []
+  contactLeads: [],
+  contents: new Map(),
+  media: []
 };
 
 // State flag for PostgreSQL live connection
@@ -297,6 +299,23 @@ export async function initDatabase() {
         details TEXT,
         ip VARCHAR(64),
         timestamp TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS contents (
+        key VARCHAR(128) PRIMARY KEY,
+        data JSONB NOT NULL,
+        "updatedAt" TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS media (
+        id VARCHAR(64) PRIMARY KEY,
+        url TEXT NOT NULL,
+        type VARCHAR(64) DEFAULT 'image',
+        "createdAt" TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS content_history (
+        id VARCHAR(64) PRIMARY KEY,
+        key VARCHAR(128),
+        data JSONB,
+        "createdAt" TIMESTAMPTZ DEFAULT NOW()
       );
     `);
     console.log('✅ Remote PostgreSQL Tables Ready!');
@@ -803,8 +822,75 @@ export async function autoSeedDatabase() {
   console.log('✅ PostgreSQL Catalog Seeded and Ready');
 }
 
+export const Content = {
+  async findOne({ key }) {
+    if (isPostgresLive) {
+      try {
+        const res = await query('SELECT * FROM contents WHERE key = $1 LIMIT 1', [key]);
+        if (res?.rows[0]) {
+          const raw = res.rows[0].data;
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+          return { _id: res.rows[0].key, key: res.rows[0].key, data: parsed };
+        }
+      } catch (e) {
+        console.warn('Content findOne query notice:', e.message);
+      }
+    }
+    const val = memStore.contents.get(key);
+    return val ? { _id: key, key, data: val } : null;
+  },
+  async findOneAndUpdate({ key }, update, opts = {}) {
+    const data = (update && update.data !== undefined) ? update.data : update;
+    if (isPostgresLive) {
+      try {
+        await query(`
+          INSERT INTO contents (key, data, "updatedAt")
+          VALUES ($1, $2, NOW())
+          ON CONFLICT (key) DO UPDATE SET data = $2, "updatedAt" = NOW()
+        `, [key, JSON.stringify(data)]);
+      } catch (e) {
+        console.warn('Content upsert query notice:', e.message);
+      }
+    }
+    memStore.contents.set(key, data);
+    return { _id: key, key, data };
+  }
+};
+
+export const Media = {
+  async create(doc) {
+    const id = generateId();
+    const item = { id, _id: id, url: doc.url, type: doc.type || 'image', createdAt: nowIso() };
+    if (isPostgresLive) {
+      try {
+        await query('INSERT INTO media (id, url, type, "createdAt") VALUES ($1, $2, $3, $4)', [id, item.url, item.type, item.createdAt]);
+      } catch (e) {
+        console.warn('Media insert notice:', e.message);
+      }
+    }
+    memStore.media.unshift(item);
+    return item;
+  },
+  async find(filter = {}) {
+    if (isPostgresLive) {
+      try {
+        const sql = filter.type ? 'SELECT * FROM media WHERE type = $1 ORDER BY "createdAt" DESC' : 'SELECT * FROM media ORDER BY "createdAt" DESC';
+        const params = filter.type ? [filter.type] : [];
+        const res = await query(sql, params);
+        if (res?.rows) return res.rows.map(r => ({ ...r, _id: r.id }));
+      } catch (e) {
+        console.warn('Media find notice:', e.message);
+      }
+    }
+    let list = [...memStore.media];
+    if (filter.type) list = list.filter(m => m.type === filter.type);
+    return list.map(m => ({ ...m, _id: m.id }));
+  }
+};
+
 export default {
   User, Package, Service, SheetType, Order, Task, Project,
   PayoutRequest, Config, Cart, RefreshToken, AuditLog, ContactLead,
+  Content, Media,
   initDatabase, getPool, query, autoSeedDatabase
 };

@@ -72,7 +72,7 @@ const PageEditor = ({ adminState }) => {
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
   const [previewMode, setPreviewMode] = useState('desktop'); // desktop, tablet, mobile
   
-  const blocks = content.pages[pageId] || [];
+  const blocks = content?.pages?.[pageId] || [];
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -130,7 +130,9 @@ const PageEditor = ({ adminState }) => {
     return '100%';
   };
 
-  const previewUrl = pageId === 'home' ? 'http://localhost:5173/' : `http://localhost:5173/${pageId}`;
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1'));
+  const clientBase = isLocal ? 'http://localhost:5173' : 'https://weddingalbums-b4bcd.web.app';
+  const previewUrl = pageId === 'home' ? `${clientBase}/` : `${clientBase}/${pageId}`;
 
   return (
     <div className="flex h-screen overflow-hidden bg-black/20">

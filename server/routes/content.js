@@ -1,78 +1,119 @@
 /**
  * server/routes/content.js — CMS & Media API
  * Unprotected reads, protected writes
+ * Resilient multi-tier architecture: PostgreSQL -> Server JSON -> Auto-seed
  */
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
 import { Content, Media } from '../db_content.js';
 
+const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = express.Router();
 const contentAdminOnly = requireRole(['admin', 'content_admin', 'sysadmin'], ['admin-portal', 'uiadmin-portal', 'sysadmin-portal']);
 
+// Bundled in-memory fallback template
+let fallbackContentData = null;
+try {
+  fallbackContentData = require('../content_fallback.json');
+} catch (e) {
+  console.warn('Could not load ../content_fallback.json via require:', e.message);
+}
+
 /* ── Content API ────────────────────────────────────────────────────── */
 router.get('/content', async (req, res) => {
   try {
     const contentDoc = await Content.findOne({ key: 'main_site' });
-    if (contentDoc && contentDoc.data && Object.keys(contentDoc.data).length > 0) {
+    if (contentDoc && contentDoc.data && Object.keys(contentDoc.data).length > 0 && contentDoc.data.pages && Object.keys(contentDoc.data.pages).length > 0) {
       return res.json(contentDoc.data);
     }
     
-    // Fallback to local file if DB is empty
-    const pathsToTry = [
-      path.join(__dirname, 'content_fallback.json'),
-      path.join(__dirname, '../../client/public/content.json')
-    ];
-    for (const p of pathsToTry) {
-      try {
-        const raw = await fs.readFile(p, 'utf-8');
-        return res.json(JSON.parse(raw));
-      } catch { /* try next */ }
+    // Fallback: If DB is empty or lacks pages, load from bundled fallback
+    let fallback = fallbackContentData;
+    if (!fallback) {
+      const pathsToTry = [
+        path.join(__dirname, '../content_fallback.json'),
+        path.join(process.cwd(), 'content_fallback.json'),
+        path.join(__dirname, 'content_fallback.json'),
+        path.join(__dirname, '../../client/public/content.json')
+      ];
+      for (const p of pathsToTry) {
+        try {
+          const raw = await fs.readFile(p, 'utf-8');
+          fallback = JSON.parse(raw);
+          if (fallback && fallback.pages) break;
+        } catch { /* try next */ }
+      }
     }
+
+    if (fallback && fallback.pages && Object.keys(fallback.pages).length > 0) {
+      // Auto-seed into DB asynchronously so future queries read directly from DB
+      Content.findOneAndUpdate({ key: 'main_site' }, { data: fallback }).catch(() => {});
+      return res.json(fallback);
+    }
+
     res.json({ pages: {}, global: {} });
   } catch (err) {
+    console.error('Content fetch error:', err);
+    if (fallbackContentData) {
+      return res.json(fallbackContentData);
+    }
     res.json({ pages: {}, global: {} });
   }
 });
 
 router.post('/content', contentAdminOnly, async (req, res) => {
   try {
-    // Phase 8.2 — Save History & Versioning
+    const newContent = req.body;
+    if (!newContent || typeof newContent !== 'object') {
+      return res.status(400).json({ error: 'Invalid content body' });
+    }
+
+    // Save previous version to history if present
     const existing = await Content.findOne({ key: 'main_site' });
-    if (existing) {
-      // Save old version to history (limit to last 50 versions for example)
-      // Save old version to history
+    if (existing && existing.data) {
       const versionId = crypto.randomUUID();
       try {
-        const { query } = await import('../db.js');
+        const { query } = await import('../db_postgres.js');
         if (query) {
-          await query(`CREATE TABLE IF NOT EXISTS content_history (id VARCHAR(64) PRIMARY KEY, key VARCHAR(128), data JSONB, created_at TIMESTAMPTZ DEFAULT NOW())`);
-          await query(`INSERT INTO content_history (id, key, data) VALUES ($1, $2, $3)`, [versionId, 'main_site', JSON.stringify(existing.data)]);
+          await query(
+            `INSERT INTO content_history (id, key, data, created_at) VALUES ($1, $2, $3, NOW())`,
+            [versionId, 'main_site', JSON.stringify(existing.data)]
+          );
         }
       } catch {
         /* optional history fallback */
       }
     }
 
+    // Upsert into PostgreSQL / memory
     await Content.findOneAndUpdate(
       { key: 'main_site' },
-      { key: 'main_site', data: req.body }
+      { key: 'main_site', data: newContent }
     );
-    return res.json({ success: true });
-  } catch (err) {
+
+    // Keep fallback cache synchronized
+    fallbackContentData = newContent;
+
+    // Persist to local fallback file if filesystem is writable
     try {
-      const localContentPath = path.join(__dirname, '../../client/public/content.json');
-      await fs.writeFile(localContentPath, JSON.stringify(req.body, null, 2));
-      res.json({ success: true, message: 'Saved to local file fallback' });
-    } catch (fsErr) {
-      res.status(500).json({ error: 'Failed to save content' });
+      const fallbackFile = path.join(__dirname, '../content_fallback.json');
+      await fs.writeFile(fallbackFile, JSON.stringify(newContent, null, 2));
+    } catch {
+      /* ignore read-only filesystems in production cloud */
     }
+
+    return res.json({ success: true, message: 'Content published successfully' });
+  } catch (err) {
+    console.error('Failed to save content:', err);
+    res.status(500).json({ error: 'Failed to save content: ' + err.message });
   }
 });
 
@@ -111,8 +152,8 @@ router.post('/upload', contentAdminOnly, upload.single('image'), async (req, res
 
 router.get('/images', contentAdminOnly, async (req, res) => {
   try {
-    const media = await Media.find({ type: 'image' }).sort({ createdAt: -1 });
-    const images = media.map(m => m.url);
+    const media = await Media.find({ type: 'image' });
+    const images = Array.isArray(media) ? media.map(m => m.url) : [];
     res.json(images);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch images' });
