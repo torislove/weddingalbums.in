@@ -8,6 +8,8 @@ const RitualsScroll = (props) => {
     rituals = []
   } = props;
 
+  const visibleRituals = (rituals || []).filter(r => !r.isHidden);
+
   return (
     <section className="section bg-darker">
       <div className="container">
@@ -16,7 +18,7 @@ const RitualsScroll = (props) => {
           <h2 className="text-gradient font-serif">{title}</h2>
         </ScrollReveal>
         <div className="rituals-scroll">
-          {rituals.map((r, i) => (
+          {visibleRituals.map((r, i) => (
             <ScrollReveal key={i} delay={i * 80}>
               <div className="ritual-card glass">
                 <span className="ritual-number">{String(i + 1).padStart(2, '0')}</span>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 
 const ContentContext = createContext(null);
 
@@ -15,7 +15,7 @@ const isValidContent = (data) => {
 };
 
 export const ContentProvider = ({ children }) => {
-  // Try initializing with cached content from localStorage for instant, flicker-free rendering
+  // Initialize with cached content from localStorage for instant, flicker-free rendering
   const [content, setContent] = useState(() => {
     try {
       const cached = localStorage.getItem('cached_site_content');
@@ -28,8 +28,12 @@ export const ContentProvider = ({ children }) => {
   });
 
   const [loading, setLoading] = useState(() => !content);
+  const isPreviewMode = useRef(false);
 
   const loadContent = useCallback(async () => {
+    // If currently running in live preview mode inside CMS iframe, don't overwrite with remote published data
+    if (isPreviewMode.current) return;
+
     let resolvedContent = null;
 
     // 1. First Tier: Fetch dynamic published content from Server API
@@ -46,7 +50,7 @@ export const ContentProvider = ({ children }) => {
     }
 
     // 2. Second Tier: Fallback to static CDN content.json
-    if (!resolvedContent) {
+    if (!resolvedContent && !isPreviewMode.current) {
       try {
         const cdnRes = await fetch('/content.json');
         if (cdnRes.ok) {
@@ -61,7 +65,7 @@ export const ContentProvider = ({ children }) => {
     }
 
     // 3. Third Tier: Fallback to cached localStorage content
-    if (!resolvedContent) {
+    if (!resolvedContent && !isPreviewMode.current) {
       try {
         const cached = localStorage.getItem('cached_site_content');
         if (cached) {
@@ -73,18 +77,17 @@ export const ContentProvider = ({ children }) => {
       } catch { /* ignore */ }
     }
 
-    if (resolvedContent) {
+    if (resolvedContent && !isPreviewMode.current) {
       setContent(resolvedContent);
       try {
         localStorage.setItem('cached_site_content', JSON.stringify(resolvedContent));
       } catch { /* storage full */ }
-    } else if (!content) {
-      // Graceful fallback empty structure if all tiers failed
+    } else if (!content && !isPreviewMode.current) {
       setContent({ pages: {}, global: {} });
     }
 
     setLoading(false);
-  }, [content]);
+  }, []); // Stable empty dependency array
 
   useEffect(() => {
     loadContent();
@@ -94,19 +97,30 @@ export const ContentProvider = ({ children }) => {
     try {
       channel = new BroadcastChannel('cms-preview');
       channel.onmessage = (event) => {
-        if (event.data && event.data.type === 'PREVIEW_UPDATE' && event.data.content) {
+        if (event.data && (event.data.type === 'PREVIEW_UPDATE' || event.data.type === 'CMS_LIVE_PREVIEW') && event.data.content) {
+          isPreviewMode.current = true;
           setContent(event.data.content);
+          setLoading(false);
         }
       };
     } catch { /* BroadcastChannel not supported */ }
 
-    // Also listen for postMessage from parent iframe (for embedded CMS preview mode)
+    // Listen for postMessage from parent iframe (embedded CMS preview mode)
     const handlePostMessage = (event) => {
-      if (event.data && event.data.type === 'CMS_LIVE_PREVIEW' && event.data.content) {
+      if (event.data && (event.data.type === 'CMS_LIVE_PREVIEW' || event.data.type === 'PREVIEW_UPDATE') && event.data.content) {
+        isPreviewMode.current = true;
         setContent(event.data.content);
+        setLoading(false);
       }
     };
     window.addEventListener('message', handlePostMessage);
+
+    // Announce to parent window (CMS) that iframe is ready to receive draft preview
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'CMS_IFRAME_READY' }, '*');
+      }
+    } catch { /* ignore cross-origin */ }
 
     return () => {
       if (channel) channel.close();

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Camera, MapPin, Upload, Briefcase, ChevronRight, ChevronLeft, CheckCircle, Store, Users, User, FileText, Smartphone } from 'lucide-react';
 import Logo from '../components/Logo';
+import { API } from '../apiConfig';
 
 const B2BRegister = () => {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ const B2BRegister = () => {
     }
     
     try {
-      const response = await fetch('http://localhost:4000/api/register', {
+      const response = await fetch(`${API}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

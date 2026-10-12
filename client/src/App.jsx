@@ -43,6 +43,8 @@ import ClientDashboard from './pages/ClientDashboard';
 import OrderHistory from './pages/OrderHistory';
 import AlbumProofGallery from './pages/AlbumProofGallery';
 import ProfileSettings from './pages/ProfileSettings';
+import ClientWallet from './pages/ClientWallet';
+import ClientReferral from './pages/ClientReferral';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 
@@ -92,6 +94,8 @@ function App() {
                     <Route path="/client" element={<ClientDashboard />}>
                       <Route path="orders" element={<OrderHistory />} />
                       <Route path="proofs" element={<AlbumProofGallery />} />
+                      <Route path="wallet" element={<ClientWallet />} />
+                      <Route path="referral" element={<ClientReferral />} />
                       <Route path="settings" element={<ProfileSettings />} />
                     </Route>
                   </Route>

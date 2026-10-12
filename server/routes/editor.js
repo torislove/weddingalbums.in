@@ -3,8 +3,9 @@
  * Protected: requires role='editor', audience='editor-portal'
  */
 import express from 'express';
+import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
-import { Task, User } from '../db.js';
+import { Task, User, PayoutRequest } from '../db.js';
 
 const router = express.Router();
 const editorOnly = requireRole('editor', 'editor-portal');
@@ -93,12 +94,55 @@ router.get('/stats', editorOnly, async (req, res) => {
     const pendingTasksCount = tasks.filter(t => ['in_progress', 'submitted'].includes(t.status)).length;
 
     res.json({
-      rating: user.editor_rating || 5.0,
+      rating: user?.editor_rating || 5.0,
       totalEarnings,
-      walletBalance: user.wallet_balance || 0,
+      walletBalance: user?.wallet_balance || 0,
       completedJobs: completedTasks.length,
       activeJobs: pendingTasksCount
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Payout Request ─────────────────────────────────────────────────── */
+const handleEditorPayout = async (req, res) => {
+  try {
+    const amount = Number(req.body.amount);
+    const upiId = req.body.upi_id || req.body.upiId;
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: 'Valid withdrawal amount required' });
+    }
+
+    const user = await User.findById(req.user.id);
+    const balance = user?.wallet_balance ?? 0;
+    if (balance < amount) {
+      return res.status(400).json({ error: `Insufficient wallet balance (Available: ₹${balance})` });
+    }
+
+    const payout = await PayoutRequest.create({
+      id: crypto.randomUUID(),
+      user_id: req.user.id,
+      amount,
+      upi_id: upiId || user?.upi_id || 'editor@upi',
+      status: 'pending',
+      created_at: new Date().toISOString(),
+    });
+
+    res.status(201).json({ success: true, message: 'Payout request submitted to Escrow for admin review', payout });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+router.post('/payout', editorOnly, handleEditorPayout);
+router.post('/payout-request', editorOnly, handleEditorPayout);
+
+router.get('/payouts', editorOnly, async (req, res) => {
+  try {
+    const payouts = await PayoutRequest.findAll({ user_id: req.user.id });
+    res.json(payouts || []);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

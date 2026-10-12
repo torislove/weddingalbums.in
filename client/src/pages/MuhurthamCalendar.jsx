@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Info } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 const MuhurthamCalendar = () => {
+  const navigate = useNavigate();
   const [dates, setDates] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDates = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/muhurtham');
+        const response = await fetch(`${API}/api/muhurtham`);
         const data = await response.json();
         setDates(data.dates || []);
       } catch (err) {
         console.error('Failed to fetch muhurtham dates', err);
-        setDates(["2026-10-12", "2026-10-18", "2026-10-26", "2026-11-04"]); // Fallback
+        setDates(["2026-10-18", "2026-10-26", "2026-11-04", "2026-11-18", "2026-12-06", "2027-01-22"]);
       } finally {
         setLoading(false);
       }
@@ -43,7 +47,13 @@ const MuhurthamCalendar = () => {
                 <p style={{ color: '#10b981', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                   <Info size={14} /> High Demand
                 </p>
-                <button className="btn-gold" style={{ marginTop: '1.5rem', width: '100%', padding: '0.5rem', fontSize: '0.9rem' }}>Check Availability</button>
+                <button 
+                  className="btn-gold" 
+                  style={{ marginTop: '1.5rem', width: '100%', padding: '0.5rem', fontSize: '0.9rem', cursor: 'pointer' }}
+                  onClick={() => navigate(`/booking?date=${dateStr}`)}
+                >
+                  Check Availability & Book
+                </button>
               </div>
             );
           })

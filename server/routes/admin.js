@@ -5,7 +5,7 @@
 import express from 'express';
 import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
-import { User, Order, Task, PayoutRequest, Project, AuditLog } from '../db.js';
+import { User, Order, Task, PayoutRequest, Project, AuditLog, Package, Service, SheetType } from '../db.js';
 
 const router = express.Router();
 const adminOnly = requireRole(['admin', 'sysadmin', 'content_admin'], ['admin-portal', 'sysadmin-portal', 'uiadmin-portal']);
@@ -216,6 +216,127 @@ router.get('/audit-logs', adminOnly, async (req, res) => {
     res.json(logs || []);
   } catch (err) {
     res.status(500).json({ error: err.message, logs: [] });
+  }
+});
+
+/* ── Jobs / Tasks Management ────────────────────────────────────────── */
+router.get('/jobs', adminOnly, async (req, res) => {
+  try {
+    const tasks = await Task.findAll(req.query || {});
+    res.json(tasks || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, jobs: [] });
+  }
+});
+
+/* ── Packages Management ───────────────────────────────────────────── */
+router.get('/packages', adminOnly, async (req, res) => {
+  try {
+    const packages = await Package.find(req.query || {});
+    res.json(packages || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, packages: [] });
+  }
+});
+
+router.post('/packages', adminOnly, async (req, res) => {
+  try {
+    const created = await Package.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put('/packages/:id', adminOnly, async (req, res) => {
+  try {
+    const updated = await Package.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated || { success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete('/packages/:id', adminOnly, async (req, res) => {
+  try {
+    await Package.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Services Management & Pricing Engine Endpoints ─────────────────── */
+router.get(['/services', '/builder/services'], adminOnly, async (req, res) => {
+  try {
+    const services = await Service.find(req.query || {});
+    res.json(services || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, services: [] });
+  }
+});
+
+router.post(['/services', '/builder/services'], adminOnly, async (req, res) => {
+  try {
+    const created = await Service.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put(['/services/:id', '/builder/services/:id'], adminOnly, async (req, res) => {
+  try {
+    const updated = await Service.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated || { success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete(['/services/:id', '/builder/services/:id'], adminOnly, async (req, res) => {
+  try {
+    await Service.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Sheet Types Management ─────────────────────────────────────────── */
+router.get(['/sheets', '/builder/sheets'], adminOnly, async (req, res) => {
+  try {
+    const sheets = await SheetType.find(req.query || {});
+    res.json(sheets || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, sheets: [] });
+  }
+});
+
+router.post(['/sheets', '/builder/sheets'], adminOnly, async (req, res) => {
+  try {
+    const created = await SheetType.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put(['/sheets/:id', '/builder/sheets/:id'], adminOnly, async (req, res) => {
+  try {
+    const updated = await SheetType.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated || { success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete(['/sheets/:id', '/builder/sheets/:id'], adminOnly, async (req, res) => {
+  try {
+    await SheetType.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

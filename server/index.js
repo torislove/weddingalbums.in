@@ -79,6 +79,7 @@ export const loginRateLimiter = rateLimit({
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join('/tmp', 'uploads')));
 
 // =======================
 // MOUNT MODULAR ROUTES
@@ -91,7 +92,8 @@ app.use('/api/client', clientRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/public', publicRouter);
 
-// Fallback mount for legacy paths
+// Fallback mount for legacy paths & builder routes
+app.use('/api/builder', publicRouter);
 app.use('/api', contentRouter);
 app.use('/api', publicRouter);
 

@@ -1,93 +1,225 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Mail, Phone, Search } from 'lucide-react';
+import { Users, Mail, Phone, Search, RefreshCw, Trash2, Shield, Briefcase, Camera, Heart } from 'lucide-react';
+import { API } from '../apiConfig';
 
-const CustomerManager = () => {
-  const [customers, setCustomers] = useState([]);
+const UserManager = () => {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [activeRole, setActiveRole] = useState('all');
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
+      const roleParam = activeRole !== 'all' ? `?role=${activeRole}` : '';
+      const res = await fetch(`${API}/api/admin/users${roleParam}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUsers(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch users', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Mock fetch for customers
-    const mockCustomers = [
-      { id: 1, name: 'Rahul Sharma', email: 'rahul@example.com', phone: '9876543210', type: 'B2C', joined: 'Oct 1, 2026', orders: 1 },
-      { id: 2, name: 'Dream Studios', email: 'hello@dreamstudios.in', phone: '9123456780', type: 'B2B', joined: 'Sep 15, 2026', orders: 14 },
-      { id: 3, name: 'Priya Reddy', email: 'priya.reddy@gmail.com', phone: '9988776655', type: 'B2C', joined: 'Oct 5, 2026', orders: 1 },
-    ];
-    setCustomers(mockCustomers);
-    setLoading(false);
-  }, []);
+    fetchUsers();
+  }, [activeRole]);
 
-  const filtered = customers.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.email.toLowerCase().includes(search.toLowerCase()));
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    try {
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
+      const res = await fetch(`${API}/api/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setUsers(users.filter(u => u.id !== id && u._id !== id));
+      } else {
+        alert('Failed to delete user');
+      }
+    } catch {
+      alert('Network error');
+    }
+  };
+
+  const filtered = users.filter(u => 
+    (u.name && u.name.toLowerCase().includes(search.toLowerCase())) ||
+    (u.email && u.email.toLowerCase().includes(search.toLowerCase())) ||
+    (u.phone && u.phone.includes(search))
+  );
+
+  const getRoleBadge = (role) => {
+    switch (role) {
+      case 'b2b':
+        return <span style={{ background: 'rgba(212, 175, 55, 0.15)', color: '#D4AF37', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>STUDIO (B2B)</span>;
+      case 'editor':
+        return <span style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>CREATOR</span>;
+      case 'sysadmin':
+      case 'admin':
+        return <span style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>ADMIN</span>;
+      default:
+        return <span style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>CLIENT (B2C)</span>;
+    }
+  };
 
   return (
-    <div className="p-10 animate-slide-up max-w-6xl mx-auto h-full flex flex-col">
-      <div className="flex justify-between items-end mb-8">
+    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 className="text-3xl font-serif text-white mb-2">Customer Directory</h1>
-          <p className="text-gray-400">Manage B2B studios and B2C direct clients.</p>
+          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Customer & User Management</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>Comprehensive directory of all B2B studios, wedding couples, and freelance editors.</p>
         </div>
-        <div className="relative w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search by name or email..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg py-2 pl-10 pr-4 text-white outline-none focus:border-[#D4AF37]"
-          />
+        
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ position: 'relative', width: '280px' }}>
+            <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} size={16} />
+            <input 
+              type="text" 
+              placeholder="Search name, email, phone..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                width: '100%',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                padding: '8px 12px 8px 36px',
+                color: '#fff',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          <button 
+            onClick={fetchUsers}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '8px 16px', background: 'rgba(14,165,233,0.1)',
+              border: '1px solid rgba(14,165,233,0.25)', color: '#22d3ee',
+              borderRadius: '8px', cursor: 'pointer'
+            }}
+          >
+            <RefreshCw size={15} className={loading ? "spin" : ""} /> Refresh
+          </button>
         </div>
       </div>
 
-      <div className="glass-panel border border-white/10 rounded-xl overflow-hidden flex-1 flex flex-col">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-white/10 bg-white/5">
-                <th className="p-4 text-gray-400 font-medium">Customer Name</th>
-                <th className="p-4 text-gray-400 font-medium">Contact Details</th>
-                <th className="p-4 text-gray-400 font-medium">Type</th>
-                <th className="p-4 text-gray-400 font-medium">Orders</th>
-                <th className="p-4 text-gray-400 font-medium">Joined Date</th>
-                <th className="p-4 text-gray-400 font-medium text-right">Actions</th>
+      {/* Role Tabs */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
+        {[
+          { key: 'all', label: 'All Users' },
+          { key: 'b2b', label: 'Studios (B2B)' },
+          { key: 'b2c', label: 'Couples (B2C)' },
+          { key: 'editor', label: 'Creators / Editors' },
+          { key: 'admin', label: 'Admins' },
+        ].map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveRole(tab.key)}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: 'none',
+              background: activeRole === tab.key ? '#0ea5e9' : 'rgba(255,255,255,0.04)',
+              color: activeRole === tab.key ? '#fff' : 'rgba(255,255,255,0.6)',
+              fontWeight: activeRole === tab.key ? 600 : 400,
+              fontSize: '13px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Table Panel */}
+      <div style={{
+        background: 'rgba(0,6,15,0.6)',
+        border: '1px solid rgba(14,165,233,0.1)',
+        borderRadius: '12px',
+        overflow: 'hidden'
+      }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <thead>
+            <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
+              <th style={{ padding: '14px 16px' }}>User / Business</th>
+              <th style={{ padding: '14px 16px' }}>Contact Info</th>
+              <th style={{ padding: '14px 16px' }}>Role</th>
+              <th style={{ padding: '14px 16px' }}>Wallet Balance</th>
+              <th style={{ padding: '14px 16px' }}>Joined Date</th>
+              <th style={{ padding: '14px 16px', textAlign: 'right' }}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading users from database...</td></tr>
+            ) : filtered.length === 0 ? (
+              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>No users match the search filter.</td></tr>
+            ) : filtered.map(user => (
+              <tr key={user.id || user._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <td style={{ padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '34px', height: '34px', borderRadius: '50%',
+                      background: 'rgba(14,165,233,0.15)', color: '#22d3ee',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontWeight: 600, fontSize: '14px', flexShrink: 0
+                    }}>
+                      {(user.name || 'U').charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, color: '#fff' }}>{user.name}</div>
+                      {user.studioName && (
+                        <div style={{ fontSize: '11px', color: '#D4AF37' }}>{user.studioName}</div>
+                      )}
+                      {user.city && (
+                        <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>{user.city}</div>
+                      )}
+                    </div>
+                  </div>
+                </td>
+                <td style={{ padding: '14px 16px' }}>
+                  <div style={{ color: 'rgba(255,255,255,0.8)' }}>{user.email}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{user.phone || 'No phone'}</div>
+                </td>
+                <td style={{ padding: '14px 16px' }}>
+                  {getRoleBadge(user.role)}
+                </td>
+                <td style={{ padding: '14px 16px', fontWeight: 600, color: '#10b981' }}>
+                  ₹{Number(user.wallet_balance || 0).toLocaleString('en-IN')}
+                </td>
+                <td style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.4)' }}>
+                  {new Date(user.createdAt || user.created_at || Date.now()).toLocaleDateString()}
+                </td>
+                <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                  <button 
+                    onClick={() => handleDelete(user.id || user._id)}
+                    style={{
+                      background: 'none', border: 'none',
+                      color: 'rgba(239,68,68,0.7)', cursor: 'pointer',
+                      padding: '4px 8px', borderRadius: '4px'
+                    }}
+                    title="Delete User"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filtered.map(customer => (
-                <tr key={customer.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
-                        {customer.name.charAt(0)}
-                      </div>
-                      <span className="text-white font-medium">{customer.name}</span>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-sm text-gray-300 flex items-center gap-2"><Mail size={14}/> {customer.email}</span>
-                      <span className="text-sm text-gray-400 flex items-center gap-2"><Phone size={14}/> {customer.phone}</span>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${customer.type === 'B2B' ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' : 'bg-blue-500/20 text-blue-400 border-blue-500/30'}`}>
-                      {customer.type}
-                    </span>
-                  </td>
-                  <td className="p-4 text-white">{customer.orders}</td>
-                  <td className="p-4 text-gray-400 text-sm">{customer.joined}</td>
-                  <td className="p-4 text-right">
-                    <button className="px-3 py-1 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-lg border border-white/10 transition-colors">
-                      View Profile
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 };
 
-export default CustomerManager;
+export default UserManager;

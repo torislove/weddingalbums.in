@@ -3,7 +3,7 @@ import ScrollReveal from '../ScrollReveal';
 import AnimatedCounter from '../AnimatedCounter';
 
 const StatsBar = (props) => {
-  const stats = props.stats || [];
+  const stats = (props.stats || []).filter(s => !s.isHidden);
 
   return (
     <section className="stats-bar">

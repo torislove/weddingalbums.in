@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Camera, MapPin, Upload, Briefcase, ChevronRight, ChevronLeft, CheckCircle, Smartphone, User, MonitorPlay, Key, Mail, Calendar, Video, Image, Play, Edit3 } from 'lucide-react';
 import Logo from '../components/Logo';
 import GoldenParticles from '../components/GoldenParticles';
+import { API } from '../apiConfig';
 
 const EditorRegister = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const EditorRegister = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:4000/api/register', {
+      const response = await fetch(`${API}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

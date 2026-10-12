@@ -57,14 +57,21 @@ const MarqueeTicker = ({ items, speed = 1, reverse = false }) => {
   }, [speed, reverse, isHovered]);
 
   // Duplicate items twice to ensure smooth infinite scrolling
+  const visibleItems = (items || []).filter(item => 
+    typeof item === 'object' && item !== null ? !item.isHidden : true
+  );
+
   const renderItems = () => (
     <div className="marquee-content">
-      {items.map((item, index) => (
-        <React.Fragment key={index}>
-          <span className="marquee-item">{item}</span>
-          <span className="marquee-separator">✦</span>
-        </React.Fragment>
-      ))}
+      {visibleItems.map((item, index) => {
+        const displayText = typeof item === 'object' && item !== null ? (item.value || item.title || item.text || '') : item;
+        return (
+          <React.Fragment key={index}>
+            <span className="marquee-item">{displayText}</span>
+            <span className="marquee-separator">✦</span>
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 

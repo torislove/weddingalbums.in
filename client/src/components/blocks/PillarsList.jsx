@@ -6,10 +6,11 @@ const iconMap = { Camera, Film, MonitorPlay, Users, History, Smartphone };
 
 const PillarsList = (props) => {
   const { pillars = [] } = props;
+  const visiblePillars = (pillars || []).filter(p => !p.isHidden);
 
   return (
     <div className="pillars-container container">
-      {pillars.map((pillar, index) => {
+      {visiblePillars.map((pillar, index) => {
         const IconComponent = iconMap[pillar.icon] || Camera;
         return (
           <ScrollReveal 

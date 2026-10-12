@@ -1,77 +1,175 @@
-import React, { useState } from 'react';
-import { Image as ImageIcon, UploadCloud, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
-import Toast from '../components/Toast';
+import React, { useState, useEffect } from 'react';
+import { Package, RefreshCw, CheckCircle2, Clock, ArrowRight, Eye, ExternalLink } from 'lucide-react';
+import { API } from '../apiConfig';
 
-const AlbumsManager = () => {
-  const [projects, setProjects] = useState([
-    { id: 'PRJ-102', client: 'Sneha & Arjun', status: 'Printed', link: 'https://weddingalbums.in/proofing/PRJ-102', date: 'Oct 1, 2026' },
-    { id: 'PRJ-103', client: 'Varun & Shalini', status: 'Awaiting Proofing', link: null, date: 'Oct 3, 2026' }
-  ]);
-  const [toast, setToast] = useState(null);
+const ORDER_STATES = ['DRAFT', 'CONFIRMED', 'IN_PRODUCTION', 'QC_REVIEW', 'DELIVERED', 'CLOSED'];
 
-  const handleUpload = (id) => {
-    setToast(`Generating 3D Flipbook for ${id}...`);
-    setTimeout(() => {
-      setProjects(projects.map(p => p.id === id ? { ...p, status: 'Proofing Ready', link: `https://weddingalbums.in/proofing/${id}` } : p));
-      setToast('Flipbook generated and client notified!');
-    }, 2000);
+const OrderManager = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState(null);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
+      const res = await fetch(`${API}/api/admin/orders`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOrders(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error('Failed to load orders', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const handleTransition = async (orderId, newStatus) => {
+    setUpdatingId(orderId);
+    try {
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
+      const res = await fetch(`${API}/api/admin/orders/${orderId}/transition`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ newStatus })
+      });
+      if (res.ok) {
+        setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+      } else {
+        alert('Failed to update status');
+      }
+    } catch {
+      alert('Network error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'DELIVERED':
+      case 'CLOSED':
+        return '#10b981';
+      case 'IN_PRODUCTION':
+      case 'QC_REVIEW':
+        return '#0ea5e9';
+      case 'CONFIRMED':
+        return '#D4AF37';
+      default:
+        return '#f59e0b';
+    }
   };
 
   return (
-    <div className="p-10 animate-slide-up max-w-6xl mx-auto h-full flex flex-col">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif text-white mb-2">Albums & Proofing Manager</h1>
-        <p className="text-gray-400">Upload final PDF spreads to generate 3D flipbooks for client approval.</p>
+    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Orders & Production Pipeline</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>Track wedding album manufacturing, print queues, and client delivery states.</p>
+        </div>
+        <button 
+          onClick={fetchOrders}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            padding: '8px 16px', background: 'rgba(14,165,233,0.1)',
+            border: '1px solid rgba(14,165,233,0.25)', color: '#22d3ee',
+            borderRadius: '8px', cursor: 'pointer'
+          }}
+        >
+          <RefreshCw size={15} className={loading ? "spin" : ""} /> Refresh Pipeline
+        </button>
       </div>
 
-      <div className="grid gap-6">
-        {projects.map(project => (
-          <div key={project.id} className="glass-panel p-6 border border-white/10 rounded-xl flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-black/40 rounded-lg flex items-center justify-center border border-white/5">
-                <ImageIcon size={24} className="text-[#D4AF37]" />
-              </div>
-              <div>
-                <h3 className="text-xl text-white font-medium mb-1">{project.client}</h3>
-                <div className="flex gap-4 text-sm">
-                  <span className="text-gray-400">Project ID: {project.id}</span>
-                  <span className="text-gray-400">•</span>
-                  <span className="text-gray-400">Date: {project.date}</span>
-                </div>
-              </div>
-            </div>
+      <div style={{
+        background: 'rgba(0,6,15,0.6)',
+        border: '1px solid rgba(14,165,233,0.1)',
+        borderRadius: '12px',
+        overflow: 'hidden'
+      }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <thead>
+            <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
+              <th style={{ padding: '14px 16px' }}>Order ID</th>
+              <th style={{ padding: '14px 16px' }}>Client / Studio</th>
+              <th style={{ padding: '14px 16px' }}>Album / Package</th>
+              <th style={{ padding: '14px 16px' }}>Amount</th>
+              <th style={{ padding: '14px 16px' }}>Current State</th>
+              <th style={{ padding: '14px 16px' }}>Move Next State</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading orders...</td></tr>
+            ) : orders.length === 0 ? (
+              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>No active orders in database.</td></tr>
+            ) : orders.map(order => {
+              const currentStatus = order.status || 'CONFIRMED';
+              const nextIdx = ORDER_STATES.indexOf(currentStatus) + 1;
+              const nextStatus = nextIdx < ORDER_STATES.length ? ORDER_STATES[nextIdx] : null;
 
-            <div className="flex items-center gap-6">
-              <div className="text-right">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Status</p>
-                <span className={`text-sm font-medium ${project.status === 'Printed' ? 'text-emerald-400' : 'text-amber-400'}`}>
-                  {project.status}
-                </span>
-              </div>
-              
-              <div className="w-px h-10 bg-white/10"></div>
-
-              {project.link ? (
-                <div className="flex gap-2">
-                  <button onClick={() => setToast('Link copied to clipboard!')} className="btn btn-outline flex items-center gap-2 py-2 text-sm">
-                    <LinkIcon size={16} /> Copy Link
-                  </button>
-                  <button className="btn btn-primary flex items-center gap-2 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 border-none">
-                    <CheckCircle2 size={16} /> Approved
-                  </button>
-                </div>
-              ) : (
-                <button onClick={() => handleUpload(project.id)} className="btn btn-gold flex items-center gap-2 py-2 text-sm">
-                  <UploadCloud size={16} /> Upload PDF Spread
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+              return (
+                <tr key={order.id || order._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                  <td style={{ padding: '14px 16px', fontFamily: 'monospace', color: '#22d3ee' }}>
+                    #{(order.id || order._id || '').substring(0, 8)}
+                  </td>
+                  <td style={{ padding: '14px 16px' }}>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>{order.customer_name || order.client_name || 'Wedding Couple'}</div>
+                    <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{order.user_email || order.email || 'customer@weddingalbums.in'}</div>
+                  </td>
+                  <td style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.8)' }}>
+                    {order.package_name || order.title || '12x18 Acrylic Royal Album'}
+                  </td>
+                  <td style={{ padding: '14px 16px', fontWeight: 600, color: '#D4AF37' }}>
+                    ₹{Number(order.total_amount || order.amount || 25000).toLocaleString('en-IN')}
+                  </td>
+                  <td style={{ padding: '14px 16px' }}>
+                    <span style={{
+                      padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                      background: `${getStatusColor(currentStatus)}20`,
+                      color: getStatusColor(currentStatus),
+                      border: `1px solid ${getStatusColor(currentStatus)}40`
+                    }}>
+                      {currentStatus}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 16px' }}>
+                    {nextStatus ? (
+                      <button
+                        onClick={() => handleTransition(order.id || order._id, nextStatus)}
+                        disabled={updatingId === (order.id || order._id)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: '6px',
+                          padding: '6px 12px', background: 'rgba(16,185,129,0.15)',
+                          border: '1px solid rgba(16,185,129,0.3)', color: '#34d399',
+                          borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600
+                        }}
+                      >
+                        Advance to {nextStatus} <ArrowRight size={13} />
+                      </button>
+                    ) : (
+                      <span style={{ color: '#10b981', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <CheckCircle2 size={14} /> Completed
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-      <Toast message={toast} onClose={() => setToast(null)} />
     </div>
   );
 };
 
-export default AlbumsManager;
+export default OrderManager;

@@ -13,11 +13,13 @@ const TestimonialsCarousel = (props) => {
     testimonials = []
   } = props;
 
+  const visibleTestimonials = (testimonials || []).filter(t => !t.isHidden);
+
   useEffect(() => {
-    if (testimonials.length === 0) return;
-    const timer = setInterval(() => setTestimonialIdx(i => (i + 1) % testimonials.length), 5000);
+    if (visibleTestimonials.length === 0) return;
+    const timer = setInterval(() => setTestimonialIdx(i => (i + 1) % visibleTestimonials.length), 5000);
     return () => clearInterval(timer);
-  }, [testimonials.length]);
+  }, [visibleTestimonials.length]);
 
   return (
     <section className="section bg-darker">
@@ -27,11 +29,11 @@ const TestimonialsCarousel = (props) => {
           <h2 className="text-gradient font-serif">{title}</h2>
         </ScrollReveal>
         
-        {testimonials.length > 0 ? (
+        {visibleTestimonials.length > 0 ? (
           <>
             <ScrollReveal delay={200}>
               <div className="testimonial-carousel">
-                {testimonials.map((t, i) => (
+                {visibleTestimonials.map((t, i) => (
                   <div key={i} className={`testimonial-card glass-3d ${i === testimonialIdx ? 'active' : ''}`}>
                     <svg width="40" height="30" viewBox="0 0 40 30" fill="none" style={{ marginBottom: '1.5rem', opacity: 0.4 }}>
                       <path d="M0 30V18C0 8.059 7.163 1.319 21.49 0L22.5 2.7C13.827 4.243 9.49 8.205 9.49 14.58H15V30H0ZM25 30V18C25 8.059 32.163 1.319 46.49 0L47.5 2.7C38.827 4.243 34.49 8.205 34.49 14.58H40V30H25Z" fill="#D4AF37"/>

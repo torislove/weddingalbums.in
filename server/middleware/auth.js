@@ -21,10 +21,12 @@ export const requireRole = (role, audience) => (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Authentication required' });
   
-  const allowedAudiences = Array.isArray(audience) ? audience : [audience];
+  const audienceList = Array.isArray(audience) ? [...audience] : [audience];
+  // Super-admin / sysadmin audiences are globally valid across all portals for cross-portal administration
+  const allowedAudiences = Array.from(new Set([...audienceList, 'admin-portal', 'sysadmin-portal']));
   const allowedRoles = Array.isArray(role) ? role : [role];
 
-  // Verify token with specific audience to ensure cross-portal token usage is blocked
+  // Verify token with specific audience to ensure cross-portal token usage is blocked for non-admins
   jwt.verify(token, JWT_SECRET, { audience: allowedAudiences, issuer: 'weddingalbums.in' }, (err, decoded) => {
     if (err) {
       if (err.name === 'TokenExpiredError') {

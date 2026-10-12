@@ -5,38 +5,63 @@ const API = (typeof window !== 'undefined' && window.location.hostname && !windo
 const TaskQueue = () => {
   const [tasks, setTasks] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [editors, setEditors] = useState([]);
+  const [selectedEditors, setSelectedEditors] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const getHeaders = () => {
+    const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken') || localStorage.getItem('token');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  };
 
   useEffect(() => {
     fetchTasks();
     fetchOrders();
+    fetchEditors();
   }, []);
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch(`${API}/api/tasks`);
+      const res = await fetch(`${API}/api/tasks`, { headers: getHeaders() });
       const data = await res.json();
-      setTasks(data);
+      setTasks(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch tasks', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API}/api/orders`);
+      const res = await fetch(`${API}/api/orders`, { headers: getHeaders() });
       const data = await res.json();
-      setOrders(data);
+      setOrders(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch orders', err);
     }
   };
 
-  const updateTaskStatus = async (id, newStatus) => {
+  const fetchEditors = async () => {
     try {
+      const res = await fetch(`${API}/api/admin/users?role=editor`, { headers: getHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) setEditors(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch editors', err);
+    }
+  };
+
+  const updateTaskStatus = async (id, newStatus, editorId = null) => {
+    try {
+      const body = { status: newStatus };
+      if (editorId) body.assigned_editor_id = editorId;
       await fetch(`${API}/api/tasks/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
+        headers: { 'Content-Type': 'application/json', ...getHeaders() },
+        body: JSON.stringify(body)
       });
       fetchTasks();
     } catch (err) {
@@ -81,13 +106,30 @@ const TaskQueue = () => {
                 <div className="bg-black/20 p-4 rounded-lg border border-white/5 mb-4">
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
                   <div className="flex gap-2">
-                    <select className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]">
+                    <select 
+                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]"
+                      value={selectedEditors[task.id] || task.assigned_editor_id || ''}
+                      onChange={(e) => setSelectedEditors(prev => ({ ...prev, [task.id]: e.target.value }))}
+                    >
                       <option value="">Unassigned</option>
-                      <option value="editor1">Suresh (In-House)</option>
-                      <option value="editor2">Rahul (Freelancer)</option>
-                      <option value="editor3">Divya (Video Dept)</option>
+                      {editors.length > 0 ? (
+                        editors.map(ed => (
+                          <option key={ed.id || ed._id} value={ed.id || ed._id}>
+                            {ed.name || ed.email} ({ed.role || 'Editor'})
+                          </option>
+                        ))
+                      ) : (
+                        <>
+                          <option value="editor-001">Suresh (In-House)</option>
+                          <option value="editor-002">Rahul (Freelancer)</option>
+                          <option value="editor-003">Divya (Video Dept)</option>
+                        </>
+                      )}
                     </select>
-                    <button className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50" onClick={() => updateTaskStatus(task.id, 'Assigned')}>
+                    <button 
+                      className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50" 
+                      onClick={() => updateTaskStatus(task.id, 'Assigned', selectedEditors[task.id])}
+                    >
                       Dispatch
                     </button>
                   </div>
@@ -162,20 +204,51 @@ const TaskQueue = () => {
                 <div className="bg-black/20 p-4 rounded-lg border border-white/5 mb-4">
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
                   <div className="flex gap-2">
-                    <select className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]">
+                    <select 
+                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]"
+                      value={selectedEditors[order.id || order._id] || order.assigned_editor_id || ''}
+                      onChange={(e) => setSelectedEditors(prev => ({ ...prev, [order.id || order._id]: e.target.value }))}
+                    >
                       <option value="">Unassigned</option>
-                      <option value="editor1">Suresh (In-House)</option>
-                      <option value="editor2">Rahul (Freelancer)</option>
+                      {editors.length > 0 ? (
+                        editors.map(ed => (
+                          <option key={ed.id || ed._id} value={ed.id || ed._id}>
+                            {ed.name || ed.email} ({ed.role || 'Editor'})
+                          </option>
+                        ))
+                      ) : (
+                        <>
+                          <option value="editor-001">Suresh (In-House)</option>
+                          <option value="editor-002">Rahul (Freelancer)</option>
+                        </>
+                      )}
                     </select>
-                    <button className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50">
+                    <button 
+                      className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50"
+                      onClick={() => updateTaskStatus(order.id || order._id, 'Assigned', selectedEditors[order.id || order._id])}
+                    >
                       Dispatch
                     </button>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <p className="text-sm text-gray-400">📸 {order.photos?.length || 0} photos uploaded</p>
-                  <button className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-6 py-2 rounded-lg text-sm font-medium transition border border-emerald-500/30">
+                  <p className="text-sm text-gray-400">📸 {order.photos?.length || (order.items?.length || 0)} items/photos</p>
+                  <button 
+                    className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 px-6 py-2 rounded-lg text-sm font-medium transition border border-emerald-500/30"
+                    onClick={async () => {
+                      try {
+                        await fetch(`${API}/api/admin/orders/${order.id || order._id}/transition`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', ...getHeaders() },
+                          body: JSON.stringify({ newStatus: 'IN_PRODUCTION' })
+                        });
+                        fetchOrders();
+                      } catch (e) {
+                        console.error(e);
+                      }
+                    }}
+                  >
                     Process Order
                   </button>
                 </div>

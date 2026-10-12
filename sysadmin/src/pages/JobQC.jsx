@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, CheckCircle, XCircle } from 'lucide-react';
-
-const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+import { Eye, CheckCircle, XCircle, RefreshCw, ExternalLink } from 'lucide-react';
+import { API } from '../apiConfig';
 
 const JobQC = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actionId, setActionId] = useState(null);
 
   const fetchJobs = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/admin/jobs`, {
@@ -28,6 +29,8 @@ const JobQC = () => {
   }, []);
 
   const handleApprove = async (id) => {
+    if (!window.confirm('Pass QC for this job and release editor escrow?')) return;
+    setActionId(id);
     try {
       const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/admin/jobs/${id}/approve`, {
@@ -35,47 +38,154 @@ const JobQC = () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
-        alert('Job Approved & Escrow Released!');
         fetchJobs();
+      } else {
+        alert('Failed to approve job');
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       alert('Network Error');
+    } finally {
+      setActionId(null);
     }
   };
 
-  const qcJobs = jobs.filter(j => j.status === 'QC Review');
+  const handleReject = async (id) => {
+    const feedback = window.prompt('Enter QC revision feedback for editor:');
+    if (!feedback) return;
+    setActionId(id);
+    try {
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
+      const res = await fetch(`${API}/api/admin/jobs/${id}/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ feedback })
+      });
+      if (res.ok) {
+        fetchJobs();
+      } else {
+        alert('Failed to reject job');
+      }
+    } catch {
+      alert('Network Error');
+    } finally {
+      setActionId(null);
+    }
+  };
+
+  const qcJobs = jobs.filter(j => 
+    j.status === 'submitted' || 
+    j.status === 'QC Review' || 
+    j.status === 'qc_review' || 
+    j.status === 'in_progress'
+  );
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', color: '#1e293b' }}>Quality Control (QC) Gate</h1>
-      
-      <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Quality Control (QC) Gate</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>Review deliverables submitted by editors before final client release.</p>
+        </div>
+        <button 
+          onClick={fetchJobs}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            padding: '8px 16px', background: 'rgba(14,165,233,0.1)',
+            border: '1px solid rgba(14,165,233,0.25)', color: '#22d3ee',
+            borderRadius: '8px', cursor: 'pointer'
+          }}
+        >
+          <RefreshCw size={15} className={loading ? "spin" : ""} /> Refresh QC
+        </button>
+      </div>
+
+      <div style={{
+        background: 'rgba(0,6,15,0.6)',
+        border: '1px solid rgba(14,165,233,0.1)',
+        borderRadius: '12px',
+        overflow: 'hidden'
+      }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid #e2e8f0', color: '#64748b' }}>
-              <th style={{ padding: '1rem' }}>Job ID</th>
-              <th style={{ padding: '1rem' }}>Studio Client</th>
-              <th style={{ padding: '1rem' }}>Editor</th>
-              <th style={{ padding: '1rem' }}>Status</th>
-              <th style={{ padding: '1rem' }}>Action</th>
+            <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
+              <th style={{ padding: '14px 16px' }}>Job ID</th>
+              <th style={{ padding: '14px 16px' }}>Studio / Event</th>
+              <th style={{ padding: '14px 16px' }}>Editor Deliverable</th>
+              <th style={{ padding: '14px 16px' }}>Status</th>
+              <th style={{ padding: '14px 16px', textAlign: 'right' }}>QC Decision</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan="5" style={{ padding: '1rem', textAlign: 'center' }}>Loading...</td></tr>
+              <tr><td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Checking QC submissions...</td></tr>
             ) : qcJobs.length === 0 ? (
-              <tr><td colSpan="5" style={{ padding: '1rem', textAlign: 'center' }}>No jobs pending QC.</td></tr>
+              <tr><td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>All jobs reviewed! Queue is clear.</td></tr>
             ) : qcJobs.map(job => (
-              <tr key={job.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                <td style={{ padding: '1rem', fontWeight: 'bold', color: '#3b82f6' }}>#{job.id.substring(0,8)}</td>
-                <td style={{ padding: '1rem' }}>{job.studio_name || job.client_name}</td>
-                <td style={{ padding: '1rem' }}>{job.editor_name || 'Unknown Editor'}</td>
-                <td style={{ padding: '1rem' }}><span style={{ padding: '4px 8px', background: '#fef3c7', color: '#d97706', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>Needs Review</span></td>
-                <td style={{ padding: '1rem', display: 'flex', gap: '8px' }}>
-                  <button style={{ padding: '6px 12px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={14}/> View Demo</button>
-                  <button onClick={() => handleApprove(job.id)} style={{ padding: '6px 12px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}><CheckCircle size={14}/> Approve</button>
-                  <button style={{ padding: '6px 12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}><XCircle size={14}/> Reject</button>
+              <tr key={job.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <td style={{ padding: '14px 16px', fontFamily: 'monospace', color: '#22d3ee' }}>
+                  #{String(job.id).substring(0, 8)}
+                </td>
+                <td style={{ padding: '14px 16px' }}>
+                  <div style={{ fontWeight: 600, color: '#fff' }}>{job.title || job.client_name || 'Project'}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{job.type || 'Photo Retouch'}</div>
+                </td>
+                <td style={{ padding: '14px 16px' }}>
+                  {job.work_link ? (
+                    <a 
+                      href={job.work_link} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '4px',
+                        color: '#D4AF37', textDecoration: 'none', fontWeight: 600
+                      }}
+                    >
+                      <ExternalLink size={14} /> Inspect Files
+                    </a>
+                  ) : (
+                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>Awaiting Submission</span>
+                  )}
+                </td>
+                <td style={{ padding: '14px 16px' }}>
+                  <span style={{
+                    padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
+                    background: job.status === 'submitted' ? 'rgba(245,158,11,0.15)' : 'rgba(14,165,233,0.15)',
+                    color: job.status === 'submitted' ? '#fbbf24' : '#38bdf8',
+                    textTransform: 'uppercase'
+                  }}>
+                    {job.status === 'submitted' ? 'Needs QC Review' : job.status}
+                  </span>
+                </td>
+                <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                    <button 
+                      onClick={() => handleApprove(job.id)} 
+                      disabled={actionId === job.id}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        padding: '6px 12px', background: 'rgba(16,185,129,0.2)',
+                        border: '1px solid rgba(16,185,129,0.4)', color: '#34d399',
+                        borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600
+                      }}
+                    >
+                      <CheckCircle size={13} /> Pass QC
+                    </button>
+                    <button 
+                      onClick={() => handleReject(job.id)} 
+                      disabled={actionId === job.id}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        padding: '6px 12px', background: 'rgba(239,68,68,0.2)',
+                        border: '1px solid rgba(239,68,68,0.4)', color: '#f87171',
+                        borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600
+                      }}
+                    >
+                      <XCircle size={13} /> Request Rework
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

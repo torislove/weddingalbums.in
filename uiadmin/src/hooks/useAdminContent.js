@@ -16,19 +16,28 @@ export const useAdminContent = (token) => {
   const [isDirty, setIsDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const channelRef = useRef(null);
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
 
   const broadcastPreview = useCallback((newContent) => {
+    if (!newContent) return;
+    
+    // BroadcastChannel for same-origin tabs
     if (channelRef.current) {
       try {
         channelRef.current.postMessage({ type: 'PREVIEW_UPDATE', content: newContent });
       } catch { /* channel error */ }
     }
-    // Also postMessage to any iframes on the page
+    
+    // postMessage to all preview iframes on the current page
     const iframes = document.querySelectorAll('iframe');
     iframes.forEach(iframe => {
       try {
         iframe.contentWindow?.postMessage({ type: 'CMS_LIVE_PREVIEW', content: newContent }, '*');
-      } catch { /* ignore cross-origin if blocked */ }
+      } catch { /* cross-origin catch */ }
     });
   }, []);
 
@@ -36,6 +45,14 @@ export const useAdminContent = (token) => {
     try {
       channelRef.current = new BroadcastChannel('cms-preview');
     } catch { /* ignore */ }
+
+    // Listen for iframe handshake when preview iframe finishes mounting
+    const handleWindowMessage = (event) => {
+      if (event.data?.type === 'CMS_IFRAME_READY' && contentRef.current) {
+        broadcastPreview(contentRef.current);
+      }
+    };
+    window.addEventListener('message', handleWindowMessage);
 
     const fetchInitialContent = async () => {
       let resolved = null;
@@ -81,8 +98,12 @@ export const useAdminContent = (token) => {
 
       if (resolved) {
         setContent(resolved);
+        contentRef.current = resolved;
+        broadcastPreview(resolved);
       } else {
-        setContent({ pages: { home: [], about: [], services: [] }, global: {} });
+        const initialEmpty = { pages: { home: [], about: [], services: [] }, global: {} };
+        setContent(initialEmpty);
+        contentRef.current = initialEmpty;
       }
       setIsDirty(false);
     };
@@ -93,8 +114,9 @@ export const useAdminContent = (token) => {
       if (channelRef.current) {
         channelRef.current.close();
       }
+      window.removeEventListener('message', handleWindowMessage);
     };
-  }, []);
+  }, [broadcastPreview]);
 
   const updatePage = (pageId, newBlocks) => {
     setContent(prev => {
@@ -106,6 +128,7 @@ export const useAdminContent = (token) => {
           [pageId]: newBlocks
         }
       };
+      contentRef.current = newContent;
       broadcastPreview(newContent);
       return newContent;
     });
@@ -122,6 +145,7 @@ export const useAdminContent = (token) => {
           [section]: newData
         }
       };
+      contentRef.current = newContent;
       broadcastPreview(newContent);
       return newContent;
     });
@@ -130,6 +154,7 @@ export const useAdminContent = (token) => {
 
   const setContentState = (newContent) => {
     setContent(newContent);
+    contentRef.current = newContent;
     broadcastPreview(newContent);
     setIsDirty(true);
   };
@@ -162,5 +187,5 @@ export const useAdminContent = (token) => {
     return false;
   };
 
-  return { content, setContent: setContentState, updatePage, updateGlobal, saveContent, isDirty, setIsDirty, saving };
+  return { content, setContent: setContentState, updatePage, updateGlobal, saveContent, isDirty, setIsDirty, saving, broadcastPreview };
 };

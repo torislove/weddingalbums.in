@@ -9,6 +9,8 @@ const InHouseAdvantage = (props) => {
     features = []
   } = props;
 
+  const visibleFeatures = (features || []).filter(f => !f.isHidden);
+
   return (
     <section className="section bg-dark">
       <div className="container">
@@ -21,7 +23,7 @@ const InHouseAdvantage = (props) => {
         </ScrollReveal>
 
         <div className="grid grid-3 mt-5" style={{ gap: '2rem' }}>
-          {features.map((feature, i) => (
+          {visibleFeatures.map((feature, i) => (
             <ScrollReveal 
               key={i} 
               delay={i * 100} 

@@ -1,34 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Clock, CheckCircle, TrendingUp, Star, FileText, Wallet, MessageSquare, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API } from '../apiConfig';
 
 const B2BDashboard = () => {
   const [jobs, setJobs] = useState([]);
+  const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:4000/api/b2b/jobs', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setJobs(data);
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        const [jobsRes, walletRes] = await Promise.all([
+          fetch(`${API}/api/b2b/jobs`, { headers }),
+          fetch(`${API}/api/b2b/wallet`, { headers })
+        ]);
+
+        if (jobsRes.ok) {
+          const data = await jobsRes.json();
+          setJobs(Array.isArray(data) ? data : []);
+        }
+        if (walletRes.ok) {
+          const wData = await walletRes.json();
+          setWalletBalance(wData.wallet_balance ?? user.wallet_balance ?? 0);
         }
       } catch (err) {
-        console.error('Failed to fetch jobs', err);
+        console.error('Failed to fetch studio data', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchJobs();
+    fetchData();
   }, []);
 
-  const activeJobsCount = jobs.filter(j => j.status !== 'Completed' && j.status !== 'Rejected').length;
-  const completedJobsCount = jobs.filter(j => j.status === 'Completed').length;
+  const activeJobsCount = jobs.filter(j => j.status !== 'Completed' && j.status !== 'approved' && j.status !== 'Rejected').length;
+  const completedJobsCount = jobs.filter(j => j.status === 'Completed' || j.status === 'approved').length;
 
   return (
     <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -73,7 +83,7 @@ const B2BDashboard = () => {
           </div>
           <div className="stat-info">
             <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)' }}>Money in Wallet</p>
-            <h3 className="liquid-gold-text" style={{ margin: 0, fontSize: '1.8rem' }}>₹2,500</h3>
+            <h3 className="liquid-gold-text" style={{ margin: 0, fontSize: '1.8rem' }}>₹{Number(walletBalance).toLocaleString('en-IN')}</h3>
           </div>
         </div>
         <div className="glass-panel stat-card" style={{ padding: '1.5rem' }}>
@@ -93,18 +103,18 @@ const B2BDashboard = () => {
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ margin: 0 }}>Active Jobs Pipeline</h3>
-            <Link to="/history" style={{ color: 'var(--gold-primary)', fontSize: '0.9rem', textDecoration: 'none' }}>View All</Link>
+            <Link to="/jobs" style={{ color: 'var(--gold-primary)', fontSize: '0.9rem', textDecoration: 'none' }}>View All</Link>
           </div>
           
           <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--glass-border)', textAlign: 'left' }}>
                 <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Job ID</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Event</th>
+                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Event / Project</th>
                 <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Type</th>
                 <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Assigned Editor</th>
                 <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Status</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>ETA</th>
+                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Date</th>
                 <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Action</th>
               </tr>
             </thead>
@@ -112,26 +122,30 @@ const B2BDashboard = () => {
               {loading ? (
                 <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>Loading jobs...</td></tr>
               ) : jobs.length === 0 ? (
-                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>No jobs submitted yet.</td></tr>
+                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>No jobs submitted yet. Click "Submit New Job" to begin.</td></tr>
               ) : jobs.map(job => (
                 <tr key={job.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                  <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>#{job.id.substring(0,8)}</td>
+                  <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>#{(job.id || '').substring(0,8)}</td>
                   <td style={{ padding: '1rem' }}>
-                    <p style={{ margin: 0, fontWeight: 500 }}>{job.client_name}</p>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{job.event_type} ({job.region})</p>
+                    <p style={{ margin: 0, fontWeight: 500 }}>{job.title || job.client_name || 'Project'}</p>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{job.event_type || 'Wedding'} ({job.region || 'AP/TS'})</p>
                   </td>
-                  <td style={{ padding: '1rem' }}>{job.job_type}</td>
-                  <td style={{ padding: '1rem' }}>{job.editor_id ? 'Assigned' : 'Pending'}</td>
+                  <td style={{ padding: '1rem', textTransform: 'capitalize' }}>{job.type || job.job_type || 'Photo'}</td>
+                  <td style={{ padding: '1rem' }}>{job.assigned_editor_id || job.editor_id ? 'Assigned' : 'Queued'}</td>
                   <td style={{ padding: '1rem' }}>
                     <span className="badge" style={{ 
-                      background: job.status === 'Completed' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.1)', 
-                      color: job.status === 'Completed' ? 'var(--accent-green)' : '#60a5fa', 
-                      padding: '4px 8px', borderRadius: '4px' 
+                      background: (job.status === 'Completed' || job.status === 'approved') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.1)', 
+                      color: (job.status === 'Completed' || job.status === 'approved') ? 'var(--accent-green)' : '#60a5fa', 
+                      padding: '4px 8px', borderRadius: '4px', textTransform: 'capitalize'
                     }}>{job.status}</span>
                   </td>
-                  <td style={{ padding: '1rem' }}>{new Date(job.event_date).toLocaleDateString()}</td>
+                  <td style={{ padding: '1rem' }}>{new Date(job.deadline || job.created_at || job.event_date || Date.now()).toLocaleDateString()}</td>
                   <td style={{ padding: '1rem' }}>
-                    <button className="btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>Track</button>
+                    {job.drive_link || job.raw_files_link ? (
+                      <a href={job.drive_link || job.raw_files_link} target="_blank" rel="noreferrer" className="btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', textDecoration: 'none' }}>Files</a>
+                    ) : (
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Queued</span>
+                    )}
                   </td>
                 </tr>
               ))}

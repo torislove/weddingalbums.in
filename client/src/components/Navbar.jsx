@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useContent } from '../context/ContentContext';
 import Logo from './Logo';
 import './Navbar.css';
 
@@ -11,13 +12,20 @@ const Navbar = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
   const { cartItems, toggleCart } = useCart();
+  const { content } = useContent();
 
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'About', path: '/about' },
-  ];
+  const navData = content?.global?.navbar || {};
+  const navLinks = Array.isArray(navData.links) && navData.links.length > 0
+    ? navData.links
+    : [
+        { name: 'Home', path: '/' },
+        { name: 'Services', path: '/services' },
+        { name: 'Pricing', path: '/pricing' },
+        { name: 'About', path: '/about' },
+      ];
+
+  const ctaText = navData.ctaText || 'Book Now';
+  const ctaLink = navData.ctaLink || '/contact';
   
   const [lang, setLang] = useState('EN');
 
@@ -81,7 +89,7 @@ const Navbar = () => {
                 </span>
               )}
             </button>
-            <Link to="/contact" className="btn btn-gold-3d nav-cta">Book Now</Link>
+            <Link to={ctaLink} className="btn btn-gold-3d nav-cta">{ctaText}</Link>
           </div>
 
           {/* Hamburger */}
@@ -110,8 +118,8 @@ const Navbar = () => {
               <Link to="/login" className="btn btn-outline" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
                 Client Portal
               </Link>
-              <Link to="/contact" className="btn btn-gold-3d" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
-                Book Now
+              <Link to={ctaLink} className="btn btn-gold-3d" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
+                {ctaText}
               </Link>
             </div>
           </div>

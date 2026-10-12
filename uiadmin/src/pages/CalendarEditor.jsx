@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, RefreshCw, Save, Info, Sparkles } from 'lucide-react';
 
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+
 const CalendarEditor = ({ adminState }) => {
   const { content, updateGlobal, saveContent, isDirty, saving } = adminState;
   
@@ -51,7 +53,7 @@ const CalendarEditor = ({ adminState }) => {
   const fetchMuhurthams = async () => {
     setFetching(true);
     try {
-      const res = await fetch('/api/muhurtham');
+      const res = await fetch(`${API}/api/muhurtham`);
       const data = await res.json();
       if (data && data.dates) {
         handleUpdate({

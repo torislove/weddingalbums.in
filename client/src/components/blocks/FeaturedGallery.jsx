@@ -11,6 +11,8 @@ const FeaturedGallery = (props) => {
     images = []
   } = props;
 
+  const visibleImages = (images || []).filter(img => !img.isHidden);
+
   return (
     <section className="section" style={{ background: 'var(--bg-dark)' }}>
       <div className="container">
@@ -21,7 +23,7 @@ const FeaturedGallery = (props) => {
           </ScrollReveal>
         </div>
         <div className="featured-grid">
-          {images.map((imgData, i) => (
+          {visibleImages.map((imgData, i) => (
             <ScrollReveal key={i} delay={(i + 1) * 100} className={`featured-item glass-3d ${i === 0 ? 'featured-large' : ''}`}>
               <img src={imgData.img} alt={imgData.title} />
               <div className="featured-overlay">

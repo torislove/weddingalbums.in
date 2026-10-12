@@ -14,25 +14,34 @@ const b2bOnly = requireRole('b2b', 'b2b-portal');
 router.post('/jobs', b2bOnly, async (req, res) => {
   try {
     const { title, type, description, packageId, driveLink, deadline, notes } = req.body;
-    if (!title || !type || !driveLink) {
+    
+    // Support aliased parameter formats from different client and studio form versions
+    const finalTitle = title || req.body.client_name || req.body.eventName || 'Studio Project';
+    const finalType = (type || req.body.job_type || req.body.jobType || req.body.eventType || 'photo').toLowerCase();
+    const finalDriveLink = driveLink || req.body.raw_files_link || req.body.cloudLink || '';
+    const finalDescription = description || req.body.instructions || '';
+    const finalDeadline = deadline || req.body.event_date || req.body.eventDate || null;
+    const finalNotes = notes || (req.body.design_style ? `Style: ${req.body.design_style}` : '');
+
+    if (!finalTitle || !finalType || !finalDriveLink) {
       return res.status(400).json({ error: 'title, type and driveLink are required' });
     }
 
     const task = await Task.create({
       id: crypto.randomUUID(),
       studio_id: req.user.id,
-      title,
-      type,           // 'photo' | 'video' | 'album'
-      description: description || '',
+      title: finalTitle,
+      type: finalType,           // 'photo' | 'video' | 'album'
+      description: finalDescription,
       package_id: packageId || null,
-      drive_link: driveLink,
-      deadline: deadline || null,
-      notes: notes || '',
+      drive_link: finalDriveLink,
+      deadline: finalDeadline,
+      notes: finalNotes,
       status: 'pending',
       created_at: new Date().toISOString(),
     });
 
-    res.status(201).json({ success: true, task });
+    res.status(201).json({ success: true, task, id: task.id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
