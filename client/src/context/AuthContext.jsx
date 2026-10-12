@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { signInWithGoogle as fbSignInWithGoogle } from '../firebase.js';
-
-const API = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.origin.includes('web.app') ? '' : 'http://localhost:4000');
+import API from '../apiConfig.js';
 
 const AuthContext = createContext();
 
