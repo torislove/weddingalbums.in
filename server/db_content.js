@@ -6,8 +6,21 @@ import crypto from 'crypto';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.join(__dirname, 'content.sqlite');
-const db = new DatabaseSync(dbPath);
+const isCloudEnv = Boolean(
+  process.env.FUNCTION_TARGET ||
+  process.env.FIREBASE_CONFIG ||
+  process.env.FUNCTIONS_EMULATOR ||
+  process.env.K_SERVICE ||
+  process.env.FUNCTION_NAME
+);
+
+let db;
+try {
+  const dbPath = isCloudEnv ? path.join('/tmp', 'content.sqlite') : path.join(__dirname, 'content.sqlite');
+  db = new DatabaseSync(dbPath);
+} catch {
+  db = new DatabaseSync(':memory:');
+}
 
 db.exec(`
   PRAGMA journal_mode = WAL;

@@ -30,7 +30,7 @@ const PricingEngine = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken') || localStorage.getItem('token');
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [srvRes, shtRes, pkgRes] = await Promise.all([
@@ -63,7 +63,7 @@ const PricingEngine = () => {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken') || localStorage.getItem('token');
       let endpoint = '';
       if (activeTab === 'services') endpoint = `${API}/api/admin/builder/services`;
       if (activeTab === 'sheets') endpoint = `${API}/api/admin/builder/sheets`;
@@ -104,7 +104,7 @@ const PricingEngine = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken') || localStorage.getItem('token');
       let endpoint = '';
       if (activeTab === 'services') endpoint = `${API}/api/admin/builder/services`;
       if (activeTab === 'sheets') endpoint = `${API}/api/admin/builder/sheets`;

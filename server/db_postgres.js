@@ -10,7 +10,7 @@ const nowIso = () => new Date().toISOString();
 // ==========================================
 // SEED & FALLBACK IN-MEMORY STORE
 // ==========================================
-const adminPasswordHash = '$2a$10$iI0b3V2kK1h0.2a6q9E1dOI5MqmJqO7a8gR1.iW0uK8m4gP9vB2O.'; // bcrypt for admin123
+const adminPasswordHash = '$2a$10$aRvBEr02kbV.9jbkGLmkH.gCsgQMUdQ3iGghafWf2nLQZj4rKPlcW'; // verified bcrypt for admin123
 
 const memStore = {
   users: [
@@ -22,6 +22,58 @@ const memStore = {
       password: adminPasswordHash,
       role: 'admin',
       wallet_balance: 10000,
+      createdAt: nowIso()
+    },
+    {
+      id: 'sysadmin-001',
+      _id: 'sysadmin-001',
+      name: 'System Admin',
+      email: 'sysadmin@weddingalbums.in',
+      password: adminPasswordHash,
+      role: 'sysadmin',
+      wallet_balance: 10000,
+      createdAt: nowIso()
+    },
+    {
+      id: 'uiadmin-001',
+      _id: 'uiadmin-001',
+      name: 'Content Admin',
+      email: 'contentadmin@weddingalbums.in',
+      password: adminPasswordHash,
+      role: 'content_admin',
+      wallet_balance: 10000,
+      createdAt: nowIso()
+    },
+    {
+      id: 'studio-001',
+      _id: 'studio-001',
+      name: 'Studio Partner',
+      email: 'studio@weddingalbums.in',
+      studioName: 'Royal Wedding Studio',
+      password: adminPasswordHash,
+      role: 'b2b',
+      wallet_balance: 5000,
+      createdAt: nowIso()
+    },
+    {
+      id: 'editor-001',
+      _id: 'editor-001',
+      name: 'Editor Pro',
+      email: 'editor@weddingalbums.in',
+      password: adminPasswordHash,
+      role: 'editor',
+      wallet_balance: 2500,
+      createdAt: nowIso()
+    },
+    {
+      id: 'client-001',
+      _id: 'client-001',
+      name: 'Customer',
+      email: 'client@weddingalbums.in',
+      phone: '9876543210',
+      password: adminPasswordHash,
+      role: 'b2c',
+      wallet_balance: 500,
       createdAt: nowIso()
     }
   ],
@@ -376,6 +428,48 @@ export const User = {
     const idx = memStore.users.findIndex(u => u.id === id);
     if (idx !== -1) memStore.users[idx] = merged;
     return merged;
+  },
+
+  async count(filter = {}) {
+    if (isPostgresLive) {
+      const res = await query('SELECT count(*)::int as count FROM users');
+      if (res?.rows[0]) return res.rows[0].count;
+    }
+    let list = [...memStore.users];
+    if (filter.role) list = list.filter(u => u.role === filter.role);
+    return list.length;
+  },
+
+  async findAll({ role, search, page = 1, limit = 20 } = {}) {
+    if (isPostgresLive) {
+      let sql = 'SELECT * FROM users WHERE 1=1';
+      const params = [];
+      if (role) { params.push(role); sql += ` AND role = $${params.length}`; }
+      if (search) { params.push(`%${search}%`); sql += ` AND (name ILIKE $${params.length} OR email ILIKE $${params.length})`; }
+      sql += ` ORDER BY "createdAt" DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`;
+      const res = await query(sql, params);
+      if (res) return res.rows.map(r => ({ ...r, _id: r.id }));
+    }
+    let list = [...memStore.users];
+    if (role) list = list.filter(u => u.role === role);
+    if (search) {
+      const s = search.toLowerCase();
+      list = list.filter(u => (u.name && u.name.toLowerCase().includes(s)) || (u.email && u.email.toLowerCase().includes(s)));
+    }
+    const offset = (page - 1) * limit;
+    return list.slice(offset, offset + limit).map(u => ({ ...u, _id: u.id }));
+  },
+
+  async update(id, data) {
+    return this.findByIdAndUpdate(id, data);
+  },
+
+  async delete(id) {
+    if (isPostgresLive) {
+      await query('DELETE FROM users WHERE id = $1', [id]);
+    }
+    memStore.users = memStore.users.filter(u => u.id !== id && u._id !== id);
+    return { success: true };
   }
 };
 
@@ -519,7 +613,21 @@ export const Order = {
     return merged;
   },
   async countDocuments(filter = {}) {
-    return memStore.orders.length;
+    return this.count(filter);
+  },
+  async count(filter = {}) {
+    let list = [...memStore.orders];
+    if (filter.status) list = list.filter(o => o.status === filter.status);
+    return list.length;
+  },
+  async findAll({ status, page = 1, limit = 20 } = {}) {
+    let list = [...memStore.orders];
+    if (status) list = list.filter(o => o.status === status);
+    const offset = (page - 1) * limit;
+    return list.slice(offset, offset + limit).map(o => ({ ...o, _id: o.id }));
+  },
+  async update(id, data) {
+    return this.findByIdAndUpdate(id, data);
   }
 };
 
@@ -545,6 +653,19 @@ export const Task = {
     const idx = memStore.tasks.findIndex(tsk => tsk.id === id);
     if (idx !== -1) memStore.tasks[idx] = merged;
     return merged;
+  },
+  async count(filter = {}) {
+    let list = [...memStore.tasks];
+    if (filter.status) list = list.filter(t => t.status === filter.status);
+    return list.length;
+  },
+  async findAll({ status } = {}) {
+    let list = [...memStore.tasks];
+    if (status) list = list.filter(t => t.status === status);
+    return list.map(t => ({ ...t, _id: t.id }));
+  },
+  async update(id, data) {
+    return this.findByIdAndUpdate(id, data);
   }
 };
 
@@ -588,6 +709,22 @@ export const PayoutRequest = {
     if (!p) return null;
     Object.assign(p, updateData);
     return p;
+  },
+  async count(filter = {}) {
+    let list = [...memStore.payoutRequests];
+    if (filter.status) list = list.filter(p => p.status === filter.status);
+    return list.length;
+  },
+  async findAll({ status } = {}) {
+    let list = [...memStore.payoutRequests];
+    if (status) list = list.filter(p => p.status === filter.status);
+    return list.map(p => ({ ...p, _id: p.id }));
+  },
+  async findById(id) {
+    return memStore.payoutRequests.find(pr => pr.id === id || pr._id === id) || null;
+  },
+  async update(id, data) {
+    return this.findByIdAndUpdate(id, data);
   }
 };
 

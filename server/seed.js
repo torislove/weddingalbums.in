@@ -8,19 +8,27 @@ async function seed() {
     await autoSeedDatabase();
 
     const hash = await bcrypt.hash('admin123', 10);
-    const existing = await User.findOne({ email: 'admin@weddingalbums.in' });
-    if (existing) {
-      await User.updatePassword(existing._id || existing.id, hash);
-      console.log('✅ PostgreSQL: Super Admin user password updated (admin@weddingalbums.in / admin123)');
-    } else {
-      await User.create({
-        name: 'Super Admin',
-        email: 'admin@weddingalbums.in',
-        password: hash,
-        role: 'admin',
-        wallet_balance: 10000
-      });
-      console.log('✅ PostgreSQL: Super Admin user created (admin@weddingalbums.in / admin123)');
+    const seedUsers = [
+      { name: 'Super Admin', email: 'admin@weddingalbums.in', role: 'admin' },
+      { name: 'System Admin', email: 'sysadmin@weddingalbums.in', role: 'sysadmin' },
+      { name: 'Content Admin', email: 'contentadmin@weddingalbums.in', role: 'content_admin' }
+    ];
+
+    for (const u of seedUsers) {
+      const existing = await User.findOne({ email: u.email });
+      if (existing) {
+        await User.updatePassword(existing._id || existing.id, hash);
+        console.log(`✅ PostgreSQL: ${u.name} password updated (${u.email} / admin123)`);
+      } else {
+        await User.create({
+          name: u.name,
+          email: u.email,
+          password: hash,
+          role: u.role,
+          wallet_balance: 10000
+        });
+        console.log(`✅ PostgreSQL: ${u.name} user created (${u.email} / admin123)`);
+      }
     }
 
     console.log('🎉 PostgreSQL Seeding complete!');

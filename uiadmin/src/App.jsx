@@ -24,14 +24,18 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem('adminToken');
+    const saved = localStorage.getItem('uiadminToken') || localStorage.getItem('adminToken');
     const savedUser = localStorage.getItem('uiAdminUser');
     if (saved && savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        if (parsed.role === 'admin') {
+        if (parsed.role === 'admin' || parsed.role === 'content_admin') {
           setToken(saved);
           setUser(parsed);
+        } else {
+          localStorage.removeItem('uiadminToken');
+          localStorage.removeItem('uiAdminUser');
+          localStorage.removeItem('adminToken');
         }
       } catch { /* bad JSON */ }
     }
@@ -39,7 +43,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const login = useCallback((tok, userData) => {
-    localStorage.setItem('adminToken', tok);
+    localStorage.setItem('uiadminToken', tok);
     localStorage.setItem('uiAdminUser', JSON.stringify(userData));
     setToken(tok);
     setUser(userData);
@@ -49,8 +53,9 @@ const AuthProvider = ({ children }) => {
     try {
       await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
     } catch { /* ignore */ }
-    localStorage.removeItem('adminToken');
+    localStorage.removeItem('uiadminToken');
     localStorage.removeItem('uiAdminUser');
+    localStorage.removeItem('adminToken');
     setToken(null);
     setUser(null);
   }, []);
@@ -72,7 +77,7 @@ const Guard = ({ children }) => {
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
-  if (!user || user.role !== 'admin') return <Navigate to="/login" replace />;
+  if (!user || (user.role !== 'admin' && user.role !== 'content_admin')) return <Navigate to="/login" replace />;
   return children;
 };
 
@@ -209,8 +214,8 @@ const Sidebar = ({ isDirty, onSave, saving }) => {
 /* ── Login Bridge ───────────────────────────────────────────────────── */
 const LoginBridge = () => {
   const { login } = useAuth();
-  const handleSetToken = (tok) => {
-    const u = JSON.parse(localStorage.getItem('uiAdminUser') || '{"role":"admin","name":"Admin"}');
+  const handleSetToken = (tok, userObj) => {
+    const u = userObj || JSON.parse(localStorage.getItem('uiAdminUser') || '{"role":"admin","name":"Admin"}');
     login(tok, u);
   };
   return <AdminLogin setToken={handleSetToken} />;

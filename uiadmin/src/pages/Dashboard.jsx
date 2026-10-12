@@ -11,7 +11,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
+        const token = localStorage.getItem('uiadminToken') || localStorage.getItem('adminToken');
         const res = await fetch(`${API}/api/admin/stats`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });

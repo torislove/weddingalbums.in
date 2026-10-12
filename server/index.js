@@ -23,6 +23,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || process.env.SERVER_PORT || 4000;
 
 // =======================
@@ -47,7 +48,15 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.web.app') || origin.endsWith('.firebaseapp.com')) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.endsWith('.web.app') ||
+      origin.endsWith('.firebaseapp.com') ||
+      origin.endsWith('.weddingalbums.in') ||
+      origin === 'https://weddingalbums.in' ||
+      /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Blocked by CORS policy'));
@@ -89,9 +98,20 @@ app.use('/api', publicRouter);
 import { onRequest } from 'firebase-functions/v2/https';
 
 // =======================
-// START SERVER / EXPORT CLOUD FUNCTION
-// =======================
-await initDatabase();
+let dbReadyPromise = null;
+const ensureDbReady = () => {
+  if (!dbReadyPromise) {
+    dbReadyPromise = initDatabase().catch(err => {
+      console.warn('⚠️ DB init notice:', err?.message);
+    });
+  }
+  return dbReadyPromise;
+};
+
+app.use(async (req, res, next) => {
+  await ensureDbReady();
+  next();
+});
 
 // Export as Firebase 2nd-gen Cloud Function for serverless deployment
 export const api = onRequest({
@@ -101,18 +121,21 @@ export const api = onRequest({
   maxInstances: 10
 }, app);
 
-// Run local HTTP server only if executed standalone (not inside Firebase Functions runner)
-const isCloudFunction = Boolean(
-  process.env.FUNCTION_TARGET ||
+// Run local HTTP server only if executed standalone directly
+const isRunningInFirebase = Boolean(
   process.env.FIREBASE_CONFIG ||
+  process.env.FUNCTION_TARGET ||
   process.env.FUNCTIONS_EMULATOR ||
   process.env.K_SERVICE ||
-  process.env.FUNCTION_NAME
+  process.env.FUNCTION_NAME ||
+  process.argv.some(arg => typeof arg === 'string' && (arg.includes('firebase') || arg.includes('functions-framework')))
 );
 
-if (!isCloudFunction) {
+const isDirectRun = !isRunningInFirebase && process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isDirectRun) {
   const standalonePort = process.env.SERVER_PORT || 4000;
   app.listen(standalonePort, () => {
-    console.log(`Clean Server running on http://localhost:${standalonePort}`);
+    console.log(`🚀 Standalone server running on http://localhost:${standalonePort}`);
   });
 }

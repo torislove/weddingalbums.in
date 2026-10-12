@@ -14,7 +14,7 @@ import { Content, Media } from '../db_content.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = express.Router();
-const contentAdminOnly = requireRole('admin', 'admin-portal'); // UIAdmin sends admin-portal tokens in this setup
+const contentAdminOnly = requireRole(['admin', 'content_admin', 'sysadmin'], ['admin-portal', 'uiadmin-portal', 'sysadmin-portal']);
 
 /* ── Content API ────────────────────────────────────────────────────── */
 router.get('/content', async (req, res) => {
@@ -25,17 +25,19 @@ router.get('/content', async (req, res) => {
     }
     
     // Fallback to local file if DB is empty
-    const localContentPath = path.join(__dirname, '../../client/public/content.json');
-    const raw = await fs.readFile(localContentPath, 'utf-8');
-    res.json(JSON.parse(raw));
-  } catch (err) {
-    try {
-      const localContentPath = path.join(__dirname, '../../client/public/content.json');
-      const raw = await fs.readFile(localContentPath, 'utf-8');
-      res.json(JSON.parse(raw));
-    } catch (fsErr) {
-      res.status(500).json({ error: 'Failed to read content' });
+    const pathsToTry = [
+      path.join(__dirname, 'content_fallback.json'),
+      path.join(__dirname, '../../client/public/content.json')
+    ];
+    for (const p of pathsToTry) {
+      try {
+        const raw = await fs.readFile(p, 'utf-8');
+        return res.json(JSON.parse(raw));
+      } catch { /* try next */ }
     }
+    res.json({ pages: {}, global: {} });
+  } catch (err) {
+    res.json({ pages: {}, global: {} });
   }
 });
 
@@ -48,15 +50,13 @@ router.post('/content', contentAdminOnly, async (req, res) => {
       // Save old version to history
       const versionId = crypto.randomUUID();
       try {
-        const { default: db } = await import('../db_business.js');
-        // We ensure the table exists or just create it if missing
-        await db.run(`CREATE TABLE IF NOT EXISTS content_history (id TEXT PRIMARY KEY, key TEXT, data TEXT, created_at TEXT)`);
-        await db.run(
-          `INSERT INTO content_history (id, key, data, created_at) VALUES (?, ?, ?, ?)`,
-          [versionId, 'main_site', JSON.stringify(existing.data), new Date().toISOString()]
-        );
-      } catch (err) {
-        console.warn('Failed to save content version history:', err.message);
+        const { query } = await import('../db.js');
+        if (query) {
+          await query(`CREATE TABLE IF NOT EXISTS content_history (id VARCHAR(64) PRIMARY KEY, key VARCHAR(128), data JSONB, created_at TIMESTAMPTZ DEFAULT NOW())`);
+          await query(`INSERT INTO content_history (id, key, data) VALUES ($1, $2, $3)`, [versionId, 'main_site', JSON.stringify(existing.data)]);
+        }
+      } catch {
+        /* optional history fallback */
       }
     }
 

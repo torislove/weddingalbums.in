@@ -9,7 +9,7 @@ const JobQC = () => {
 
   const fetchJobs = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/admin/jobs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -29,7 +29,7 @@ const JobQC = () => {
 
   const handleApprove = async (id) => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/admin/jobs/${id}/approve`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }

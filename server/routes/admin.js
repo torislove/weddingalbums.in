@@ -5,10 +5,10 @@
 import express from 'express';
 import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
-import { User, Order, Task, PayoutRequest, Project } from '../db.js';
+import { User, Order, Task, PayoutRequest, Project, AuditLog } from '../db.js';
 
 const router = express.Router();
-const adminOnly = requireRole('admin', 'admin-portal');
+const adminOnly = requireRole(['admin', 'sysadmin', 'content_admin'], ['admin-portal', 'sysadmin-portal', 'uiadmin-portal']);
 
 /* ── Dashboard Stats ────────────────────────────────────────────────── */
 router.get('/stats', adminOnly, async (req, res) => {
@@ -198,26 +198,22 @@ router.post('/jobs/:id/reject', adminOnly, async (req, res) => {
 /* ── Audit Log helper ────────────────────────────────────────────────── */
 async function writeAuditLog({ userId, action, resource = '', details = '', ip = '' }) {
   try {
-    // Uses raw db if AuditLog model exists, else gracefully skips
-    const { default: db } = await import('../db_business.js');
-    await db.run(
-      `INSERT INTO audit_logs (id, user_id, action, resource, details, ip, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [crypto.randomUUID(), userId, action, resource, details, ip, new Date().toISOString()]
-    );
-  } catch { /* audit_logs table may not exist yet — handled in db init */ }
+    await AuditLog.create({
+      user_id: userId,
+      action,
+      resource,
+      details,
+      ip,
+      timestamp: new Date().toISOString()
+    });
+  } catch { /* gracefully skip if table/store unavailable */ }
 }
 
 /* ── Audit Log read ─────────────────────────────────────────────────── */
 router.get('/audit-logs', adminOnly, async (req, res) => {
   try {
-    const { default: db } = await import('../db_business.js');
-    const logs = await db.all(
-      `SELECT al.*, u.name as user_name FROM audit_logs al
-       LEFT JOIN users u ON al.user_id = u.id
-       ORDER BY al.created_at DESC LIMIT 200`
-    );
-    res.json(logs);
+    const logs = await AuditLog.find();
+    res.json(logs || []);
   } catch (err) {
     res.status(500).json({ error: err.message, logs: [] });
   }

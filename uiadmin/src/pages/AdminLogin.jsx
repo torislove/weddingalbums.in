@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PenTool, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight, FileText, Image, Settings } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || '';
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 /* ── Typewriter hook ── */
 const useTypewriter = (text, speed = 55) => {
@@ -48,11 +48,12 @@ const AdminLogin = ({ setToken }) => {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Login failed. Please check your credentials.');
-      } else if (data.user?.role !== 'admin') {
-        setError('Unauthorized: Content Admin access only.');
+      } else if (data.user?.role !== 'admin' && data.user?.role !== 'content_admin') {
+        setError('Unauthorized: Content Admin or Admin access only.');
       } else {
-        localStorage.setItem('adminToken', data.token);
-        setToken(data.token);
+        localStorage.setItem('uiadminToken', data.token);
+        localStorage.setItem('uiAdminUser', JSON.stringify(data.user));
+        setToken(data.token, data.user);
       }
     } catch {
       setError('Cannot connect to server. Is the server running?');

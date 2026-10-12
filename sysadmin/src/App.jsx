@@ -28,15 +28,17 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('adminToken');
-    const savedUser = localStorage.getItem('adminUser');
+    const saved = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
+    const savedUser = localStorage.getItem('sysadminUser') || localStorage.getItem('adminUser');
     if (saved && savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        if (parsed.role === 'admin') {
+        if (parsed.role === 'admin' || parsed.role === 'sysadmin') {
           setToken(saved);
           setUser(parsed);
         } else {
+          localStorage.removeItem('sysadminToken');
+          localStorage.removeItem('sysadminUser');
           localStorage.removeItem('adminToken');
           localStorage.removeItem('adminUser');
         }
@@ -46,8 +48,8 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const login = useCallback((tok, userData) => {
-    localStorage.setItem('adminToken', tok);
-    localStorage.setItem('adminUser', JSON.stringify(userData));
+    localStorage.setItem('sysadminToken', tok);
+    localStorage.setItem('sysadminUser', JSON.stringify(userData));
     setToken(tok);
     setUser(userData);
   }, []);
@@ -56,6 +58,8 @@ const AuthProvider = ({ children }) => {
     try {
       await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
     } catch { /* ignore */ }
+    localStorage.removeItem('sysadminToken');
+    localStorage.removeItem('sysadminUser');
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     setToken(null);
@@ -79,7 +83,7 @@ const Guard = ({ children }) => {
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
-  if (!user || user.role !== 'admin') return <Navigate to="/login" replace />;
+  if (!user || (user.role !== 'admin' && user.role !== 'sysadmin')) return <Navigate to="/login" replace />;
   return children;
 };
 
@@ -207,7 +211,7 @@ const Sidebar = () => {
 const Dashboard = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState(null);
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
 
   useEffect(() => {
     if (!token) return;
@@ -261,8 +265,8 @@ const Dashboard = () => {
 /* ── Login Bridge (setToken → login context method) ─────────────────── */
 const LoginBridge = () => {
   const { login } = useAuth();
-  const handleSetToken = (tok) => {
-    const savedUser = JSON.parse(localStorage.getItem('adminUser') || '{"role":"admin","name":"Admin"}');
+  const handleSetToken = (tok, userObj) => {
+    const savedUser = userObj || JSON.parse(localStorage.getItem('sysadminUser') || localStorage.getItem('adminUser') || '{"role":"admin","name":"Admin"}');
     login(tok, savedUser);
   };
   return <AdminLogin setToken={handleSetToken} />;

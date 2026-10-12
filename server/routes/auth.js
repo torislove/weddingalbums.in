@@ -123,32 +123,44 @@ router.post('/login', loginRateLimiter, async (req, res) => {
 
     const { accessToken, refreshTokenValue, refreshTokenHash, expiresAt } = generateTokens(user);
     
-    await RefreshToken.create({
-      user_id: user._id || user.id,
-      token_hash: refreshTokenHash,
-      expires_at: expiresAt
-    });
+    try {
+      await RefreshToken.create({
+        user_id: user._id || user.id,
+        token_hash: refreshTokenHash,
+        expires_at: expiresAt
+      });
+    } catch (e) {
+      console.warn('RefreshToken create non-fatal error:', e.message);
+    }
 
-    await AuditLog.create({
-      user_id: user._id || user.id,
-      action: 'USER_LOGIN',
-      ip: req.ip
-    });
+    try {
+      await AuditLog.create({
+        user_id: user._id || user.id,
+        action: 'USER_LOGIN',
+        ip: req.ip
+      });
+    } catch (e) {
+      console.warn('AuditLog create non-fatal error:', e.message);
+    }
 
-    res.cookie('refreshToken', refreshTokenValue, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
+    try {
+      res.cookie('refreshToken', refreshTokenValue, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+    } catch (e) {
+      console.warn('Cookie set notice:', e.message);
+    }
 
     res.json({ 
       token: accessToken, 
       user: { id: user._id || user.id, name: user.name, email: user.email, role: user.role, wallet_balance: user.wallet_balance } 
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Login endpoint error:', err);
+    res.status(500).json({ error: 'Server error: ' + (err.message || 'Internal failure') });
   }
 });
 

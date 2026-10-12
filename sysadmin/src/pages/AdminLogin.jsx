@@ -74,11 +74,12 @@ const AdminLogin = ({ setToken }) => {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Authentication failed.');
-      } else if (data.user?.role !== 'admin') {
+      } else if (data.user?.role !== 'admin' && data.user?.role !== 'sysadmin') {
         setError('ACCESS DENIED: Insufficient clearance level.');
       } else {
-        localStorage.setItem('adminToken', data.token);
-        setToken(data.token);
+        localStorage.setItem('sysadminToken', data.token);
+        localStorage.setItem('sysadminUser', JSON.stringify(data.user));
+        setToken(data.token, data.user);
       }
     } catch {
       setError('SYSTEM ERROR: Cannot reach server. Check network connection.');
