@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import './AvailabilityCalendar.css';
 import ScrollReveal from './ScrollReveal';
 import { useContent } from '../context/ContentContext';
 
 const AvailabilityCalendar = () => {
+  const navigate = useNavigate();
   const { global } = useContent();
   const availability = global?.availability || { slotsPerDay: 2, bookings: {}, auspiciousDates: [] };
 
@@ -36,10 +39,26 @@ const AvailabilityCalendar = () => {
 
   const months = generateMonths();
 
+  const handleDateClick = (dateStr, isBooked) => {
+    if (isBooked) return;
+    navigate(`/order?date=${dateStr}`);
+  };
+
   return (
     <ScrollReveal className="availability-calendar">
-      <h3 className="mb-4 text-gradient">Booking Availability</h3>
-      <p className="text-muted mb-4">Our calendar fills up quickly during the wedding season. Please check dates below.</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+        <div>
+          <h3 className="text-gradient" style={{ margin: '0 0 6px 0', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)' }}>
+            Telugu Subha Muhurtham Availability
+          </h3>
+          <p className="text-muted" style={{ margin: 0, fontSize: '0.85rem' }}>
+            🔥 Slots fill up fast for peak wedding dates. Tap any date to reserve immediately.
+          </p>
+        </div>
+        <Link to="/order" className="btn btn-primary" style={{ padding: '8px 18px', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <Sparkles size={14} /> Fast Booking <ArrowRight size={14} />
+        </Link>
+      </div>
       
       <div className="calendar-legend">
         <span className="legend-item"><div className="dot dot-available"></div> Available</span>
@@ -62,13 +81,19 @@ const AvailabilityCalendar = () => {
               {month.days.map(dayObj => {
                 const bookedCount = availability.bookings[dayObj.dateStr] || 0;
                 const isAuspicious = availability.auspiciousDates?.includes(dayObj.dateStr);
+                const isBooked = bookedCount >= availability.slotsPerDay;
                 
                 let statusClass = 'day-available';
                 if (bookedCount > 0 && bookedCount < availability.slotsPerDay) statusClass = 'day-filling';
-                else if (bookedCount >= availability.slotsPerDay) statusClass = 'day-booked';
+                else if (isBooked) statusClass = 'day-booked';
 
                 return (
-                  <div key={dayObj.day} className={`calendar-day ${statusClass} ${isAuspicious ? 'day-auspicious' : ''}`} title={isAuspicious ? "Highly Auspicious Subhamuhurtham Date" : ""}>
+                  <div
+                    key={dayObj.day}
+                    onClick={() => handleDateClick(dayObj.dateStr, isBooked)}
+                    className={`calendar-day ${statusClass} ${isAuspicious ? 'day-auspicious' : ''} ${!isBooked ? 'calendar-day-clickable' : ''}`}
+                    title={isBooked ? "Fully Booked" : isAuspicious ? `🌟 Telugu Subhamuhurtham (${dayObj.dateStr}) — Click to Book!` : `Click to book for ${dayObj.dateStr}`}
+                  >
                     {dayObj.day}
                     {isAuspicious && <span className="auspicious-star">🌟</span>}
                   </div>
@@ -79,7 +104,7 @@ const AvailabilityCalendar = () => {
         ))}
       </div>
       <p className="text-xs text-gray-500 mt-6 text-center opacity-70">
-        * Auspicious dates (🌟) are highly demanded. We recommend booking 3-6 months in advance for Subhamuhurthams.
+        * Auspicious dates (🌟) are highly demanded across AP & Telangana. We recommend reserving at least 3-6 months in advance.
       </p>
     </ScrollReveal>
   );

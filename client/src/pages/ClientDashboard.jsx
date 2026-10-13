@@ -6,6 +6,7 @@ import {
   Settings, LogOut, Heart, CheckCircle2, Truck,
   Package, Camera, Download, Phone, CreditCard,
   ChevronDown, ChevronUp, Wallet, ExternalLink,
+  Home, ArrowLeft
 } from 'lucide-react';
 import './ClientDashboard.css';
 
@@ -77,16 +78,23 @@ const OrderCard = ({ order }) => {
               </span>
             )}
           </div>
-          <div className="text-xs text-gray-400 mt-0.5">
-            {order.date} • {order.amount} • {order.city ? `${order.eventType || 'Event'} in ${order.city}` : 'Andhra Pradesh'}
+          <div className="text-xs text-gray-400 mt-1 flex items-center gap-2 flex-wrap">
+            <span>{order.date}</span>
+            <span>•</span>
+            <span className="text-[#D4AF37] font-mono font-bold">{order.amount}</span>
+            <span>•</span>
+            <span>{order.city ? `${order.eventType || 'Event'} in ${order.city}` : 'Andhra Pradesh'}</span>
           </div>
         </div>
-        <div className="cdash-order-id">{order.id}</div>
-        <div className="cdash-order-badge" style={{ background: order.badgeBg, color: order.badgeColor }}>
-          {order.statusLabel}
+        <div className="cdash-order-right-meta">
+          <span className="cdash-order-id">{order.id}</span>
+          <span className="cdash-order-badge" style={{ background: order.badgeBg, color: order.badgeColor }}>
+            {order.statusLabel}
+          </span>
         </div>
-        {expanded ? <ChevronUp size={16} style={{ color: 'rgba(255,255,255,0.4)', flexShrink: 0 }} />
-                  : <ChevronDown size={16} style={{ color: 'rgba(255,255,255,0.4)', flexShrink: 0 }} />}
+        <div className="cdash-order-chevron">
+          {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </div>
       </div>
 
       {expanded && (
@@ -309,6 +317,34 @@ const ClientDashboard = () => {
 
   return (
     <div className="cdash-root">
+      {/* ── Mobile Top Header Bar ───────────────────────────────── */}
+      <header className="cdash-mobile-header">
+        <div className="cdash-mobile-user">
+          <div className="cdash-mobile-avatar">{initials}</div>
+          <div>
+            <div className="cdash-mobile-name">{user?.coupleNames || user?.name || 'Client Portal'}</div>
+            <div className="cdash-mobile-sub">💍 WeddingAlbums.in</div>
+          </div>
+        </div>
+        <div className="cdash-mobile-actions">
+          <Link to="/" className="cdash-mobile-btn cdash-mobile-home-btn" title="Back to Main Site">
+            <Home size={16} />
+          </Link>
+          <a
+            href={`https://wa.me/919876543210?text=${encodeURIComponent('నమస్కారం WeddingAlbums.in టీమ్! నా క్లయింట్ పోర్టల్ ఆర్డర్ల గురించి సహాయం కావాలి.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cdash-mobile-btn cdash-mobile-wa-btn"
+            title="WhatsApp Support"
+          >
+            <Phone size={15} />
+          </a>
+          <Link to="/order" className="cdash-mobile-book-btn">
+            + Book
+          </Link>
+        </div>
+      </header>
+
       {/* ── Sidebar ──────────────────────────────────────────────── */}
       <aside className="cdash-sidebar">
         {/* Brand */}
@@ -342,6 +378,9 @@ const ClientDashboard = () => {
           ))}
 
           <div className="cdash-nav-label" style={{ marginTop: '16px' }}>Quick Links</div>
+          <Link to="/" className="cdash-nav-item">
+            <Home size={17} /> Back to Main Site
+          </Link>
           <a href="/services" className="cdash-nav-item">
             <Camera size={17} /> Browse Services
           </a>
@@ -441,6 +480,35 @@ const ClientDashboard = () => {
           <Outlet />
         )}
       </main>
+
+      {/* ── Mobile Persistent Bottom Navigation ─────────────────── */}
+      <nav className="cdash-mobile-nav">
+        {[
+          { label: 'Overview', path: '/client', icon: LayoutDashboard },
+          { label: 'Orders', path: '/client/orders', icon: ShoppingBag, badge: orders.length > 0 ? String(orders.length) : undefined },
+          { label: 'Proofs', path: '/client/proofs', icon: ImageIcon, badge: '1' },
+          { label: 'Wallet', path: '/client/wallet', icon: Wallet },
+          { label: 'Settings', path: '/client/settings', icon: Settings },
+        ].map(item => {
+          const isActive = item.path === '/client'
+            ? location.pathname === '/client'
+            : location.pathname.startsWith(item.path);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.label}
+              to={item.path}
+              className={`cdash-mnav-item ${isActive ? 'active' : ''}`}
+            >
+              <div className="cdash-mnav-icon-wrap">
+                <Icon size={19} />
+                {item.badge && <span className="cdash-mnav-badge">{item.badge}</span>}
+              </div>
+              <span className="cdash-mnav-label">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 };

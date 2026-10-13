@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
+
+// TOP AUSPICIOUS TELUGU SUBHA MUHURTHAM DATES (HIGH DEMAND - SLOTS FILLING UP FAST)
+const AUSPICIOUS_MUHURTHAM_DATES = [
+  { date: '2026-10-18', label: 'Oct 18, 2026', telugu: 'ఆశ్వయుజ శుద్ధ విదియ (విజయవాడ/గుంటూరు)', tag: '🔥 85% Booked' },
+  { date: '2026-10-26', label: 'Oct 26, 2026', telugu: 'ఆశ్వయుజ బహుళ పాడ్యమి (అత్యంత శుభం)', tag: '🔥 90% Booked' },
+  { date: '2026-11-04', label: 'Nov 04, 2026', telugu: 'కార్తీక శుద్ధ ఏకాదశి (బోధన ముహూర్తం)', tag: '🔥 95% Booked' },
+  { date: '2026-11-18', label: 'Nov 18, 2026', telugu: 'కార్తీక పూర్ణిమ మహా ముహూర్తం', tag: '🔥 Peak Rush' },
+  { date: '2026-12-06', label: 'Dec 06, 2026', telugu: 'మార్గశిర శుద్ధ త్రయోదశి', tag: '🔥 80% Booked' },
+  { date: '2027-01-22', label: 'Jan 22, 2027', telugu: 'పుష్య బహుళ పూర్ణిమ సంక్రాంతి ముహూర్తం', tag: '⭐ Best Seller' },
+];
 import {
   ShoppingCart, CheckCircle2, Package, Image, Video,
   UploadCloud, Truck, MonitorPlay, Film, Palette,
@@ -527,6 +537,25 @@ const BookingPage = () => {
     }
   };
 
+  const [searchParams] = useSearchParams();
+
+  // Prepopulate from URL params (?date=YYYY-MM-DD, ?bundle=..., ?mode=...)
+  useEffect(() => {
+    const urlDate = searchParams.get('date');
+    const urlBundle = searchParams.get('bundle');
+    const urlMode = searchParams.get('mode');
+
+    if (urlDate) {
+      setFormData(prev => ({ ...prev, eventDate: urlDate }));
+    }
+    if (urlBundle) {
+      applyBundle(urlBundle, false);
+    }
+    if (urlMode === 'custom') {
+      setExperienceMode('custom');
+    }
+  }, [searchParams]);
+
   // Multi-select toggle helpers
   const toggleSheetType = (sheetId) => {
     setFormData(prev => {
@@ -773,6 +802,10 @@ const BookingPage = () => {
           alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
           return;
         }
+        if (!formData.eventDate) {
+          alert(lang === 'TE' ? 'దయచేసి మీ ఈవెంట్ లేదా వివాహ ముహూర్తం తేదీని ఎంచుకోండి.' : 'Please select your event or wedding muhurtham date.');
+          return;
+        }
         setStep(3);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -801,6 +834,10 @@ const BookingPage = () => {
         }
         if (!formData.phone.trim() || formData.phone.length < 10) {
           alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
+          return;
+        }
+        if (!formData.eventDate) {
+          alert(lang === 'TE' ? 'దయచేసి మీ ఈవెంట్ లేదా వివాహ ముహూర్తం తేదీని ఎంచుకోండి.' : 'Please select your event or wedding muhurtham date.');
           return;
         }
         setStep(4);
@@ -1553,6 +1590,75 @@ const BookingPage = () => {
                           {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
                         </button>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* EVENT DATE & SUBHA MUHURTHAM SELECTOR */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-black/40 to-yellow-500/10 border border-[#D4AF37]/30 space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={18} className="text-[#D4AF37]" />
+                        <label className="text-sm text-white font-bold">
+                          {lang === 'TE' ? 'ఈవెంట్ / ముహూర్తం తేదీ *' : 'Event / Wedding Muhurtham Date *'}
+                        </label>
+                      </div>
+                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 font-bold flex items-center gap-1 animate-pulse">
+                        🔥 {lang === 'TE' ? 'ముహూర్తాలు వేగంగా పూర్తవుతున్నాయి!' : 'Muhurtham Slots Filling Up Fast!'}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-gray-400">
+                      {lang === 'TE'
+                        ? 'క్రింది ప్రముఖ శుభ ముహూర్తాల నుండి ఎంచుకోండి లేదా మీ వివాహ తేదీని నేరుగా సెలెక్ట్ చేయండి.'
+                        : 'Select from peak Andhra/Telangana Subha Muhurtham dates below, or pick your wedding date.'}
+                    </p>
+
+                    {/* Quick Auspicious Date Pills */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                      {AUSPICIOUS_MUHURTHAM_DATES.map(m => {
+                        const isSelected = formData.eventDate === m.date;
+                        return (
+                          <button
+                            key={m.date}
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, eventDate: m.date }))}
+                            className={`p-2.5 rounded-xl border text-left transition-all ${
+                              isSelected
+                                ? 'border-[#D4AF37] bg-[#D4AF37]/25 text-white shadow-[0_0_12px_rgba(212,175,55,0.3)]'
+                                : 'border-white/10 bg-black/40 text-gray-300 hover:border-white/20'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-white">{m.label}</span>
+                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-500/20 text-red-300 font-semibold">{m.tag}</span>
+                            </div>
+                            <div className="text-[10px] text-[#D4AF37] font-telugu mt-0.5 truncate">{m.telugu}</div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Custom Date Input */}
+                    <div className="pt-2 flex items-center gap-3 flex-wrap sm:flex-nowrap">
+                      <div className="flex-1 min-w-[200px]">
+                        <label className="block text-[11px] text-gray-400 mb-1">
+                          {lang === 'TE' ? 'లేదా ఇతర తేదీని ఎంచుకోండి:' : 'Or pick your custom event date:'}
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.eventDate}
+                          min={new Date().toISOString().split('T')[0]}
+                          onChange={e => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
+                          className="w-full p-2.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none text-xs"
+                          required
+                        />
+                      </div>
+                      {formData.eventDate && (
+                        <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shrink-0 self-end">
+                          <CheckCircle2 size={15} />
+                          <span>Selected: {new Date(formData.eventDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -2549,6 +2655,75 @@ const BookingPage = () => {
                           {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
                         </button>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* EVENT DATE & SUBHA MUHURTHAM SELECTOR */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-black/40 to-yellow-500/10 border border-[#D4AF37]/30 space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={18} className="text-[#D4AF37]" />
+                        <label className="text-sm text-white font-bold">
+                          {lang === 'TE' ? 'ఈవెంట్ / ముహూర్తం తేదీ *' : 'Event / Wedding Muhurtham Date *'}
+                        </label>
+                      </div>
+                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 font-bold flex items-center gap-1 animate-pulse">
+                        🔥 {lang === 'TE' ? 'ముహూర్తాలు వేగంగా పూర్తవుతున్నాయి!' : 'Muhurtham Slots Filling Up Fast!'}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-gray-400">
+                      {lang === 'TE'
+                        ? 'క్రింది ప్రముఖ శుభ ముహూర్తాల నుండి ఎంచుకోండి లేదా మీ వివాహ తేదీని నేరుగా సెలెక్ట్ చేయండి.'
+                        : 'Select from peak Andhra/Telangana Subha Muhurtham dates below, or pick your wedding date.'}
+                    </p>
+
+                    {/* Quick Auspicious Date Pills */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                      {AUSPICIOUS_MUHURTHAM_DATES.map(m => {
+                        const isSelected = formData.eventDate === m.date;
+                        return (
+                          <button
+                            key={m.date}
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, eventDate: m.date }))}
+                            className={`p-2.5 rounded-xl border text-left transition-all ${
+                              isSelected
+                                ? 'border-[#D4AF37] bg-[#D4AF37]/25 text-white shadow-[0_0_12px_rgba(212,175,55,0.3)]'
+                                : 'border-white/10 bg-black/40 text-gray-300 hover:border-white/20'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-white">{m.label}</span>
+                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-500/20 text-red-300 font-semibold">{m.tag}</span>
+                            </div>
+                            <div className="text-[10px] text-[#D4AF37] font-telugu mt-0.5 truncate">{m.telugu}</div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Custom Date Input */}
+                    <div className="pt-2 flex items-center gap-3 flex-wrap sm:flex-nowrap">
+                      <div className="flex-1 min-w-[200px]">
+                        <label className="block text-[11px] text-gray-400 mb-1">
+                          {lang === 'TE' ? 'లేదా ఇతర తేదీని ఎంచుకోండి:' : 'Or pick your custom event date:'}
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.eventDate}
+                          min={new Date().toISOString().split('T')[0]}
+                          onChange={e => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
+                          className="w-full p-2.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none text-xs"
+                          required
+                        />
+                      </div>
+                      {formData.eventDate && (
+                        <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shrink-0 self-end">
+                          <CheckCircle2 size={15} />
+                          <span>Selected: {new Date(formData.eventDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

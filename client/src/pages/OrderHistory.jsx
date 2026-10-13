@@ -52,12 +52,12 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="dashboard-page" style={{ maxWidth: '960px', margin: '0 auto', padding: '20px' }}>
+    <div className="dashboard-page" style={{ maxWidth: '960px', margin: '0 auto', padding: 'clamp(12px, 3vw, 24px)' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.8rem', margin: '0 0 6px 0', color: '#fff', fontFamily: 'serif' }}>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0', color: '#fff', fontFamily: 'serif' }}>
           Order History & Itemized Invoices
         </h2>
-        <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>
           Track production progress, itemized service breakdowns, and download GST tax invoices.
         </p>
       </div>
@@ -94,21 +94,21 @@ const OrderHistory = () => {
                 style={{
                   background: 'rgba(18, 16, 12, 0.75)',
                   border: '1px solid rgba(212, 175, 55, 0.2)',
-                  borderRadius: '20px',
-                  padding: '24px',
+                  borderRadius: '18px',
+                  padding: 'clamp(14px, 3vw, 24px)',
                   boxShadow: '0 12px 36px rgba(0,0,0,0.4)',
                   position: 'relative'
                 }}
               >
                 {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                      <h4 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', fontWeight: 'bold' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '14px', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ flex: '1 1 200px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                      <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#fff', fontWeight: 'bold' }}>
                         Order #{orderIdStr}
                       </h4>
                       <span style={{
-                        fontSize: '0.7rem',
+                        fontSize: '0.68rem',
                         fontWeight: 'bold',
                         padding: '2px 8px',
                         borderRadius: '999px',
@@ -120,15 +120,15 @@ const OrderHistory = () => {
                         {pkgType === 'bundles' ? '⚡ Curated Bundle' : '🛠️ Custom Multi-Service'}
                       </span>
                     </div>
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                       Placed on: {new Date(order.createdAt || order.created_at || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ display: 'inline-block', padding: '4px 12px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 600, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <span style={{ display: 'inline-block', padding: '3px 10px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', borderRadius: '999px', fontSize: '0.76rem', fontWeight: 600, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
                       {statusVal}
                     </span>
-                    <div style={{ marginTop: '4px', fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--gold-primary)', fontFamily: 'monospace' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--gold-primary)', fontFamily: 'monospace' }}>
                       ₹{Number(totalVal).toLocaleString('en-IN')}
                     </div>
                   </div>
@@ -211,22 +211,24 @@ const OrderHistory = () => {
                 </div>
 
                 {/* Actions */}
-                <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', flexWrap: 'wrap' }}>
                   <button
                     type="button"
                     onClick={() => openWhatsAppTrack(order)}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '8px',
-                      padding: '8px 16px',
-                      fontSize: '0.82rem',
+                      padding: '10px 14px',
+                      fontSize: '0.8rem',
                       fontWeight: 600,
                       borderRadius: '10px',
                       background: 'rgba(37, 211, 102, 0.15)',
                       border: '1px solid rgba(37, 211, 102, 0.35)',
                       color: '#25D366',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      flex: '1 1 140px'
                     }}
                   >
                     <MessageCircle size={15} /> Track on WhatsApp
@@ -236,15 +238,17 @@ const OrderHistory = () => {
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '8px',
-                      padding: '8px 16px',
-                      fontSize: '0.82rem',
+                      padding: '10px 14px',
+                      fontSize: '0.8rem',
                       fontWeight: 600,
                       borderRadius: '10px',
                       background: 'rgba(212, 175, 55, 0.15)',
                       border: '1px solid rgba(212, 175, 55, 0.35)',
                       color: '#D4AF37',
-                      textDecoration: 'none'
+                      textDecoration: 'none',
+                      flex: '1 1 140px'
                     }}
                   >
                     <Eye size={15} /> View Digital Proofs
@@ -256,15 +260,17 @@ const OrderHistory = () => {
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '8px',
-                      padding: '8px 16px',
-                      fontSize: '0.82rem',
+                      padding: '10px 14px',
+                      fontSize: '0.8rem',
                       fontWeight: 600,
                       borderRadius: '10px',
                       background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.15)',
                       color: 'rgba(255, 255, 255, 0.8)',
-                      textDecoration: 'none'
+                      textDecoration: 'none',
+                      flex: '1 1 140px'
                     }}
                   >
                     <Download size={14} /> Download Tax Invoice

@@ -60,7 +60,7 @@ function AppContent() {
       <CustomCursor />
       <div className={`app-container ${isClientDashboard ? 'portal-mode' : ''} ${isAuthPage ? 'auth-mode' : ''}`}>
         {!isClientDashboard && <PushNotification />}
-        <Navbar />
+        {!isClientDashboard && <Navbar />}
         <CartDrawer />
         <main className={isHome ? 'main-home' : isClientDashboard || isAuthPage ? 'main-portal' : 'main-inner'}>
           <PageTransition>

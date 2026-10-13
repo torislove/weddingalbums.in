@@ -4,36 +4,36 @@ import { Link } from 'react-router-dom';
 
 const AlbumProofGallery = () => {
   return (
-    <div className="dashboard-page" style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
+    <div className="dashboard-page" style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(12px, 3vw, 24px)' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.8rem', margin: '0 0 6px 0' }}>Album Proofing Studio</h2>
-        <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Review high-resolution spreads, leave margin notes, and approve your photobook design.</p>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0' }}>Album Proofing Studio</h2>
+        <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>Review high-resolution spreads, leave margin notes, and approve your photobook design.</p>
       </div>
 
       {/* Active Proof Card */}
-      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(212,175,55,0.25)', marginBottom: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(14px, 3vw, 24px)', border: '1px solid rgba(212,175,55,0.25)', marginBottom: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span style={{ fontSize: '0.8rem', background: 'rgba(212,175,55,0.15)', color: '#D4AF37', padding: '3px 10px', borderRadius: '999px', fontWeight: 600, border: '1px solid rgba(212,175,55,0.3)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.78rem', background: 'rgba(212,175,55,0.15)', color: '#D4AF37', padding: '3px 10px', borderRadius: '999px', fontWeight: 600, border: '1px solid rgba(212,175,55,0.3)' }}>
                 3D Interactive Proof
               </span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Updated 2 hours ago</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Updated 2 hours ago</span>
             </div>
-            <h3 style={{ margin: '4px 0 6px 0', fontSize: '1.3rem', color: '#fff' }}>Royal Wedding Photobook — First Draft Spreads</h3>
-            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>40 Pages • Flush Mount 12x18 • Matte Velvet Finish</p>
+            <h3 style={{ margin: '4px 0 6px 0', fontSize: '1.2rem', color: '#fff' }}>Royal Wedding Photobook — First Draft Spreads</h3>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>40 Pages • Flush Mount 12x18 • Matte Velvet Finish</p>
           </div>
           <Link 
             to="/proofing/sample" 
             className="btn btn-primary"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', textDecoration: 'none', fontSize: '0.9rem' }}
+            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px 18px', textDecoration: 'none', fontSize: '0.85rem' }}
           >
             <BookOpen size={16} /> Open 3D Viewer <ExternalLink size={14} />
           </Link>
         </div>
 
         {/* Spread Previews */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginTop: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '12px', marginTop: '16px' }}>
           {[
             { title: 'Cover & Title Spread', img: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400' },
             { title: 'Ceremony & Vows', img: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400' },

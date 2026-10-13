@@ -35,10 +35,10 @@ const ProfileSettings = () => {
     <div className="dashboard-page">
       <h2>Profile & Settings</h2>
       
-      <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '30px', border: '1px solid rgba(255,255,255,0.05)', maxWidth: '800px' }}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(16px, 3vw, 30px)', border: '1px solid rgba(255,255,255,0.08)', maxWidth: '800px' }}>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
             <div className="form-group premium-input-group">
               <label>Full Name</label>
               <input type="text" name="name" value={formData.name} onChange={handleChange} required />
@@ -51,7 +51,7 @@ const ProfileSettings = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
             <div className="form-group premium-input-group">
               <label>Phone Number</label>
               <input type="tel" name="phone" value={formData.phone} onChange={handleChange} />
@@ -63,9 +63,9 @@ const ProfileSettings = () => {
             </div>
           </div>
 
-          <h3 style={{ marginTop: '20px', marginBottom: '10px', color: 'var(--primary)', fontSize: '1.2rem' }}>Wedding Details</h3>
+          <h3 style={{ marginTop: '16px', marginBottom: '6px', color: 'var(--primary)', fontSize: '1.2rem' }}>Wedding Details</h3>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
             <div className="form-group premium-input-group">
               <label>Couple Names</label>
               <input type="text" name="coupleNames" value={formData.coupleNames} onChange={handleChange} placeholder="e.g. Ram & Sita" />
@@ -78,7 +78,7 @@ const ProfileSettings = () => {
           </div>
 
           <div style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="submit" className="btn btn-gold-3d" disabled={loading}>
+            <button type="submit" className="btn btn-gold-3d" disabled={loading} style={{ minWidth: '160px', padding: '12px 24px' }}>
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
