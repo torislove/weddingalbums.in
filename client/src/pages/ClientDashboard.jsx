@@ -49,49 +49,155 @@ const MOCK_ORDERS = [
   },
 ];
 
-/* ── Order card with expandable timeline ───────────────────────────── */
+/* ── Order card with expandable timeline & full booked specifications ─── */
 const OrderCard = ({ order }) => {
   const [expanded, setExpanded] = useState(order.status !== 'delivered');
+  const items = order.items && order.items.length > 0 ? order.items : [];
+
+  const openWhatsAppTrack = (e) => {
+    e.stopPropagation();
+    const msg = `నమస్కారం WeddingAlbums.in టీమ్! నా ఆర్డర్ Reference: ${order.id} గురించి లేటెస్ట్ స్టేటస్ మరియు ప్రూఫ్ అప్‌డేట్స్ తెలుసుకోవాలనుకుంటున్నాను.`;
+    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
+  };
 
   return (
     <div className="cdash-order-card">
       <div className="cdash-order-head" onClick={() => setExpanded(v => !v)}>
         <div className="cdash-order-status-dot" style={{ background: order.statusColor, boxShadow: `0 0 8px ${order.statusColor}` }} />
-        <div className="cdash-order-name">{order.name}</div>
+        <div className="cdash-order-name">
+          <div className="font-bold text-white text-sm sm:text-base flex items-center gap-2 flex-wrap">
+            <span>{order.name}</span>
+            {order.packageType === 'bundles' ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 font-bold uppercase">
+                ⚡ Curated Bundle
+              </span>
+            ) : (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-bold uppercase">
+                🛠️ Custom Services
+              </span>
+            )}
+          </div>
+          <div className="text-xs text-gray-400 mt-0.5">
+            {order.date} • {order.amount} • {order.city ? `${order.eventType || 'Event'} in ${order.city}` : 'Andhra Pradesh'}
+          </div>
+        </div>
         <div className="cdash-order-id">{order.id}</div>
         <div className="cdash-order-badge" style={{ background: order.badgeBg, color: order.badgeColor }}>
           {order.statusLabel}
         </div>
-        {expanded ? <ChevronUp size={16} style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0 }} />
-                  : <ChevronDown size={16} style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0 }} />}
+        {expanded ? <ChevronUp size={16} style={{ color: 'rgba(255,255,255,0.4)', flexShrink: 0 }} />
+                  : <ChevronDown size={16} style={{ color: 'rgba(255,255,255,0.4)', flexShrink: 0 }} />}
       </div>
 
       {expanded && (
-        <div className="cdash-timeline">
-          {TIMELINE_STEPS.map((step, i) => {
-            const isDone   = i < order.currentStep;
-            const isActive = i === order.currentStep;
-            const Icon = step.icon;
-            return (
-              <div key={step.key} className={`cdash-tl-step ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}`}>
-                <div className="cdash-tl-icon">
-                  {isDone
-                    ? <CheckCircle2 size={12} />
-                    : isActive
-                      ? <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#3b82f6' }} />
-                      : <Icon size={11} style={{ opacity: 0.3 }} />
-                  }
-                </div>
-                <div className="cdash-tl-body">
-                  <div className="cdash-tl-label">{step.label}</div>
-                  <div className="cdash-tl-time">
-                    {isDone ? '✓ Completed' : isActive ? 'In progress — ETA 2 days' : 'Upcoming'}
+        <>
+          {/* Timeline */}
+          <div className="cdash-timeline">
+            {TIMELINE_STEPS.map((step, i) => {
+              const isDone   = i < order.currentStep;
+              const isActive = i === order.currentStep;
+              const Icon = step.icon;
+              return (
+                <div key={step.key} className={`cdash-tl-step ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}`}>
+                  <div className="cdash-tl-icon">
+                    {isDone
+                      ? <CheckCircle2 size={12} />
+                      : isActive
+                        ? <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#3b82f6' }} />
+                        : <Icon size={11} style={{ opacity: 0.3 }} />
+                    }
+                  </div>
+                  <div className="cdash-tl-body">
+                    <div className="cdash-tl-label">{step.label}</div>
+                    <div className="cdash-tl-time">
+                      {isDone ? '✓ Completed' : isActive ? 'In progress — Lab manager assigned' : 'Upcoming Step'}
+                    </div>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+
+          {/* Booked Services & Specifications Breakdown */}
+          <div className="cdash-order-details">
+            <div className="cdash-details-header">
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-300">
+                Booked Services & Specifications ({items.length || 1} items)
+              </span>
+              <span className="text-xs font-mono font-bold text-[#D4AF37]">
+                Total: {order.amount}
+              </span>
+            </div>
+
+            {/* Meta Strip: Speed, Location & Media Inward */}
+            <div className="cdash-meta-strip">
+              <span>
+                <Truck size={14} className="text-[#D4AF37]" />
+                {order.deliverySpeed === 'express' ? '🚀 Express 24-48h Rush Dispatch' : '⚡ Standard 3-5 Days Free Courier'}
+              </span>
+              {order.city && (
+                <span>
+                  <CheckCircle2 size={14} className="text-emerald-400" />
+                  Destination: {order.city}
+                </span>
+              )}
+              {order.cloudLink && (
+                <a
+                  href={order.cloudLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold"
+                >
+                  <Download size={14} /> Open Drive Photos ↗
+                </a>
+              )}
+            </div>
+
+            {/* Items Grid */}
+            {items.length > 0 ? (
+              <div className="cdash-items-grid">
+                {items.map((it, idx) => (
+                  <div key={idx} className="cdash-item-chip">
+                    <div className="cdash-item-head">
+                      <div className="cdash-item-title">{it.name}</div>
+                      {it.price && <div className="cdash-item-price">₹{Number(it.price).toLocaleString('en-IN')}</div>}
+                    </div>
+                    {it.details && <div className="cdash-item-desc">{it.details}</div>}
+                  </div>
+                ))}
               </div>
-            );
-          })}
-        </div>
+            ) : (
+              <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-xs text-gray-300 mb-4">
+                <strong>Standard Package:</strong> Lay-Flat Couture Wedding Album with pro skin retouching & presentation case.
+              </div>
+            )}
+
+            {/* Quick Actions */}
+            <div className="cdash-order-actions-bar">
+              <button
+                type="button"
+                onClick={openWhatsAppTrack}
+                className="cdash-btn-action cdash-btn-whatsapp"
+              >
+                <Phone size={14} /> Track on WhatsApp
+              </button>
+              <Link
+                to="/client/proofs"
+                className="cdash-btn-action cdash-btn-proofs"
+              >
+                <ImageIcon size={14} /> View Digital Proofs
+              </Link>
+              <a
+                href={`${API}/api/orders/${order.id}/invoice`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cdash-btn-action cdash-btn-invoice"
+              >
+                <Download size={14} /> Download Tax Invoice
+              </a>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
@@ -115,7 +221,7 @@ const ClientDashboard = () => {
         .catch(() => {});
     }
 
-    // Fetch user's orders
+    // Fetch user's orders with full itemization and metadata
     const fetchOrders = async () => {
       try {
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
@@ -130,7 +236,7 @@ const ClientDashboard = () => {
               return ordEmail ? ordEmail.toLowerCase() === user.email.toLowerCase() : true;
             });
 
-            const mapped = (userOrders.length > 0 ? userOrders : list.slice(0, 3)).map(ord => {
+            const mapped = (userOrders.length > 0 ? userOrders : list.slice(0, 5)).map(ord => {
               const statusStr = (ord.status || 'Confirmed').toLowerCase();
               let stepIdx = 0;
               let color = '#3b82f6';
@@ -141,9 +247,17 @@ const ClientDashboard = () => {
               else if (statusStr.includes('edit')) { stepIdx = 2; color = '#3b82f6'; }
               else if (statusStr.includes('receiv')) { stepIdx = 1; color = '#eab308'; }
 
+              const orderItems = ord.items && Array.isArray(ord.items) && ord.items.length > 0
+                ? ord.items
+                : ord.data?.items && Array.isArray(ord.data?.items) && ord.data?.items.length > 0
+                ? ord.data.items
+                : [];
+
+              const pkgType = ord.data?.packageType || (ord.data?.appliedBundle ? 'bundles' : 'custom');
+
               return {
                 id: ord.id || ord.orderId || 'ORD-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
-                name: ord.name || ord.data?.services ? 'Wedding Post-Production Bundle' : 'Custom Wedding Album',
+                name: ord.name || (pkgType === 'bundles' ? 'Royal Wedding Master Suite' : 'Custom Wedding Multi-Service Package'),
                 status: statusStr,
                 statusColor: color,
                 statusLabel: ord.status || 'Confirmed',
@@ -151,7 +265,15 @@ const ClientDashboard = () => {
                 badgeColor: color,
                 date: new Date(ord.createdAt || ord.created_at || Date.now()).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }),
                 amount: `₹${(ord.total || ord.data?.total || 7500).toLocaleString('en-IN')}`,
-                currentStep: stepIdx
+                currentStep: stepIdx,
+                items: orderItems,
+                packageType: pkgType,
+                city: ord.data?.event?.city || ord.data?.city,
+                eventType: ord.data?.event?.type || ord.data?.eventType,
+                deliverySpeed: ord.data?.event?.speed || ord.data?.deliverySpeed,
+                cloudLink: ord.cloudLink || ord.data?.cloudLink,
+                uploadPreference: ord.uploadPreference || ord.data?.uploadPreference,
+                phone: ord.phone || ord.data?.phone
               };
             });
             setOrders(mapped);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Download, ShoppingBag, Clock } from 'lucide-react';
+import { Download, ShoppingBag, Clock, Truck, MessageCircle, Eye, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const OrderHistory = () => {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ const OrderHistory = () => {
       const data = await res.json();
       
       const list = Array.isArray(data) ? data : [];
-      // Filter by email if user is logged in, else display recent session orders
+      // Filter by email if user is logged in
       const userOrders = list.filter(order => {
         if (!user?.email) return true;
         const ordEmail = order.email || order.userEmail || order.data?.userEmail;
@@ -35,6 +36,12 @@ const OrderHistory = () => {
     }
   };
 
+  const openWhatsAppTrack = (order) => {
+    const orderId = order.orderId || order.id || order._id || 'ORD-VERIFIED';
+    const msg = `నమస్కారం WeddingAlbums.in టీమ్! నా ఆర్డర్ Reference: ${orderId} గురించి స్టేటస్ మరియు ప్రూఫ్ అప్‌డేట్స్ తెలుసుకోవాలనుకుంటున్నాను.`;
+    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
@@ -45,35 +52,75 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="dashboard-page" style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
+    <div className="dashboard-page" style={{ maxWidth: '960px', margin: '0 auto', padding: '20px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.8rem', margin: '0 0 6px 0' }}>Order History & Invoices</h2>
-        <p style={{ color: 'var(--text-secondary)', margin: 0 }}>View your photobook orders, production status, and tax invoices.</p>
+        <h2 style={{ fontSize: '1.8rem', margin: '0 0 6px 0', color: '#fff', fontFamily: 'serif' }}>
+          Order History & Itemized Invoices
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>
+          Track production progress, itemized service breakdowns, and download GST tax invoices.
+        </p>
       </div>
       
       {orders.length === 0 ? (
-        <div className="empty-state" style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="empty-state" style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)' }}>
           <ShoppingBag size={48} color="var(--gold-primary)" style={{ marginBottom: '16px', opacity: 0.8 }} />
-          <h3 style={{ margin: '0 0 8px 0' }}>No Orders Found</h3>
-          <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0' }}>You haven't placed any photobook orders yet.</p>
-          <a href="/order" className="btn btn-primary" style={{ padding: '10px 24px', textDecoration: 'none', display: 'inline-block' }}>
-            Build Your Album
-          </a>
+          <h3 style={{ margin: '0 0 8px 0', color: '#fff' }}>No Orders Found</h3>
+          <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0', fontSize: '0.9rem' }}>You haven't placed any photobook or post-production orders yet.</p>
+          <Link to="/order" className="btn btn-primary" style={{ padding: '10px 24px', textDecoration: 'none', display: 'inline-block' }}>
+            Book Services & Albums
+          </Link>
         </div>
       ) : (
         <div className="orders-list" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {orders.map(order => {
-            const orderIdStr = String(order.orderId || order.id || order._id || 'ORD').substring(0, 12).toUpperCase();
+            const orderIdStr = String(order.orderId || order.id || order._id || 'ORD').substring(0, 14).toUpperCase();
             const totalVal = order.total || order.data?.total || 0;
             const statusVal = order.status || order.data?.status || 'Confirmed';
-            const itemsList = order.items || order.data?.items || [];
+            const itemsList = order.items && Array.isArray(order.items) && order.items.length > 0
+              ? order.items
+              : order.data?.items && Array.isArray(order.data?.items) && order.data?.items.length > 0
+              ? order.data.items
+              : [];
+            
+            const pkgType = order.data?.packageType || (order.data?.appliedBundle ? 'bundles' : 'custom');
+            const city = order.data?.event?.city || order.data?.city;
+            const speed = order.data?.event?.speed || order.data?.deliverySpeed;
+            const cloudLink = order.cloudLink || order.data?.cloudLink;
             
             return (
-              <div key={order.id || order._id} style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px', marginBottom: '16px' }}>
+              <div
+                key={order.id || order._id}
+                style={{
+                  background: 'rgba(18, 16, 12, 0.75)',
+                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  borderRadius: '20px',
+                  padding: '24px',
+                  boxShadow: '0 12px 36px rgba(0,0,0,0.4)',
+                  position: 'relative'
+                }}
+              >
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
                   <div>
-                    <h4 style={{ margin: '0 0 4px 0', fontSize: '1.1rem', color: '#fff' }}>Order #{orderIdStr}</h4>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                      <h4 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', fontWeight: 'bold' }}>
+                        Order #{orderIdStr}
+                      </h4>
+                      <span style={{
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold',
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                        background: pkgType === 'bundles' ? 'rgba(212, 175, 55, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+                        color: pkgType === 'bundles' ? '#D4AF37' : '#93c5fd',
+                        border: `1px solid ${pkgType === 'bundles' ? 'rgba(212, 175, 55, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
+                        textTransform: 'uppercase'
+                      }}>
+                        {pkgType === 'bundles' ? '⚡ Curated Bundle' : '🛠️ Custom Multi-Service'}
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
                       Placed on: {new Date(order.createdAt || order.created_at || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
@@ -81,36 +128,144 @@ const OrderHistory = () => {
                     <span style={{ display: 'inline-block', padding: '4px 12px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 600, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
                       {statusVal}
                     </span>
-                    <div style={{ marginTop: '6px', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--gold-primary)' }}>
+                    <div style={{ marginTop: '4px', fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--gold-primary)', fontFamily: 'monospace' }}>
                       ₹{Number(totalVal).toLocaleString('en-IN')}
                     </div>
                   </div>
                 </div>
+
+                {/* Metadata Strip */}
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '12px',
+                  padding: '10px 14px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  marginBottom: '16px',
+                  fontSize: '0.8rem',
+                  color: 'rgba(255, 255, 255, 0.75)'
+                }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Truck size={14} color="#D4AF37" />
+                    {speed === 'express' ? '🚀 Express 24-48h Rush Courier' : '⚡ Standard 3-5 Days Free Delivery'}
+                  </span>
+                  {city && (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <CheckCircle2 size={14} color="#10b981" />
+                      Destination: {city}
+                    </span>
+                  )}
+                  {cloudLink && (
+                    <a
+                      href={cloudLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: '#D4AF37', textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}
+                    >
+                      <Download size={14} /> Open Drive Media ↗
+                    </a>
+                  )}
+                </div>
                 
+                {/* Booked Services Itemized Grid */}
                 <div style={{ marginBottom: '20px' }}>
-                  <h5 style={{ margin: '0 0 10px 0', color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Order Details:</h5>
-                  <ul style={{ margin: 0, paddingLeft: '20px', color: 'var(--text-main)', fontSize: '0.95rem' }}>
-                    {itemsList.length > 0 ? (
-                      itemsList.map((item, idx) => (
-                        <li key={idx} style={{ marginBottom: '6px' }}>
-                          <strong>{item.name || 'Photobook'}</strong> {item.quantity ? `(Qty: ${item.quantity})` : ''}
-                        </li>
-                      ))
-                    ) : (
-                      <li style={{ marginBottom: '6px' }}>
-                        <strong>{order.size?.label || order.size || 'Couture Wedding Photobook'}</strong> {order.coverType?.label ? `— ${order.coverType.label} Cover` : ''}
-                      </li>
-                    )}
-                  </ul>
+                  <h5 style={{ margin: '0 0 10px 0', color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Booked Services & Specifications:
+                  </h5>
+
+                  {itemsList.length > 0 ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '10px' }}>
+                      {itemsList.map((item, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            padding: '12px 14px',
+                            borderRadius: '12px',
+                            background: 'rgba(0, 0, 0, 0.4)',
+                            border: '1px solid rgba(255, 255, 255, 0.08)'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
+                            <strong style={{ color: '#fff', fontSize: '0.88rem' }}>{item.name || 'Service Item'}</strong>
+                            {item.price && (
+                              <span style={{ color: '#D4AF37', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.82rem' }}>
+                                ₹{Number(item.price).toLocaleString('en-IN')}
+                              </span>
+                            )}
+                          </div>
+                          {item.details && (
+                            <p style={{ margin: 0, fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.55)', lineHeight: 1.35 }}>
+                              {item.details}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ padding: '12px 16px', borderRadius: '12px', background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.06)', color: '#ccc', fontSize: '0.88rem' }}>
+                      <strong>{order.size?.label || order.size || 'Couture Wedding Photobook'}</strong> {order.coverType?.label ? `— ${order.coverType.label} Cover` : ''}
+                    </div>
+                  )}
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
+                {/* Actions */}
+                <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => openWhatsAppTrack(order)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 16px',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      borderRadius: '10px',
+                      background: 'rgba(37, 211, 102, 0.15)',
+                      border: '1px solid rgba(37, 211, 102, 0.35)',
+                      color: '#25D366',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <MessageCircle size={15} /> Track on WhatsApp
+                  </button>
+                  <Link
+                    to="/client/proofs"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 16px',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      borderRadius: '10px',
+                      background: 'rgba(212, 175, 55, 0.15)',
+                      border: '1px solid rgba(212, 175, 55, 0.35)',
+                      color: '#D4AF37',
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <Eye size={15} /> View Digital Proofs
+                  </Link>
                   <a 
                     href={`${API}/api/orders/${order._id || order.id}/invoice`} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', fontSize: '0.85rem', color: 'var(--gold-primary)', borderColor: 'var(--gold-primary)' }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 16px',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      borderRadius: '10px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      textDecoration: 'none'
+                    }}
                   >
                     <Download size={14} /> Download Tax Invoice
                   </a>

@@ -4,12 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
 import {
   ShoppingCart, CheckCircle2, Package, Image, Video,
-  UploadCloud, Truck, MonitorPlay, Printer, Film,
-  Palette, MessageCircle, Sparkles, MapPin, Phone,
-  HelpCircle, HardDrive, ArrowRight, ArrowLeft, Check,
-  Clock, ShieldCheck, Music, Box, BookOpen, Layers,
-  Calendar, CheckSquare, ChevronRight, Award, Zap,
-  Building2, Eye, Tag, FileText
+  UploadCloud, Truck, MonitorPlay, Film, Palette,
+  MessageCircle, Sparkles, MapPin, ArrowRight, ArrowLeft,
+  Check, Clock, ShieldCheck, BookOpen, Layers,
+  Calendar, CheckSquare, Zap, Building2, Eye, Tag
 } from 'lucide-react';
 import './OrderAlbum.css';
 
@@ -27,7 +25,7 @@ const DEFAULT_ALBUM_SIZES = [
     basePrice: 9500,
     studioBasePrice: 6800,
     popular: true,
-    description: '36 inch wide panoramic lay-flat views. India\'s #1 wedding choice.'
+    description: "36 inch wide panoramic lay-flat views. India's #1 wedding choice."
   },
   {
     id: '12x30',
@@ -152,8 +150,6 @@ const DEFAULT_SHEETS = [
     telugu: 'సిల్కీ వెల్వెట్ మ్యాట్ (వాటర్ ప్రూఫ్)',
     pricePerSheet: 65,
     studioPricePerSheet: 42,
-    premiumCoverSurcharge: 1200,
-    studioCoverSurcharge: 750,
     note: 'Ultra-smooth matte finish, 100% waterproof, tear-resistant, feather touch.'
   },
   {
@@ -162,8 +158,6 @@ const DEFAULT_SHEETS = [
     telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్',
     pricePerSheet: 75,
     studioPricePerSheet: 48,
-    premiumCoverSurcharge: 1000,
-    studioCoverSurcharge: 650,
     note: 'Super-reflective mirror gloss. Vivid colors, deep blacks and saturated wedding reds.'
   },
   {
@@ -172,8 +166,6 @@ const DEFAULT_SHEETS = [
     telugu: 'రాయల్ హై-గ్లాస్ మెటాలిక్',
     pricePerSheet: 85,
     studioPricePerSheet: 55,
-    premiumCoverSurcharge: 1400,
-    studioCoverSurcharge: 900,
     note: 'Lustrous high-contrast sheen that brings gold jewellery and wedding silks alive.'
   },
   {
@@ -182,8 +174,6 @@ const DEFAULT_SHEETS = [
     telugu: 'రాయల్ ఫెదర్ టచ్ లెథరెట్',
     pricePerSheet: 110,
     studioPricePerSheet: 72,
-    premiumCoverSurcharge: 1800,
-    studioCoverSurcharge: 1150,
     note: 'Ultra-luxury textured sheets with genuine tactile grain and rich gold hot-stamping.'
   },
   {
@@ -192,8 +182,6 @@ const DEFAULT_SHEETS = [
     telugu: 'హై-డెఫినిషన్ థర్మల్ లామినేషన్',
     pricePerSheet: 50,
     studioPricePerSheet: 32,
-    premiumCoverSurcharge: 800,
-    studioCoverSurcharge: 500,
     note: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday studio handling.'
   },
   {
@@ -202,8 +190,6 @@ const DEFAULT_SHEETS = [
     telugu: 'సిల్క్ మ్యాట్ పెర్ల్ లస్టర్',
     pricePerSheet: 95,
     studioPricePerSheet: 62,
-    premiumCoverSurcharge: 1500,
-    studioCoverSurcharge: 950,
     note: 'Micro-pearlescent sheen with true-to-life skin tones and natural highlights without glare.'
   },
   {
@@ -212,8 +198,6 @@ const DEFAULT_SHEETS = [
     telugu: 'సిల్వర్ హాలైడ్ ట్రూ ఫోటో పేపర్',
     pricePerSheet: 125,
     studioPricePerSheet: 82,
-    premiumCoverSurcharge: 2000,
-    studioCoverSurcharge: 1300,
     note: 'Continuous tone optical RGB exposure. 100-year archival laboratory rating without dots.'
   },
   {
@@ -222,8 +206,6 @@ const DEFAULT_SHEETS = [
     telugu: 'కాన్వాస్ ఎంబోస్డ్ ఫైన్ ఆర్ట్ టెక్స్చర్',
     pricePerSheet: 105,
     studioPricePerSheet: 68,
-    premiumCoverSurcharge: 1600,
-    studioCoverSurcharge: 1050,
     note: 'Tactile painterly woven fabric texture with artistic micro-embossing for timeless art.'
   }
 ];
@@ -328,9 +310,9 @@ const BookingPage = () => {
     return user?.role === 'studio' || Boolean(user?.studioName);
   });
 
-  // Experience Mode: 'custom' | 'bundles'
-  const [experienceMode, setExperienceMode] = useState('bundles'); // Defaults to Bundles for instant fast presets, switchable to custom
-  const [appliedBundle, setAppliedBundle] = useState(null);
+  // SEPARATED EXPERIENCE MODE: 'bundles' (1-Click Fast Suites) vs 'custom' (A-la-carte Multi-Service)
+  const [experienceMode, setExperienceMode] = useState('bundles'); 
+  const [appliedBundle, setAppliedBundle] = useState('royal_telugu');
 
   // Orientation filter for album sizes: 'all' | 'landscape' | 'portrait'
   const [selectedOrientation, setSelectedOrientation] = useState('all');
@@ -380,7 +362,7 @@ const BookingPage = () => {
     
     // Category Enablement
     services: {
-      albumPrint: true, // Default enabled
+      albumPrint: true,
       videoEdit: false,
       photoEdit: false,
       flexBanner: false,
@@ -388,29 +370,29 @@ const BookingPage = () => {
     },
     
     // Album Specifications
-    albumType: 'karizma', // 'karizma' | 'acrylic' | 'velvet' | 'leather' | 'flushmount'
-    albumSize: '12x36', // '12x36' | '12x30' | '18x12' etc.
-    selectedSheetTypes: ['velvet'], // Supports MULTIPLE sheet types! e.g. ['velvet', 'metallic']
-    pages: 30, // 30, 40, 50, 60, 80, 100 sheets
-    boxType: 'standard', // 'standard' | 'velvet_case' | 'wooden_box' | 'acrylic_box'
-    parentAlbums: 0, // 0, 1, 2
+    albumType: 'karizma',
+    albumSize: '12x36',
+    selectedSheetTypes: ['velvet'],
+    pages: 30,
+    boxType: 'standard',
+    parentAlbums: 0,
     
     // Video Editing Options - MULTI-SELECT!
-    selectedVideoServices: ['teaser'], // e.g. ['teaser', 'reels', 'traditional']
+    selectedVideoServices: ['teaser'],
     musicStyle: 'telugu_romantic',
     
     // Photo Editing Options - MULTI-SELECT!
-    selectedPhotoServices: ['retouching'], // e.g. ['retouching', 'karizma_psd']
-    photoCount: 50, // 30, 50, 100, 200, 300, 500
+    selectedPhotoServices: ['retouching'],
+    photoCount: 50,
     
     // Flex & Banners Options - MULTI-SELECT!
-    selectedFlexServices: [], // e.g. ['mandap', 'invite']
+    selectedFlexServices: [],
     
     // Calendars & Keepsakes Options - MULTI-SELECT!
-    selectedCalendarServices: [], // e.g. ['desk_easel']
-    calendarCopies: 1, // 1, 2, 5, 10, 25, 50
+    selectedCalendarServices: [],
+    calendarCopies: 1,
     
-    // Step 3: Media upload method
+    // Media upload method
     uploadMethod: 'cloud', // 'cloud' | 'whatsapp' | 'courier'
     cloudLink: '',
   });
@@ -460,9 +442,9 @@ const BookingPage = () => {
         },
         albumType: 'karizma',
         albumSize: '12x36',
-        selectedSheetTypes: ['velvet'],
+        selectedSheetTypes: ['velvet', 'metallic'],
         pages: 40,
-        boxType: 'standard',
+        boxType: 'velvet_case',
         selectedVideoServices: ['teaser', 'reels'],
         selectedPhotoServices: ['retouching', 'cinematic_luts'],
         photoCount: 50,
@@ -504,10 +486,17 @@ const BookingPage = () => {
         deliverySpeed: 'express',
       }));
     }
+
     if (directToEvent) {
+      // In Bundles mode: step 2 is Event Details
+      setExperienceMode('bundles');
       setStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      // Customizer path: switches to Custom Multi-Service Builder step 2
       setExperienceMode('custom');
+      setStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -517,7 +506,6 @@ const BookingPage = () => {
       const exists = prev.selectedSheetTypes.includes(sheetId);
       let updated;
       if (exists) {
-        // Keep at least one selected
         if (prev.selectedSheetTypes.length > 1) {
           updated = prev.selectedSheetTypes.filter(id => id !== sheetId);
         } else {
@@ -601,6 +589,14 @@ const BookingPage = () => {
   // Precise, 100% Itemized Pricing Calculation (No Arbitrary Bulk Lump Sums!)
   const calculateTotal = (forceMode = null) => {
     const studio = forceMode !== null ? forceMode : isStudioMode;
+
+    // Special curated bundle fast calculation if in bundles mode
+    if (experienceMode === 'bundles') {
+      if (appliedBundle === 'royal_telugu') return studio ? 14999 : 17999;
+      if (appliedBundle === 'cinematic_duo') return studio ? 10800 : 13200;
+      if (appliedBundle === 'lab_express') return studio ? 6500 : 8200;
+    }
+
     let total = 0;
 
     // 1. Album Print & Design
@@ -639,7 +635,7 @@ const BookingPage = () => {
       else if (formData.parentAlbums === 2) total += (studio ? 3200 : 4500);
     }
 
-    // 2. Video Editing (Sum of all individually selected video services!)
+    // 2. Video Editing
     if (formData.services.videoEdit && formData.selectedVideoServices.length > 0) {
       formData.selectedVideoServices.forEach(vId => {
         const item = VIDEO_SERVICES.find(v => v.id === vId);
@@ -649,7 +645,7 @@ const BookingPage = () => {
       });
     }
 
-    // 3. Photo Editing (Sum of individually selected per-photo rates * photo count)
+    // 3. Photo Editing
     if (formData.services.photoEdit && formData.selectedPhotoServices.length > 0) {
       let combinedPerPhoto = 0;
       formData.selectedPhotoServices.forEach(pId => {
@@ -662,7 +658,7 @@ const BookingPage = () => {
       total += Math.max(photoMin, combinedPerPhoto * formData.photoCount);
     }
 
-    // 4. Flex, Hoardings & Invitations (Sum of all individually selected items!)
+    // 4. Flex & Banners
     if (formData.services.flexBanner && formData.selectedFlexServices.length > 0) {
       formData.selectedFlexServices.forEach(fId => {
         const item = FLEX_SERVICES.find(f => f.id === fId);
@@ -672,7 +668,7 @@ const BookingPage = () => {
       });
     }
 
-    // 5. Calendars & Keepsakes
+    // 5. Calendars
     if (formData.services.calendars && formData.selectedCalendarServices.length > 0) {
       let calendarUnitSum = 0;
       formData.selectedCalendarServices.forEach(cId => {
@@ -696,26 +692,64 @@ const BookingPage = () => {
   const wholesaleTotal = calculateTotal(true);
   const studioSavings = Math.max(0, retailTotal - wholesaleTotal);
 
+  // Dynamic Stepper Definitions
+  const wizardSteps = experienceMode === 'bundles'
+    ? [
+        { num: 1, title: 'Luxury Bundle', telugu: 'బండిల్ ఎంపిక', icon: Sparkles },
+        { num: 2, title: 'Event Details', telugu: 'ఈవెంట్ వివరాలు', icon: MapPin },
+        { num: 3, title: 'Upload & Confirm', telugu: 'మీడియా & కన్ఫర్మ్', icon: UploadCloud },
+      ]
+    : [
+        { num: 1, title: 'Pick Services', telugu: 'సర్వీసుల ఎంపిక', icon: CheckSquare },
+        { num: 2, title: 'Customization', telugu: 'కాన్ఫిగరేషన్', icon: Layers },
+        { num: 3, title: 'Event Details', telugu: 'ఈవెంట్ వివరాలు', icon: MapPin },
+        { num: 4, title: 'Upload & Confirm', telugu: 'మీడియా & కన్ఫర్మ్', icon: UploadCloud },
+      ];
+
+  const totalSteps = wizardSteps.length;
+
   const proceedToNextStep = () => {
-    if (step === 1) {
-      const hasAnyService = Object.values(formData.services).some(Boolean);
-      if (!hasAnyService) {
-        alert(lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి.' : 'Please select at least one service to continue.');
-        return;
+    if (experienceMode === 'bundles') {
+      if (step === 1) {
+        setStep(2);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (step === 2) {
+        if (!formData.name.trim()) {
+          alert(lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.');
+          return;
+        }
+        if (!formData.phone.trim() || formData.phone.length < 10) {
+          alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
+          return;
+        }
+        setStep(3);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      setStep(2);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (step === 2) {
-      if (!formData.name.trim()) {
-        alert(lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.');
-        return;
+    } else {
+      // Custom Builder Mode
+      if (step === 1) {
+        const hasAnyService = Object.values(formData.services).some(Boolean);
+        if (!hasAnyService) {
+          alert(lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి.' : 'Please select at least one service to continue.');
+          return;
+        }
+        setStep(2);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (step === 2) {
+        setStep(3);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (step === 3) {
+        if (!formData.name.trim()) {
+          alert(lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.');
+          return;
+        }
+        if (!formData.phone.trim() || formData.phone.length < 10) {
+          alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
+          return;
+        }
+        setStep(4);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      if (!formData.phone.trim() || formData.phone.length < 10) {
-        alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
-        return;
-      }
-      setStep(3);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -724,6 +758,105 @@ const BookingPage = () => {
       setStep(step - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  // Structured Item Generator for Client Panel Full Understanding
+  const generateStructuredItems = () => {
+    const items = [];
+    if (experienceMode === 'bundles') {
+      const bundleNames = {
+        royal_telugu: 'Royal Telugu Muhurtham Master Suite',
+        cinematic_duo: 'Cinematic Story & Karizma Duo',
+        lab_express: 'Studio Fast-Track Printing Pack'
+      };
+      items.push({
+        name: bundleNames[appliedBundle] || 'Curated Wedding Luxury Suite',
+        type: 'bundle',
+        details: appliedBundle === 'royal_telugu'
+          ? '12×36 Layflat Karizma (40 sheets, Velvet Touch) + 4K Teaser & 5 Reels + 50 Retouched Photos + Briefcase Box'
+          : appliedBundle === 'cinematic_duo'
+          ? '12×30 Layflat Album (30 sheets, Metallic Pearl) + 4K Teaser & 5 Reels + 30 Retouched Photos'
+          : '12×36 Layflat Flushmount (30 sheets, Metallic Pearl) + Velvet Briefcase Box + Express Delivery',
+        price: calculateTotal(),
+        specs: {
+          bundleKey: appliedBundle,
+          albumSize: formData.albumSize,
+          sheets: formData.pages,
+          sheetTypes: formData.selectedSheetTypes,
+          videoServices: formData.selectedVideoServices,
+          photosCount: formData.photoCount
+        }
+      });
+    } else {
+      if (formData.services.albumPrint) {
+        items.push({
+          name: `Handcrafted Album (${formData.albumSize} • ${formData.albumType})`,
+          type: 'album',
+          details: `${formData.pages} Sheets (${formData.selectedSheetTypes.join(' + ')} finishes) | Box: ${formData.boxType}${formData.parentAlbums > 0 ? ` | ${formData.parentAlbums} Mini Parent Album(s)` : ''}`,
+          price: isStudioMode ? 6800 : 9500,
+          specs: {
+            size: formData.albumSize,
+            cover: formData.albumType,
+            sheets: formData.pages,
+            sheetTypes: formData.selectedSheetTypes,
+            box: formData.boxType,
+            parentAlbums: formData.parentAlbums
+          }
+        });
+      }
+      if (formData.services.videoEdit && formData.selectedVideoServices.length > 0) {
+        const vNames = formData.selectedVideoServices.map(id => VIDEO_SERVICES.find(v => v.id === id)?.name).filter(Boolean);
+        items.push({
+          name: `Cinematic Video Editing (${formData.selectedVideoServices.length} cut${formData.selectedVideoServices.length > 1 ? 's' : ''})`,
+          type: 'video',
+          details: `${vNames.join(', ')} | Audio: ${formData.musicStyle.replace('_', ' ')}`,
+          price: formData.selectedVideoServices.reduce((sum, id) => sum + (isStudioMode ? (VIDEO_SERVICES.find(v => v.id === id)?.studioPrice || 0) : (VIDEO_SERVICES.find(v => v.id === id)?.price || 0)), 0),
+          specs: {
+            services: formData.selectedVideoServices,
+            music: formData.musicStyle
+          }
+        });
+      }
+      if (formData.services.photoEdit && formData.selectedPhotoServices.length > 0) {
+        const pNames = formData.selectedPhotoServices.map(id => PHOTO_SERVICES.find(p => p.id === id)?.name).filter(Boolean);
+        items.push({
+          name: `Photo Retouching & Color (${formData.photoCount} photos)`,
+          type: 'photo',
+          details: `${pNames.join(', ')}`,
+          price: formData.photoCount * formData.selectedPhotoServices.reduce((sum, id) => sum + (isStudioMode ? (PHOTO_SERVICES.find(p => p.id === id)?.studioRate || 0) : (PHOTO_SERVICES.find(p => p.id === id)?.rate || 0)), 0),
+          specs: {
+            styles: formData.selectedPhotoServices,
+            count: formData.photoCount
+          }
+        });
+      }
+      if (formData.services.flexBanner && formData.selectedFlexServices.length > 0) {
+        const fNames = formData.selectedFlexServices.map(id => FLEX_SERVICES.find(f => f.id === id)?.name).filter(Boolean);
+        items.push({
+          name: `Wedding Flex & Banners (${formData.selectedFlexServices.length} items)`,
+          type: 'flex',
+          details: fNames.join(', '),
+          price: formData.selectedFlexServices.reduce((sum, id) => sum + (isStudioMode ? (FLEX_SERVICES.find(f => f.id === id)?.studioPrice || 0) : (FLEX_SERVICES.find(f => f.id === id)?.price || 0)), 0),
+          specs: {
+            services: formData.selectedFlexServices
+          }
+        });
+      }
+      if (formData.services.calendars && formData.selectedCalendarServices.length > 0) {
+        const cNames = formData.selectedCalendarServices.map(id => CALENDAR_SERVICES.find(c => c.id === id)?.name).filter(Boolean);
+        items.push({
+          name: `Personalized Calendars (${formData.calendarCopies} copies)`,
+          type: 'calendar',
+          details: `${cNames.join(', ')}`,
+          price: formData.calendarCopies * formData.selectedCalendarServices.reduce((sum, id) => sum + (isStudioMode ? (CALENDAR_SERVICES.find(c => c.id === id)?.studioPrice || 0) : (CALENDAR_SERVICES.find(c => c.id === id)?.price || 0)), 0),
+          specs: {
+            services: formData.selectedCalendarServices,
+            copies: formData.calendarCopies
+          }
+        });
+      }
+    }
+    return items;
   };
 
   const submitOrder = async (currentUser = user) => {
@@ -736,6 +869,8 @@ const BookingPage = () => {
     try {
       const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
       const totalAmount = calculateTotal();
+      const itemsList = generateStructuredItems();
+
       const payload = {
         orderId,
         name: formData.name,
@@ -746,26 +881,49 @@ const BookingPage = () => {
         status: 'Confirmed',
         cloudLink: formData.uploadMethod === 'cloud' ? formData.cloudLink : '',
         uploadPreference: formData.uploadMethod,
-        instructions: `[${isStudioMode ? 'B2B STUDIO WHOLESALE' : 'B2C CUSTOMER'} | ${formData.eventType} in ${formData.city}] Album: ${formData.albumType} ${formData.albumSize} (${formData.pages} sheets, Sheets: ${formData.selectedSheetTypes.join('+')}). Videos: [${formData.selectedVideoServices.join(', ')}]. Photos: [${formData.selectedPhotoServices.join(', ')}] (${formData.photoCount}p). Flex: [${formData.selectedFlexServices.join(', ')}]. Calendars: [${formData.selectedCalendarServices.join(', ')}] (${formData.calendarCopies}x). Speed: ${formData.deliverySpeed}. Notes: ${formData.instructions || 'Standard order'}`,
+        instructions: `[${isStudioMode ? 'B2B STUDIO WHOLESALE' : 'B2C CUSTOMER'} | ${formData.eventType} in ${formData.city}] ${experienceMode === 'bundles' ? `Bundle: ${appliedBundle}` : `Custom: ${Object.keys(formData.services).filter(k => formData.services[k]).join(', ')}`}. Speed: ${formData.deliverySpeed}. Notes: ${formData.instructions || 'Standard order'}`,
+        items: itemsList,
         data: {
-          pricingTier: isStudioMode ? 'b2b_studio' : 'b2c_retail',
+          packageType: experienceMode,
+          appliedBundle: experienceMode === 'bundles' ? appliedBundle : null,
           services: formData.services,
-          albumType: formData.albumType,
-          albumSize: formData.albumSize,
-          selectedSheetTypes: formData.selectedSheetTypes,
-          pages: formData.pages,
-          boxType: formData.boxType,
-          parentAlbums: formData.parentAlbums,
-          selectedVideoServices: formData.selectedVideoServices,
-          musicStyle: formData.musicStyle,
-          selectedPhotoServices: formData.selectedPhotoServices,
-          photoCount: formData.photoCount,
-          selectedFlexServices: formData.selectedFlexServices,
-          selectedCalendarServices: formData.selectedCalendarServices,
-          calendarCopies: formData.calendarCopies,
-          city: formData.city,
-          eventType: formData.eventType,
-          deliverySpeed: formData.deliverySpeed
+          album: formData.services.albumPrint ? {
+            type: formData.albumType,
+            size: formData.albumSize,
+            sheets: formData.pages,
+            sheetTypes: formData.selectedSheetTypes,
+            box: formData.boxType,
+            parentAlbums: formData.parentAlbums
+          } : null,
+          video: formData.services.videoEdit ? {
+            services: formData.selectedVideoServices,
+            music: formData.musicStyle
+          } : null,
+          photo: formData.services.photoEdit ? {
+            styles: formData.selectedPhotoServices,
+            count: formData.photoCount
+          } : null,
+          flex: formData.services.flexBanner ? {
+            services: formData.selectedFlexServices
+          } : null,
+          calendars: formData.services.calendars ? {
+            services: formData.selectedCalendarServices,
+            copies: formData.calendarCopies
+          } : null,
+          event: {
+            type: formData.eventType,
+            city: formData.city,
+            speed: formData.deliverySpeed,
+            address: formData.address
+          },
+          pricing: {
+            total: totalAmount,
+            retailTotal,
+            wholesaleTotal,
+            savings: studioSavings,
+            isStudioMode
+          },
+          items: itemsList
         }
       };
 
@@ -775,7 +933,7 @@ const BookingPage = () => {
         body: JSON.stringify(payload)
       });
 
-      // Save to cart session as well for checkout continuity
+      // Save to cart session for checkout continuity
       const token = localStorage.getItem('token');
       if (token) {
         fetch(`${API}/api/cart`, {
@@ -783,8 +941,8 @@ const BookingPage = () => {
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({
             items: [{
-              type: 'custom_booking',
-              name: `Custom Post-Production Package (${formData.eventType} - ${isStudioMode ? 'Studio Trade' : 'Retail'})`,
+              type: experienceMode === 'bundles' ? 'bundle_booking' : 'custom_booking',
+              name: `${experienceMode === 'bundles' ? 'Curated Suite' : 'Custom Package'} (${formData.eventType} - ${isStudioMode ? 'Studio Trade' : 'Retail'})`,
               price: totalAmount,
               details: payload.data
             }],
@@ -793,7 +951,7 @@ const BookingPage = () => {
         }).catch(() => {});
       }
 
-      // Capture WhatsApp lead sync
+      // WhatsApp lead sync
       fetch(`${API}/api/whatsapp-lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -831,6 +989,7 @@ const BookingPage = () => {
       `*Phone:* ${formData.phone || 'Not provided'}\n` +
       `*Account Type:* ${isStudioMode ? '🏢 Studio Wholesale Trade (B2B)' : '👥 Customer Retail (B2C)'}\n` +
       `*Event:* ${formData.eventType} in ${formData.city}\n` +
+      `*Mode:* ${experienceMode === 'bundles' ? `⚡ Curated Bundle (${appliedBundle})` : '🛠️ Custom Multi-Service Builder'}\n` +
       `*Speed:* ${formData.deliverySpeed === 'express' ? '🚀 Express 24-48h' : '⚡ Standard 3-5 Days'}\n\n` +
       `*Selected Services:*\n• ${selectedServiceNames}\n\n` +
       `*Total Estimate:* ₹${calculateTotal().toLocaleString('en-IN')}${isStudioMode && studioSavings > 0 ? ` (Saved ₹${studioSavings.toLocaleString('en-IN')} with Studio rates)` : ''}\n` +
@@ -869,6 +1028,10 @@ const BookingPage = () => {
               <span className="text-[#D4AF37] font-mono font-bold">{formData.createdOrderId || 'ORD-VERIFIED'}</span>
             </div>
             <div className="flex justify-between text-gray-400">
+              <span>Booking Mode:</span>
+              <span className="text-white font-semibold">{experienceMode === 'bundles' ? '⚡ Curated Luxury Bundle' : '🛠️ Custom Multi-Service'}</span>
+            </div>
+            <div className="flex justify-between text-gray-400">
               <span>Pricing Tier:</span>
               <span className="text-white font-semibold">{isStudioMode ? '🏢 Studio Wholesale' : '👥 Retail Customer'}</span>
             </div>
@@ -891,10 +1054,10 @@ const BookingPage = () => {
               <span>Track on WhatsApp</span>
             </button>
             <button
-              onClick={() => navigate('/')}
-              className="flex-1 py-3.5 px-4 rounded-xl bg-white/10 text-white font-bold text-sm hover:bg-white/20 transition"
+              onClick={() => navigate('/client')}
+              className="flex-1 py-3.5 px-4 rounded-xl bg-[#D4AF37] text-black font-bold text-sm hover:bg-[#b8952b] transition"
             >
-              Back to Home
+              Go to Client Dashboard →
             </button>
           </div>
         </div>
@@ -904,7 +1067,7 @@ const BookingPage = () => {
 
   return (
     <div className="builder-layout pt-28 pb-20">
-      {/* LEFT: 3-STEP WIZARD */}
+      {/* LEFT: WIZARD */}
       <div className="builder-main">
         
         {/* Header */}
@@ -918,8 +1081,8 @@ const BookingPage = () => {
           </h1>
           <p className="text-gray-300 text-sm sm:text-base max-w-2xl">
             {lang === 'TE'
-              ? 'సులువైన 3 దశలు. ఫోటో ఎడిటింగ్, సినిమాటిక్ వీడియోలు, ఫ్లష్ మౌంట్ ఆల్బమ్స్, పెద్ద ఫ్లెక్స్ మరియు క్యాలెండర్లు.'
-              : 'Effortless 3 steps. Pick photo retouching, cinematic films, flush mount albums, large flex prints, or calendars.'}
+              ? 'సులువైన దశలు. తక్షణ బండిల్స్ లేదా మీ అవసరానికి తగినట్లుగా విడివిడిగా సేవలను ఎంచుకోండి.'
+              : 'Effortless booking. Choose curated 1-click bundles or handpick services a-la-carte.'}
           </p>
         </div>
 
@@ -957,45 +1120,9 @@ const BookingPage = () => {
           </button>
         </div>
 
-        {/* 4-Step Process Banner */}
-        <div className="process-workflow-banner">
-          <div className="process-step-item">
-            <div className="process-step-num">1</div>
-            <div className="process-step-text">
-              <h5>Choose & Upload</h5>
-              <p>Pick services & share Drive link</p>
-            </div>
-          </div>
-          <div className="process-step-item">
-            <div className="process-step-num">2</div>
-            <div className="process-step-text">
-              <h5>Pro Design & Cut</h5>
-              <p>Skin retouch, LUTs & video edit</p>
-            </div>
-          </div>
-          <div className="process-step-item">
-            <div className="process-step-num">3</div>
-            <div className="process-step-text">
-              <h5>Digital Proofing</h5>
-              <p>Online approval with 1-click edits</p>
-            </div>
-          </div>
-          <div className="process-step-item">
-            <div className="process-step-num">4</div>
-            <div className="process-step-text">
-              <h5>Doorstep Delivery</h5>
-              <p>Safe courier & 4K cloud download</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 3-Step Indicator */}
+        {/* Dynamic Stepper Bar */}
         <div className="builder-progress mb-8">
-          {[
-            { num: 1, title: 'Services & Styles', telugu: 'సేవలు & స్టైల్స్', icon: Package },
-            { num: 2, title: 'Event Details', telugu: 'ఈవెంట్ వివరాలు', icon: MapPin },
-            { num: 3, title: 'Send Photos', telugu: 'ఫోటోలు & కన్ఫర్మ్', icon: UploadCloud },
-          ].map((s) => (
+          {wizardSteps.map((s) => (
             <div
               key={s.num}
               className={`progress-step ${step === s.num ? 'active' : step > s.num ? 'completed' : ''}`}
@@ -1013,56 +1140,53 @@ const BookingPage = () => {
           ))}
         </div>
 
-        {/* ================= STEP 1: CATEGORIZED SERVICES & SPECIFIC OPTIONS ================= */}
-        {step === 1 && (
+        {/* =========================================================================
+            PATHWAY 1: CURATED FAST BUNDLES (3 CLEAN STEPS)
+            ========================================================================= */}
+        {experienceMode === 'bundles' && (
           <div className="space-y-6">
 
-            {/* ⚡ EXPERIENCE MODE SWITCHER (BUNDLES VS CUSTOM BUILDER) */}
-            <div className="mode-switch-bar">
-              <button
-                type="button"
-                onClick={() => setExperienceMode('bundles')}
-                className={`mode-switch-btn ${experienceMode === 'bundles' ? 'active' : ''}`}
-              >
-                <Sparkles size={18} className="text-[#D4AF37]" />
-                <span>{lang === 'TE' ? '⚡ తక్షణ బండిల్స్ (1-క్లిక్ ప్రీసెట్స్)' : '⚡ 1-Click Fast Bundles (Curated Suites)'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setExperienceMode('custom')}
-                className={`mode-switch-btn ${experienceMode === 'custom' ? 'active' : ''}`}
-              >
-                <Layers size={18} className="text-[#D4AF37]" />
-                <span>{lang === 'TE' ? '🛠️ కస్టమ్ మల్టీ-సర్వీస్ బిల్డర్' : '🛠️ Custom Multi-Service Builder'}</span>
-              </button>
-            </div>
-
-            {/* ================= MODE A: CURATED FAST BUNDLES ================= */}
-            {experienceMode === 'bundles' && (
+            {/* STEP 1 (BUNDLES): PICK CURATED BUNDLE */}
+            {step === 1 && (
               <div className="space-y-6">
+                {/* Mode Switcher */}
+                <div className="mode-switch-bar">
+                  <button
+                    type="button"
+                    onClick={() => { setExperienceMode('bundles'); setStep(1); }}
+                    className="mode-switch-btn active"
+                  >
+                    <Sparkles size={18} className="text-[#D4AF37]" />
+                    <span>{lang === 'TE' ? '⚡ తక్షణ బండిల్స్ (1-క్లిక్)' : '⚡ 1-Click Curated Bundles'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setExperienceMode('custom'); setStep(1); }}
+                    className="mode-switch-btn"
+                  >
+                    <Layers size={18} className="text-[#D4AF37]" />
+                    <span>{lang === 'TE' ? '🛠️ కస్టమ్ మల్టీ-సర్వీస్ బిల్డర్' : '🛠️ Custom Multi-Service Builder'}</span>
+                  </button>
+                </div>
+
                 <div className="flex justify-between items-center flex-wrap gap-2">
                   <div>
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                       <Sparkles size={20} className="text-[#D4AF37]" />
-                      <span>{lang === 'TE' ? 'తక్షణ లగ్జరీ బండిల్స్ (1-క్లిక్)' : 'Curated Luxury Bundles (1-Click Presets)'}</span>
+                      <span>{lang === 'TE' ? 'తక్షణ లగ్జరీ బండిల్స్ (1-క్లిక్)' : 'Curated Luxury Bundles (1-Click Suites)'}</span>
                     </h3>
                     <p className="text-xs text-gray-400 mt-1">
-                      {lang === 'TE' ? 'పూర్తి ప్యాకేజీని తక్షణమే ఎంచుకోండి. క్లిష్టమైన కాన్ఫిగరేషన్ అవసరం లేదు.' : 'Complete ready-to-go suites crafted for Andhra weddings. 1-click apply directly to checkout.'}
+                      {lang === 'TE' ? 'పూర్తి ప్యాకేజీని తక్షణమే ఎంచుకోండి. క్లిష్టమైన కాన్ఫిగరేషన్ అవసరం లేదు.' : 'Complete ready-to-go suites crafted for Andhra weddings. Pick your suite and proceed.'}
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setExperienceMode('custom')}
-                    className="text-xs text-[#D4AF37] hover:underline font-semibold flex items-center gap-1 bg-[#D4AF37]/10 px-3.5 py-1.5 rounded-xl border border-[#D4AF37]/30"
-                  >
-                    <span>Switch to Custom Builder</span>
-                    <ArrowRight size={14} />
-                  </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   {/* Bundle 1 */}
-                  <div className={`luxury-bundle-card ${appliedBundle === 'royal_telugu' ? 'active' : ''}`}>
+                  <div
+                    onClick={() => setAppliedBundle('royal_telugu')}
+                    className={`luxury-bundle-card ${appliedBundle === 'royal_telugu' ? 'active' : ''}`}
+                  >
                     <div className="flex justify-between items-start mb-2">
                       <span className="bundle-badge">⭐ Best Value Master Suite</span>
                       <span className="bundle-savings">Save ₹8,500 Wholesale!</span>
@@ -1071,13 +1195,13 @@ const BookingPage = () => {
                     <div className="text-xs text-gray-400 font-telugu mb-3">రాయల్ తెలుగు ముహూర్తం మాస్టర్ సూట్</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹17,999</span>
+                      <span className="text-2xl font-black text-[#D4AF37]">₹{isStudioMode ? '14,999' : '17,999'}</span>
                       <span className="text-sm text-gray-500 line-through">₹26,499</span>
                       {isStudioMode && <span className="text-xs text-emerald-400 font-bold ml-auto">⚡ Wholesale Active</span>}
                     </div>
 
                     <ul className="text-xs text-gray-300 space-y-2 mb-6">
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 12×36 Royal Panoramic Karizma Layflat (40 sheets, Velvet Silk)</li>
+                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 12×36 Royal Panoramic Karizma Layflat (40 sheets, Velvet Touch)</li>
                       <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 4K Cinematic Wedding Teaser (3-5 min) + 5 IG Reels</li>
                       <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> High-End Skin Retouching & Color Grading (50 photos)</li>
                       <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Royal Velvet Briefcase Presentation Box</li>
@@ -1086,24 +1210,27 @@ const BookingPage = () => {
                     <div className="space-y-2">
                       <button
                         type="button"
-                        onClick={() => applyBundle('royal_telugu', true)}
+                        onClick={(e) => { e.stopPropagation(); applyBundle('royal_telugu', true); }}
                         className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
                       >
-                        <span>Apply Bundle & Continue</span>
+                        <span>Select Bundle & Continue</span>
                         <ArrowRight size={14} />
                       </button>
                       <button
                         type="button"
-                        onClick={() => applyBundle('royal_telugu', false)}
+                        onClick={(e) => { e.stopPropagation(); applyBundle('royal_telugu', false); }}
                         className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
                       >
-                        Customize Options ✏️
+                        Customize Options in Builder ✏️
                       </button>
                     </div>
                   </div>
 
                   {/* Bundle 2 */}
-                  <div className={`luxury-bundle-card ${appliedBundle === 'cinematic_duo' ? 'active' : ''}`}>
+                  <div
+                    onClick={() => setAppliedBundle('cinematic_duo')}
+                    className={`luxury-bundle-card ${appliedBundle === 'cinematic_duo' ? 'active' : ''}`}
+                  >
                     <div className="flex justify-between items-start mb-2">
                       <span className="bundle-badge">🎬 Most Popular Duo</span>
                       <span className="bundle-savings">Save ₹6,200 Wholesale!</span>
@@ -1112,7 +1239,7 @@ const BookingPage = () => {
                     <div className="text-xs text-gray-400 font-telugu mb-3">సినిమాటిక్ స్టోరీ & కరిజ్మా డ్యుయో</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹13,200</span>
+                      <span className="text-2xl font-black text-[#D4AF37]">₹{isStudioMode ? '10,800' : '13,200'}</span>
                       <span className="text-sm text-gray-500 line-through">₹19,400</span>
                       {isStudioMode && <span className="text-xs text-emerald-400 font-bold ml-auto">⚡ Wholesale Active</span>}
                     </div>
@@ -1127,24 +1254,27 @@ const BookingPage = () => {
                     <div className="space-y-2">
                       <button
                         type="button"
-                        onClick={() => applyBundle('cinematic_duo', true)}
+                        onClick={(e) => { e.stopPropagation(); applyBundle('cinematic_duo', true); }}
                         className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
                       >
-                        <span>Apply Bundle & Continue</span>
+                        <span>Select Bundle & Continue</span>
                         <ArrowRight size={14} />
                       </button>
                       <button
                         type="button"
-                        onClick={() => applyBundle('cinematic_duo', false)}
+                        onClick={(e) => { e.stopPropagation(); applyBundle('cinematic_duo', false); }}
                         className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
                       >
-                        Customize Options ✏️
+                        Customize Options in Builder ✏️
                       </button>
                     </div>
                   </div>
 
                   {/* Bundle 3 */}
-                  <div className={`luxury-bundle-card ${appliedBundle === 'lab_express' ? 'active' : ''}`}>
+                  <div
+                    onClick={() => setAppliedBundle('lab_express')}
+                    className={`luxury-bundle-card ${appliedBundle === 'lab_express' ? 'active' : ''}`}
+                  >
                     <div className="flex justify-between items-start mb-2">
                       <span className="bundle-badge">🚀 Lab Express Printing Pack</span>
                       <span className="bundle-savings">Save ₹4,200 Wholesale!</span>
@@ -1153,7 +1283,7 @@ const BookingPage = () => {
                     <div className="text-xs text-gray-400 font-telugu mb-3">స్టూడియో ఫాస్ట్-ట్రాక్ ప్రింటింగ్ ప్యాక్</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹8,200</span>
+                      <span className="text-2xl font-black text-[#D4AF37]">₹{isStudioMode ? '6,500' : '8,200'}</span>
                       <span className="text-sm text-gray-500 line-through">₹12,400</span>
                       {isStudioMode && <span className="text-xs text-emerald-400 font-bold ml-auto">⚡ Wholesale Active</span>}
                     </div>
@@ -1168,18 +1298,18 @@ const BookingPage = () => {
                     <div className="space-y-2">
                       <button
                         type="button"
-                        onClick={() => applyBundle('lab_express', true)}
+                        onClick={(e) => { e.stopPropagation(); applyBundle('lab_express', true); }}
                         className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
                       >
-                        <span>Apply Bundle & Continue</span>
+                        <span>Select Bundle & Continue</span>
                         <ArrowRight size={14} />
                       </button>
                       <button
                         type="button"
-                        onClick={() => applyBundle('lab_express', false)}
+                        onClick={(e) => { e.stopPropagation(); applyBundle('lab_express', false); }}
                         className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
                       >
-                        Customize Options ✏️
+                        Customize Options in Builder ✏️
                       </button>
                     </div>
                   </div>
@@ -1189,7 +1319,7 @@ const BookingPage = () => {
                   <span className="text-xs text-gray-400">Prefer selecting individual services a-la-carte?</span>
                   <button
                     type="button"
-                    onClick={() => setExperienceMode('custom')}
+                    onClick={() => { setExperienceMode('custom'); setStep(1); }}
                     className="text-xs text-[#D4AF37] font-bold hover:underline"
                   >
                     Open Custom Multi-Service Builder →
@@ -1198,313 +1328,633 @@ const BookingPage = () => {
               </div>
             )}
 
-            {/* ================= MODE B: CUSTOM MULTI-SERVICE BUILDER ================= */}
-            {experienceMode === 'custom' && (
-              <div className="space-y-8">
-                {/* 5 SERVICE SELECTION TILES (ZERO SCROLLBARS - RESPONSIVE GRID!) */}
+            {/* STEP 2 (BUNDLES): EVENT & DELIVERY DETAILS */}
+            {step === 2 && (
+              <div className="space-y-6">
                 <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <CheckSquare size={18} className="text-[#D4AF37]" />
-                      <span>{lang === 'TE' ? 'కావాల్సిన సర్వీసులను ఎంచుకోండి (ఒకటి లేదా అంతకంటే ఎక్కువ)' : 'Choose Your Services (Pick One or Multiple)'}</span>
-                    </h3>
-                    <span className="text-xs text-gray-400">Click tiles to toggle services ON/OFF</span>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    2. {lang === 'TE' ? 'మీ ఈవెంట్ & డెలివరీ వివరాలు' : 'Your Event & Delivery Details'}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-6">
+                    {lang === 'TE'
+                      ? 'మీ వాట్సాప్ నెంబర్‌కు ఆర్డర్ అప్‌డేట్స్ మరియు ప్రూఫ్ లింక్ వస్తుంది.'
+                      : 'We will send preview proofs and tracking updates directly to your WhatsApp.'}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">
+                        {lang === 'TE' ? 'మీ పూర్తి పేరు *' : 'Your Full Name *'}
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="e.g. Ramesh Varma"
+                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">
+                        {lang === 'TE' ? 'వాట్సాప్ మొబైల్ నెంబర్ *' : 'WhatsApp Phone Number *'}
+                      </label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                        required
+                      />
+                    </div>
                   </div>
 
-                  <div className="service-tiles-grid">
-                    {SERVICE_CATEGORIES.map(cat => {
-                      const isChecked = Boolean(formData.services[cat.key]);
-                      return (
-                        <div
-                          key={cat.id}
-                          onClick={() => toggleServiceCategory(cat.key)}
-                          className={`service-tile-card ${isChecked ? 'checked' : ''}`}
+                  <div>
+                    <label className="block text-sm text-gray-300 font-semibold mb-2">
+                      {lang === 'TE' ? 'ఈవెంట్ రకం' : 'Event Type'}
+                    </label>
+                    <div className="flex gap-2 flex-wrap">
+                      {[
+                        { id: 'Wedding', telugu: 'పెళ్ళి' },
+                        { id: 'Engagement', telugu: 'నిశ్చితార్థం' },
+                        { id: 'Reception', telugu: 'రిసెప్షన్' },
+                        { id: 'Half-Saree / Dhoti', telugu: 'లంగా వోణి' },
+                        { id: 'Birthday / Other', telugu: 'పుట్టినరోజు' },
+                      ].map(evt => (
+                        <button
+                          key={evt.id}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, eventType: evt.id })}
+                          className={`bubble-pill ${formData.eventType === evt.id ? 'active' : ''}`}
                         >
-                          <div className="service-tile-top">
-                            <div className="service-tile-icon-box">
-                              <cat.icon size={22} />
-                            </div>
-                            <div className="service-tile-check-circle">
-                              {isChecked && <Check size={14} className="text-black stroke-[3]" />}
-                            </div>
+                          {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">
+                        {lang === 'TE' ? 'నగరం / పట్టణం' : 'City / District'}
+                      </label>
+                      <select
+                        value={formData.city}
+                        onChange={e => setFormData({ ...formData, city: e.target.value })}
+                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                      >
+                        <option value="Vijayawada">Vijayawada (విజయవాడ)</option>
+                        <option value="Guntur">Guntur (గుంటూరు)</option>
+                        <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
+                        <option value="Hyderabad">Hyderabad (హైదరాబాద్)</option>
+                        <option value="Tirupati">Tirupati (తిరుపతి)</option>
+                        <option value="Rajahmundry">Rajahmundry (రాజమండ్రి)</option>
+                        <option value="Kakinada">Kakinada (కాకినాడ)</option>
+                        <option value="Nellore">Nellore (నెల్లూరు)</option>
+                        <option value="Kurnool">Kurnool (కర్నూలు)</option>
+                        <option value="Other">Other City (ఇతర నగరం)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">
+                        {lang === 'TE' ? 'డెలివరీ వేగం' : 'Delivery Speed'}
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, deliverySpeed: 'standard' })}
+                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
+                            formData.deliverySpeed === 'standard'
+                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+                              : 'border-white/10 bg-white/5 text-gray-400'
+                          }`}
+                        >
+                          <div className="font-bold text-white">⚡ Standard (3-5 Days)</div>
+                          <div className="text-emerald-400 mt-0.5">Free Delivery</div>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, deliverySpeed: 'express' })}
+                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
+                            formData.deliverySpeed === 'express'
+                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+                              : 'border-white/10 bg-white/5 text-gray-400'
+                          }`}
+                        >
+                          <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
+                          <div className="text-[#D4AF37] mt-0.5 font-bold">
+                            {isStudioMode ? '+₹1,000 Rush' : '+₹1,500 Rush'}
                           </div>
-                          <div>
-                            <div className="service-tile-title">{cat.name}</div>
-                            <div className="service-tile-telugu font-telugu">{cat.telugu}</div>
-                            <div className="service-tile-price">{isStudioMode ? cat.studioPriceTag : cat.priceTag}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 font-semibold mb-2">
+                      {lang === 'TE' ? 'కొరియర్ డెలివరీ అడ్రస్' : 'Shipping Address (For physical album delivery)'}
+                    </label>
+                    <textarea
+                      rows="2"
+                      value={formData.address}
+                      onChange={e => setFormData({ ...formData, address: e.target.value })}
+                      placeholder="Door No, Street, Landmark, Town, PIN Code..."
+                      className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                    />
                   </div>
                 </div>
 
-                {/* ================= CONDITIONAL CONFIGURATORS (ONLY SELECTED ONES APPEAR!) ================= */}
+                <div className="flex justify-between pt-4">
+                  <button
+                    type="button"
+                    onClick={goBackStep}
+                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
+                  >
+                    <ArrowLeft size={16} />
+                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={proceedToNextStep}
+                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
+                  >
+                    <span>{lang === 'TE' ? 'తదుపరి దశ: ఫోటోలు పంపండి' : 'Next: Media Transfer'}</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              </div>
+            )}
 
-                {/* 1. ALBUM PRINTING CONFIGURATOR */}
+            {/* STEP 3 (BUNDLES): MEDIA TRANSFER & CONFIRM */}
+            {step === 3 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    3. {lang === 'TE' ? 'మీ ఫోటోలు / వీడియోలు ఎలా పంపుతారు?' : 'How will you share your photos/videos?'}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-6">
+                    {lang === 'TE'
+                      ? 'మీకు నచ్చిన సులభమైన పద్ధతిని ఎంచుకోండి:'
+                      : 'Choose the most convenient transfer method for you:'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div
+                    onClick={() => setFormData({ ...formData, uploadMethod: 'cloud' })}
+                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
+                      formData.uploadMethod === 'cloud'
+                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
+                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
+                    }`}
+                  >
+                    <UploadCloud size={26} className="text-[#D4AF37] mb-2" />
+                    <h4 className="font-bold text-white text-sm">Google Drive / Link</h4>
+                    <p className="text-xs text-gray-400 mt-1">Paste Drive, WeTransfer, or OneDrive link</p>
+                  </div>
+
+                  <div
+                    onClick={() => setFormData({ ...formData, uploadMethod: 'whatsapp' })}
+                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
+                      formData.uploadMethod === 'whatsapp'
+                        ? 'border-[#25D366] bg-[#25D366]/20 text-white shadow-[0_0_20px_rgba(37,211,102,0.2)]'
+                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
+                    }`}
+                  >
+                    <MessageCircle size={26} className="text-[#25D366] mb-2" />
+                    <h4 className="font-bold text-white text-sm">Send via WhatsApp</h4>
+                    <p className="text-xs text-gray-400 mt-1">Our coordinator will message you</p>
+                  </div>
+
+                  <div
+                    onClick={() => setFormData({ ...formData, uploadMethod: 'courier' })}
+                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
+                      formData.uploadMethod === 'courier'
+                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
+                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
+                    }`}
+                  >
+                    <Truck size={26} className="text-[#D4AF37] mb-2" />
+                    <h4 className="font-bold text-white text-sm">Courier Pen Drive</h4>
+                    <p className="text-xs text-gray-400 mt-1">Ship USB/Hard disk to AP hub</p>
+                  </div>
+                </div>
+
+                {formData.uploadMethod === 'cloud' && (
+                  <div className="p-6 rounded-2xl bg-black/60 border border-white/20">
+                    <label className="block text-sm text-gray-200 font-semibold mb-2">
+                      Paste your Google Drive or WeTransfer Link
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://drive.google.com/drive/folders/..."
+                      value={formData.cloudLink}
+                      onChange={e => setFormData({ ...formData, cloudLink: e.target.value })}
+                      className="w-full p-3.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none font-mono text-sm"
+                    />
+                    <p className="text-xs text-[#D4AF37] mt-2 flex items-center gap-1.5 font-medium">
+                      <ShieldCheck size={14} /> Please set link access to "Anyone with the link can view".
+                    </p>
+                  </div>
+                )}
+
+                {formData.uploadMethod === 'whatsapp' && (
+                  <div className="p-6 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/30 text-left">
+                    <h4 className="font-bold text-[#25D366] text-sm mb-1 flex items-center gap-2">
+                      <MessageCircle size={18} />
+                      {lang === 'TE' ? 'వాట్సాప్ ద్వారా సులభంగా పంపండి' : 'Super Easy: Direct WhatsApp Concierge'}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-gray-300">
+                      {lang === 'TE'
+                        ? `మీరు ఇక్కడ ఆర్డర్ సబ్మిట్ చేసిన వెంటనే, మా టీమ్ ${formData.phone || 'మీ నంబరు'} కి వాట్సాప్‌లో మెసేజ్ చేసి ఫోటోలు సేకరిస్తుంది.`
+                        : `No technical hassle. Once you place the order, our coordinator will message ${formData.phone || 'your WhatsApp'} to collect the high-res photos.`}
+                    </p>
+                  </div>
+                )}
+
+                {formData.uploadMethod === 'courier' && (
+                  <div className="p-6 rounded-2xl bg-black/60 border border-white/20 text-left text-xs sm:text-sm text-gray-300 space-y-3">
+                    <p className="font-bold text-white">Send your Pen Drive / Hard Disk to:</p>
+                    <div className="p-4 rounded-xl bg-black/80 border border-[#D4AF37]/30 text-gray-200 leading-relaxed">
+                      <strong className="text-[#D4AF37] text-base">WeddingAlbums.in Production Center</strong><br />
+                      Plot 14, 2nd Floor, MG Road, Vijayawada, Andhra Pradesh 520010<br />
+                      Contact: +91 98765 43210 (Attn: Media Inward Team)
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm text-gray-300 font-semibold mb-2">
+                    {lang === 'TE' ? 'ప్రత్యేక సూచనలు (ఐచ్ఛికం)' : 'Special Instructions / Notes (Optional)'}
+                  </label>
+                  <textarea
+                    rows="2"
+                    value={formData.instructions}
+                    onChange={e => setFormData({ ...formData, instructions: e.target.value })}
+                    placeholder="e.g. Include Talambralu ritual focus, use devotional Telugu songs, highlight family..."
+                    className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                  />
+                </div>
+
+                <div className="flex justify-between items-center pt-4">
+                  <button
+                    type="button"
+                    onClick={goBackStep}
+                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
+                  >
+                    <ArrowLeft size={16} />
+                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => submitOrder()}
+                    disabled={submitting}
+                    className="btn btn-gold-3d flex items-center gap-2 px-10 py-4 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-50"
+                  >
+                    <CheckCircle2 size={20} />
+                    <span>{submitting ? 'Placing Order...' : (lang === 'TE' ? 'ఆర్డర్ కన్ఫర్మ్ చేయండి' : 'Confirm & Place Order')}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* =========================================================================
+            PATHWAY 2: CUSTOM MULTI-SERVICE BUILDER (4 DEDICATED STEPS)
+            ========================================================================= */}
+        {experienceMode === 'custom' && (
+          <div className="space-y-6">
+
+            {/* STEP 1 (CUSTOM): CHOOSE SERVICES (ZERO SCROLLBARS - RESPONSIVE TILES) */}
+            {step === 1 && (
+              <div className="space-y-6">
+                {/* Mode Switcher */}
+                <div className="mode-switch-bar">
+                  <button
+                    type="button"
+                    onClick={() => { setExperienceMode('bundles'); setStep(1); }}
+                    className="mode-switch-btn"
+                  >
+                    <Sparkles size={18} className="text-[#D4AF37]" />
+                    <span>{lang === 'TE' ? '⚡ తక్షణ బండిల్స్ (1-క్లిక్)' : '⚡ 1-Click Curated Bundles'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setExperienceMode('custom'); setStep(1); }}
+                    className="mode-switch-btn active"
+                  >
+                    <Layers size={18} className="text-[#D4AF37]" />
+                    <span>{lang === 'TE' ? '🛠️ కస్టమ్ మల్టీ-సర్వీస్ బిల్డర్' : '🛠️ Custom Multi-Service Builder'}</span>
+                  </button>
+                </div>
+
+                <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+                  <div>
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                      <CheckSquare size={20} className="text-[#D4AF37]" />
+                      <span>{lang === 'TE' ? 'కావాల్సిన సర్వీసులను ఎంచుకోండి' : 'Choose Your Services (Pick 1 or More)'}</span>
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Click tiles to toggle services. Customize their detailed specs in the next step.
+                    </p>
+                  </div>
+                  <span className="text-xs text-[#D4AF37] font-semibold bg-[#D4AF37]/15 px-3 py-1 rounded-full border border-[#D4AF37]/30">
+                    {Object.values(formData.services).filter(Boolean).length} Services Selected
+                  </span>
+                </div>
+
+                {/* 5 SERVICE TILES (RESPONSIVE GRID) */}
+                <div className="service-tiles-grid">
+                  {SERVICE_CATEGORIES.map(cat => {
+                    const isChecked = Boolean(formData.services[cat.key]);
+                    return (
+                      <div
+                        key={cat.id}
+                        onClick={() => toggleServiceCategory(cat.key)}
+                        className={`service-tile-card ${isChecked ? 'checked' : ''}`}
+                      >
+                        <div className="service-tile-top">
+                          <div className="service-tile-icon-box">
+                            <cat.icon size={22} />
+                          </div>
+                          <div className="service-tile-check-circle">
+                            {isChecked && <Check size={14} className="text-black stroke-[3]" />}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="service-tile-title">{cat.name}</div>
+                          <div className="service-tile-telugu font-telugu">{cat.telugu}</div>
+                          <div className="service-tile-price">{isStudioMode ? cat.studioPriceTag : cat.priceTag}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Next Button */}
+                <div className="flex justify-end pt-4">
+                  <button
+                    type="button"
+                    onClick={proceedToNextStep}
+                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)]"
+                  >
+                    <span>{lang === 'TE' ? 'తదుపరి దశ: కాన్ఫిగరేషన్' : 'Next: Customize Selected Services'}</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2 (CUSTOM): CUSTOMIZE SELECTED SERVICES (ONLY ACTIVE SERVICES SHOWN!) */}
+            {step === 2 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    2. {lang === 'TE' ? 'ఎంచుకున్న సేవల కాన్ఫిగరేషన్' : 'Customize Selected Services'}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-6">
+                    Only the services you picked in Step 1 are shown below. Configure sizes, sheets, cuts, and quantities.
+                  </p>
+                </div>
+
+                {/* 1. ALBUM CONFIGURATOR */}
                 {formData.services.albumPrint && (
                   <div className="dynamic-config-section">
                     <div className="dynamic-config-header">
                       <div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#D4AF37] flex items-center gap-2">
-                          <BookOpen size={22} />
-                          <span>{lang === 'TE' ? 'ఆల్బమ్ ప్రింటింగ్ & షీట్ల ఎంపిక' : 'Album Printing, Sizes & Sheets'}</span>
+                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
+                          <BookOpen size={20} />
+                          <span>{lang === 'TE' ? 'ఆల్బమ్ సైజులు, కవర్లు & షీట్లు' : 'Album Cover, Sizes & Paper Sheets'}</span>
                         </h4>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Pick your dimensions, cover style, and one or multiple sheet types for hybrid layouts.
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Configure layout dimensions, cover binding, and transparent per-sheet finishes.
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => toggleServiceCategory('albumPrint')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20"
+                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
                       >
                         Remove Album
                       </button>
                     </div>
 
-                    <div className="space-y-7">
-                      {/* 1. Cover & Binding Style */}
+                    <div className="space-y-6">
+                      {/* Cover Style */}
                       <div>
-                        <label className="block text-sm text-gray-200 font-bold mb-3">
-                          1. Cover & Binding Style (కవర్ రకం)
+                        <label className="block text-xs text-gray-200 font-bold mb-2 uppercase tracking-wider">
+                          1. Cover & Binding Style
                         </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {[
-                          { id: 'karizma', label: 'Karizma Royal Spread', note: "India's #1 Wedding Choice ⭐", surcharge: 'Standard' },
-                          { id: 'acrylic', label: 'Crystal Acrylic Glass 3D', note: 'Ultra-modern high-gloss glass face', surcharge: isStudioMode ? '+₹1,000' : '+₹1,500' },
-                          { id: 'velvet', label: 'Royal Velvet Touch', note: 'Soft luxury fabric feel', surcharge: isStudioMode ? '+₹700' : '+₹1,000' },
-                          { id: 'leather', label: 'Embossed Leatherette', note: 'Timeless heirloom finish with gold foil', surcharge: isStudioMode ? '+₹800' : '+₹1,200' },
-                          { id: 'flushmount', label: 'Seamless Lay-Flat Flush Mount', note: 'Edge-to-edge panoramic view', surcharge: 'Included' },
-                        ].map(opt => (
-                          <div
-                            key={opt.id}
-                            onClick={() => setFormData(p => ({ ...p, albumType: opt.id }))}
-                            className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
-                              formData.albumType === opt.id
-                                ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                                : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
-                            }`}
-                          >
-                            <div className="flex justify-between items-start">
-                              <span className="font-bold text-sm text-white">{opt.label}</span>
-                              <span className="text-xs text-[#D4AF37] font-mono font-bold">{opt.surcharge}</span>
-                            </div>
-                            <div className="text-xs text-gray-400 mt-1">{opt.note}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* 2. Album Dimensions — Landscape ↔️ & Portrait ↕️ Orientation Filter */}
-                    <div>
-                      <div className="flex justify-between items-center mb-3 flex-wrap gap-2">
-                        <label className="text-sm text-gray-200 font-bold">
-                          2. Album Dimensions & Orientations (సైజు & దిశ)
-                        </label>
-                        <span className="text-xs text-[#D4AF37] font-semibold">
-                          Showing {filteredSizes.length} Available Sizes
-                        </span>
-                      </div>
-
-                      {/* Orientation Filter Pills */}
-                      <div className="orientation-filter-bar">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedOrientation('all')}
-                          className={`orientation-pill ${selectedOrientation === 'all' ? 'active' : ''}`}
-                        >
-                          All Sizes ({dynamicPricing.sizes.length})
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedOrientation('landscape')}
-                          className={`orientation-pill ${selectedOrientation === 'landscape' ? 'active' : ''}`}
-                        >
-                          ↔️ Landscape / Widescreen ({dynamicPricing.sizes.filter(s => s.orientation === 'landscape').length})
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedOrientation('portrait')}
-                          className={`orientation-pill ${selectedOrientation === 'portrait' ? 'active' : ''}`}
-                        >
-                          ↕️ Portrait / Royal Magazine ({dynamicPricing.sizes.filter(s => s.orientation === 'portrait').length})
-                        </button>
-                      </div>
-
-                      {/* Album Sizes Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {filteredSizes.map(sz => {
-                          const szBase = isStudioMode && sz.studioBasePrice ? sz.studioBasePrice : sz.basePrice;
-                          const isSelected = formData.albumSize === sz.id || formData.albumSize === sz.dimensions || formData.albumSize.includes(sz.id);
-
-                          return (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                          {[
+                            { id: 'karizma', label: 'Karizma Royal Spread', note: "India's #1 Choice", surcharge: 'Standard' },
+                            { id: 'acrylic', label: 'Crystal Acrylic Glass 3D', note: 'Ultra-modern high-gloss face', surcharge: isStudioMode ? '+₹1,000' : '+₹1,500' },
+                            { id: 'velvet', label: 'Royal Velvet Touch', note: 'Soft luxury fabric feel', surcharge: isStudioMode ? '+₹700' : '+₹1,000' },
+                            { id: 'leather', label: 'Embossed Leatherette', note: 'Timeless gold foil heirloom', surcharge: isStudioMode ? '+₹800' : '+₹1,200' },
+                            { id: 'flushmount', label: 'Seamless Flush Mount', note: 'Edge-to-edge panoramic view', surcharge: 'Included' },
+                          ].map(opt => (
                             <div
-                              key={sz.id}
-                              onClick={() => setFormData(p => ({ ...p, albumSize: sz.id }))}
-                              className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
-                                isSelected
-                                  ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.25)]'
+                              key={opt.id}
+                              onClick={() => setFormData(p => ({ ...p, albumType: opt.id }))}
+                              className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                                formData.albumType === opt.id
+                                  ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
                                   : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
                               }`}
                             >
-                              <div className="flex justify-between items-start mb-1.5">
-                                <div className="flex items-center gap-1.5">
-                                  <span className={`aspect-indicator-box ${sz.orientation === 'portrait' ? 'portrait' : 'landscape'}`} />
-                                  <span className="font-bold text-sm text-white">{sz.name}</span>
-                                </div>
-                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
-                                  sz.orientation === 'portrait'
-                                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                    : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                                }`}>
-                                  {sz.orientation === 'portrait' ? '↕️ Portrait' : '↔️ Landscape'}
-                                </span>
+                              <div className="flex justify-between items-start">
+                                <span className="font-bold text-xs text-white">{opt.label}</span>
+                                <span className="text-[11px] text-[#D4AF37] font-mono font-bold">{opt.surcharge}</span>
                               </div>
-
-                              {sz.telugu && <div className="text-xs text-[#D4AF37] font-telugu mt-0.5">{sz.telugu}</div>}
-                              <div className="text-xs text-gray-400 mt-1">{sz.description}</div>
-
-                              <div className="flex justify-between items-baseline mt-3 pt-2 border-t border-white/5">
-                                <span className="text-sm text-[#D4AF37] font-mono font-bold">
-                                  ₹{szBase.toLocaleString('en-IN')} base
-                                </span>
-                                {isStudioMode && sz.basePrice > szBase && (
-                                  <span className="text-[11px] text-gray-400 line-through">
-                                    ₹{sz.basePrice.toLocaleString('en-IN')}
-                                  </span>
-                                )}
-                              </div>
+                              <div className="text-[11px] text-gray-400 mt-1">{opt.note}</div>
                             </div>
-                          );
-                        })}
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* 3. Paper Sheet Finish — Multiple Sheet Selection with Per-Sheet Pricing */}
-                    <div>
-                      <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-                        <label className="text-sm text-gray-200 font-bold">
-                          3. Paper Sheet Finishes (షీట్ రకాలు - Select 1 or More)
-                        </label>
-                        <span className="text-xs text-emerald-400 font-semibold">
-                          {formData.selectedSheetTypes.length} Sheet Type(s) Selected
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-400 mb-3">
-                        You can select multiple sheet types (e.g., Velvet Touch for story spreads + Metallic Pearl for stage jewellery). Price per sheet is transparently shown below.
-                      </p>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                        {dynamicPricing.sheets.map(sht => {
-                          const shtRate = isStudioMode && sht.studioPricePerSheet ? sht.studioPricePerSheet : sht.pricePerSheet;
-                          const isSelected = formData.selectedSheetTypes.includes(sht.id);
-
-                          return (
-                            <div
-                              key={sht.id}
-                              onClick={() => toggleSheetType(sht.id)}
-                              className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                            >
-                              <div className="service-checkbox-circle">
-                                {isSelected && <Check size={14} />}
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex justify-between items-start">
-                                  <h5 className="font-bold text-xs sm:text-sm text-white">{sht.name}</h5>
-                                </div>
-                                <div className="text-xs font-mono font-bold text-[#D4AF37] mt-0.5">₹{shtRate} / sheet</div>
-                                {sht.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>}
-                                <div className="text-[11px] text-gray-400 mt-1 leading-snug">{sht.note || sht.description}</div>
-                                {isStudioMode && sht.pricePerSheet > shtRate && (
-                                  <div className="text-[10px] text-emerald-400 mt-2 font-semibold">
-                                    Save ₹{sht.pricePerSheet - shtRate}/sheet wholesale
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* 4. Sheet Count Bubbles */}
-                    <div>
-                      <div className="flex justify-between items-center mb-3">
-                        <label className="text-sm text-gray-200 font-bold">4. Sheets Count (1 Sheet = 2 Pages)</label>
-                        <span className="text-[#D4AF37] font-bold text-sm bg-[#D4AF37]/15 px-3 py-1 rounded-full border border-[#D4AF37]/30">
-                          {formData.pages} Sheets (~{formData.pages * 6} photos)
-                        </span>
-                      </div>
-                      <div className="flex gap-2.5 flex-wrap">
-                        {[30, 40, 50, 60, 80, 100].map(cnt => (
-                          <button
-                            key={cnt}
-                            type="button"
-                            onClick={() => setFormData(p => ({ ...p, pages: cnt }))}
-                            className={`bubble-pill ${formData.pages === cnt ? 'active' : ''}`}
-                          >
-                            {cnt} Sheets
-                          </button>
-                        ))}
-                      </div>
-                      <div className="text-xs text-gray-400 mt-2">
-                        {formData.pages <= 30
-                          ? '30 Sheets included in base album price.'
-                          : `30 Sheets in base + ${formData.pages - 30} extra sheets calculated itemized per sheet.`}
-                      </div>
-                    </div>
-
-                    {/* 5. Luxury Box */}
-                    <div>
-                      <label className="text-sm text-gray-200 font-bold mb-3 block">
-                        5. Luxury Box (ప్రెజెంటేషన్ బాక్స్)
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {[
-                          { id: 'standard', label: 'Standard Presentation Box', surcharge: '(Included)' },
-                          { id: 'velvet_case', label: 'Royal Velvet Briefcase Matching Box', surcharge: isStudioMode ? '+₹800' : '+₹1,200' },
-                          { id: 'wooden_box', label: 'Laser Engraved Wooden Core Box', surcharge: isStudioMode ? '+₹1,200' : '+₹1,800' },
-                          { id: 'acrylic_box', label: 'Acrylic Luxury Window Box', surcharge: isStudioMode ? '+₹1,500' : '+₹2,200' },
-                        ].map(box => (
-                          <div
-                            key={box.id}
-                            onClick={() => setFormData({ ...formData, boxType: box.id })}
-                            className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all flex justify-between items-center ${
-                              formData.boxType === box.id
-                                ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                                : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
-                            }`}
-                          >
-                            <span className="font-semibold text-xs sm:text-sm">{box.label}</span>
-                            <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">{box.surcharge}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Duplicate Parent Albums Addon */}
-                    <div className="p-4 rounded-xl bg-black/60 border border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      {/* Dimensions & Orientation Filter */}
                       <div>
-                        <div className="text-sm font-bold text-white">Add Duplicate Pocket / Parent Albums</div>
-                        <div className="text-xs text-gray-400 mt-0.5">Gift matching mini replica albums to parents or in-laws</div>
+                        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">
+                            2. Dimensions (Landscape ↔️ & Portrait ↕️)
+                          </label>
+                          <div className="orientation-filter-bar mb-0">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedOrientation('all')}
+                              className={`orientation-pill ${selectedOrientation === 'all' ? 'active' : ''}`}
+                            >
+                              All
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedOrientation('landscape')}
+                              className={`orientation-pill ${selectedOrientation === 'landscape' ? 'active' : ''}`}
+                            >
+                              ↔️ Landscape
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedOrientation('portrait')}
+                              className={`orientation-pill ${selectedOrientation === 'portrait' ? 'active' : ''}`}
+                            >
+                              ↕️ Portrait
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                          {filteredSizes.map(sz => {
+                            const szBase = isStudioMode && sz.studioBasePrice ? sz.studioBasePrice : sz.basePrice;
+                            const isSelected = formData.albumSize === sz.id || formData.albumSize === sz.dimensions || formData.albumSize.includes(sz.id);
+
+                            return (
+                              <div
+                                key={sz.id}
+                                onClick={() => setFormData(p => ({ ...p, albumSize: sz.id }))}
+                                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                                  isSelected
+                                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.25)]'
+                                    : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
+                                }`}
+                              >
+                                <div className="flex justify-between items-start mb-1">
+                                  <span className="font-bold text-xs text-white">{sz.name}</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-white/10 text-gray-300">
+                                    {sz.orientation === 'portrait' ? '↕️ Port' : '↔️ Land'}
+                                  </span>
+                                </div>
+                                {sz.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu">{sz.telugu}</div>}
+                                <div className="flex justify-between items-baseline mt-2 pt-1 border-t border-white/5">
+                                  <span className="text-xs text-[#D4AF37] font-mono font-bold">
+                                    ₹{szBase.toLocaleString('en-IN')}
+                                  </span>
+                                  {isStudioMode && sz.basePrice > szBase && (
+                                    <span className="text-[10px] text-gray-500 line-through">
+                                      ₹{sz.basePrice.toLocaleString('en-IN')}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        {[
-                          { cnt: 0, label: 'None' },
-                          { cnt: 1, label: isStudioMode ? '+1 Mini (+₹1,800)' : '+1 Mini (+₹2,500)' },
-                          { cnt: 2, label: isStudioMode ? '+2 Minis (+₹3,200)' : '+2 Minis (+₹4,500)' },
-                        ].map(b => (
-                          <button
-                            key={b.cnt}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, parentAlbums: b.cnt })}
-                            className={`bubble-pill ${formData.parentAlbums === b.cnt ? 'active' : ''}`}
-                          >
-                            {b.label}
-                          </button>
-                        ))}
+
+                      {/* Paper Sheet Finishes with Multi-Select & Transparent Per-Sheet Rates */}
+                      <div>
+                        <div className="flex justify-between items-center mb-1 flex-wrap gap-2">
+                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">
+                            3. Paper Sheet Finishes (Select 1 or More)
+                          </label>
+                          <span className="text-xs text-emerald-400 font-semibold">
+                            {formData.selectedSheetTypes.length} Sheet Finish(es) Active
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-400 mb-2">
+                          Multi-select sheet finishes (e.g. Velvet for candid rituals + Metallic Pearl for stage jewellery).
+                        </p>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                          {dynamicPricing.sheets.map(sht => {
+                            const shtRate = isStudioMode && sht.studioPricePerSheet ? sht.studioPricePerSheet : sht.pricePerSheet;
+                            const isSelected = formData.selectedSheetTypes.includes(sht.id);
+
+                            return (
+                              <div
+                                key={sht.id}
+                                onClick={() => toggleSheetType(sht.id)}
+                                className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                              >
+                                <div className="service-checkbox-circle">
+                                  {isSelected && <Check size={14} />}
+                                </div>
+                                <div className="flex-1">
+                                  <h5 className="font-bold text-xs text-white">{sht.name}</h5>
+                                  <div className="text-xs font-mono font-bold text-[#D4AF37] mt-0.5">₹{shtRate} / sheet</div>
+                                  <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note || sht.description}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
+
+                      {/* Sheet Count Bubbles */}
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">4. Total Sheets</label>
+                          <span className="text-[#D4AF37] font-bold text-xs bg-[#D4AF37]/15 px-2.5 py-0.5 rounded-full border border-[#D4AF37]/30">
+                            {formData.pages} Sheets (~{formData.pages * 6} photos)
+                          </span>
+                        </div>
+                        <div className="flex gap-2 flex-wrap">
+                          {[30, 40, 50, 60, 80, 100].map(cnt => (
+                            <button
+                              key={cnt}
+                              type="button"
+                              onClick={() => setFormData(p => ({ ...p, pages: cnt }))}
+                              className={`bubble-pill ${formData.pages === cnt ? 'active' : ''}`}
+                            >
+                              {cnt} Sheets
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Luxury Box & Duplicate Parent Albums */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-white/10">
+                        <div>
+                          <label className="text-xs text-gray-200 font-bold mb-2 block uppercase tracking-wider">5. Presentation Box</label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {[
+                              { id: 'standard', label: 'Standard Box', surcharge: 'Included' },
+                              { id: 'velvet_case', label: 'Velvet Briefcase', surcharge: isStudioMode ? '+₹800' : '+₹1,200' },
+                              { id: 'wooden_box', label: 'Wooden Box', surcharge: isStudioMode ? '+₹1,200' : '+₹1,800' },
+                              { id: 'acrylic_box', label: 'Acrylic Box', surcharge: isStudioMode ? '+₹1,500' : '+₹2,200' },
+                            ].map(box => (
+                              <div
+                                key={box.id}
+                                onClick={() => setFormData({ ...formData, boxType: box.id })}
+                                className={`p-2.5 rounded-xl border text-left cursor-pointer text-xs ${
+                                  formData.boxType === box.id
+                                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white'
+                                    : 'border-white/10 bg-white/5 text-gray-300'
+                                }`}
+                              >
+                                <div className="font-semibold">{box.label}</div>
+                                <div className="text-[11px] text-[#D4AF37] font-mono">{box.surcharge}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-xs text-gray-200 font-bold mb-2 block uppercase tracking-wider">6. Mini Parent Albums</label>
+                          <div className="flex gap-2">
+                            {[
+                              { cnt: 0, label: 'None' },
+                              { cnt: 1, label: isStudioMode ? '+1 Mini (+₹1,800)' : '+1 Mini (+₹2,500)' },
+                              { cnt: 2, label: isStudioMode ? '+2 Minis (+₹3,200)' : '+2 Minis (+₹4,500)' },
+                            ].map(b => (
+                              <button
+                                key={b.cnt}
+                                type="button"
+                                onClick={() => setFormData({ ...formData, parentAlbums: b.cnt })}
+                                className={`bubble-pill ${formData.parentAlbums === b.cnt ? 'active' : ''}`}
+                              >
+                                {b.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1515,613 +1965,560 @@ const BookingPage = () => {
                   <div className="dynamic-config-section">
                     <div className="dynamic-config-header">
                       <div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#D4AF37] flex items-center gap-2">
-                          <Film size={22} />
-                          <span>{lang === 'TE' ? '2. సినిమాటిక్ వీడియో ఎడిటింగ్ సేవలు' : '2. Cinematic Video Editing Services'}</span>
+                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
+                          <Film size={20} />
+                          <span>{lang === 'TE' ? 'సినిమాటిక్ వీడియో ఎడిటింగ్ సేవలు' : 'Cinematic Video Editing Services'}</span>
                         </h4>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Multi-select one or more video cuts below. Each itemized with transparent prices.
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Multi-select video cuts. Transparent itemized rates applied.
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => toggleServiceCategory('videoEdit')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20"
+                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
                       >
                         Remove Video
                       </button>
                     </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {VIDEO_SERVICES.map(v => {
-                    const isSelected = formData.selectedVideoServices.includes(v.id);
-                    const vPrice = isStudioMode ? v.studioPrice : v.price;
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      {VIDEO_SERVICES.map(v => {
+                        const isSelected = formData.selectedVideoServices.includes(v.id);
+                        const vPrice = isStudioMode ? v.studioPrice : v.price;
 
-                    return (
-                      <div
-                        key={v.id}
-                        onClick={() => toggleVideoService(v.id)}
-                        className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                      >
-                        <div className="service-checkbox-circle">
-                          {isSelected && <Check size={14} />}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <span className="font-bold text-sm text-white">{v.name}</span>
-                            <span className="text-sm text-[#D4AF37] font-mono font-bold ml-2">
-                              +₹{vPrice.toLocaleString('en-IN')}
-                            </span>
+                        return (
+                          <div
+                            key={v.id}
+                            onClick={() => toggleVideoService(v.id)}
+                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                          >
+                            <div className="service-checkbox-circle">
+                              {isSelected && <Check size={14} />}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <span className="font-bold text-xs text-white">{v.name}</span>
+                                <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
+                                  +₹{vPrice.toLocaleString('en-IN')}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-gray-400 mt-1">{v.note}</div>
+                            </div>
                           </div>
-                          <div className="text-xs text-[#D4AF37] font-telugu mt-0.5">{v.telugu}</div>
-                          <div className="text-xs text-gray-400 mt-1">{v.note}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                        );
+                      })}
+                    </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
-                  <div>
-                    <label className="text-xs text-gray-200 font-bold mb-1.5 block">Audio / Music Direction</label>
-                    <select
-                      value={formData.musicStyle}
-                      onChange={e => setFormData({ ...formData, musicStyle: e.target.value })}
-                      className="w-full p-3 rounded-xl bg-black/60 border border-white/20 text-white text-xs outline-none focus:border-[#D4AF37]"
-                    >
-                      <option value="telugu_romantic">Classical & Modern Telugu Romantic Melodies</option>
-                      <option value="devotional">Traditional Nadaswaram & Mangala Vaadhyam</option>
-                      <option value="energetic">High-Energy Trending Beats & Bass</option>
-                      <option value="custom">I will provide our custom Telugu song playlist</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-200 font-bold mb-1.5 block">Voiceover / Audio Cleanup</label>
-                    <div className="p-3 rounded-xl bg-black/60 border border-white/10 text-xs text-emerald-400 font-semibold flex items-center gap-2">
-                      <CheckCircle2 size={16} /> ✓ AI Speech Isolation & Background Noise Removal Included
+                    <div className="pt-3 border-t border-white/10">
+                      <label className="text-xs text-gray-200 font-bold mb-1.5 block">Music & Audio Direction</label>
+                      <select
+                        value={formData.musicStyle}
+                        onChange={e => setFormData({ ...formData, musicStyle: e.target.value })}
+                        className="w-full p-3 rounded-xl bg-black/60 border border-white/20 text-white text-xs outline-none focus:border-[#D4AF37]"
+                      >
+                        <option value="telugu_romantic">Classical & Modern Telugu Romantic Melodies</option>
+                        <option value="devotional">Traditional Nadaswaram & Mangala Vaadhyam</option>
+                        <option value="energetic">High-Energy Trending Beats & Bass</option>
+                        <option value="custom">I will provide our custom Telugu song playlist</option>
+                      </select>
                     </div>
                   </div>
-                </div>
-              </div>
-            )}
+                )}
 
-            {/* 3. PHOTO RETOUCHING & COLOR GRADING CONFIGURATOR */}
-            {formData.services.photoEdit && (
-              <div className="dynamic-config-section">
-                <div className="dynamic-config-header">
-                  <div>
-                    <h4 className="text-lg sm:text-xl font-bold text-[#D4AF37] flex items-center gap-2">
-                      <Palette size={22} />
-                      <span>{lang === 'TE' ? '3. ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్ సేవలు' : '3. Photo Retouching & Color Grading'}</span>
-                    </h4>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Multi-select editing styles below. Calculated transparently per photo.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleServiceCategory('photoEdit')}
-                    className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20"
-                  >
-                    Remove Photo Retouch
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {PHOTO_SERVICES.map(p => {
-                    const isSelected = formData.selectedPhotoServices.includes(p.id);
-                    const pRate = isStudioMode ? p.studioRate : p.rate;
-
-                    return (
-                      <div
-                        key={p.id}
-                        onClick={() => togglePhotoService(p.id)}
-                        className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                      >
-                        <div className="service-checkbox-circle">
-                          {isSelected && <Check size={14} />}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <span className="font-bold text-sm text-white">{p.name}</span>
-                            <span className="text-sm text-[#D4AF37] font-mono font-bold ml-2">
-                              +₹{pRate}/p
-                            </span>
-                          </div>
-                          <div className="text-xs text-[#D4AF37] font-telugu mt-0.5">{p.telugu}</div>
-                          <div className="text-xs text-gray-400 mt-1">{p.note}</div>
-                        </div>
+                {/* 3. PHOTO RETOUCHING CONFIGURATOR */}
+                {formData.services.photoEdit && (
+                  <div className="dynamic-config-section">
+                    <div className="dynamic-config-header">
+                      <div>
+                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
+                          <Palette size={20} />
+                          <span>{lang === 'TE' ? 'ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్' : 'Photo Retouching & Color Grading'}</span>
+                        </h4>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Multi-select retouching styles calculated per-photo.
+                        </p>
                       </div>
-                    );
-                  })}
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-white/10">
-                  <div>
-                    <label className="text-sm text-gray-200 font-bold block">Estimated Photos to Edit:</label>
-                    <span className="text-xs text-gray-400">Total photos to apply selected retouching</span>
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {[30, 50, 100, 200, 300, 500].map(cnt => (
                       <button
-                        key={cnt}
                         type="button"
-                        onClick={() => setFormData({ ...formData, photoCount: cnt })}
-                        className={`bubble-pill ${formData.photoCount === cnt ? 'active' : ''}`}
+                        onClick={() => toggleServiceCategory('photoEdit')}
+                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
                       >
-                        {cnt} Photos
+                        Remove Photos
                       </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+                    </div>
 
-            {/* 4. FLEX, BANNERS & WHATSAPP INVITES CONFIGURATOR */}
-            {formData.services.flexBanner && (
-              <div className="dynamic-config-section">
-                <div className="dynamic-config-header">
-                  <div>
-                    <h4 className="text-lg sm:text-xl font-bold text-[#D4AF37] flex items-center gap-2">
-                      <MonitorPlay size={22} />
-                      <span>{lang === 'TE' ? '4. ఫ్లెక్స్, బ్యానర్లు & వాట్సాప్ ఆహ్వానాలు' : '4. Wedding Flex, Banners & Invites'}</span>
-                    </h4>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Multi-select large format outdoor printing & digital video invites.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleServiceCategory('flexBanner')}
-                    className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20"
-                  >
-                    Remove Flex
-                  </button>
-                </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      {PHOTO_SERVICES.map(p => {
+                        const isSelected = formData.selectedPhotoServices.includes(p.id);
+                        const pRate = isStudioMode ? p.studioRate : p.rate;
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {FLEX_SERVICES.map(f => {
-                    const isSelected = formData.selectedFlexServices.includes(f.id);
-                    const fPrice = isStudioMode ? f.studioPrice : f.price;
-
-                    return (
-                      <div
-                        key={f.id}
-                        onClick={() => toggleFlexService(f.id)}
-                        className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                      >
-                        <div className="service-checkbox-circle">
-                          {isSelected && <Check size={14} />}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <span className="font-bold text-sm text-white">{f.name}</span>
-                            <span className="text-sm text-[#D4AF37] font-mono font-bold ml-2">
-                              +₹{fPrice.toLocaleString('en-IN')}
-                            </span>
+                        return (
+                          <div
+                            key={p.id}
+                            onClick={() => togglePhotoService(p.id)}
+                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                          >
+                            <div className="service-checkbox-circle">
+                              {isSelected && <Check size={14} />}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <span className="font-bold text-xs text-white">{p.name}</span>
+                                <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
+                                  +₹{pRate}/p
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-gray-400 mt-1">{p.note}</div>
+                            </div>
                           </div>
-                          <div className="text-xs text-[#D4AF37] font-telugu mt-0.5">{f.telugu}</div>
-                          <div className="text-xs text-gray-400 mt-1">{f.note}</div>
-                        </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
+                      <div>
+                        <label className="text-xs text-gray-200 font-bold block">Estimated Photos to Retouch:</label>
+                        <span className="text-[11px] text-gray-400">Total photos to process</span>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* 5. CALENDARS & KEEPSAKES CONFIGURATOR */}
-            {formData.services.calendars && (
-              <div className="dynamic-config-section">
-                <div className="dynamic-config-header">
-                  <div>
-                    <h4 className="text-lg sm:text-xl font-bold text-[#D4AF37] flex items-center gap-2">
-                      <Calendar size={22} />
-                      <span>{lang === 'TE' ? '5. కపుల్ క్యాలెండర్లు & బహుమతి వస్తువులు' : '5. Personalized Calendars & Keepsakes'}</span>
-                    </h4>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Multi-select desk calendars and wall posters with couple photos.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleServiceCategory('calendars')}
-                    className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20"
-                  >
-                    Remove Calendars
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                  {CALENDAR_SERVICES.map(c => {
-                    const isSelected = formData.selectedCalendarServices.includes(c.id);
-                    const cPrice = isStudioMode ? c.studioPrice : c.price;
-
-                    return (
-                      <div
-                        key={c.id}
-                        onClick={() => toggleCalendarService(c.id)}
-                        className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                      >
-                        <div className="service-checkbox-circle">
-                          {isSelected && <Check size={14} />}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <span className="font-bold text-sm text-white">{c.name}</span>
-                          </div>
-                          <div className="text-xs text-[#D4AF37] font-mono font-bold mt-1">
-                            +₹{cPrice.toLocaleString('en-IN')} / ea
-                          </div>
-                          <div className="text-xs text-[#D4AF37] font-telugu mt-0.5">{c.telugu}</div>
-                          <div className="text-xs text-gray-400 mt-1">{c.note}</div>
-                        </div>
+                      <div className="flex gap-2 flex-wrap">
+                        {[30, 50, 100, 200, 300, 500].map(cnt => (
+                          <button
+                            key={cnt}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, photoCount: cnt })}
+                            className={`bubble-pill ${formData.photoCount === cnt ? 'active' : ''}`}
+                          >
+                            {cnt} Photos
+                          </button>
+                        ))}
                       </div>
-                    );
-                  })}
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-white/10">
-                  <div>
-                    <label className="text-sm text-gray-200 font-bold block">Number of Calendar Copies (కాపీల సంఖ్య):</label>
-                    <span className="text-xs text-gray-400">Total copies printed</span>
+                    </div>
                   </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {[1, 2, 5, 10, 25, 50].map(cnt => (
+                )}
+
+                {/* 4. FLEX & BANNERS CONFIGURATOR */}
+                {formData.services.flexBanner && (
+                  <div className="dynamic-config-section">
+                    <div className="dynamic-config-header">
+                      <div>
+                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
+                          <MonitorPlay size={20} />
+                          <span>{lang === 'TE' ? 'ఫ్లెక్స్, బ్యానర్లు & వాట్సాప్ ఆహ్వానాలు' : 'Wedding Flex & Digital Video Invites'}</span>
+                        </h4>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Multi-select outdoor print sizes and animated digital cards.
+                        </p>
+                      </div>
                       <button
-                        key={cnt}
                         type="button"
-                        onClick={() => setFormData({ ...formData, calendarCopies: cnt })}
-                        className={`bubble-pill ${formData.calendarCopies === cnt ? 'active' : ''}`}
+                        onClick={() => toggleServiceCategory('flexBanner')}
+                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
                       >
-                        {cnt} {cnt === 1 ? 'Copy' : 'Copies'}
+                        Remove Flex
                       </button>
-                    ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {FLEX_SERVICES.map(f => {
+                        const isSelected = formData.selectedFlexServices.includes(f.id);
+                        const fPrice = isStudioMode ? f.studioPrice : f.price;
+
+                        return (
+                          <div
+                            key={f.id}
+                            onClick={() => toggleFlexService(f.id)}
+                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                          >
+                            <div className="service-checkbox-circle">
+                              {isSelected && <Check size={14} />}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <span className="font-bold text-xs text-white">{f.name}</span>
+                                <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
+                                  +₹{fPrice.toLocaleString('en-IN')}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-gray-400 mt-1">{f.note}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
+                )}
+
+                {/* 5. CALENDARS CONFIGURATOR */}
+                {formData.services.calendars && (
+                  <div className="dynamic-config-section">
+                    <div className="dynamic-config-header">
+                      <div>
+                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
+                          <Calendar size={20} />
+                          <span>{lang === 'TE' ? 'కపుల్ క్యాలెండర్లు & బహుమతి వస్తువులు' : 'Personalized Calendars & Keepsakes'}</span>
+                        </h4>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          Desk easels and wall poster calendars with couple photos.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleServiceCategory('calendars')}
+                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
+                      >
+                        Remove Calendars
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                      {CALENDAR_SERVICES.map(c => {
+                        const isSelected = formData.selectedCalendarServices.includes(c.id);
+                        const cPrice = isStudioMode ? c.studioPrice : c.price;
+
+                        return (
+                          <div
+                            key={c.id}
+                            onClick={() => toggleCalendarService(c.id)}
+                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                          >
+                            <div className="service-checkbox-circle">
+                              {isSelected && <Check size={14} />}
+                            </div>
+                            <div className="flex-1">
+                              <span className="font-bold text-xs text-white block">{c.name}</span>
+                              <div className="text-xs text-[#D4AF37] font-mono font-bold mt-1">
+                                +₹{cPrice.toLocaleString('en-IN')} / ea
+                              </div>
+                              <div className="text-[11px] text-gray-400 mt-1">{c.note}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
+                      <div>
+                        <label className="text-xs text-gray-200 font-bold block">Number of Copies:</label>
+                        <span className="text-[11px] text-gray-400">Total calendar copies printed</span>
+                      </div>
+                      <div className="flex gap-2 flex-wrap">
+                        {[1, 2, 5, 10, 25, 50].map(cnt => (
+                          <button
+                            key={cnt}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, calendarCopies: cnt })}
+                            className={`bubble-pill ${formData.calendarCopies === cnt ? 'active' : ''}`}
+                          >
+                            {cnt} {cnt === 1 ? 'Copy' : 'Copies'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-between pt-4">
+                  <button
+                    type="button"
+                    onClick={goBackStep}
+                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
+                  >
+                    <ArrowLeft size={16} />
+                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={proceedToNextStep}
+                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
+                  >
+                    <span>{lang === 'TE' ? 'తదుపరి దశ: ఈవెంట్ వివరాలు' : 'Next: Event & Delivery Details'}</span>
+                    <ArrowRight size={18} />
+                  </button>
                 </div>
               </div>
             )}
 
-            {/* EMPTY STATE IF NO SERVICES CHECKED IN CUSTOM BUILDER */}
-            {!Object.values(formData.services).some(Boolean) && (
-              <div className="p-8 rounded-2xl bg-white/5 border border-dashed border-white/20 text-center">
-                <Sparkles size={36} className="text-[#D4AF37] mx-auto mb-3" />
-                <h4 className="text-lg font-bold text-white mb-1">
-                  {lang === 'TE' ? 'ఏదైనా సర్వీస్‌ను ఎంచుకోండి' : 'No Services Selected Yet'}
-                </h4>
-                <p className="text-sm text-gray-400 max-w-md mx-auto mb-4">
-                  Click on one or more service tiles above to customize your project, or choose a pre-built 1-Click Fast Bundle.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setExperienceMode('bundles')}
-                  className="px-6 py-2.5 rounded-xl bg-[#D4AF37] text-black font-bold text-sm hover:bg-[#b8952b] transition shadow-lg"
-                >
-                  Browse 1-Click Fast Bundles
-                </button>
+            {/* STEP 3 (CUSTOM): EVENT & DELIVERY DETAILS */}
+            {step === 3 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    3. {lang === 'TE' ? 'ఈవెంట్ & సంప్రదింపు వివరాలు' : 'Event & Delivery Details'}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-6">
+                    Enter contact name, WhatsApp number, and delivery city for dispatch.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">Your Full Name *</label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="e.g. Ramesh Varma"
+                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">WhatsApp Phone Number *</label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 font-semibold mb-2">Event Type</label>
+                    <div className="flex gap-2 flex-wrap">
+                      {[
+                        { id: 'Wedding', telugu: 'పెళ్ళి' },
+                        { id: 'Engagement', telugu: 'నిశ్చితార్థం' },
+                        { id: 'Reception', telugu: 'రిసెప్షన్' },
+                        { id: 'Half-Saree / Dhoti', telugu: 'లంగా వోణి' },
+                        { id: 'Birthday / Other', telugu: 'పుట్టినరోజు' },
+                      ].map(evt => (
+                        <button
+                          key={evt.id}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, eventType: evt.id })}
+                          className={`bubble-pill ${formData.eventType === evt.id ? 'active' : ''}`}
+                        >
+                          {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">City / District</label>
+                      <select
+                        value={formData.city}
+                        onChange={e => setFormData({ ...formData, city: e.target.value })}
+                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                      >
+                        <option value="Vijayawada">Vijayawada (విజయవాడ)</option>
+                        <option value="Guntur">Guntur (గుంటూరు)</option>
+                        <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
+                        <option value="Hyderabad">Hyderabad (హైదరాబాద్)</option>
+                        <option value="Tirupati">Tirupati (తిరుపతి)</option>
+                        <option value="Rajahmundry">Rajahmundry (రాజమండ్రి)</option>
+                        <option value="Kakinada">Kakinada (కాకినాడ)</option>
+                        <option value="Nellore">Nellore (నెల్లూరు)</option>
+                        <option value="Kurnool">Kurnool (కర్నూలు)</option>
+                        <option value="Other">Other City (ఇతర నగరం)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-300 font-semibold mb-2">Delivery Speed</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, deliverySpeed: 'standard' })}
+                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
+                            formData.deliverySpeed === 'standard'
+                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+                              : 'border-white/10 bg-white/5 text-gray-400'
+                          }`}
+                        >
+                          <div className="font-bold text-white">⚡ Standard (3-5 Days)</div>
+                          <div className="text-emerald-400 mt-0.5">Free Delivery</div>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, deliverySpeed: 'express' })}
+                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
+                            formData.deliverySpeed === 'express'
+                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+                              : 'border-white/10 bg-white/5 text-gray-400'
+                          }`}
+                        >
+                          <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
+                          <div className="text-[#D4AF37] mt-0.5 font-bold">
+                            {isStudioMode ? '+₹1,000 Rush' : '+₹1,500 Rush'}
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 font-semibold mb-2">Shipping Address</label>
+                    <textarea
+                      rows="2"
+                      value={formData.address}
+                      onChange={e => setFormData({ ...formData, address: e.target.value })}
+                      placeholder="Door No, Street, Landmark, Town, PIN Code..."
+                      className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-between pt-4">
+                  <button
+                    type="button"
+                    onClick={goBackStep}
+                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
+                  >
+                    <ArrowLeft size={16} />
+                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={proceedToNextStep}
+                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
+                  >
+                    <span>{lang === 'TE' ? 'తదుపరి దశ: ఫోటోలు & నిర్ధారణ' : 'Next: Media & Confirmation'}</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
               </div>
             )}
 
-            {/* NEXT STEP BUTTON */}
-            <div className="flex justify-end pt-4">
-              <button
-                type="button"
-                onClick={proceedToNextStep}
-                className="btn btn-gold-3d flex items-center gap-2 px-8 py-4 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)]"
-              >
-                <span>{lang === 'TE' ? 'తదుపరి దశ: వివరాలు నమోదు చేయండి' : 'Next: Event & Contact Details'}</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          </div>
-        )}
-          </div>
-        )}
+            {/* STEP 4 (CUSTOM): MEDIA UPLOAD & FINAL CONFIRMATION */}
+            {step === 4 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    4. {lang === 'TE' ? 'మీ ఫోటోలు పంపండి & ఆర్డర్ నిర్ధారించండి' : 'Media Transfer & Order Confirmation'}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-6">
+                    Choose how you want to share files and review your itemized package.
+                  </p>
+                </div>
 
-        {/* ================= STEP 2: EVENT & CONTACT ================= */}
-        {step === 2 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                2. {lang === 'TE' ? 'మీ ఈవెంట్ & డెలివరీ వివరాలు' : 'Your Event & Delivery Details'}
-              </h3>
-              <p className="text-sm text-gray-400 mb-6">
-                {lang === 'TE'
-                  ? 'మీ వాట్సాప్ నెంబర్‌కు ఆర్డర్ అప్‌డేట్స్ మరియు ప్రూఫ్ లింక్ వస్తుంది.'
-                  : 'We will send preview proofs and tracking updates directly to your WhatsApp.'}
-              </p>
-            </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div
+                    onClick={() => setFormData({ ...formData, uploadMethod: 'cloud' })}
+                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
+                      formData.uploadMethod === 'cloud'
+                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
+                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
+                    }`}
+                  >
+                    <UploadCloud size={26} className="text-[#D4AF37] mb-2" />
+                    <h4 className="font-bold text-white text-sm">Google Drive / Link</h4>
+                    <p className="text-xs text-gray-400 mt-1">Paste Drive, WeTransfer link</p>
+                  </div>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div
+                    onClick={() => setFormData({ ...formData, uploadMethod: 'whatsapp' })}
+                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
+                      formData.uploadMethod === 'whatsapp'
+                        ? 'border-[#25D366] bg-[#25D366]/20 text-white shadow-[0_0_20px_rgba(37,211,102,0.2)]'
+                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
+                    }`}
+                  >
+                    <MessageCircle size={26} className="text-[#25D366] mb-2" />
+                    <h4 className="font-bold text-white text-sm">Send on WhatsApp</h4>
+                    <p className="text-xs text-gray-400 mt-1">Direct coordinator chat</p>
+                  </div>
+
+                  <div
+                    onClick={() => setFormData({ ...formData, uploadMethod: 'courier' })}
+                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
+                      formData.uploadMethod === 'courier'
+                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
+                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
+                    }`}
+                  >
+                    <Truck size={26} className="text-[#D4AF37] mb-2" />
+                    <h4 className="font-bold text-white text-sm">Courier Pen Drive</h4>
+                    <p className="text-xs text-gray-400 mt-1">Ship USB to Vijayawada lab</p>
+                  </div>
+                </div>
+
+                {formData.uploadMethod === 'cloud' && (
+                  <div className="p-6 rounded-2xl bg-black/60 border border-white/20">
+                    <label className="block text-sm text-gray-200 font-semibold mb-2">
+                      Google Drive or WeTransfer Link
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://drive.google.com/drive/folders/..."
+                      value={formData.cloudLink}
+                      onChange={e => setFormData({ ...formData, cloudLink: e.target.value })}
+                      className="w-full p-3.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none font-mono text-sm"
+                    />
+                  </div>
+                )}
+
+                {/* Final Order Review Card */}
+                <div className="p-5 rounded-2xl bg-white/5 border border-white/15 space-y-3">
+                  <div className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <CheckSquare size={16} className="text-[#D4AF37]" />
+                    <span>Package Breakdown Review</span>
+                  </div>
+                  <ul className="text-xs text-gray-300 space-y-1.5 pl-2">
+                    {generateStructuredItems().map((it, idx) => (
+                      <li key={idx} className="flex justify-between items-start py-1 border-b border-white/5">
+                        <div>
+                          <strong className="text-white block">{it.name}</strong>
+                          <span className="text-gray-400 text-[11px]">{it.details}</span>
+                        </div>
+                        <span className="text-[#D4AF37] font-mono font-bold ml-2">₹{it.price.toLocaleString('en-IN')}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex justify-between items-baseline pt-2 text-sm font-bold">
+                    <span className="text-gray-300">Total Amount:</span>
+                    <span className="text-2xl font-mono text-emerald-400">₹{calculateTotal().toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm text-gray-300 font-semibold mb-2">
-                    {lang === 'TE' ? 'మీ పూర్తి పేరు *' : 'Your Full Name *'}
+                    Special Instructions / Notes (Optional)
                   </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Ramesh Varma"
+                  <textarea
+                    rows="2"
+                    value={formData.instructions}
+                    onChange={e => setFormData({ ...formData, instructions: e.target.value })}
+                    placeholder="e.g. Ritual focus, song preference..."
                     className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                    required
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm text-gray-300 font-semibold mb-2">
-                    {lang === 'TE' ? 'వాట్సాప్ మొబైల్ నెంబర్ *' : 'WhatsApp Phone Number *'}
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+91 98765 43210"
-                    className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 font-semibold mb-2">
-                  {lang === 'TE' ? 'ఈవెంట్ రకం' : 'Event Type'}
-                </label>
-                <div className="flex gap-2 flex-wrap">
-                  {[
-                    { id: 'Wedding', telugu: 'పెళ్ళి' },
-                    { id: 'Engagement', telugu: 'నిశ్చితార్థం' },
-                    { id: 'Reception', telugu: 'రిసెప్షన్' },
-                    { id: 'Half-Saree / Dhoti', telugu: 'లంగా వోణి' },
-                    { id: 'Birthday / Other', telugu: 'పుట్టినరోజు' },
-                  ].map(evt => (
-                    <button
-                      key={evt.id}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, eventType: evt.id })}
-                      className={`bubble-pill ${formData.eventType === evt.id ? 'active' : ''}`}
-                    >
-                      {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm text-gray-300 font-semibold mb-2">
-                    {lang === 'TE' ? 'నగరం / పట్టణం' : 'City / District'}
-                  </label>
-                  <select
-                    value={formData.city}
-                    onChange={e => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
+                <div className="flex justify-between items-center pt-4">
+                  <button
+                    type="button"
+                    onClick={goBackStep}
+                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
                   >
-                    <option value="Vijayawada">Vijayawada (విజయవాడ)</option>
-                    <option value="Guntur">Guntur (గుంటూరు)</option>
-                    <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
-                    <option value="Hyderabad">Hyderabad (హైదరాబాద్)</option>
-                    <option value="Tirupati">Tirupati (తిరుపతి)</option>
-                    <option value="Rajahmundry">Rajahmundry (రాజమండ్రి)</option>
-                    <option value="Kakinada">Kakinada (కాకినాడ)</option>
-                    <option value="Nellore">Nellore (నెల్లూరు)</option>
-                    <option value="Kurnool">Kurnool (కర్నూలు)</option>
-                    <option value="Other">Other City (ఇతర నగరం)</option>
-                  </select>
-                </div>
+                    <ArrowLeft size={16} />
+                    <span>Back</span>
+                  </button>
 
-                <div>
-                  <label className="block text-sm text-gray-300 font-semibold mb-2">
-                    {lang === 'TE' ? 'డెలివరీ వేగం' : 'Delivery Speed'}
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, deliverySpeed: 'standard' })}
-                      className={`p-3 rounded-xl text-xs font-semibold border text-left ${
-                        formData.deliverySpeed === 'standard'
-                          ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                          : 'border-white/10 bg-white/5 text-gray-400'
-                      }`}
-                    >
-                      <div className="font-bold text-white">⚡ Standard (3-5 Days)</div>
-                      <div className="text-emerald-400 mt-0.5">Free Delivery</div>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, deliverySpeed: 'express' })}
-                      className={`p-3 rounded-xl text-xs font-semibold border text-left ${
-                        formData.deliverySpeed === 'express'
-                          ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                          : 'border-white/10 bg-white/5 text-gray-400'
-                      }`}
-                    >
-                      <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
-                      <div className="text-[#D4AF37] mt-0.5 font-bold">
-                        {isStudioMode ? '+₹1,000 Rush' : '+₹1,500 Rush'}
-                      </div>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => submitOrder()}
+                    disabled={submitting}
+                    className="btn btn-gold-3d flex items-center gap-2 px-10 py-4 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-50"
+                  >
+                    <CheckCircle2 size={20} />
+                    <span>{submitting ? 'Placing Order...' : 'Confirm & Place Order'}</span>
+                  </button>
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm text-gray-300 font-semibold mb-2">
-                  {lang === 'TE' ? 'కొరియర్ డెలివరీ అడ్రస్' : 'Shipping Address (For physical album delivery)'}
-                </label>
-                <textarea
-                  rows="2"
-                  value={formData.address}
-                  onChange={e => setFormData({ ...formData, address: e.target.value })}
-                  placeholder="Door No, Street, Landmark, Town, PIN Code..."
-                  className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <button
-                type="button"
-                onClick={goBackStep}
-                className="btn btn-outline flex items-center gap-2 px-6 py-3"
-              >
-                <ArrowLeft size={16} />
-                <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={proceedToNextStep}
-                className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
-              >
-                <span>{lang === 'TE' ? 'తదుపరి దశ: ఫోటోలు పంపండి' : 'Next: Media Transfer'}</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
+            )}
           </div>
         )}
 
-        {/* ================= STEP 3: MEDIA & CONFIRM ================= */}
-        {step === 3 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                3. {lang === 'TE' ? 'మీ ఫోటోలు / వీడియోలు ఎలా పంపుతారు?' : 'How will you share your photos/videos?'}
-              </h3>
-              <p className="text-sm text-gray-400 mb-6">
-                {lang === 'TE'
-                  ? 'మీకు నచ్చిన సులభమైన పద్ధతిని ఎంచుకోండి:'
-                  : 'Choose the most convenient transfer method for you:'}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* Option 1: Cloud Link */}
-              <div
-                onClick={() => setFormData({ ...formData, uploadMethod: 'cloud' })}
-                className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                  formData.uploadMethod === 'cloud'
-                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                    : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                }`}
-              >
-                <UploadCloud size={26} className="text-[#D4AF37] mb-2" />
-                <h4 className="font-bold text-white text-sm">Google Drive / Link</h4>
-                <p className="text-xs text-gray-400 mt-1">Paste Drive, WeTransfer, or OneDrive link</p>
-              </div>
-
-              {/* Option 2: Send on WhatsApp */}
-              <div
-                onClick={() => setFormData({ ...formData, uploadMethod: 'whatsapp' })}
-                className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                  formData.uploadMethod === 'whatsapp'
-                    ? 'border-[#25D366] bg-[#25D366]/20 text-white shadow-[0_0_20px_rgba(37,211,102,0.2)]'
-                    : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                }`}
-              >
-                <MessageCircle size={26} className="text-[#25D366] mb-2" />
-                <h4 className="font-bold text-white text-sm">Send via WhatsApp</h4>
-                <p className="text-xs text-gray-400 mt-1">Our coordinator will ping you on WhatsApp</p>
-              </div>
-
-              {/* Option 3: Courier Pendrive */}
-              <div
-                onClick={() => setFormData({ ...formData, uploadMethod: 'courier' })}
-                className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                  formData.uploadMethod === 'courier'
-                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                    : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                }`}
-              >
-                <HardDrive size={26} className="text-[#D4AF37] mb-2" />
-                <h4 className="font-bold text-white text-sm">Courier Pen Drive</h4>
-                <p className="text-xs text-gray-400 mt-1">Ship USB/Hard disk to our AP hub</p>
-              </div>
-            </div>
-
-            {/* Cloud link input */}
-            {formData.uploadMethod === 'cloud' && (
-              <div className="p-6 rounded-2xl bg-black/60 border border-white/20">
-                <label className="block text-sm text-gray-200 font-semibold mb-2">
-                  Paste your Google Drive or WeTransfer Link
-                </label>
-                <input
-                  type="url"
-                  placeholder="https://drive.google.com/drive/folders/..."
-                  value={formData.cloudLink}
-                  onChange={e => setFormData({ ...formData, cloudLink: e.target.value })}
-                  className="w-full p-3.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none font-mono text-sm"
-                />
-                <p className="text-xs text-[#D4AF37] mt-2 flex items-center gap-1.5 font-medium">
-                  <ShieldCheck size={14} /> Please set link access to "Anyone with the link can view".
-                </p>
-              </div>
-            )}
-
-            {/* WhatsApp method note */}
-            {formData.uploadMethod === 'whatsapp' && (
-              <div className="p-6 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/30 text-left">
-                <h4 className="font-bold text-[#25D366] text-sm mb-1 flex items-center gap-2">
-                  <MessageCircle size={18} />
-                  {lang === 'TE' ? 'వాట్సాప్ ద్వారా సులభంగా పంపండి' : 'Super Easy: Send directly over WhatsApp'}
-                </h4>
-                <p className="text-xs sm:text-sm text-gray-300">
-                  {lang === 'TE'
-                    ? `మీరు ఇక్కడ ఆర్డర్ సబ్మిట్ చేసిన వెంటనే, మా టీమ్ ${formData.phone || 'మీ నంబరు'} కి వాట్సాప్‌లో మెసేజ్ చేసి ఫోటోలు సేకరిస్తుంది.`
-                    : `No technical hassle. Once you place the order, our coordinator will message ${formData.phone || 'your WhatsApp'} to collect the high-res photos.`}
-                </p>
-              </div>
-            )}
-
-            {/* Courier method note */}
-            {formData.uploadMethod === 'courier' && (
-              <div className="p-6 rounded-2xl bg-black/60 border border-white/20 text-left text-xs sm:text-sm text-gray-300 space-y-3">
-                <p className="font-bold text-white">Send your Pen Drive / Hard Disk to:</p>
-                <div className="p-4 rounded-xl bg-black/80 border border-[#D4AF37]/30 text-gray-200 leading-relaxed">
-                  <strong className="text-[#D4AF37] text-base">WeddingAlbums.in Production Center</strong><br />
-                  Plot 14, 2nd Floor, MG Road, Vijayawada, Andhra Pradesh 520010<br />
-                  Contact: +91 98765 43210 (Attn: Media Inward Team)
-                </div>
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm text-gray-300 font-semibold mb-2">
-                {lang === 'TE' ? 'ప్రత్యేక సూచనలు (ఐచ్ఛికం)' : 'Special Instructions / Notes (Optional)'}
-              </label>
-              <textarea
-                rows="2"
-                value={formData.instructions}
-                onChange={e => setFormData({ ...formData, instructions: e.target.value })}
-                placeholder="e.g. Include Talambralu ritual focus, use devotional Telugu songs, highlight family..."
-                className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-              />
-            </div>
-
-            <div className="flex justify-between items-center pt-4">
-              <button
-                type="button"
-                onClick={goBackStep}
-                className="btn btn-outline flex items-center gap-2 px-6 py-3"
-              >
-                <ArrowLeft size={16} />
-                <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => submitOrder()}
-                disabled={submitting}
-                className="btn btn-gold-3d flex items-center gap-2 px-10 py-4 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-50"
-              >
-                <CheckCircle2 size={20} />
-                <span>{submitting ? 'Placing Order...' : (lang === 'TE' ? 'ఆర్డర్ కన్ఫర్మ్ చేయండి' : 'Confirm & Place Order')}</span>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* RIGHT: ITEMIZED ORDER SUMMARY SIDEBAR */}
+      {/* RIGHT: ITEMIZED STICKY SIDEBAR */}
       <div className="builder-sidebar">
         <div className="cart-sticky p-6 sm:p-7 rounded-2xl bg-black/70 border border-[#D4AF37]/30 shadow-2xl backdrop-blur-2xl">
           <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
@@ -2139,122 +2536,15 @@ const BookingPage = () => {
 
           {/* Itemized Line-By-Line Receipt Breakdown */}
           <div className="space-y-3 text-xs sm:text-sm">
-            
-            {/* 1. Album Section */}
-            {formData.services.albumPrint && (
-              <div className="space-y-1.5 pb-2 border-b border-white/10">
+            {generateStructuredItems().map((it, idx) => (
+              <div key={idx} className="space-y-1 pb-2 border-b border-white/10">
                 <div className="flex justify-between text-white font-semibold">
-                  <span>Album ({formData.albumSize} • {formData.albumType})</span>
-                  <span className="font-mono text-[#D4AF37]">
-                    ₹{(isStudioMode ? 6800 : 9500).toLocaleString('en-IN')}
-                  </span>
+                  <span className="truncate max-w-[210px]">{it.name}</span>
+                  <span className="font-mono text-[#D4AF37]">₹{it.price.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between text-gray-400 text-xs">
-                  <span>Sheets: {formData.selectedSheetTypes.join(' + ')} ({formData.pages} sheets)</span>
-                  {formData.pages > 30 && (
-                    <span className="text-gray-300 font-mono">
-                      +{formData.pages - 30} extra
-                    </span>
-                  )}
-                </div>
-                {formData.boxType !== 'standard' && (
-                  <div className="flex justify-between text-yellow-500/80 text-xs">
-                    <span>Box: {formData.boxType.replace('_', ' ')}</span>
-                    <span className="font-mono">+{isStudioMode ? '₹800' : '₹1,200'}</span>
-                  </div>
-                )}
-                {formData.parentAlbums > 0 && (
-                  <div className="flex justify-between text-yellow-500/80 text-xs">
-                    <span>{formData.parentAlbums} Mini Parent Album(s)</span>
-                    <span className="font-mono">+{isStudioMode ? (formData.parentAlbums === 1 ? '₹1,800' : '₹3,200') : (formData.parentAlbums === 1 ? '₹2,500' : '₹4,500')}</span>
-                  </div>
-                )}
+                <div className="text-gray-400 text-[11px] leading-tight">{it.details}</div>
               </div>
-            )}
-
-            {/* 2. Video Services Itemized */}
-            {formData.services.videoEdit && formData.selectedVideoServices.length > 0 && (
-              <div className="space-y-1.5 pb-2 border-b border-white/10">
-                <div className="text-white font-semibold text-xs flex justify-between">
-                  <span>Video Services ({formData.selectedVideoServices.length})</span>
-                  <span className="text-[#D4AF37]">Itemized</span>
-                </div>
-                {formData.selectedVideoServices.map(vId => {
-                  const item = VIDEO_SERVICES.find(v => v.id === vId);
-                  if (!item) return null;
-                  const price = isStudioMode ? item.studioPrice : item.price;
-                  return (
-                    <div key={vId} className="flex justify-between text-gray-400 text-xs">
-                      <span className="truncate max-w-[180px]">{item.name}</span>
-                      <span className="font-mono text-gray-200">+₹{price.toLocaleString('en-IN')}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* 3. Photo Services Itemized */}
-            {formData.services.photoEdit && formData.selectedPhotoServices.length > 0 && (
-              <div className="space-y-1.5 pb-2 border-b border-white/10">
-                <div className="text-white font-semibold text-xs flex justify-between">
-                  <span>Photos ({formData.photoCount} pics • {formData.selectedPhotoServices.length} styles)</span>
-                  <span className="text-[#D4AF37]">Itemized</span>
-                </div>
-                {formData.selectedPhotoServices.map(pId => {
-                  const item = PHOTO_SERVICES.find(p => p.id === pId);
-                  if (!item) return null;
-                  const rate = isStudioMode ? item.studioRate : item.rate;
-                  return (
-                    <div key={pId} className="flex justify-between text-gray-400 text-xs">
-                      <span className="truncate max-w-[180px]">{item.name}</span>
-                      <span className="font-mono text-gray-200">₹{rate}/p</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* 4. Flex Services Itemized */}
-            {formData.services.flexBanner && formData.selectedFlexServices.length > 0 && (
-              <div className="space-y-1.5 pb-2 border-b border-white/10">
-                <div className="text-white font-semibold text-xs flex justify-between">
-                  <span>Flex & Invites ({formData.selectedFlexServices.length})</span>
-                  <span className="text-[#D4AF37]">Itemized</span>
-                </div>
-                {formData.selectedFlexServices.map(fId => {
-                  const item = FLEX_SERVICES.find(f => f.id === fId);
-                  if (!item) return null;
-                  const price = isStudioMode ? item.studioPrice : item.price;
-                  return (
-                    <div key={fId} className="flex justify-between text-gray-400 text-xs">
-                      <span className="truncate max-w-[180px]">{item.name}</span>
-                      <span className="font-mono text-gray-200">+₹{price.toLocaleString('en-IN')}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* 5. Calendar Services Itemized */}
-            {formData.services.calendars && formData.selectedCalendarServices.length > 0 && (
-              <div className="space-y-1.5 pb-2 border-b border-white/10">
-                <div className="text-white font-semibold text-xs flex justify-between">
-                  <span>Calendars ({formData.calendarCopies}x copies)</span>
-                  <span className="text-[#D4AF37]">Itemized</span>
-                </div>
-                {formData.selectedCalendarServices.map(cId => {
-                  const item = CALENDAR_SERVICES.find(c => c.id === cId);
-                  if (!item) return null;
-                  const price = (isStudioMode ? item.studioPrice : item.price) * (formData.calendarCopies || 1);
-                  return (
-                    <div key={cId} className="flex justify-between text-gray-400 text-xs">
-                      <span className="truncate max-w-[180px]">{item.name}</span>
-                      <span className="font-mono text-gray-200">+₹{price.toLocaleString('en-IN')}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            ))}
 
             {formData.deliverySpeed === 'express' && (
               <div className="flex justify-between text-[#D4AF37] text-xs py-1 border-b border-white/10">
@@ -2263,10 +2553,9 @@ const BookingPage = () => {
               </div>
             )}
 
-            {/* Wholesale Trade Savings Alert */}
             {isStudioMode && studioSavings > 0 && (
               <div className="p-3 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-semibold flex items-center justify-between">
-                <span>⚡ Studio Trade Wholesale Savings:</span>
+                <span>⚡ Wholesale Trade Savings:</span>
                 <span className="font-mono font-bold">-₹{studioSavings.toLocaleString('en-IN')}</span>
               </div>
             )}
@@ -2326,10 +2615,10 @@ const BookingPage = () => {
             <span>WhatsApp</span>
           </button>
           <button
-            onClick={() => step < 3 ? proceedToNextStep() : submitOrder()}
+            onClick={() => step < totalSteps ? proceedToNextStep() : submitOrder()}
             className="px-4 py-3 rounded-xl bg-[#D4AF37] text-black font-bold text-xs flex items-center gap-1.5"
           >
-            <span>{step < 3 ? 'Next Step →' : 'Confirm Book'}</span>
+            <span>{step < totalSteps ? 'Next Step →' : 'Confirm Book'}</span>
           </button>
         </div>
       </div>
