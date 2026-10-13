@@ -6,7 +6,9 @@ import express from 'express';
 import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
 import { User, Order, Task, PayoutRequest, Project, AuditLog, Package, Service, SheetType, AlbumSize } from '../db.js';
+import multer from 'multer';
 
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const router = express.Router();
 const adminOnly = requireRole(['admin', 'sysadmin', 'content_admin'], ['admin-portal', 'sysadmin-portal', 'uiadmin-portal']);
 
@@ -371,6 +373,104 @@ router.put(['/album-sizes/:id', '/builder/album-sizes/:id'], adminOnly, async (r
 router.delete(['/album-sizes/:id', '/builder/album-sizes/:id'], adminOnly, async (req, res) => {
   try {
     await AlbumSize.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Services Management ────────────────────────────────────────────── */
+router.get(['/services', '/builder/services'], adminOnly, async (req, res) => {
+  try {
+    const list = await Service.find(req.query || {});
+    res.json(list || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, services: [] });
+  }
+});
+
+router.post(['/services', '/builder/services'], adminOnly, async (req, res) => {
+  try {
+    const created = await Service.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put(['/services/:id', '/builder/services/:id'], adminOnly, async (req, res) => {
+  try {
+    const updated = await Service.findByIdAndUpdate(req.params.id, req.body);
+    res.json(updated || { success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete(['/services/:id', '/builder/services/:id'], adminOnly, async (req, res) => {
+  try {
+    await Service.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Bundled Packages Management ────────────────────────────────────── */
+router.get(['/packages', '/builder/packages'], adminOnly, async (req, res) => {
+  try {
+    const list = await Package.find(req.query || {});
+    res.json(list || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, packages: [] });
+  }
+});
+
+router.post(['/packages', '/builder/packages'], adminOnly, upload.single('coverImage'), async (req, res) => {
+  try {
+    let payload = { ...req.body };
+    if (typeof payload.features === 'string') {
+      try { payload.features = JSON.parse(payload.features); } catch (e) {}
+    }
+    if (typeof payload.includedServiceIds === 'string') {
+      try { payload.includedServiceIds = JSON.parse(payload.includedServiceIds); } catch (e) {}
+    }
+    if (req.file) {
+      payload.coverImage = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    }
+    if (payload.popular !== undefined) payload.popular = String(payload.popular) === 'true';
+    if (payload.isActive !== undefined) payload.isActive = String(payload.isActive) !== 'false';
+    const created = await Package.create(payload);
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put(['/packages/:id', '/builder/packages/:id'], adminOnly, upload.single('coverImage'), async (req, res) => {
+  try {
+    let payload = { ...req.body };
+    if (typeof payload.features === 'string') {
+      try { payload.features = JSON.parse(payload.features); } catch (e) {}
+    }
+    if (typeof payload.includedServiceIds === 'string') {
+      try { payload.includedServiceIds = JSON.parse(payload.includedServiceIds); } catch (e) {}
+    }
+    if (req.file) {
+      payload.coverImage = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    }
+    if (payload.popular !== undefined) payload.popular = String(payload.popular) === 'true';
+    if (payload.isActive !== undefined) payload.isActive = String(payload.isActive) !== 'false';
+    const updated = await Package.findByIdAndUpdate(req.params.id, payload);
+    res.json(updated || { success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete(['/packages/:id', '/builder/packages/:id'], adminOnly, async (req, res) => {
+  try {
+    await Package.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

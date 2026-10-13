@@ -81,7 +81,8 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '15px', marginLeft: '20px' }}>
+          {/* Desktop Nav Actions */}
+          <div className="nav-actions">
             <button 
               onClick={() => {
                 const next = lang === 'EN' ? 'TE' : 'EN';
@@ -90,7 +91,6 @@ const Navbar = () => {
                 window.dispatchEvent(new Event('languageChange'));
               }}
               className="lang-toggle-btn"
-              style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
               title="తెలుగు / English"
             >
               {lang === 'EN' ? 'తెలుగు' : 'English'}
@@ -98,10 +98,10 @@ const Navbar = () => {
             <Link to="/login" className="btn btn-outline" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
               Client Portal
             </Link>
-            <button onClick={toggleCart} className="cart-toggle-btn" style={{ background: 'transparent', border: 'none', color: '#D4AF37', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center' }}>
-              <ShoppingBag size={24} />
+            <button onClick={toggleCart} className="cart-toggle-btn" aria-label="Open cart">
+              <ShoppingBag size={22} />
               {cartItems?.length > 0 && (
-                <span style={{ position: 'absolute', top: '-5px', right: '-8px', background: '#ef4444', color: 'white', fontSize: '0.7rem', fontWeight: 'bold', width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="cart-badge">
                   {cartItems.length}
                 </span>
               )}
@@ -109,14 +109,36 @@ const Navbar = () => {
             <Link to={ctaLink} className="btn btn-gold-3d nav-cta">{ctaText}</Link>
           </div>
 
-          {/* Hamburger */}
-          <button
-            className={`hamburger ${menuOpen ? 'open' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span /><span /><span />
-          </button>
+          {/* Mobile Header Controls (Cart, Lang, Hamburger) */}
+          <div className="mobile-nav-controls">
+            <button 
+              onClick={() => {
+                const next = lang === 'EN' ? 'TE' : 'EN';
+                setLang(next);
+                localStorage.setItem('site_lang', next);
+                window.dispatchEvent(new Event('languageChange'));
+              }}
+              className="lang-toggle-btn mobile-lang-btn"
+              title="తెలుగు / English"
+            >
+              {lang === 'EN' ? 'తె' : 'EN'}
+            </button>
+            <button onClick={toggleCart} className="cart-toggle-btn" aria-label="Open cart">
+              <ShoppingBag size={22} />
+              {cartItems?.length > 0 && (
+                <span className="cart-badge">
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
+            <button
+              className={`hamburger ${menuOpen ? 'open' : ''}`}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span /><span /><span />
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Backdrop */}
@@ -131,7 +153,7 @@ const Navbar = () => {
               </Link>
             ))}
             
-            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <Link to="/login" className="btn btn-outline" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
                 Client Portal
               </Link>

@@ -596,11 +596,28 @@ export const Package = {
     const pkg = await this.findById(id);
     if (!pkg) return null;
     const merged = { ...pkg, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(`
+          UPDATE packages SET tier=$1, category=$2, price=$3, suffix=$4, features=$5, popular=$6, "isActive"=$7, "sortOrder"=$8, "b2bOrB2c"=$9, color=$10, "coverImage"=$11, "priceType"=$12, "priceMax"=$13, "updatedAt"=NOW()
+          WHERE id=$14
+        `, [merged.tier, merged.category, merged.price, merged.suffix || null, JSON.stringify(merged.features || []), Boolean(merged.popular), merged.isActive !== false, Number(merged.sortOrder || 0), merged.b2bOrB2c, merged.color || '#9E9E9E', merged.coverImage || '', merged.priceType || 'fixed', merged.priceMax || null, id]);
+      } catch (e) {
+        console.warn('Package update warning:', e.message);
+      }
+    }
     const idx = memStore.packages.findIndex(p => p.id === id);
     if (idx !== -1) memStore.packages[idx] = merged;
     return merged;
   },
   async findByIdAndDelete(id) {
+    if (isPostgresLive) {
+      try {
+        await query('DELETE FROM packages WHERE id=$1', [id]);
+      } catch (e) {
+        console.warn('Package delete warning:', e.message);
+      }
+    }
     memStore.packages = memStore.packages.filter(p => p.id !== id);
     return { success: true };
   }
@@ -609,8 +626,12 @@ export const Package = {
 export const Service = {
   async find(filter = {}) {
     if (isPostgresLive) {
-      const res = await query('SELECT * FROM services ORDER BY category ASC, name ASC');
-      if (res) return res.rows.map(r => ({ ...r, _id: r.id }));
+      try {
+        const res = await query('SELECT * FROM services ORDER BY category ASC, name ASC');
+        if (res?.rows?.length) return res.rows.map(r => ({ ...r, _id: r.id }));
+      } catch (e) {
+        console.warn('Service find warning:', e.message);
+      }
     }
     let list = [...memStore.services];
     if (filter.isActive !== undefined) list = list.filter(s => s.isActive === Boolean(filter.isActive));
@@ -623,6 +644,16 @@ export const Service = {
   async create(data) {
     const id = generateId();
     const srv = { id, _id: id, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(
+          'INSERT INTO services (id, category, name, "basePrice", "estimatedDaysToDeliver", "isActive") VALUES ($1, $2, $3, $4, $5, $6)',
+          [id, srv.category, srv.name, Number(srv.basePrice || 0), Number(srv.estimatedDaysToDeliver || 1), srv.isActive !== false]
+        );
+      } catch (e) {
+        console.warn('Service insert warning:', e.message);
+      }
+    }
     memStore.services.push(srv);
     return srv;
   },
@@ -630,11 +661,28 @@ export const Service = {
     const srv = await this.findById(id);
     if (!srv) return null;
     const merged = { ...srv, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(
+          'UPDATE services SET category=$1, name=$2, "basePrice"=$3, "estimatedDaysToDeliver"=$4, "isActive"=$5, "updatedAt"=NOW() WHERE id=$6',
+          [merged.category, merged.name, Number(merged.basePrice || 0), Number(merged.estimatedDaysToDeliver || 1), merged.isActive !== false, id]
+        );
+      } catch (e) {
+        console.warn('Service update warning:', e.message);
+      }
+    }
     const idx = memStore.services.findIndex(s => s.id === id);
     if (idx !== -1) memStore.services[idx] = merged;
     return merged;
   },
   async findByIdAndDelete(id) {
+    if (isPostgresLive) {
+      try {
+        await query('DELETE FROM services WHERE id=$1', [id]);
+      } catch (e) {
+        console.warn('Service delete warning:', e.message);
+      }
+    }
     memStore.services = memStore.services.filter(s => s.id !== id);
     return { success: true };
   }
@@ -643,8 +691,12 @@ export const Service = {
 export const SheetType = {
   async find(filter = {}) {
     if (isPostgresLive) {
-      const res = await query('SELECT * FROM sheet_types');
-      if (res) return res.rows.map(r => ({ ...r, _id: r.id }));
+      try {
+        const res = await query('SELECT * FROM sheet_types ORDER BY "pricePerSheet" ASC');
+        if (res?.rows?.length) return res.rows.map(r => ({ ...r, _id: r.id }));
+      } catch (e) {
+        console.warn('SheetType find warning:', e.message);
+      }
     }
     let list = [...memStore.sheetTypes];
     if (filter.isActive !== undefined) list = list.filter(s => s.isActive === Boolean(filter.isActive));
@@ -657,6 +709,16 @@ export const SheetType = {
   async create(data) {
     const id = generateId();
     const sheet = { id, _id: id, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(
+          'INSERT INTO sheet_types (id, name, telugu, "pricePerSheet", "studioPricePerSheet", "premiumCoverSurcharge", "studioCoverSurcharge", multiplier, description, popular, "isActive") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)',
+          [id, sheet.name, sheet.telugu, Number(sheet.pricePerSheet || 0), Number(sheet.studioPricePerSheet || 0), Number(sheet.premiumCoverSurcharge || 0), Number(sheet.studioCoverSurcharge || 0), Number(sheet.multiplier || 1), sheet.description, Boolean(sheet.popular), sheet.isActive !== false]
+        );
+      } catch (e) {
+        console.warn('SheetType insert warning:', e.message);
+      }
+    }
     memStore.sheetTypes.push(sheet);
     return sheet;
   },
@@ -664,11 +726,28 @@ export const SheetType = {
     const sheet = await this.findById(id);
     if (!sheet) return null;
     const merged = { ...sheet, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(
+          'UPDATE sheet_types SET name=$1, telugu=$2, "pricePerSheet"=$3, "studioPricePerSheet"=$4, "premiumCoverSurcharge"=$5, "studioCoverSurcharge"=$6, multiplier=$7, description=$8, popular=$9, "isActive"=$10, "updatedAt"=NOW() WHERE id=$11',
+          [merged.name, merged.telugu, Number(merged.pricePerSheet || 0), Number(merged.studioPricePerSheet || 0), Number(merged.premiumCoverSurcharge || 0), Number(merged.studioCoverSurcharge || 0), Number(merged.multiplier || 1), merged.description, Boolean(merged.popular), merged.isActive !== false, id]
+        );
+      } catch (e) {
+        console.warn('SheetType update warning:', e.message);
+      }
+    }
     const idx = memStore.sheetTypes.findIndex(s => s.id === id);
     if (idx !== -1) memStore.sheetTypes[idx] = merged;
     return merged;
   },
   async findByIdAndDelete(id) {
+    if (isPostgresLive) {
+      try {
+        await query('DELETE FROM sheet_types WHERE id=$1', [id]);
+      } catch (e) {
+        console.warn('SheetType delete warning:', e.message);
+      }
+    }
     memStore.sheetTypes = memStore.sheetTypes.filter(s => s.id !== id);
     return { success: true };
   }
@@ -678,10 +757,10 @@ export const AlbumSize = {
   async find(filter = {}) {
     if (isPostgresLive) {
       try {
-        const res = await query('SELECT * FROM album_sizes');
+        const res = await query('SELECT * FROM album_sizes ORDER BY "basePrice" ASC');
         if (res?.rows?.length) return res.rows.map(r => ({ ...r, _id: r.id }));
       } catch (e) {
-        // Fallback to memory
+        console.warn('AlbumSize find warning:', e.message);
       }
     }
     let list = [...(memStore.albumSizes || [])];
@@ -695,6 +774,16 @@ export const AlbumSize = {
   async create(data) {
     const id = generateId();
     const size = { id, _id: id, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(
+          'INSERT INTO album_sizes (id, name, dimensions, orientation, telugu, "basePrice", "studioBasePrice", popular, "isBundle", "bundleDiscount", description, "isActive") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+          [id, size.name, size.dimensions, size.orientation || 'landscape', size.telugu, Number(size.basePrice || 0), Number(size.studioBasePrice || 0), Boolean(size.popular), Boolean(size.isBundle), Number(size.bundleDiscount || 0), size.description, size.isActive !== false]
+        );
+      } catch (e) {
+        console.warn('AlbumSize insert warning:', e.message);
+      }
+    }
     if (!memStore.albumSizes) memStore.albumSizes = [];
     memStore.albumSizes.push(size);
     return size;
@@ -703,12 +792,29 @@ export const AlbumSize = {
     const size = await this.findById(id);
     if (!size) return null;
     const merged = { ...size, ...data };
+    if (isPostgresLive) {
+      try {
+        await query(
+          'UPDATE album_sizes SET name=$1, dimensions=$2, orientation=$3, telugu=$4, "basePrice"=$5, "studioBasePrice"=$6, popular=$7, "isBundle"=$8, "bundleDiscount"=$9, description=$10, "isActive"=$11, "updatedAt"=NOW() WHERE id=$12',
+          [merged.name, merged.dimensions, merged.orientation || 'landscape', merged.telugu, Number(merged.basePrice || 0), Number(merged.studioBasePrice || 0), Boolean(merged.popular), Boolean(merged.isBundle), Number(merged.bundleDiscount || 0), merged.description, merged.isActive !== false, id]
+        );
+      } catch (e) {
+        console.warn('AlbumSize update warning:', e.message);
+      }
+    }
     if (!memStore.albumSizes) memStore.albumSizes = [];
     const idx = memStore.albumSizes.findIndex(s => s.id === id);
     if (idx !== -1) memStore.albumSizes[idx] = merged;
     return merged;
   },
   async findByIdAndDelete(id) {
+    if (isPostgresLive) {
+      try {
+        await query('DELETE FROM album_sizes WHERE id=$1', [id]);
+      } catch (e) {
+        console.warn('AlbumSize delete warning:', e.message);
+      }
+    }
     if (!memStore.albumSizes) memStore.albumSizes = [];
     memStore.albumSizes = memStore.albumSizes.filter(s => s.id !== id);
     return { success: true };

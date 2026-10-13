@@ -91,8 +91,18 @@
 }
 
 @media (max-width: 768px) {
+  .pricing-hero {
+    padding: clamp(70px, 12vh, 100px) 16px 30px;
+  }
   .faq-grid {
     grid-template-columns: 1fr;
+    margin-bottom: 40px;
+  }
+  .faq-card {
+    padding: 20px 16px;
+  }
+  .pricing-cta {
+    padding: 30px 16px;
   }
   .pricing-tab-switcher {
     flex-direction: column;
@@ -102,5 +112,6 @@
   .ptab-btn {
     width: 100%;
     border-radius: 12px;
+    padding: 10px 20px;
   }
 }

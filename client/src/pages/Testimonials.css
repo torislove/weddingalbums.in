@@ -81,6 +81,13 @@
   flex-direction: column;
 }
 
+@media (max-width: 640px) {
+  .testimonial-card {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+
 .quote-icon-bg {
   position: absolute;
   top: -10px;

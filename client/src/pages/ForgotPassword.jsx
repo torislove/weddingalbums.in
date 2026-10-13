@@ -13,26 +13,27 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="pt-[120px] pb-[60px] min-h-screen flex items-center justify-center bg-[#050505] p-5">
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-2xl w-full max-w-md shadow-2xl relative">
+    <div style={{ minHeight: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(5rem, 10vh, 7rem) 1.25rem 4rem' }}>
+      <div className="glass-3d" style={{ width: '100%', maxWidth: '440px', padding: 'clamp(1.75rem, 4vw, 2.5rem)', borderRadius: '20px' }}>
         {!submitted ? (
           <>
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-serif text-white mb-2">Reset Password</h1>
-              <p className="text-gray-400">Enter your email address and we'll send you a link to reset your password.</p>
+              <h1 className="font-serif text-white mb-2" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)' }}>Reset Password</h1>
+              <p className="text-gray-400" style={{ fontSize: '0.9rem', lineHeight: 1.5 }}>Enter your email address and we'll send you a link to reset your password.</p>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-gray-400 text-sm font-medium mb-2">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Email Address</label>
+                <div style={{ position: 'relative' }}>
+                  <Mail style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-secondary)' }} size={18} />
                   <input 
                     type="email" 
                     required 
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                    className="form-input"
+                    style={{ paddingLeft: '44px' }}
                     placeholder="you@example.com"
                   />
                 </div>
@@ -40,23 +41,24 @@ const ForgotPassword = () => {
               
               <button 
                 type="submit" 
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:from-[#F3E5AB] hover:to-[#D4AF37] text-black font-semibold py-3 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-yellow-900/20"
+                className="btn btn-gold-3d"
+                style={{ width: '100%', marginTop: '0.5rem' }}
               >
                 Send Reset Link <ArrowRight size={18} />
               </button>
             </form>
 
-            <div className="mt-6 text-center">
-              <Link to="/login" className="text-sm text-gray-400 hover:text-[#D4AF37] transition-colors">
-                Back to Login
+            <div className="mt-4 text-center">
+              <Link to="/login" style={{ fontSize: '0.875rem', color: '#aaa', transition: 'color 0.2s ease' }} onMouseOver={e => e.currentTarget.style.color = '#D4AF37'} onMouseOut={e => e.currentTarget.style.color = '#aaa'}>
+                ← Back to Login
               </Link>
             </div>
           </>
         ) : (
-          <div className="text-center animate-slide-up">
-            <CheckCircle2 size={64} className="text-[#10b981] mx-auto mb-6" />
-            <h2 className="text-2xl font-serif text-white mb-4">Check your email</h2>
-            <p className="text-gray-400 mb-8">
+          <div className="text-center">
+            <CheckCircle2 size={56} style={{ color: '#10b981', margin: '0 auto 1.25rem' }} />
+            <h2 className="font-serif text-white mb-3" style={{ fontSize: '1.5rem' }}>Check your email</h2>
+            <p className="text-gray-400 mb-6" style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
               We've sent a password reset link to <strong>{email}</strong>. Please check your inbox and spam folder.
             </p>
             <Link to="/login" className="btn btn-outline w-full">Return to Login</Link>

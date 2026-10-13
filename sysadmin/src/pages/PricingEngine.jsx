@@ -76,7 +76,8 @@ const PricingEngine = () => {
       if (activeTab === 'packages') endpoint = `${API}/api/admin/packages`;
 
       const method = editingItem ? 'PUT' : 'POST';
-      const url = editingItem ? `${endpoint}/${editingItem._id}` : endpoint;
+      const itemId = editingItem ? (editingItem._id || editingItem.id) : null;
+      const url = editingItem ? `${endpoint}/${itemId}` : endpoint;
 
       let body, headers = { 'Authorization': `Bearer ${token}` };
 
@@ -161,7 +162,7 @@ const PricingEngine = () => {
       {activeTab === 'services' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map(s => (
-            <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
+            <div key={s._id || s.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
               <div className="flex justify-between items-start mb-2">
                 <div className="text-xs uppercase tracking-widest text-blue-400 font-semibold">{s.category}</div>
                 {s.popular && <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2.5 py-0.5 rounded-full font-semibold border border-[#D4AF37]/30 shrink-0">⭐ Featured</span>}
@@ -182,7 +183,7 @@ const PricingEngine = () => {
               
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
                 <button onClick={() => openModal(s)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
-                <button onClick={() => handleDelete(s._id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
+                <button onClick={() => handleDelete(s._id || s.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}
@@ -193,7 +194,7 @@ const PricingEngine = () => {
       {activeTab === 'sizes' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {albumSizes.map(sz => (
-            <div key={sz._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
+            <div key={sz._id || sz.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-2">
                   <span className="text-xs uppercase tracking-widest text-[#D4AF37] font-bold">{sz.dimensions}</span>
@@ -222,7 +223,7 @@ const PricingEngine = () => {
               
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
                 <button onClick={() => openModal(sz)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
-                <button onClick={() => handleDelete(sz._id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
+                <button onClick={() => handleDelete(sz._id || sz.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}
@@ -233,7 +234,7 @@ const PricingEngine = () => {
       {activeTab === 'sheets' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sheets.map(s => (
-            <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
+            <div key={s._id || s.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h3 className="text-xl font-bold text-white mb-1">{s.name}</h3>
@@ -262,7 +263,7 @@ const PricingEngine = () => {
               
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
                 <button onClick={() => openModal(s)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
-                <button onClick={() => handleDelete(s._id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
+                <button onClick={() => handleDelete(s._id || s.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}
@@ -273,7 +274,7 @@ const PricingEngine = () => {
       {activeTab === 'packages' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {packages.map(pkg => (
-            <div key={pkg._id} className="bg-[#111] rounded-xl border relative group overflow-hidden" style={{ borderColor: pkg.color }}>
+            <div key={pkg._id || pkg.id} className="bg-[#111] rounded-xl border relative group overflow-hidden" style={{ borderColor: pkg.color }}>
               {pkg.coverImage && (
                 <div className="h-40 w-full bg-cover bg-center" style={{ backgroundImage: `url(${pkg.coverImage})` }} />
               )}
@@ -295,7 +296,7 @@ const PricingEngine = () => {
                 
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
                   <button onClick={() => openModal(pkg)} className="p-2 bg-black/50 hover:bg-black/80 text-white rounded-lg backdrop-blur-sm"><Edit2 size={16} /></button>
-                  <button onClick={() => handleDelete(pkg._id)} className="p-2 bg-red-500/50 hover:bg-red-500/80 text-red-500 rounded-lg backdrop-blur-sm"><Trash2 size={16} /></button>
+                  <button onClick={() => handleDelete(pkg._id || pkg.id)} className="p-2 bg-red-500/50 hover:bg-red-500/80 text-red-500 rounded-lg backdrop-blur-sm"><Trash2 size={16} /></button>
                 </div>
               </div>
             </div>
@@ -536,16 +537,17 @@ const PricingEngine = () => {
                     <label className="block text-sm text-gray-400 mb-2">Included Services (Click to Add/Remove)</label>
                     <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2">
                       {services.map(s => {
-                        const isSelected = (formData.includedServiceIds || []).includes(s._id);
+                        const sId = s._id || s.id;
+                        const isSelected = (formData.includedServiceIds || []).includes(sId);
                         return (
                           <div 
-                            key={s._id} 
+                            key={sId} 
                             onClick={() => {
                               const arr = formData.includedServiceIds || [];
                               if (isSelected) {
-                                setFormData({...formData, includedServiceIds: arr.filter(id => id !== s._id)});
+                                setFormData({...formData, includedServiceIds: arr.filter(id => id !== sId)});
                               } else {
-                                setFormData({...formData, includedServiceIds: [...arr, s._id]});
+                                setFormData({...formData, includedServiceIds: [...arr, sId]});
                               }
                             }}
                             className={`p-2 rounded-lg text-sm cursor-pointer transition flex items-center gap-2 border ${isSelected ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-[#1a1a1a] border-white/10 text-gray-400 hover:bg-white/5'}`}

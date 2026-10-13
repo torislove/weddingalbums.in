@@ -20,11 +20,11 @@
     grid-template-columns: 1fr;
   }
   .cpl-visual { display: none; }
-  .cpl-form-panel { padding: 40px 20px; } /* Improved tablet alignment */
+  .cpl-form-panel { padding: 90px 20px 40px; } /* Clean clearance below fixed navbar */
 }
 
 @media (max-width: 500px) {
-  .cpl-form-panel { padding: 30px 16px; } /* Pixel perfect mobile alignment */
+  .cpl-form-panel { padding: 85px 16px 40px; } /* Pixel perfect mobile alignment */
   .cpl-auth-header h2 { font-size: 1.8rem; } /* Scale down heading */
   .cpl-tabs { margin-bottom: 20px; }
 }

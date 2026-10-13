@@ -125,3 +125,41 @@
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
   z-index: 10;
 }
+
+@media (hover: none) {
+  .masonry-item:hover {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-tabs {
+    gap: 0.4rem;
+    margin-bottom: 1.75rem;
+  }
+  .filter-btn {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+  .masonry-grid {
+    gap: 1rem;
+  }
+  .lightbox {
+    padding: 1rem;
+  }
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .lightbox-nav {
+    width: 42px;
+    height: 42px;
+    font-size: 1.75rem;
+  }
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
+}

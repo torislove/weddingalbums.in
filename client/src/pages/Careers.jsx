@@ -26,8 +26,8 @@ const Careers = () => {
               <div className="space-y-6 mb-8">
                 <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
                   <h3 className="text-xl text-white font-medium mb-2">💰 Earnings Potential</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '10px' }}>
-                    <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '10px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1 1 200px' }}>
                       <p className="text-sm text-gray-400 mb-2">Jobs per month (Avg ₹3,000 / job)</p>
                       <input type="range" min="1" max="20" defaultValue="5" className="w-full" style={{ accentColor: '#D4AF37' }} onChange={(e) => document.getElementById('calc-result').innerText = `₹${(e.target.value * 3000).toLocaleString()}`} />
                     </div>

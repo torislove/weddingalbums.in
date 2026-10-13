@@ -2218,6 +2218,33 @@ const BookingPage = () => {
                   </div>
                 )}
 
+                {/* Empty State Guard */}
+                {!Object.values(formData.services).some(Boolean) && (
+                  <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center space-y-4">
+                    <p className="text-gray-300 font-semibold">
+                      {lang === 'TE'
+                        ? 'ప్రస్తుతం ఏ సేవలు ఎంపిక చేయబడలేదు. దయచేసి వెనుకకు వెళ్లి సర్వీసులను ఎంచుకోండి లేదా తక్షణ బండిల్స్‌ను ఉపయోగించండి.'
+                        : 'No services are currently selected. Please choose one or more services, or switch to 1-Click Fast Bundles.'}
+                    </p>
+                    <div className="flex justify-center gap-3 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => setStep(1)}
+                        className="btn btn-gold-3d px-6 py-2.5 text-xs font-bold"
+                      >
+                        {lang === 'TE' ? '← సర్వీసులను ఎంచుకోండి' : '← Pick Services'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setExperienceMode('bundles'); setStep(1); }}
+                        className="btn btn-outline px-6 py-2.5 text-xs font-bold"
+                      >
+                        {lang === 'TE' ? '⚡ తక్షణ బండిల్స్ చూడండి' : '⚡ Browse 1-Click Bundles'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex justify-between pt-4">
                   <button
                     type="button"

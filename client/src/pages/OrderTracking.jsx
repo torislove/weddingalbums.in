@@ -31,28 +31,31 @@ const OrderTracking = () => {
   ];
 
   return (
-    <div className="pt-[120px] pb-[60px] min-h-screen">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="text-center mb-12">
+    <div className="order-tracking-page" style={{ padding: '0 1.25rem 4rem', minHeight: '80vh' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+        <div className="text-center mb-10">
           <ScrollReveal>
-            <h1 className="text-4xl md:text-5xl font-serif text-[#D4AF37] mb-4">Track Your Order</h1>
-            <p className="text-gray-400">Enter your Order ID below to check the real-time status of your album.</p>
+            <h1 className="font-serif text-[#D4AF37] mb-3" style={{ fontSize: 'clamp(2rem, 5.5vw, 3.25rem)' }}>Track Your Order</h1>
+            <p className="text-gray-400" style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', lineHeight: 1.6 }}>
+              Enter your Order ID below to check the real-time status of your album.
+            </p>
           </ScrollReveal>
         </div>
 
-        <form onSubmit={handleTrack} className="flex gap-4 mb-16 relative">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+        <form onSubmit={handleTrack} style={{ display: 'flex', gap: '10px', marginBottom: '3rem', flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', flex: '1 1 240px' }}>
+            <Search style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#888' }} size={20} />
             <input 
               type="text" 
               placeholder="e.g. ORD-123456" 
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
-              className="w-full bg-white/5 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#D4AF37] transition-all text-lg"
+              className="form-input"
+              style={{ paddingLeft: '48px', height: '52px', fontSize: '1rem', width: '100%' }}
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary px-8" disabled={status === 'loading'}>
+          <button type="submit" className="btn btn-primary" style={{ height: '52px', padding: '0 2rem', flexShrink: 0 }} disabled={status === 'loading'}>
             {status === 'loading' ? 'Searching...' : 'Track'}
           </button>
         </form>

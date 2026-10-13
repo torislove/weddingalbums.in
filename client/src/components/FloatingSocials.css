@@ -120,7 +120,22 @@
 
 @media (max-width: 768px) {
   .floating-socials-container {
-    bottom: 80px; /* Above mobile booking bar */
-    right: 20px;
+    bottom: 70px; /* Above mobile booking bar */
+    right: 14px;
+    gap: 8px;
+    transform: scale(0.85);
+    transform-origin: bottom right;
+  }
+  .whatsapp-float-btn {
+    width: 52px;
+    height: 52px;
+  }
+  .wa-icon-container {
+    width: 52px;
+    height: 52px;
+  }
+  .floating-btn {
+    width: 44px;
+    height: 44px;
   }
 }

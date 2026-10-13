@@ -36,7 +36,6 @@ import LeadCaptureModal from './components/LeadCaptureModal';
 import ScrollToTop from './components/ScrollToTop';
 import MobileBookingBar from './components/MobileBookingBar';
 import PageTransition from './components/PageTransition';
-import IntroScreen from './components/IntroScreen';
 import CartDrawer from './components/CartDrawer';
 import ProtectedRoute from './components/ProtectedRoute';
 import ClientDashboard from './pages/ClientDashboard';
@@ -48,70 +47,81 @@ import ClientReferral from './pages/ClientReferral';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 
-function App() {
+function AppContent() {
+  const location = useLocation();
   const isIframe = window.self !== window.top;
+  const isHome = location.pathname === '/';
+  const isClientDashboard = location.pathname.startsWith('/client');
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/forgot-password';
 
+  return (
+    <>
+      {!isIframe && <ScrollToTop />}
+      <CustomCursor />
+      <div className={`app-container ${isClientDashboard ? 'portal-mode' : ''} ${isAuthPage ? 'auth-mode' : ''}`}>
+        {!isClientDashboard && <PushNotification />}
+        <Navbar />
+        <CartDrawer />
+        <main className={isHome ? 'main-home' : isClientDashboard || isAuthPage ? 'main-portal' : 'main-inner'}>
+          <PageTransition>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/testimonials" element={<Testimonials />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/b2b" element={<B2B />} />
+              <Route path="/b2c" element={<B2C />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/tools/ai-culling" element={<PhotoCulling />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/login" element={<PortalLogin />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/order" element={<OrderAlbum />} />
+              <Route path="/proofing/:id" element={<ClientProofing />} />
+              <Route path="/albums" element={<AlbumsShowcase />} />
+              <Route path="/track" element={<OrderTracking />} />
+              <Route path="/booking" element={<BookingPage />} />
+              <Route path="/muhurtham" element={<MuhurthamCalendar />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route element={<ProtectedRoute allowedRoles={['b2c', 'admin']} />}>
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/client" element={<ClientDashboard />}>
+                  <Route path="orders" element={<OrderHistory />} />
+                  <Route path="proofs" element={<AlbumProofGallery />} />
+                  <Route path="wallet" element={<ClientWallet />} />
+                  <Route path="referral" element={<ClientReferral />} />
+                  <Route path="settings" element={<ProfileSettings />} />
+                </Route>
+              </Route>
+            </Routes>
+          </PageTransition>
+        </main>
+        {!isClientDashboard && !isAuthPage && <Footer />}
+        {!isIframe && !isClientDashboard && !isAuthPage && (
+          <>
+            <AudioEffectManager />
+            <FloatingSocials />
+            <MobileBookingBar />
+            <LeadCaptureModal />
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+function App() {
   return (
     <ContentProvider>
       <AuthProvider>
         <CartProvider>
           <Router>
-          {!isIframe && <ScrollToTop />}
-          <CustomCursor />
-          <IntroScreen />
-          <div className="app-container">
-            <PushNotification />
-            <Navbar />
-            <CartDrawer />
-            <main>
-              <PageTransition>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/services" element={<Services />} />
-                  <Route path="/portfolio" element={<Portfolio />} />
-                  <Route path="/testimonials" element={<Testimonials />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/b2b" element={<B2B />} />
-                  <Route path="/b2c" element={<B2C />} />
-                  <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/tools/ai-culling" element={<PhotoCulling />} />
-                  <Route path="/careers" element={<Careers />} />
-                  <Route path="/login" element={<PortalLogin />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                  <Route path="/order" element={<OrderAlbum />} />
-                  <Route path="/proofing/:id" element={<ClientProofing />} />
-                  <Route path="/albums" element={<AlbumsShowcase />} />
-                  <Route path="/track" element={<OrderTracking />} />
-                  <Route path="/booking" element={<BookingPage />} />
-                  <Route path="/muhurtham" element={<MuhurthamCalendar />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route element={<ProtectedRoute allowedRoles={['b2c', 'admin']} />}>
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/client" element={<ClientDashboard />}>
-                      <Route path="orders" element={<OrderHistory />} />
-                      <Route path="proofs" element={<AlbumProofGallery />} />
-                      <Route path="wallet" element={<ClientWallet />} />
-                      <Route path="referral" element={<ClientReferral />} />
-                      <Route path="settings" element={<ProfileSettings />} />
-                    </Route>
-                  </Route>
-                </Routes>
-              </PageTransition>
-            </main>
-            <Footer />
-            {!isIframe && (
-              <>
-                <AudioEffectManager />
-                <FloatingSocials />
-                <MobileBookingBar />
-                <LeadCaptureModal />
-              </>
-            )}
-          </div>
+            <AppContent />
           </Router>
         </CartProvider>
       </AuthProvider>

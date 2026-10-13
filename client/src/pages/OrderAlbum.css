@@ -576,8 +576,10 @@
 @media (max-width: 1024px) {
   .builder-layout {
     grid-template-columns: 1fr;
-    gap: 32px;
-    margin-top: 80px;
+    gap: 28px;
+    margin-top: 20px;
+    padding: 0 16px;
+    margin-bottom: 130px;
   }
   .cart-sticky {
     position: static;
@@ -586,7 +588,7 @@
   .mobile-summary-bar {
     display: flex;
     position: fixed;
-    bottom: 0;
+    bottom: 56px; /* Sits right above the mobile booking bar */
     left: 0;
     right: 0;
     z-index: 99;
@@ -594,7 +596,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid rgba(212, 175, 55, 0.3);
-    padding: 12px 20px;
+    padding: 10px 16px;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
@@ -603,23 +605,28 @@
 
 @media (max-width: 768px) {
   .builder-main {
-    padding: 28px 18px;
+    padding: 24px 14px;
+    border-radius: 20px;
   }
   .order-header h1 {
-    font-size: 1.85rem;
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
   }
   .builder-progress {
     overflow-x: auto;
-    padding-bottom: 20px;
+    padding-bottom: 16px;
     justify-content: flex-start;
-    gap: 28px;
+    gap: 20px;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .builder-progress::-webkit-scrollbar {
+    display: none;
   }
   .builder-progress::after {
     display: none;
   }
   .progress-step {
-    min-width: 70px;
-    font-size: 0.74rem;
+    min-width: 65px;
+    font-size: 0.72rem;
   }
 }

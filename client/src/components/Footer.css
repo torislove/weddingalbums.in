@@ -102,17 +102,16 @@
 .footer-marquee-container {
   overflow: hidden;
   white-space: nowrap;
-  padding: 1.5rem 0;
+  padding: 1.25rem 0;
   margin: 2rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   background: rgba(0, 0, 0, 0.2);
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  left: 0;
+  right: 0;
 }
 
 .footer-marquee {
@@ -127,4 +126,13 @@
 @keyframes scrollMarquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 3rem 0 calc(2rem + 60px); /* 60px clearance for mobile booking bar */
+  }
+  .footer-grid {
+    gap: 2rem;
+  }
 }

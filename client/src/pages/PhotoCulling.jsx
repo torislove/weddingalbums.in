@@ -31,7 +31,7 @@ const PhotoCulling = () => {
 
   return (
     <div className="page-container culling-page">
-      <section className="section bg-gradient text-center" style={{ paddingTop: '150px' }}>
+      <section className="section bg-gradient text-center" style={{ paddingTop: 'clamp(2rem, 5vh, 4rem)' }}>
         <div className="container">
           <ScrollReveal>
             <h1 className="hero-title">AI Photo <span>Culling</span></h1>
@@ -45,10 +45,10 @@ const PhotoCulling = () => {
           <div className="culling-workspace glass-3d">
             {!results && (
               <>
-                <div className="upload-box" style={{ padding: '4rem', border: '2px dashed rgba(255,255,255,0.2)', borderRadius: '12px', textAlign: 'center', cursor: 'pointer' }} onClick={() => document.getElementById('cull-upload').click()}>
-                  <Upload size={48} color="var(--color-primary)" style={{ marginBottom: '1rem' }} />
-                  <h3>Upload Wedding Folder</h3>
-                  <p className="text-muted">Supports JPG, RAW, CR3, NEF (Max 5000 images)</p>
+                <div className="upload-box" style={{ padding: 'clamp(2rem, 6vw, 3.5rem) 1.25rem', border: '2px dashed rgba(255,255,255,0.2)', borderRadius: '12px', textAlign: 'center', cursor: 'pointer', width: '100%' }} onClick={() => document.getElementById('cull-upload').click()}>
+                  <Upload size={44} color="var(--color-secondary)" style={{ margin: '0 auto 1rem' }} />
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Upload Wedding Folder</h3>
+                  <p className="text-muted" style={{ fontSize: '0.9rem' }}>Supports JPG, RAW, CR3, NEF (Max 5000 images)</p>
                   <input type="file" id="cull-upload" multiple hidden onChange={handleUpload} accept="image/*" />
                 </div>
                 

@@ -175,5 +175,37 @@
 @media (max-width: 900px) {
   .cart-container {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cart-page {
+    padding: clamp(75px, 12vh, 100px) 1rem 60px;
+  }
+  .cart-page-item {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+  .item-image-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+  .item-info {
+    min-width: 140px;
+  }
+  .item-quantity {
+    gap: 10px;
+    padding: 4px 8px;
+  }
+  .item-price {
+    min-width: auto;
+    font-size: 1rem;
+    margin-left: auto;
+  }
+  .cart-summary-section {
+    padding: 20px 16px;
   }
 }

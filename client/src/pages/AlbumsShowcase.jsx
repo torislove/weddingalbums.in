@@ -59,29 +59,47 @@ const AlbumsShowcase = () => {
   const [activeTab, setActiveTab] = useState('covers');
 
   return (
-    <div className="pt-[120px] pb-[60px] min-h-screen">
-      <div className="text-center mb-16">
+    <div className="albums-showcase-page" style={{ padding: '0 1rem 4rem', minHeight: '80vh' }}>
+      <div className="text-center mb-12">
         <ScrollReveal>
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#996515] shadow-lg shadow-yellow-900/20 mb-6">
-            <Layers size={32} className="text-black" />
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '50%', background: 'linear-gradient(135deg, #D4AF37, #996515)', marginBottom: '1.25rem', boxShadow: '0 8px 24px rgba(212, 175, 55, 0.25)' }}>
+            <Layers size={28} color="#000" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif text-[#D4AF37] mb-4">Our Master Album Craftsmanship</h1>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+          <h1 className="font-serif text-[#D4AF37] mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>Our Master Album Craftsmanship</h1>
+          <p className="text-gray-400 mx-auto" style={{ maxWidth: '640px', fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', lineHeight: 1.6 }}>
             Printed on high-precision European digital presses with archival inks guaranteed to retain color fidelity for 100+ years.
           </p>
         </ScrollReveal>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex justify-center gap-4 mb-12 border-b border-white/10 pb-4">
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '2.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', flexWrap: 'wrap' }}>
           <button 
-            className={`px-6 py-2 rounded-full font-medium transition-all ${activeTab === 'covers' ? 'bg-[#D4AF37] text-black shadow-lg shadow-yellow-900/30' : 'bg-white/5 text-gray-400 hover:text-white'}`}
+            className="btn"
+            style={{ 
+              borderRadius: '50px', 
+              padding: '0.6rem 1.5rem', 
+              fontSize: '0.9rem',
+              background: activeTab === 'covers' ? 'var(--color-secondary)' : 'rgba(255,255,255,0.06)',
+              color: activeTab === 'covers' ? '#000' : '#ccc',
+              border: 'none',
+              cursor: 'pointer'
+            }}
             onClick={() => setActiveTab('covers')}
           >
             Album Types & Covers
           </button>
           <button 
-            className={`px-6 py-2 rounded-full font-medium transition-all ${activeTab === 'paper' ? 'bg-[#D4AF37] text-black shadow-lg shadow-yellow-900/30' : 'bg-white/5 text-gray-400 hover:text-white'}`}
+            className="btn"
+            style={{ 
+              borderRadius: '50px', 
+              padding: '0.6rem 1.5rem', 
+              fontSize: '0.9rem',
+              background: activeTab === 'paper' ? 'var(--color-secondary)' : 'rgba(255,255,255,0.06)',
+              color: activeTab === 'paper' ? '#000' : '#ccc',
+              border: 'none',
+              cursor: 'pointer'
+            }}
             onClick={() => setActiveTab('paper')}
           >
             Paper Finishes

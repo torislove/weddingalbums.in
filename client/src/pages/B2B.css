@@ -38,7 +38,7 @@
   position: relative;
   z-index: 10;
   text-align: center;
-  padding: 180px 20px 100px;
+  padding: clamp(90px, 14vh, 160px) 1.25rem 60px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -59,11 +59,12 @@
 }
 
 .b2b-title {
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(2rem, 6.5vw, 4.5rem);
   font-weight: 900;
   line-height: 1.1;
-  letter-spacing: -1.5px;
-  margin-bottom: 24px;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  word-break: break-word;
   background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -71,11 +72,12 @@
 }
 
 .b2b-subtitle {
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
   color: #9ca3af;
   max-width: 700px;
   margin: 0 auto 40px;
   line-height: 1.6;
+  padding: 0 0.5rem;
 }
 
 .b2b-primary-btn {
