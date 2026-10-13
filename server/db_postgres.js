@@ -137,14 +137,14 @@ const memStore = {
     { id: 'srv-sh-5', _id: 'srv-sh-5', category: 'Shoots & Drone', name: 'Multi-Camera YouTube Live Streaming Setup', telugu: 'యూట్యూబ్ లైవ్ స్ట్రీమింగ్ సెటప్', basePrice: 15000, estimatedDaysToDeliver: 0, processDescription: '1. Multi-cam switcher with wireless video transmitters -> 2. High-speed bonded 4G/5G internet setup -> 3. Dedicated YouTube 1080p 60fps stream -> 4. Instant replay recording', features: ['Multi-Cam Live Mixing', 'Bonded Internet Reliability', 'Custom Telugu Wedding Frame Overlay'], isActive: true }
   ],
   sheetTypes: [
-    { id: 'sheet-1', _id: 'sheet-1', name: 'Non-Tearable Velvet Touch', telugu: 'సిల్కీ వెల్వెట్ మ్యాట్ (వాటర్ ప్రూఫ్)', pricePerSheet: 65, studioPricePerSheet: 42, premiumCoverSurcharge: 1200, studioCoverSurcharge: 750, multiplier: 1.0, description: 'Ultra-smooth matte finish, 100% waterproof and tear-resistant. Soft luxury feather touch.', isActive: true },
-    { id: 'sheet-2', _id: 'sheet-2', name: 'High-Gloss Metallic', telugu: 'రాయల్ హై-గ్లాస్ మెటాలిక్', pricePerSheet: 85, studioPricePerSheet: 55, premiumCoverSurcharge: 1400, studioCoverSurcharge: 900, multiplier: 1.25, description: 'Lustrous high-contrast sheen that brings gold jewellery and wedding silks alive with breathtaking vibrancy.', isActive: true },
-    { id: 'sheet-3', _id: 'sheet-3', name: 'Royal Feather Touch Leatherette', telugu: 'రాయల్ ఫెదర్ టచ్ లెథరెట్', pricePerSheet: 110, studioPricePerSheet: 72, premiumCoverSurcharge: 1800, studioCoverSurcharge: 1150, multiplier: 1.4, description: 'Ultra-luxury textured sheets with genuine tactile grain and rich gold hot-stamping on edges.', isActive: true },
-    { id: 'sheet-4', _id: 'sheet-4', name: 'HD Thermal Lamination Matte', telugu: 'హై-డెఫినిషన్ థర్మల్ లామినేషన్', pricePerSheet: 50, studioPricePerSheet: 32, premiumCoverSurcharge: 800, studioCoverSurcharge: 500, multiplier: 1.15, description: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday studio handling and longevity.', isActive: true },
-    { id: 'sheet-5', _id: 'sheet-5', name: 'Silk Matte Pearl Lustre', telugu: 'సిల్క్ మ్యాట్ పెర్ల్ లస్టర్', pricePerSheet: 95, studioPricePerSheet: 62, premiumCoverSurcharge: 1500, studioCoverSurcharge: 950, multiplier: 1.3, description: 'Micro-pearlescent sheen with true-to-life skin tones and natural highlights without glare.', isActive: true },
-    { id: 'sheet-6', _id: 'sheet-6', name: 'Crystal High Gloss (Ultra Mirror)', telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్', pricePerSheet: 75, studioPricePerSheet: 48, premiumCoverSurcharge: 1000, studioCoverSurcharge: 650, multiplier: 1.2, description: 'Super-reflective mirror gloss. Vivid colors, high contrast deep blacks and saturated wedding reds.', isActive: true },
-    { id: 'sheet-7', _id: 'sheet-7', name: 'Silver Halide True Photographic (Fuji DP2)', telugu: 'సిల్వర్ హాలైడ్ ట్రూ ఫోటో పేపర్', pricePerSheet: 125, studioPricePerSheet: 82, premiumCoverSurcharge: 2000, studioCoverSurcharge: 1300, multiplier: 1.5, description: 'Continuous tone optical RGB exposure. 100-year archival rating without inkjet dot patterns.', isActive: true },
-    { id: 'sheet-8', _id: 'sheet-8', name: 'Embossed Canvas Texture Fine Art', telugu: 'కాన్వాస్ ఎంబోస్డ్ ఫైన్ ఆర్ట్ టెక్స్చర్', pricePerSheet: 105, studioPricePerSheet: 68, premiumCoverSurcharge: 1600, studioCoverSurcharge: 1050, multiplier: 1.35, description: 'Tactile painterly woven fabric texture with artistic micro-embossing for timeless heirloom portraiture.', isActive: true }
+    { id: 'sheet-1', _id: 'sheet-1', name: 'Non-Tearable Velvet Touch', telugu: 'సిల్కీ వెల్వెట్ మ్యాట్ (వాటర్ ప్రూఫ్)', pricePerSheet: 65, studioPricePerSheet: 42, premiumCoverSurcharge: 1200, studioCoverSurcharge: 750, multiplier: 1.0, popular: true, description: 'Ultra-smooth matte finish, 100% waterproof and tear-resistant. Soft luxury feather touch.', isActive: true },
+    { id: 'sheet-2', _id: 'sheet-2', name: 'High-Gloss Metallic', telugu: 'రాయల్ హై-గ్లాస్ మెటాలిక్', pricePerSheet: 85, studioPricePerSheet: 55, premiumCoverSurcharge: 1400, studioCoverSurcharge: 900, multiplier: 1.25, popular: true, description: 'Lustrous high-contrast sheen that brings gold jewellery and wedding silks alive with breathtaking vibrancy.', isActive: true },
+    { id: 'sheet-3', _id: 'sheet-3', name: 'Royal Feather Touch Leatherette', telugu: 'రాయల్ ఫెదర్ టచ్ లెథరెట్', pricePerSheet: 110, studioPricePerSheet: 72, premiumCoverSurcharge: 1800, studioCoverSurcharge: 1150, multiplier: 1.4, popular: false, description: 'Ultra-luxury textured sheets with genuine tactile grain and rich gold hot-stamping on edges.', isActive: true },
+    { id: 'sheet-4', _id: 'sheet-4', name: 'HD Thermal Lamination Matte', telugu: 'హై-డెఫినిషన్ థర్మల్ లామినేషన్', pricePerSheet: 50, studioPricePerSheet: 32, premiumCoverSurcharge: 800, studioCoverSurcharge: 500, multiplier: 1.15, popular: false, description: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday studio handling and longevity.', isActive: true },
+    { id: 'sheet-5', _id: 'sheet-5', name: 'Silk Matte Pearl Lustre', telugu: 'సిల్క్ మ్యాట్ పెర్ల్ లస్టర్', pricePerSheet: 95, studioPricePerSheet: 62, premiumCoverSurcharge: 1500, studioCoverSurcharge: 950, multiplier: 1.3, popular: false, description: 'Micro-pearlescent sheen with true-to-life skin tones and natural highlights without glare.', isActive: true },
+    { id: 'sheet-6', _id: 'sheet-6', name: 'Crystal High Gloss (Ultra Mirror)', telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్', pricePerSheet: 75, studioPricePerSheet: 48, premiumCoverSurcharge: 1000, studioCoverSurcharge: 650, multiplier: 1.2, popular: false, description: 'Super-reflective mirror gloss. Vivid colors, high contrast deep blacks and saturated wedding reds.', isActive: true },
+    { id: 'sheet-7', _id: 'sheet-7', name: 'Silver Halide True Photographic (Fuji DP2)', telugu: 'సిల్వర్ హాలైడ్ ట్రూ ఫోటో పేపర్', pricePerSheet: 125, studioPricePerSheet: 82, premiumCoverSurcharge: 2000, studioCoverSurcharge: 1300, multiplier: 1.5, popular: false, description: 'Continuous tone optical RGB exposure. 100-year archival rating without inkjet dot patterns.', isActive: true },
+    { id: 'sheet-8', _id: 'sheet-8', name: 'Embossed Canvas Texture Fine Art', telugu: 'కాన్వాస్ ఎంబోస్డ్ ఫైన్ ఆర్ట్ టెక్స్చర్', pricePerSheet: 105, studioPricePerSheet: 68, premiumCoverSurcharge: 1600, studioCoverSurcharge: 1050, multiplier: 1.35, popular: false, description: 'Tactile painterly woven fabric texture with artistic micro-embossing for timeless heirloom portraiture.', isActive: true }
   ],
   albumSizes: [
     // LANDSCAPE SIZES (హారిజాంటల్ / ల్యాండ్‌స్కేప్)
@@ -287,7 +287,29 @@ export async function initDatabase() {
       CREATE TABLE IF NOT EXISTS sheet_types (
         id VARCHAR(64) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
+        telugu VARCHAR(255),
+        "pricePerSheet" NUMERIC DEFAULT 65,
+        "studioPricePerSheet" NUMERIC DEFAULT 42,
+        "premiumCoverSurcharge" NUMERIC DEFAULT 0,
+        "studioCoverSurcharge" NUMERIC DEFAULT 0,
         multiplier NUMERIC DEFAULT 1.0,
+        description TEXT,
+        popular BOOLEAN DEFAULT false,
+        "isActive" BOOLEAN DEFAULT true,
+        "createdAt" TIMESTAMPTZ DEFAULT NOW(),
+        "updatedAt" TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS album_sizes (
+        id VARCHAR(64) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        dimensions VARCHAR(128),
+        orientation VARCHAR(64) DEFAULT 'landscape',
+        telugu VARCHAR(255),
+        "basePrice" NUMERIC,
+        "studioBasePrice" NUMERIC,
+        popular BOOLEAN DEFAULT false,
+        "isBundle" BOOLEAN DEFAULT false,
+        "bundleDiscount" NUMERIC DEFAULT 0,
         description TEXT,
         "isActive" BOOLEAN DEFAULT true,
         "createdAt" TIMESTAMPTZ DEFAULT NOW(),

@@ -18,9 +18,9 @@ const PricingEngine = () => {
   const [editingItem, setEditingItem] = useState(null);
 
   // Forms states
-  const initService = { category: 'Premium Album Printing & Design', name: '', telugu: '', basePrice: '', studioBasePrice: '', estimatedDaysToDeliver: 2, processDescription: '', isActive: true };
+  const initService = { category: 'Premium Album Printing & Design', name: '', telugu: '', basePrice: '', studioBasePrice: '', estimatedDaysToDeliver: 2, processDescription: '', popular: false, isActive: true };
   const initSize = { name: '', dimensions: '', orientation: 'landscape', basePrice: 7500, studioBasePrice: 5200, telugu: '', description: '', popular: false, isBundle: false, bundleDiscount: 0, isActive: true };
-  const initSheet = { name: '', telugu: '', pricePerSheet: '', studioPricePerSheet: '', premiumCoverSurcharge: 0, studioCoverSurcharge: 0, multiplier: 1.0, description: '', isActive: true };
+  const initSheet = { name: '', telugu: '', pricePerSheet: '', studioPricePerSheet: '', premiumCoverSurcharge: 0, studioCoverSurcharge: 0, multiplier: 1.0, description: '', popular: false, isActive: true };
   const initPackage = { tier: '', category: 'combo', priceType: 'fixed', price: '', priceMax: '', suffix: '', includedServiceIds: [], features: [], popular: false, isActive: true, b2bOrB2c: 'b2c', color: '#D4AF37' };
 
   const [formData, setFormData] = useState({});
@@ -161,9 +161,13 @@ const PricingEngine = () => {
       {activeTab === 'services' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map(s => (
-            <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group">
-              <div className="text-xs uppercase tracking-widest text-blue-400 mb-2">{s.category}</div>
+            <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
+              <div className="flex justify-between items-start mb-2">
+                <div className="text-xs uppercase tracking-widest text-blue-400 font-semibold">{s.category}</div>
+                {s.popular && <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2.5 py-0.5 rounded-full font-semibold border border-[#D4AF37]/30 shrink-0">⭐ Featured</span>}
+              </div>
               <h3 className="text-xl font-bold text-white mb-2">{s.name}</h3>
+              {s.telugu && <div className="text-xs text-[#D4AF37] mb-2 font-telugu">{s.telugu}</div>}
               <div className="flex justify-between items-baseline mb-3 bg-white/5 p-3 rounded-lg border border-white/5">
                 <div>
                   <span className="text-[11px] text-gray-400 block uppercase tracking-wider font-semibold">Customer (B2C)</span>
@@ -230,8 +234,13 @@ const PricingEngine = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sheets.map(s => (
             <div key={s._id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
-              <h3 className="text-xl font-bold text-white mb-1">{s.name}</h3>
-              {s.telugu && <div className="text-xs text-[#D4AF37] mb-2 font-telugu">{s.telugu}</div>}
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">{s.name}</h3>
+                  {s.telugu && <div className="text-xs text-[#D4AF37] mb-2 font-telugu">{s.telugu}</div>}
+                </div>
+                {s.popular && <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2.5 py-0.5 rounded-full font-semibold border border-[#D4AF37]/30 shrink-0">⭐ Most Popular</span>}
+              </div>
               
               <div className="flex justify-between items-baseline mb-3 bg-white/5 p-3 rounded-lg border border-white/5">
                 <div>
@@ -354,6 +363,16 @@ const PricingEngine = () => {
                     <label className="block text-sm text-gray-400 mb-1">Process / Workflow Description (విధానం)</label>
                     <textarea rows="2" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white text-sm" value={formData.processDescription || ''} onChange={e => setFormData({...formData, processDescription: e.target.value})} placeholder="e.g. 1. RAW file intake -> 2. Pro color grade -> 3. Client preview -> 4. 4K master delivery" />
                   </div>
+                  <div className="flex gap-4 pt-2">
+                    <label className="flex items-center gap-2 text-white cursor-pointer">
+                      <input type="checkbox" checked={formData.popular || false} onChange={e => setFormData({...formData, popular: e.target.checked})} className="w-5 h-5 rounded accent-[#D4AF37]" />
+                      Mark as "Featured / Most Popular (⭐)"
+                    </label>
+                    <label className="flex items-center gap-2 text-white cursor-pointer">
+                      <input type="checkbox" checked={formData.isActive !== false} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="w-5 h-5 rounded accent-[#D4AF37]" />
+                      Active on Website
+                    </label>
+                  </div>
                 </>
               )}
 
@@ -446,6 +465,16 @@ const PricingEngine = () => {
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">Description / Finish Feature</label>
                     <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.description || ''} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="e.g. No fingerprints, anti-scratch" />
+                  </div>
+                  <div className="flex gap-4 pt-2">
+                    <label className="flex items-center gap-2 text-white cursor-pointer">
+                      <input type="checkbox" checked={formData.popular || false} onChange={e => setFormData({...formData, popular: e.target.checked})} className="w-5 h-5 rounded accent-[#D4AF37]" />
+                      Mark as "Most Popular / Best Seller (⭐)"
+                    </label>
+                    <label className="flex items-center gap-2 text-white cursor-pointer">
+                      <input type="checkbox" checked={formData.isActive !== false} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="w-5 h-5 rounded accent-[#D4AF37]" />
+                      Active in Catalog
+                    </label>
                   </div>
                 </>
               )}
