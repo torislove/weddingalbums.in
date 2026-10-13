@@ -500,6 +500,33 @@ const BookingPage = () => {
     }
   };
 
+  // Dynamic Package from SysAdmin Engine Applier
+  const applyDynamicPackage = (pkg, directToEvent = true) => {
+    const pkgKey = pkg.id || pkg._id || pkg.tier;
+    setAppliedBundle(pkgKey);
+    setFormData(prev => ({
+      ...prev,
+      dynamicPackage: pkg,
+      instructions: `[Curated Suite: ${pkg.tier}] ${Array.isArray(pkg.features) ? pkg.features.join(' | ') : ''}`,
+      services: {
+        albumPrint: true,
+        videoEdit: pkg.category === 'combo' || String(pkg.category).toLowerCase().includes('video'),
+        photoEdit: pkg.category === 'combo' || String(pkg.category).toLowerCase().includes('photo'),
+        flexBanner: false,
+        calendars: false,
+      }
+    }));
+    if (directToEvent) {
+      setExperienceMode('bundles');
+      setStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setExperienceMode('custom');
+      setStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   // Multi-select toggle helpers
   const toggleSheetType = (sheetId) => {
     setFormData(prev => {
@@ -586,7 +613,7 @@ const BookingPage = () => {
     });
   };
 
-  // Precise, 100% Itemized Pricing Calculation (No Arbitrary Bulk Lump Sums!)
+  // Precise, 100% Itemized Pricing Calculation (Supports Arbitrary Per-Sheet Rates!)
   const calculateTotal = (forceMode = null) => {
     const studio = forceMode !== null ? forceMode : isStudioMode;
 
@@ -595,6 +622,13 @@ const BookingPage = () => {
       if (appliedBundle === 'royal_telugu') return studio ? 14999 : 17999;
       if (appliedBundle === 'cinematic_duo') return studio ? 10800 : 13200;
       if (appliedBundle === 'lab_express') return studio ? 6500 : 8200;
+      if (formData.dynamicPackage && appliedBundle === (formData.dynamicPackage.id || formData.dynamicPackage._id || formData.dynamicPackage.tier)) {
+        const raw = String(formData.dynamicPackage.price || '').replace(/[^0-9]/g, '');
+        const num = parseInt(raw, 10);
+        if (!isNaN(num) && num > 0) {
+          return studio ? Math.round(num * 0.72) : num;
+        }
+      }
     }
 
     let total = 0;
@@ -603,9 +637,17 @@ const BookingPage = () => {
     if (formData.services.albumPrint) {
       let basePrice = studio ? 6800 : 9500;
       
-      const matchedSize = dynamicPricing.sizes.find(s => s.id === formData.albumSize || s.dimensions?.includes(formData.albumSize) || s.name?.includes(formData.albumSize));
+      const matchedSize = dynamicPricing.sizes.find(s =>
+        s.id === formData.albumSize ||
+        s._id === formData.albumSize ||
+        s.dimensions === formData.albumSize ||
+        s.dimensions?.includes(formData.albumSize) ||
+        s.name?.includes(formData.albumSize)
+      );
       if (matchedSize) {
-        basePrice = studio && matchedSize.studioBasePrice ? matchedSize.studioBasePrice : matchedSize.basePrice;
+        basePrice = studio && matchedSize.studioBasePrice !== undefined && matchedSize.studioBasePrice !== null
+          ? Number(matchedSize.studioBasePrice)
+          : Number(matchedSize.basePrice || (studio ? 6800 : 9500));
       }
 
       // Cover style surcharge
@@ -613,15 +655,24 @@ const BookingPage = () => {
       else if (formData.albumType === 'velvet') basePrice += (studio ? 700 : 1000);
       else if (formData.albumType === 'leather') basePrice += (studio ? 800 : 1200);
 
-      // Multiple sheet types calculation
-      const activeSheets = dynamicPricing.sheets.filter(s => formData.selectedSheetTypes.includes(s.id));
+      // Multiple sheet types calculation with arbitrary per-sheet rates
+      const activeSheets = dynamicPricing.sheets.filter(s =>
+        formData.selectedSheetTypes.includes(s.id) ||
+        formData.selectedSheetTypes.includes(s._id) ||
+        formData.selectedSheetTypes.some(sel => s.name?.toLowerCase().includes(String(sel).toLowerCase()))
+      );
       let avgSheetRate = studio ? 42 : 65;
       if (activeSheets.length > 0) {
-        const sumRates = activeSheets.reduce((acc, s) => acc + (studio && s.studioPricePerSheet ? s.studioPricePerSheet : s.pricePerSheet), 0);
+        const sumRates = activeSheets.reduce((acc, s) => {
+          const rate = studio && s.studioPricePerSheet !== undefined && s.studioPricePerSheet !== null
+            ? Number(s.studioPricePerSheet)
+            : Number(s.pricePerSheet || (studio ? 42 : 65));
+          return acc + rate;
+        }, 0);
         avgSheetRate = Math.round(sumRates / activeSheets.length);
       }
 
-      // Extra sheets above 30
+      // Extra sheets above 30 calculated at arbitrary sheet rate
       const extraSheets = Math.max(0, formData.pages - 30);
       total += basePrice + (extraSheets * avgSheetRate);
 
@@ -736,6 +787,11 @@ const BookingPage = () => {
         setStep(2);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (step === 2) {
+        const hasAnyService = Object.values(formData.services).some(Boolean);
+        if (!hasAnyService) {
+          alert(lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి లేదా తక్షణ బండిల్స్ మోడ్‌కి మారండి.' : 'Please select at least one service to continue, or switch to 1-Click Fast Bundles.');
+          return;
+        }
         setStep(3);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (step === 3) {
@@ -769,14 +825,19 @@ const BookingPage = () => {
         cinematic_duo: 'Cinematic Story & Karizma Duo',
         lab_express: 'Studio Fast-Track Printing Pack'
       };
-      items.push({
-        name: bundleNames[appliedBundle] || 'Curated Wedding Luxury Suite',
-        type: 'bundle',
-        details: appliedBundle === 'royal_telugu'
+      const bundleName = formData.dynamicPackage?.tier || bundleNames[appliedBundle] || 'Curated Wedding Luxury Suite';
+      const bundleDetails = formData.dynamicPackage
+        ? (Array.isArray(formData.dynamicPackage.features) ? formData.dynamicPackage.features.join(' • ') : formData.dynamicPackage.tier)
+        : (appliedBundle === 'royal_telugu'
           ? '12×36 Layflat Karizma (40 sheets, Velvet Touch) + 4K Teaser & 5 Reels + 50 Retouched Photos + Briefcase Box'
           : appliedBundle === 'cinematic_duo'
           ? '12×30 Layflat Album (30 sheets, Metallic Pearl) + 4K Teaser & 5 Reels + 30 Retouched Photos'
-          : '12×36 Layflat Flushmount (30 sheets, Metallic Pearl) + Velvet Briefcase Box + Express Delivery',
+          : '12×36 Layflat Flushmount (30 sheets, Metallic Pearl) + Velvet Briefcase Box + Express Delivery');
+
+      items.push({
+        name: bundleName,
+        type: 'bundle',
+        details: bundleDetails,
         price: calculateTotal(),
         specs: {
           bundleKey: appliedBundle,
@@ -789,11 +850,51 @@ const BookingPage = () => {
       });
     } else {
       if (formData.services.albumPrint) {
+        let albumItemPrice = isStudioMode ? 6800 : 9500;
+        const matchedSize = dynamicPricing.sizes.find(s =>
+          s.id === formData.albumSize ||
+          s._id === formData.albumSize ||
+          s.dimensions === formData.albumSize ||
+          s.dimensions?.includes(formData.albumSize) ||
+          s.name?.includes(formData.albumSize)
+        );
+        if (matchedSize) {
+          albumItemPrice = isStudioMode && matchedSize.studioBasePrice !== undefined && matchedSize.studioBasePrice !== null
+            ? Number(matchedSize.studioBasePrice)
+            : Number(matchedSize.basePrice || (isStudioMode ? 6800 : 9500));
+        }
+        if (formData.albumType === 'acrylic') albumItemPrice += (isStudioMode ? 1000 : 1500);
+        else if (formData.albumType === 'velvet') albumItemPrice += (isStudioMode ? 700 : 1000);
+        else if (formData.albumType === 'leather') albumItemPrice += (isStudioMode ? 800 : 1200);
+
+        const activeSheets = dynamicPricing.sheets.filter(s =>
+          formData.selectedSheetTypes.includes(s.id) ||
+          formData.selectedSheetTypes.includes(s._id) ||
+          formData.selectedSheetTypes.some(sel => s.name?.toLowerCase().includes(String(sel).toLowerCase()))
+        );
+        let avgSheetRate = isStudioMode ? 42 : 65;
+        if (activeSheets.length > 0) {
+          const sumRates = activeSheets.reduce((acc, s) => acc + (isStudioMode && s.studioPricePerSheet !== undefined && s.studioPricePerSheet !== null ? Number(s.studioPricePerSheet) : Number(s.pricePerSheet || (isStudioMode ? 42 : 65))), 0);
+          avgSheetRate = Math.round(sumRates / activeSheets.length);
+        }
+        const extraSheets = Math.max(0, formData.pages - 30);
+        albumItemPrice += (extraSheets * avgSheetRate);
+
+        if (formData.boxType === 'velvet_case') albumItemPrice += (isStudioMode ? 800 : 1200);
+        else if (formData.boxType === 'wooden_box') albumItemPrice += (isStudioMode ? 1200 : 1800);
+        else if (formData.boxType === 'acrylic_box') albumItemPrice += (isStudioMode ? 1500 : 2200);
+
+        if (formData.parentAlbums === 1) albumItemPrice += (isStudioMode ? 1800 : 2500);
+        else if (formData.parentAlbums === 2) albumItemPrice += (isStudioMode ? 3200 : 4500);
+
+        const sheetNames = activeSheets.map(s => s.name).filter(Boolean);
+        const sheetDisplay = sheetNames.length > 0 ? sheetNames.join(' + ') : formData.selectedSheetTypes.join(' + ');
+
         items.push({
-          name: `Handcrafted Album (${formData.albumSize} • ${formData.albumType})`,
+          name: `Handcrafted Album (${matchedSize?.name || formData.albumSize} • ${formData.albumType})`,
           type: 'album',
-          details: `${formData.pages} Sheets (${formData.selectedSheetTypes.join(' + ')} finishes) | Box: ${formData.boxType}${formData.parentAlbums > 0 ? ` | ${formData.parentAlbums} Mini Parent Album(s)` : ''}`,
-          price: isStudioMode ? 6800 : 9500,
+          details: `${formData.pages} Sheets (${sheetDisplay} @ ₹${avgSheetRate}/sheet) | Box: ${formData.boxType}${formData.parentAlbums > 0 ? ` | ${formData.parentAlbums} Mini Parent Album(s)` : ''}`,
+          price: albumItemPrice,
           specs: {
             size: formData.albumSize,
             cover: formData.albumType,
@@ -1313,6 +1414,64 @@ const BookingPage = () => {
                       </button>
                     </div>
                   </div>
+
+                  {/* Dynamic Packages Configured by SysAdmin */}
+                  {dynamicPricing.packages && dynamicPricing.packages
+                    .filter(pkg => pkg.isActive !== false && (!pkg.b2bOrB2c || pkg.b2bOrB2c === (isStudioMode ? 'b2b' : 'b2c')))
+                    .map(pkg => {
+                      const isSelected = appliedBundle === (pkg.id || pkg._id || pkg.tier);
+                      return (
+                        <div
+                          key={pkg.id || pkg._id}
+                          onClick={() => applyDynamicPackage(pkg, false)}
+                          className={`luxury-bundle-card ${isSelected ? 'active' : ''}`}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="bundle-badge" style={{ borderColor: pkg.color || '#D4AF37', color: pkg.color || '#D4AF37' }}>
+                              {pkg.popular ? '⭐ Most Popular Suite' : (pkg.category ? pkg.category.toUpperCase() : 'CURATED SUITE')}
+                            </span>
+                            {pkg.priceType === 'starting_at' && <span className="bundle-savings">Starting Rate</span>}
+                          </div>
+                          <h4 className="text-lg font-bold text-white">{pkg.tier}</h4>
+                          <div className="text-xs text-gray-400 font-telugu mb-3">కస్టమ్ క్యూరేటెడ్ సూట్</div>
+
+                          <div className="flex items-baseline gap-2 mb-4">
+                            <span className="text-2xl font-black text-[#D4AF37]">{pkg.price}</span>
+                            {pkg.priceMax && <span className="text-sm text-gray-400 font-medium">to {pkg.priceMax}</span>}
+                            {pkg.suffix && <span className="text-xs text-gray-500">{pkg.suffix}</span>}
+                          </div>
+
+                          {pkg.features && Array.isArray(pkg.features) && (
+                            <ul className="text-xs text-gray-300 space-y-2 mb-6">
+                              {pkg.features.map((f, fi) => (
+                                <li key={fi} className="flex items-start gap-2">
+                                  <Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" />
+                                  <span>{f}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          <div className="space-y-2">
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); applyDynamicPackage(pkg, true); }}
+                              className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
+                            >
+                              <span>Select Suite & Continue</span>
+                              <ArrowRight size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); applyDynamicPackage(pkg, false); }}
+                              className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
+                            >
+                              Customize Options in Builder ✏️
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
 
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center flex-wrap gap-2">
@@ -1724,6 +1883,57 @@ const BookingPage = () => {
                   </p>
                 </div>
 
+                {/* Empty State Guard if user deselected all services */}
+                {!Object.values(formData.services).some(Boolean) && (
+                  <div className="p-8 sm:p-10 rounded-3xl bg-black/70 border border-[#D4AF37]/30 text-center my-6 space-y-4 shadow-[0_0_35px_rgba(212,175,55,0.15)]">
+                    <div className="w-16 h-16 rounded-full bg-[#D4AF37]/15 border-2 border-[#D4AF37] flex items-center justify-center mx-auto text-[#D4AF37]">
+                      <Layers size={32} />
+                    </div>
+                    <h4 className="text-2xl font-bold text-white font-serif">
+                      {lang === 'TE' ? 'ప్రస్తుతం ఏ సర్వీసు ఎంపిక చేయలేదు' : 'No Services Selected Yet'}
+                    </h4>
+                    <p className="text-sm text-gray-400 max-w-lg mx-auto">
+                      {lang === 'TE'
+                        ? 'దయచేసి కింద ఇవ్వబడిన బటన్లతో సర్వీసులను ఎంచుకోండి లేదా తక్షణ బండిల్స్ మోడ్‌కి మారండి.'
+                        : 'Select one or more services below to configure, or switch to 1-Click Fast Bundles.'}
+                    </p>
+                    <div className="flex justify-center gap-3 flex-wrap pt-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleServiceCategory('albumPrint')}
+                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 border border-white/20 transition"
+                      >
+                        <BookOpen size={16} className="text-[#D4AF37]" />
+                        + Add Album Printing
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleServiceCategory('videoEdit')}
+                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 border border-white/20 transition"
+                      >
+                        <Film size={16} className="text-[#D4AF37]" />
+                        + Add Video Editing
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleServiceCategory('photoEdit')}
+                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 border border-white/20 transition"
+                      >
+                        <Palette size={16} className="text-[#D4AF37]" />
+                        + Add Photo Retouching
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setExperienceMode('bundles'); setStep(1); }}
+                        className="px-5 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs flex items-center gap-2 shadow-lg transition"
+                      >
+                        <Sparkles size={16} />
+                        Switch to 1-Click Fast Bundles
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* 1. ALBUM CONFIGURATOR */}
                 {formData.services.albumPrint && (
                   <div className="dynamic-config-section">
@@ -1813,32 +2023,39 @@ const BookingPage = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                           {filteredSizes.map(sz => {
                             const szBase = isStudioMode && sz.studioBasePrice ? sz.studioBasePrice : sz.basePrice;
-                            const isSelected = formData.albumSize === sz.id || formData.albumSize === sz.dimensions || formData.albumSize.includes(sz.id);
+                            const isSelected = formData.albumSize === sz.id || formData.albumSize === sz._id || formData.albumSize === sz.dimensions || (formData.albumSize && sz.dimensions && formData.albumSize.includes(sz.dimensions)) || (formData.albumSize && sz.id && formData.albumSize.includes(sz.id));
 
                             return (
                               <div
-                                key={sz.id}
-                                onClick={() => setFormData(p => ({ ...p, albumSize: sz.id }))}
+                                key={sz.id || sz._id}
+                                onClick={() => setFormData(p => ({ ...p, albumSize: sz.id || sz._id }))}
                                 className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
                                   isSelected
                                     ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.25)]'
                                     : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
                                 }`}
                               >
-                                <div className="flex justify-between items-start mb-1">
-                                  <span className="font-bold text-xs text-white">{sz.name}</span>
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-white/10 text-gray-300">
+                                <div className="flex justify-between items-start mb-1 gap-2">
+                                  <div>
+                                    <span className="font-bold text-xs text-white block">{sz.name}</span>
+                                    {sz.popular && (
+                                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] bg-[#D4AF37]/25 text-[#D4AF37] px-2 py-0.5 rounded-full font-bold border border-[#D4AF37]/40">
+                                        ⭐ Most Popular
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-white/10 text-gray-300 shrink-0">
                                     {sz.orientation === 'portrait' ? '↕️ Port' : '↔️ Land'}
                                   </span>
                                 </div>
                                 {sz.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu">{sz.telugu}</div>}
                                 <div className="flex justify-between items-baseline mt-2 pt-1 border-t border-white/5">
                                   <span className="text-xs text-[#D4AF37] font-mono font-bold">
-                                    ₹{szBase.toLocaleString('en-IN')}
+                                    ₹{Number(szBase).toLocaleString('en-IN')}
                                   </span>
                                   {isStudioMode && sz.basePrice > szBase && (
                                     <span className="text-[10px] text-gray-500 line-through">
-                                      ₹{sz.basePrice.toLocaleString('en-IN')}
+                                      ₹{Number(sz.basePrice).toLocaleString('en-IN')}
                                     </span>
                                   )}
                                 </div>
@@ -1865,20 +2082,28 @@ const BookingPage = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                           {dynamicPricing.sheets.map(sht => {
                             const shtRate = isStudioMode && sht.studioPricePerSheet ? sht.studioPricePerSheet : sht.pricePerSheet;
-                            const isSelected = formData.selectedSheetTypes.includes(sht.id);
+                            const isSelected = formData.selectedSheetTypes.includes(sht.id) || formData.selectedSheetTypes.includes(sht._id) || (sht.name && formData.selectedSheetTypes.some(st => sht.name.toLowerCase().includes(String(st).toLowerCase())));
 
                             return (
                               <div
-                                key={sht.id}
-                                onClick={() => toggleSheetType(sht.id)}
+                                key={sht.id || sht._id}
+                                onClick={() => toggleSheetType(sht.id || sht._id)}
                                 className={`service-check-card ${isSelected ? 'checked' : ''}`}
                               >
                                 <div className="service-checkbox-circle">
                                   {isSelected && <Check size={14} />}
                                 </div>
                                 <div className="flex-1">
-                                  <h5 className="font-bold text-xs text-white">{sht.name}</h5>
-                                  <div className="text-xs font-mono font-bold text-[#D4AF37] mt-0.5">₹{shtRate} / sheet</div>
+                                  <div className="flex items-start justify-between gap-1">
+                                    <h5 className="font-bold text-xs text-white">{sht.name}</h5>
+                                    {sht.popular && (
+                                      <span className="text-[10px] bg-[#D4AF37]/25 text-[#D4AF37] px-2 py-0.5 rounded-full font-bold border border-[#D4AF37]/40 shrink-0">
+                                        ⭐ Most Popular
+                                      </span>
+                                    )}
+                                  </div>
+                                  {sht.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>}
+                                  <div className="text-xs font-mono font-bold text-[#D4AF37] mt-1">₹{shtRate} / sheet</div>
                                   <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note || sht.description}</div>
                                 </div>
                               </div>
