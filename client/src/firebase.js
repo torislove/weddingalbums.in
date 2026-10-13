@@ -175,14 +175,24 @@ export const addAlbumComment = async (albumId, commentData) => {
 
 // 5. Firebase Analytics
 export let analytics = null;
-if (typeof window !== "undefined") {
-  isAnalyticsSupported().then((supported) => {
-    if (supported) {
-      analytics = getAnalytics(app);
-    }
-  }).catch((err) => {
-    console.warn("Firebase Analytics not supported or blocked:", err);
-  });
+if (typeof window !== "undefined" && window.location && !window.location.protocol.startsWith('chrome-extension')) {
+  try {
+    isAnalyticsSupported()
+      .then((supported) => {
+        if (supported) {
+          try {
+            analytics = getAnalytics(app);
+          } catch (_) {
+            // Suppress error in unsupported environments
+          }
+        }
+      })
+      .catch(() => {
+        // Analytics not supported in this environment
+      });
+  } catch (_) {
+    // Unsupported environment
+  }
 }
 
 export const logAnalyticsEvent = (eventName, params = {}) => {
