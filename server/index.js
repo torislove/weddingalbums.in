@@ -103,6 +103,33 @@ app.use(async (req, res, next) => {
 });
 
 // =======================
+// SYSTEM HEALTH & DIAGNOSTICS
+// =======================
+app.get(['/api/health', '/health'], async (req, res) => {
+  try {
+    const isDbReady = Boolean(dbReadyPromise);
+    res.json({
+      status: 'ok',
+      uptime: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString(),
+      service: 'weddingalbums-api',
+      environment: process.env.NODE_ENV || 'development',
+      port: PORT,
+      database: {
+        status: isDbReady ? 'connected' : 'initializing',
+        engine: 'postgresql-hybrid'
+      }
+    });
+  } catch (err) {
+    res.status(503).json({
+      status: 'error',
+      error: err.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// =======================
 // MOUNT MODULAR ROUTES
 // =======================
 app.use('/api/auth', authRouter);
