@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Phone, User, Info } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { X, Calendar, Phone, User, Info, Sparkles } from 'lucide-react';
+import { useContent } from '../context/ContentContext';
 import './LeadCaptureModal.css';
 
 const LeadCaptureModal = () => {
+  const location = useLocation();
+  const { content } = useContent();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -11,17 +15,24 @@ const LeadCaptureModal = () => {
     eventType: 'Wedding'
   });
 
+  // Suppress completely on booking, checkout or client portal
+  const isExcluded = location.pathname.startsWith('/order') || 
+                     location.pathname.startsWith('/booking') || 
+                     location.pathname.startsWith('/checkout') ||
+                     location.pathname.startsWith('/client');
+
   useEffect(() => {
-    // Show modal after 45 seconds of engagement
+    if (isExcluded) return;
+
+    // Show modal after 60 seconds of passive browsing
     const timer = setTimeout(() => {
-      // Check if user hasn't already closed it in a previous session
-      if (!sessionStorage.getItem('leadModalClosed')) {
+      if (!sessionStorage.getItem('leadModalClosed') && !isExcluded) {
         setIsOpen(true);
       }
-    }, 45000);
+    }, 60000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isExcluded]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -30,12 +41,14 @@ const LeadCaptureModal = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const settings = content?.global?.siteSettings || {};
+    const footerData = content?.global?.footer || {};
+    const rawPhone = settings.whatsapp || settings.phone || footerData.phone || '919876543210';
+    const cleanPhone = String(rawPhone).replace(/[^0-9]/g, '') || '919876543210';
+
+    const message = `నమస్కారం! నేను వెడ్డింగ్ ఆల్బమ్ కొటేషన్ కోసం వివరాలు పంపిస్తున్నాను:%0A%0A*పేరు:* ${formData.name}%0A*ఫోన్:* ${formData.phone}%0A*ఈవెంట్ తేదీ:* ${formData.date}%0A*ఈవెంట్ రకం:* ${formData.eventType}`;
     
-    // Format message for WhatsApp
-    const message = `Hello! I am looking for a quote.%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Date:* ${formData.date}%0A*Event:* ${formData.eventType}`;
-    
-    // Redirect to WhatsApp
-    window.open(`https://wa.me/910000000000?text=${message}`, '_blank');
+    window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank');
     handleClose();
   };
 
@@ -43,7 +56,7 @@ const LeadCaptureModal = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || isExcluded) return null;
 
   return (
     <div className="modal-overlay" onClick={handleClose}>

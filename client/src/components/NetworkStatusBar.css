@@ -1,0 +1,52 @@
+.network-status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999999;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  animation: slideDown 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+.network-status-bar.offline {
+  background: linear-gradient(90deg, #780016 0%, #991b1b 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(120, 0, 22, 0.5);
+}
+
+.network-status-bar.reconnected {
+  background: linear-gradient(90deg, #065f46 0%, #059669 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.5);
+}
+
+.network-status-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 900px;
+}
+
+.network-icon.pulse {
+  animation: netPulse 1.5s infinite;
+}
+
+@keyframes netPulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}

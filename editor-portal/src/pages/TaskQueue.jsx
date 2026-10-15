@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { DownloadCloud, UploadCloud, CheckCircle, Clock, AlertCircle, RefreshCw, ExternalLink } from 'lucide-react';
 import { API } from '../apiConfig';
 
+import { useToast } from '../context/ToastContext';
+
 const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
+  const toast = useToast();
   const [availableJobs, setAvailableJobs] = useState([]);
   const [myJobs, setMyJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +35,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
       }
     } catch (err) {
       console.error('Failed to fetch editor jobs', err);
+      toast.error('Could not connect to task engine. Check your connection.');
     } finally {
       setLoading(false);
     }
@@ -52,21 +56,21 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
         }
       });
       if (res.ok) {
-        alert('Job claimed successfully! Moved to your In-Progress workspace.');
+        toast.success('Job claimed successfully! Moved to your In-Progress workspace.', 'Job Claimed');
         fetchJobs();
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || 'Failed to claim job');
+        toast.error(data.error || 'Failed to claim job', 'Claim Error');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error claiming job');
+      toast.error('Network error while claiming job', 'Connection Error');
     }
   };
 
   const handleSubmitWork = async (e) => {
     e.preventDefault();
-    if (!workLink) return alert('Please enter your deliverable Drive / Cloud link');
+    if (!workLink) return toast.error('Please enter your deliverable Drive / Cloud link', 'Link Required');
     
     setSubmitting(true);
     try {
@@ -80,18 +84,18 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
         body: JSON.stringify({ workLink, notes })
       });
       if (res.ok) {
-        alert('Work submitted for Quality Control (QC)!');
+        toast.success('Work submitted for Quality Control (QC)!', 'Work Submitted');
         setSubmitJobId(null);
         setWorkLink('');
         setNotes('');
         fetchJobs();
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || 'Failed to submit work');
+        toast.error(data.error || 'Failed to submit work', 'Submission Error');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error submitting work');
+      toast.error('Network error submitting work', 'Connection Error');
     } finally {
       setSubmitting(false);
     }

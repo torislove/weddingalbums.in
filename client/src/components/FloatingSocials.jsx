@@ -1,30 +1,40 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useContent } from '../context/ContentContext';
 import { Youtube, Instagram, MessageCircle } from 'lucide-react';
 import './FloatingSocials.css';
 
 const FloatingSocials = () => {
+  const location = useLocation();
   const { content } = useContent();
-  const settings = content?.global?.siteSettings || {
-    whatsapp: '910000000000',
-    instagram: '#',
-    youtube: '#'
-  };
 
-  const whatsappMessage = "నమస్కారం! మీ album/editing services గురించి అడగాలనుకుంటున్నాను";
-  const whatsappUrl = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+  // Hide on order/booking/checkout/portal pages so it never blocks action buttons
+  const isExcluded = location.pathname.startsWith('/order') || 
+                     location.pathname.startsWith('/booking') || 
+                     location.pathname.startsWith('/checkout') ||
+                     location.pathname.startsWith('/client');
+
+  if (isExcluded) return null;
+
+  const settings = content?.global?.siteSettings || {};
+  const footerData = content?.global?.footer || {};
+  const rawPhone = settings.whatsapp || settings.phone || footerData.phone || '919876543210';
+  const cleanPhone = String(rawPhone).replace(/[^0-9]/g, '') || '919876543210';
+
+  const whatsappMessage = "నమస్కారం! మీ wedding album & video editing services గురించి ఆర్డర్ / కొటేషన్ వివరాలు తెలుసుకోవాలనుకుంటున్నాను.";
+  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
-    <div className="floating-socials-container">
+    <div className="floating-socials-container" aria-label="Social and WhatsApp contact">
       {settings.youtube && settings.youtube !== '#' && (
         <a href={settings.youtube} className="floating-btn youtube-btn" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-          <Youtube size={24} />
+          <Youtube size={22} />
         </a>
       )}
       
       {settings.instagram && settings.instagram !== '#' && (
         <a href={settings.instagram} className="floating-btn instagram-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-          <Instagram size={24} />
+          <Instagram size={22} />
         </a>
       )}
 
@@ -32,7 +42,7 @@ const FloatingSocials = () => {
         <div className="pulse-ring"></div>
         <div className="pulse-ring delay"></div>
         <div className="wa-icon-container">
-          <MessageCircle size={28} fill="currentColor" />
+          <MessageCircle size={26} fill="currentColor" />
         </div>
         <span className="wa-text">వాట్సాప్ లో చాట్ చేయండి</span>
       </a>

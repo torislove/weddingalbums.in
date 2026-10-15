@@ -60,30 +60,34 @@ const ProtectedPage = ({ children, title, roles = ['editor', 'admin'] }) => (
   </ProtectedRoute>
 );
 
+import { ToastProvider } from './context/ToastContext';
+
 function App() {
   return (
     <AuthProvider requiredRole="editor">
-      <Router>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<EditorLanding />} />
-            <Route path="/login" element={<EditorLogin />} />
-            <Route path="/signup" element={<EditorRegister />} />
+      <ToastProvider>
+        <Router>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<EditorLanding />} />
+              <Route path="/login" element={<EditorLogin />} />
+              <Route path="/signup" element={<EditorRegister />} />
 
-            {/* Protected routes */}
-            <Route path="/dashboard" element={<ProtectedPage title="Dashboard"><EditorDashboard /></ProtectedPage>} />
-            <Route path="/photo"     element={<ProtectedPage title="Photo Jobs"><TaskQueue title="Photo" description="Culling, retouching, and color grading jobs." icon={Scissors} color="#3b82f6" type="Photo" /></ProtectedPage>} />
-            <Route path="/video"     element={<ProtectedPage title="Video Jobs"><TaskQueue title="Video" description="Teasers, highlight reels, and full wedding films." icon={Video} color="#ec4899" type="Video" /></ProtectedPage>} />
-            <Route path="/album"     element={<ProtectedPage title="Album Jobs"><TaskQueue title="Album" description="Layout designs for 12x18 and standard albums." icon={BookOpen} color="#eab308" type="Album" /></ProtectedPage>} />
-            <Route path="/earnings"  element={<ProtectedPage title="Earnings"><Earnings /></ProtectedPage>} />
-            <Route path="/rating"    element={<ProtectedPage title="My Ratings"><Rating /></ProtectedPage>} />
+              {/* Protected routes */}
+              <Route path="/dashboard" element={<ProtectedPage title="Dashboard"><EditorDashboard /></ProtectedPage>} />
+              <Route path="/photo"     element={<ProtectedPage title="Photo Jobs"><TaskQueue title="Photo" description="Culling, retouching, and color grading jobs." icon={Scissors} color="#3b82f6" type="Photo" /></ProtectedPage>} />
+              <Route path="/video"     element={<ProtectedPage title="Video Jobs"><TaskQueue title="Video" description="Teasers, highlight reels, and full wedding films." icon={Video} color="#ec4899" type="Video" /></ProtectedPage>} />
+              <Route path="/album"     element={<ProtectedPage title="Album Jobs"><TaskQueue title="Album" description="Layout designs for 12x18 and standard albums." icon={BookOpen} color="#eab308" type="Album" /></ProtectedPage>} />
+              <Route path="/earnings"  element={<ProtectedPage title="Earnings"><Earnings /></ProtectedPage>} />
+              <Route path="/rating"    element={<ProtectedPage title="My Ratings"><Rating /></ProtectedPage>} />
 
-            {/* Fallback */}
-            <Route path="*" element={<ProtectedPage title=""><div className="page-content"><h2>Page Not Found</h2></div></ProtectedPage>} />
-          </Routes>
-        </Suspense>
-      </Router>
+              {/* Fallback */}
+              <Route path="*" element={<ProtectedPage title=""><div className="page-content"><h2>Page Not Found</h2></div></ProtectedPage>} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </ToastProvider>
     </AuthProvider>
   );
 }

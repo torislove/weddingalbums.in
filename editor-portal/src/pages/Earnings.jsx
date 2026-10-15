@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { IndianRupee, TrendingUp, Download, ArrowUpRight, CheckCircle, BarChart3, CreditCard, RefreshCw } from 'lucide-react';
 import { API } from '../apiConfig';
 
+import { useToast } from '../context/ToastContext';
+
 const Earnings = () => {
+  const toast = useToast();
   const [stats, setStats] = useState({
     walletBalance: 0,
     totalEarnings: 0,
@@ -40,9 +43,9 @@ const Earnings = () => {
 
   const handleWithdraw = async () => {
     const amt = Number(withdrawAmount);
-    if (!amt || amt <= 0 || !upiId) return alert('Please enter a valid withdrawal amount and UPI ID');
+    if (!amt || amt <= 0 || !upiId) return toast.error('Please enter a valid withdrawal amount and UPI ID', 'Validation Error');
     if (amt > (stats.walletBalance || 0)) {
-      return alert(`Insufficient funds. Your available balance is ₹${stats.walletBalance || 0}`);
+      return toast.error(`Insufficient funds. Your available balance is ₹${stats.walletBalance || 0}`, 'Insufficient Balance');
     }
 
     setSubmitting(true);
@@ -58,14 +61,15 @@ const Earnings = () => {
       });
       const data = await res.json();
       if (res.ok) {
+        toast.success('Payout request submitted to Escrow! Funds will be transferred upon admin approval.', 'Payout Requested');
         setMsg('Payout request submitted to Escrow! Funds will be transferred upon admin approval.');
         setWithdrawAmount('');
         fetchStats();
       } else {
-        alert(data.error || 'Failed to request payout');
+        toast.error(data.error || 'Failed to request payout', 'Payout Error');
       }
     } catch (err) {
-      alert('Network error while requesting payout');
+      toast.error('Network error while requesting payout', 'Connection Error');
     } finally {
       setSubmitting(false);
     }

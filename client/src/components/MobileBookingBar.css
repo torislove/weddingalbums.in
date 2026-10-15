@@ -44,17 +44,27 @@
 @media (max-width: 768px) {
   .mobile-booking-bar {
     display: flex;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 8, 6, 0.94);
+    border-top: 1px solid rgba(212, 175, 55, 0.28);
+    padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
   }
   
   .mobile-bar-btn {
     padding: 0.85rem 1rem;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
+    min-height: 48px;
+    letter-spacing: 0.2px;
+  }
+  
+  .mobile-bar-btn:active {
+    transform: scale(0.98);
   }
   
   /* Add padding to bottom of app so content doesn't hide behind the bar */
   body {
-    padding-bottom: 60px;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 }

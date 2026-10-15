@@ -30,6 +30,9 @@ import PhotoCulling from './pages/PhotoCulling';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { ToastProvider } from './context/ToastContext';
+import ErrorBoundary from './components/ErrorBoundary';
+import NetworkStatusBar from './components/NetworkStatusBar';
 import CustomCursor from './components/CustomCursor';
 import PushNotification from './components/PushNotification';
 import LeadCaptureModal from './components/LeadCaptureModal';
@@ -56,6 +59,7 @@ function AppContent() {
 
   return (
     <>
+      <NetworkStatusBar />
       {!isIframe && <ScrollToTop />}
       {!isClientDashboard && <CustomCursor />}
       <div className={`app-container ${isClientDashboard ? 'portal-mode' : ''} ${isAuthPage ? 'auth-mode' : ''}`}>
@@ -117,15 +121,19 @@ function AppContent() {
 
 function App() {
   return (
-    <ContentProvider>
-      <AuthProvider>
-        <CartProvider>
-          <Router>
-            <AppContent />
-          </Router>
-        </CartProvider>
-      </AuthProvider>
-    </ContentProvider>
+    <ErrorBoundary>
+      <ContentProvider>
+        <AuthProvider>
+          <CartProvider>
+            <ToastProvider>
+              <Router>
+                <AppContent />
+              </Router>
+            </ToastProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ContentProvider>
+    </ErrorBoundary>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { resilientFetch } from '../utils/apiClient';
 
 const ContentContext = createContext(null);
 
@@ -36,10 +37,10 @@ export const ContentProvider = ({ children }) => {
 
     let resolvedContent = null;
 
-    // 1. First Tier: Fetch dynamic published content from Server API
+    // 1. First Tier: Fetch dynamic published content from Server API with resilient retries
     try {
-      const res = await fetch('/api/content', { cache: 'no-store' });
-      if (res.ok) {
+      const res = await resilientFetch('/api/content', { cache: 'no-store' }, 2, 600);
+      if (res && res.ok) {
         const data = await res.json();
         if (isValidContent(data)) {
           resolvedContent = data;
