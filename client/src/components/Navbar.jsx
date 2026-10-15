@@ -179,6 +179,16 @@ const Navbar = () => {
               <Link to={ctaLink} className="btn btn-gold-3d" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
                 {ctaText}
               </Link>
+              <a 
+                href={`https://wa.me/${String(content?.global?.siteSettings?.whatsapp || content?.global?.siteSettings?.phone || '919876543210').replace(/[^0-9]/g, '')}?text=${encodeURIComponent("నమస్కారం! నేను వెడ్డింగ్ ఆల్బమ్ డిజైన్ & వీడియో ఎడిటింగ్ సర్వీసెస్ గురించి అడగాలనుకుంటున్నాను.")}`}
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="btn btn-outline" 
+                style={{ justifyContent: 'center', padding: '0.8rem', borderColor: 'rgba(37,211,102,0.4)', color: '#25D366', background: 'rgba(37,211,102,0.06)' }}
+                onClick={() => setMenuOpen(false)}
+              >
+                WhatsApp Concierge 💬
+              </a>
             </div>
           </div>
         </div>
