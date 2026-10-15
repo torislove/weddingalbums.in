@@ -11,7 +11,7 @@ const ClientWallet = () => {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('clientToken');
     if (!token) return;
     fetch(`${API}/api/client/profile`, { headers: { 'Authorization': `Bearer ${token}` } })
       .then(r => r.ok ? r.json() : null)
@@ -87,7 +87,7 @@ const ClientWallet = () => {
       </div>
 
       {/* Transaction History */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '24px' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: 'clamp(14px, 3vw, 24px)' }}>
         <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem' }}>Recent Wallet Activity</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>

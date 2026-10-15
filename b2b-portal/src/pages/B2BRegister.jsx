@@ -93,6 +93,7 @@ const B2BRegister = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('b2bToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
@@ -113,18 +114,18 @@ const B2BRegister = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
-      <header style={{ padding: '2rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)' }}>
+      <header style={{ padding: '1.5rem 1rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)' }}>
         <Link to="/">
-          <Logo size={45} />
+          <Logo size={40} />
         </Link>
       </header>
       
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem' }}>
-        <div className="glass-panel fade-in" style={{ maxWidth: '800px', width: '100%', padding: '3rem', borderRadius: '24px' }}>
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem 1rem' }}>
+        <div className="glass-panel fade-in" style={{ maxWidth: '800px', width: '100%', padding: 'clamp(1.25rem, 4vw, 3rem)', borderRadius: '24px', boxSizing: 'border-box' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Partner Registration</h2>
-            <p style={{ color: 'var(--text-muted)' }}>Step {step} of 5: {
+            <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem' }}>Partner Registration</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Step {step} of 5: {
               step === 1 ? "Studio Identity" : 
               step === 2 ? "Location & Region" :
               step === 3 ? "Proofs & Compliance" :
@@ -136,7 +137,7 @@ const B2BRegister = () => {
               {[1, 2, 3, 4, 5].map(i => (
                 <div key={i} style={{ 
                   height: '6px', 
-                  width: '40px', 
+                  width: 'clamp(28px, 6vw, 40px)', 
                   borderRadius: '3px', 
                   background: i <= step ? 'var(--gold-primary)' : 'var(--bg-tertiary)',
                   transition: 'background 0.3s ease'
@@ -150,7 +151,7 @@ const B2BRegister = () => {
             {/* STEP 1 */}
             {step === 1 && (
               <div className="fade-in" style={{ display: 'grid', gap: '1.5rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Studio Name</label>
                     <div className="input-group">
@@ -167,7 +168,7 @@ const B2BRegister = () => {
                   </div>
                 </div>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Email Address</label>
                     <input type="email" className="form-control" style={{ paddingLeft: '1rem' }} placeholder="studio@example.com" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
@@ -180,7 +181,7 @@ const B2BRegister = () => {
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Studio Type</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '1rem' }}>
                     {['Solo Photographer', 'Small Studio', 'Large Wedding House'].map(type => (
                       <div 
                         key={type}
@@ -206,19 +207,19 @@ const B2BRegister = () => {
             {/* STEP 2 */}
             {step === 2 && (
               <div className="fade-in" style={{ display: 'grid', gap: '1.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <label style={{ color: 'var(--text-secondary)', margin: 0 }}>Location Details</label>
-                  <button type="button" onClick={handleAutoLocation} disabled={loadingLocation} style={{ background: 'rgba(212, 175, 55, 0.1)', border: '1px solid var(--gold-primary)', color: 'var(--gold-primary)', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem' }}>
+                  <button type="button" onClick={handleAutoLocation} disabled={loadingLocation} style={{ background: 'rgba(212, 175, 55, 0.1)', border: '1px solid var(--gold-primary)', color: 'var(--gold-primary)', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem' }}>
                     <MapPin size={14} />
                     {loadingLocation ? 'Detecting...' : 'Auto-detect Location'}
                   </button>
                 </div>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem' }}>
                   <input type="text" className="form-control" style={{ paddingLeft: '1rem' }} placeholder="City" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} required />
                   <input type="text" className="form-control" style={{ paddingLeft: '1rem' }} placeholder="State" value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} required />
                 </div>
-                <input type="text" className="form-control" style={{ paddingLeft: '1rem', width: '50%' }} placeholder="Pincode" value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} required />
+                <input type="text" className="form-control" style={{ paddingLeft: '1rem', width: '100%', maxWidth: '280px' }} placeholder="Pincode" value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} required />
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Region Speciality</label>
@@ -239,7 +240,7 @@ const B2BRegister = () => {
               <div className="fade-in" style={{ display: 'grid', gap: '1.5rem' }}>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Upload compliance documents to help us verify your studio. Files are strictly confidential.</p>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>GST Number (Optional)</label>
                     <input type="text" className="form-control" style={{ paddingLeft: '1rem' }} placeholder="e.g. 36AABCU9603R1ZM" value={formData.gst} onChange={e => setFormData({...formData, gst: e.target.value})} />
@@ -252,7 +253,7 @@ const B2BRegister = () => {
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Studio Registration / Address Proof</label>
-                  <div style={{ border: '2px dashed var(--glass-border)', borderRadius: '12px', padding: '2rem', textAlign: 'center', background: 'var(--bg-tertiary)', cursor: 'pointer' }}>
+                  <div style={{ border: '2px dashed var(--glass-border)', borderRadius: '12px', padding: '2rem 1rem', textAlign: 'center', background: 'var(--bg-tertiary)', cursor: 'pointer' }}>
                     <Upload size={32} color="var(--gold-primary)" style={{ margin: '0 auto 1rem' }} />
                     <p style={{ color: '#fff', marginBottom: '0.5rem' }}>Click to upload Aadhar PDF or GST Certificate</p>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Max file size: 5MB</p>
@@ -275,7 +276,7 @@ const B2BRegister = () => {
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Average Events per Month</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 80px), 1fr))', gap: '1rem' }}>
                     {['< 5', '5-15', '15+'].map(num => (
                       <div 
                         key={num}
@@ -298,7 +299,7 @@ const B2BRegister = () => {
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Do you currently have a post-production team?</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 100px), 1fr))', gap: '1rem' }}>
                     {['Yes', 'No'].map(ans => (
                       <div 
                         key={ans}
@@ -326,7 +327,7 @@ const B2BRegister = () => {
               <div className="fade-in">
                 <div style={{ background: 'rgba(212, 175, 55, 0.05)', border: '1px solid var(--gold-primary)', borderRadius: '12px', padding: '1.5rem', marginBottom: '2rem' }}>
                   <h3 style={{ color: 'var(--gold-primary)', marginBottom: '1rem', borderBottom: '1px solid rgba(212,175,55,0.2)', paddingBottom: '0.5rem' }}>Summary</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.95rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1rem', fontSize: '0.95rem' }}>
                     <div>
                       <p style={{ color: 'var(--text-muted)', margin: '0 0 0.2rem' }}>Studio Name</p>
                       <p style={{ color: '#fff', margin: 0, fontWeight: 500 }}>{formData.studioName}</p>
@@ -362,23 +363,23 @@ const B2BRegister = () => {
             )}
 
             {/* Navigation Buttons */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
               {step > 1 ? (
-                <button type="button" onClick={handlePrev} className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button type="button" onClick={handlePrev} className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
                   <ChevronLeft size={18} /> Back
                 </button>
               ) : (
-                <button type="button" onClick={() => navigate('/login')} className="btn-outline">
+                <button type="button" onClick={() => navigate('/login')} className="btn-outline" style={{ cursor: 'pointer' }}>
                   Cancel
                 </button>
               )}
               
               {step < 5 ? (
-                <button type="button" onClick={handleNext} disabled={nextDisabled()} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: nextDisabled() ? 0.5 : 1 }}>
+                <button type="button" onClick={handleNext} disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', opacity: nextDisabled() ? 0.5 : 1, cursor: 'pointer' }}>
                   Next <ChevronRight size={18} />
                 </button>
               ) : (
-                <button type="submit" disabled={nextDisabled()} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', fontSize: '1.1rem', opacity: nextDisabled() ? 0.5 : 1 }}>
+                <button type="submit" disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', fontSize: '1.1rem', opacity: nextDisabled() ? 0.5 : 1, cursor: 'pointer' }}>
                   Submit Registration <CheckCircle size={20} />
                 </button>
               )}

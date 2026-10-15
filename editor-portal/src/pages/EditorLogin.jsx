@@ -104,6 +104,7 @@ const EditorLogin = () => {
           return;
         }
         localStorage.setItem('token', data.token);
+        localStorage.setItem('editorToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
@@ -130,6 +131,7 @@ const EditorLogin = () => {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('editorToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
@@ -185,7 +187,8 @@ const EditorLogin = () => {
           WebkitBackdropFilter: 'blur(30px)',
           border: '1px solid rgba(129,140,248,0.15)',
           borderRadius: '24px',
-          padding: '40px 36px',
+          padding: 'clamp(28px, 6vw, 40px) clamp(18px, 5vw, 36px)',
+          boxSizing: 'border-box',
           boxShadow: '0 40px 80px rgba(0,0,0,0.7), 0 0 40px rgba(129,140,248,0.05), inset 0 1px 0 rgba(129,140,248,0.1)',
         }}>
           {/* Tabs */}

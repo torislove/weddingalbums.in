@@ -19,8 +19,8 @@ const EditorDashboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem('token');
-        const headers = { 'Authorization': `Bearer ${token}` };
+        const token = localStorage.getItem('token') || localStorage.getItem('editorToken');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
         const [statsRes, jobsRes] = await Promise.all([
           fetch(`${API}/api/editor/stats`, { headers }),
@@ -44,19 +44,19 @@ const EditorDashboard = () => {
   }, []);
 
   return (
-    <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
       
       {/* Welcome Banner */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', padding: '1.5rem 2rem', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '16px', border: '1px solid rgba(99,102,241,0.2)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem', padding: 'clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 2rem)', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '16px', border: '1px solid rgba(99,102,241,0.2)' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', margin: '0 0 0.5rem 0' }}>
             Ready to create magic, <span style={{ color: 'var(--accent-primary)' }}>{user.name || 'Editor'}</span>?
           </h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.9rem' }}>
             <Star size={16} fill="var(--gold-primary)" color="var(--gold-primary)" /> Premium Creator (Rating: {stats.rating || 5.0}/5) • {stats.activeJobs || myJobs.length} Active Pipeline Jobs
           </p>
         </div>
-        <Link to="/photo" className="liquid-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 1.5rem', borderRadius: '8px' }}>
+        <Link to="/photo" className="liquid-btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 1.5rem', borderRadius: '8px', whiteSpace: 'nowrap' }}>
           <Search size={20} />
           Browse Open Jobs
         </Link>
@@ -107,10 +107,10 @@ const EditorDashboard = () => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '2rem' }}>
         
         {/* Active Queue Table */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
+        <div className="glass-panel" style={{ padding: 'clamp(1rem, 2vw, 1.5rem)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ margin: 0 }}>My Claimed Work Queue</h3>
             <Link to="/photo" style={{ color: 'var(--accent-primary)', fontSize: '0.9rem', textDecoration: 'none' }}>View Workspace</Link>
@@ -122,15 +122,15 @@ const EditorDashboard = () => {
             ) : myJobs.length === 0 ? (
               <div style={{ padding: '2.5rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>No active claimed jobs right now.</p>
-                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <Link to="/photo" className="btn-primary" style={{ textDecoration: 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>Browse Photo Jobs</Link>
                   <Link to="/video" className="btn-outline" style={{ textDecoration: 'none', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>Browse Video Jobs</Link>
                 </div>
               </div>
             ) : myJobs.map(job => (
-              <div key={job.id} style={{ padding: '1.25rem', background: 'var(--bg-tertiary)', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem', alignItems: 'center' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem' }}>
+              <div key={job.id} style={{ padding: '1.25rem', background: 'var(--bg-tertiary)', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div style={{ minWidth: '180px', flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
                     <span style={{ fontFamily: 'monospace', color: 'var(--accent-primary)', fontSize: '0.85rem' }}>#{String(job.id).substring(0,8)}</span>
                     <span className="badge" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                       {job.type || 'Photo'}

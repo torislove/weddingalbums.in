@@ -19,9 +19,9 @@ const Earnings = () => {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('editorToken');
       const res = await fetch(`${API}/api/editor/stats`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
       if (res.ok) {
         const data = await res.json();
@@ -47,12 +47,12 @@ const Earnings = () => {
 
     setSubmitting(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('editorToken');
       const res = await fetch(`${API}/api/editor/payout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify({ amount: amt, upi_id: upiId })
       });
@@ -72,14 +72,14 @@ const Earnings = () => {
   };
 
   return (
-    <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Earnings & Payouts</h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Track your creator income and withdraw escrow funds to your bank via UPI.</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem' }}>Earnings & Payouts</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>Track your creator income and withdraw escrow funds to your bank via UPI.</p>
         </div>
-        <button onClick={fetchStats} className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+        <button onClick={fetchStats} className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
           <RefreshCw size={16} className={loading ? "spin" : ""} /> Refresh Stats
         </button>
       </div>
@@ -90,11 +90,11 @@ const Earnings = () => {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem', marginBottom: '2.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
         
         <div style={{ display: 'grid', gap: '2rem' }}>
           {/* Main Earnings KPI */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
             <div className="glass-panel stat-card" style={{ padding: '2rem', borderTop: '4px solid var(--accent-success)' }}>
               <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
                 <IndianRupee size={28} color="var(--accent-success)" />

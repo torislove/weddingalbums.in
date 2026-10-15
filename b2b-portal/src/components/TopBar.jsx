@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Bell, ChevronDown, LogOut, User, Settings } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, User, Settings, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const TopBar = ({ title = '' }) => {
+const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,8 +20,21 @@ const TopBar = ({ title = '' }) => {
 
   return (
     <header className="topbar" style={{ position: 'relative' }}>
-      <div style={{ flex: 1 }}>
-        {title && <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)' }}>{title}</h1>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+        <button
+          onClick={onToggleSidebar}
+          className="mobile-hamburger-btn"
+          style={{
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '8px', width: '36px', height: '36px',
+            alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            color: 'var(--gold-primary)', flexShrink: 0
+          }}
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
+        </button>
+        {title && <h1 style={{ margin: 0, fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', fontWeight: '600', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</h1>}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>

@@ -457,6 +457,8 @@ const PortalLogin = () => {
                       className="cpl-input"
                       type="text"
                       name="otpCode"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       maxLength={6}
                       required
                       placeholder="Enter 6-digit OTP"
@@ -710,6 +712,8 @@ const PortalLogin = () => {
                     <input
                       className="cpl-input"
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       maxLength={6}
                       required
                       placeholder="Enter 6-digit code"

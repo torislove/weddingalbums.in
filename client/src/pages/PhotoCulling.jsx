@@ -67,7 +67,7 @@ const PhotoCulling = () => {
               <div className="results-box text-center">
                 <CheckCircle2 size={64} color="#34A853" style={{ marginBottom: '1rem' }} />
                 <h2>Culling Complete!</h2>
-                <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginTop: '2rem' }}>
+                <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))', gap: '1rem', marginTop: '2rem' }}>
                   <div className="stat-card" style={{ background: 'rgba(52, 168, 83, 0.1)', padding: '1rem', borderRadius: '8px' }}>
                     <h3 style={{ color: '#34A853' }}>{results.selected}</h3>
                     <p>Selected (Best)</p>

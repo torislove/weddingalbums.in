@@ -2,33 +2,61 @@ import React, { useState } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import { Search, Package, Truck, CheckCircle2, Clock, Printer } from 'lucide-react';
 
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+
 const OrderTracking = () => {
   const [orderId, setOrderId] = useState('');
   const [status, setStatus] = useState(null); // null | 'loading' | 'found' | 'error'
+  const [orderData, setOrderData] = useState(null);
 
-  const handleTrack = (e) => {
+  const handleTrack = async (e) => {
     e.preventDefault();
-    if (!orderId) return;
+    const cleanId = orderId.trim();
+    if (!cleanId) return;
     
     setStatus('loading');
     
-    // Mock API call
-    setTimeout(() => {
-      if (orderId.startsWith('ORD-')) {
+    try {
+      const res = await fetch(`${API}/api/orders/${cleanId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setOrderData(data);
+        setStatus('found');
+      } else if (cleanId.toUpperCase().startsWith('ORD-') || cleanId.toUpperCase().startsWith('WA-')) {
+        setOrderData(null);
         setStatus('found');
       } else {
         setStatus('error');
       }
-    }, 1500);
+    } catch {
+      if (cleanId.toUpperCase().startsWith('ORD-') || cleanId.toUpperCase().startsWith('WA-')) {
+        setOrderData(null);
+        setStatus('found');
+      } else {
+        setStatus('error');
+      }
+    }
   };
 
-  const steps = [
-    { title: 'Order Placed', desc: 'We received your specifications and media.', icon: Package, completed: true },
-    { title: 'Design & Proofing', desc: 'Our editors are working on the 3D layout.', icon: Clock, completed: true },
-    { title: 'Printing & Binding', desc: 'Your album is currently in the printing press.', icon: Printer, completed: true, active: true },
-    { title: 'Quality Check', desc: 'Final inspection of colors and binding.', icon: CheckCircle2, completed: false },
-    { title: 'Shipped', desc: 'Handed over to courier partner.', icon: Truck, completed: false },
-  ];
+  const getStepProgress = () => {
+    const rawStatus = (orderData?.status || 'In Progress').toLowerCase();
+    let currentIdx = 2; // Default to Printing
+    if (rawStatus.includes('deliver')) currentIdx = 4;
+    else if (rawStatus.includes('ship')) currentIdx = 3;
+    else if (rawStatus.includes('print')) currentIdx = 2;
+    else if (rawStatus.includes('proof') || rawStatus.includes('edit')) currentIdx = 1;
+    else if (rawStatus.includes('placed') || rawStatus.includes('confirm') || rawStatus.includes('pending')) currentIdx = 0;
+
+    return [
+      { title: 'Order Placed', desc: 'We received your specifications and media.', icon: Package, completed: currentIdx >= 0, active: currentIdx === 0 },
+      { title: 'Design & Proofing', desc: 'Our editors are working on the 3D layout.', icon: Clock, completed: currentIdx > 1, active: currentIdx === 1 },
+      { title: 'Printing & Binding', desc: 'Your album is currently in the printing press.', icon: Printer, completed: currentIdx > 2, active: currentIdx === 2 },
+      { title: 'Quality Check', desc: 'Final inspection of colors and binding.', icon: CheckCircle2, completed: currentIdx > 3, active: currentIdx === 3 },
+      { title: 'Shipped & Delivered', desc: 'Handed over to courier partner for delivery.', icon: Truck, completed: currentIdx === 4, active: currentIdx === 4 },
+    ];
+  };
+
+  const steps = getStepProgress();
 
   return (
     <div className="order-tracking-page" style={{ padding: '0 1.25rem 4rem', minHeight: '80vh' }}>
@@ -55,7 +83,7 @@ const OrderTracking = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ height: '52px', padding: '0 2rem', flexShrink: 0 }} disabled={status === 'loading'}>
+          <button type="submit" className="btn btn-primary" style={{ height: '52px', padding: '0 2rem', flex: '1 1 120px' }} disabled={status === 'loading'}>
             {status === 'loading' ? 'Searching...' : 'Track'}
           </button>
         </form>
@@ -67,13 +95,13 @@ const OrderTracking = () => {
         )}
 
         {status === 'found' && (
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 animate-slide-up">
-            <div className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-8 animate-slide-up">
+            <div className="flex flex-wrap justify-between items-start gap-4 border-b border-white/10 pb-6 mb-8">
               <div>
                 <p className="text-gray-400 mb-1">Order Details for</p>
                 <h2 className="text-2xl text-white font-bold">{orderId.toUpperCase()}</h2>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <span className="px-4 py-1 bg-[#D4AF37]/20 text-[#D4AF37] rounded-full text-sm font-medium border border-[#D4AF37]/30">
                   In Progress
                 </span>

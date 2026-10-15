@@ -102,26 +102,26 @@ const CalendarEditor = ({ adminState }) => {
         <div 
           key={day} 
           onClick={() => toggleBooking(dateStr)}
-          className={`relative p-3 border border-white/5 cursor-pointer transition-colors flex flex-col items-center justify-center aspect-square rounded-lg ${statusClass}`}
+          className={`relative p-1 sm:p-3 border border-white/5 cursor-pointer transition-colors flex flex-col items-center justify-center aspect-square rounded-lg ${statusClass}`}
         >
-          <span className="font-medium text-lg">{day}</span>
+          <span className="font-medium text-sm sm:text-lg">{day}</span>
           {bookedCount > 0 && (
-            <span className="text-[10px] mt-1 opacity-80">{bookedCount}/{availability.slotsPerDay} Booked</span>
+            <span className="text-[9px] sm:text-[10px] mt-0.5 sm:mt-1 opacity-80 text-center">{bookedCount}/{availability.slotsPerDay}</span>
           )}
           {isAuspicious && (
-            <Sparkles size={12} className="text-yellow-400 absolute top-1.5 right-1.5 drop-shadow-[0_0_5px_rgba(255,215,0,0.8)]" />
+            <Sparkles size={10} className="text-yellow-400 absolute top-1 right-1 drop-shadow-[0_0_5px_rgba(255,215,0,0.8)]" />
           )}
         </div>
       );
     });
 
     return (
-      <div className="bg-black/40 border border-white/10 rounded-2xl p-6">
-        <h3 className="text-xl font-serif text-white mb-4 text-center">{monthName}</h3>
-        <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs text-gray-500 font-medium tracking-widest uppercase">
+      <div className="bg-black/40 border border-white/10 rounded-2xl p-3 sm:p-6">
+        <h3 className="text-lg sm:text-xl font-serif text-white mb-4 text-center">{monthName}</h3>
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center text-[10px] sm:text-xs text-gray-500 font-medium tracking-widest uppercase">
           <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {blanks}
           {days}
         </div>
@@ -130,7 +130,7 @@ const CalendarEditor = ({ adminState }) => {
   };
 
   return (
-    <div className="p-8 h-full overflow-y-auto custom-scrollbar animate-fade-in relative z-10">
+    <div className="p-4 sm:p-6 md:p-8 h-full overflow-y-auto custom-scrollbar animate-fade-in relative z-10">
       <div className="max-w-5xl mx-auto space-y-8">
         
         {/* Header */}

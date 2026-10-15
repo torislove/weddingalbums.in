@@ -77,22 +77,23 @@ const Payouts = () => {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Editor & Studio Payout Requests</h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>Review, approve, and disburse UPI transfers from the Escrow pool.</p>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Editor & Studio Payout Requests</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '13px' }}>Review, approve, and disburse UPI transfers from the Escrow pool.</p>
         </div>
         <button 
           onClick={fetchPayouts}
           style={{
             display: 'flex', alignItems: 'center', gap: '6px',
-            padding: '8px 16px', background: 'rgba(14,165,233,0.1)',
+            padding: '8px 14px', background: 'rgba(14,165,233,0.1)',
             border: '1px solid rgba(14,165,233,0.25)', color: '#22d3ee',
-            borderRadius: '8px', cursor: 'pointer'
+            borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
+            whiteSpace: 'nowrap'
           }}
         >
-          <RefreshCw size={15} className={loading ? "spin" : ""} /> Refresh Payouts
+          <RefreshCw size={14} className={loading ? "spin" : ""} /> Refresh Payouts
         </button>
       </div>
 
@@ -100,9 +101,10 @@ const Payouts = () => {
         background: 'rgba(0,6,15,0.6)',
         border: '1px solid rgba(14,165,233,0.1)',
         borderRadius: '12px',
-        overflow: 'hidden'
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch'
       }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+        <table style={{ width: '100%', minWidth: '750px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
             <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
               <th style={{ padding: '14px 16px' }}>Request ID</th>

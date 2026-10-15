@@ -38,17 +38,21 @@ const LoadingFallback = () => (
   </div>
 );
 
-const MainLayout = ({ children, title }) => (
-  <div className="app-layout">
-    <Sidebar />
-    <div className="main-wrapper">
-      <TopBar title={title} />
-      <Suspense fallback={<LoadingFallback />}>
-        {children}
-      </Suspense>
+const MainLayout = ({ children, title }) => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  return (
+    <div className="app-layout">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="main-wrapper">
+        <TopBar title={title} onToggleSidebar={() => setSidebarOpen(prev => !prev)} />
+        <Suspense fallback={<LoadingFallback />}>
+          {children}
+        </Suspense>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ProtectedPage = ({ children, title, roles = ['editor', 'admin'] }) => (
   <ProtectedRoute roles={roles}>

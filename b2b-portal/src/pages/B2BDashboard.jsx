@@ -12,8 +12,8 @@ const B2BDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const headers = { 'Authorization': `Bearer ${token}` };
+        const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
         const [jobsRes, walletRes] = await Promise.all([
           fetch(`${API}/api/b2b/jobs`, { headers }),
@@ -41,17 +41,17 @@ const B2BDashboard = () => {
   const completedJobsCount = jobs.filter(j => j.status === 'Completed' || j.status === 'approved').length;
 
   return (
-    <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="page-content fade-in" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
       
       {/* Welcome Banner */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', padding: '1.5rem 2rem', background: 'rgba(212, 175, 55, 0.05)', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.2)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem', padding: 'clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 2rem)', background: 'rgba(212, 175, 55, 0.05)', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.2)' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>Welcome back, <span className="liquid-gold-text">{user.studioName || user.name || 'Studio'}</span></h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', margin: '0 0 0.5rem 0' }}>Welcome back, <span className="liquid-gold-text">{user.studioName || user.name || 'Studio'}</span></h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.9rem' }}>
             <MapPin size={16} /> {user.city || 'Studio'} • You have {activeJobsCount} active jobs in post-production.
           </p>
         </div>
-        <Link to="/submit" className="liquid-btn" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 1.5rem', borderRadius: '8px' }}>
+        <Link to="/submit" className="liquid-btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 1.5rem', borderRadius: '8px', whiteSpace: 'nowrap' }}>
           <Upload size={20} />
           Submit New Job
         </Link>
@@ -97,60 +97,62 @@ const B2BDashboard = () => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '2rem' }}>
         
         {/* Active Jobs Table */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
+        <div className="glass-panel" style={{ padding: 'clamp(1rem, 2vw, 1.5rem)', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ margin: 0 }}>Active Jobs Pipeline</h3>
             <Link to="/jobs" style={{ color: 'var(--gold-primary)', fontSize: '0.9rem', textDecoration: 'none' }}>View All</Link>
           </div>
           
-          <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--glass-border)', textAlign: 'left' }}>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Job ID</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Event / Project</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Type</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Assigned Editor</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Status</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Date</th>
-                <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>Loading jobs...</td></tr>
-              ) : jobs.length === 0 ? (
-                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>No jobs submitted yet. Click "Submit New Job" to begin.</td></tr>
-              ) : jobs.map(job => (
-                <tr key={job.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                  <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>#{(job.id || '').substring(0,8)}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <p style={{ margin: 0, fontWeight: 500 }}>{job.title || job.client_name || 'Project'}</p>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{job.event_type || 'Wedding'} ({job.region || 'AP/TS'})</p>
-                  </td>
-                  <td style={{ padding: '1rem', textTransform: 'capitalize' }}>{job.type || job.job_type || 'Photo'}</td>
-                  <td style={{ padding: '1rem' }}>{job.assigned_editor_id || job.editor_id ? 'Assigned' : 'Queued'}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <span className="badge" style={{ 
-                      background: (job.status === 'Completed' || job.status === 'approved') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.1)', 
-                      color: (job.status === 'Completed' || job.status === 'approved') ? 'var(--accent-green)' : '#60a5fa', 
-                      padding: '4px 8px', borderRadius: '4px', textTransform: 'capitalize'
-                    }}>{job.status}</span>
-                  </td>
-                  <td style={{ padding: '1rem' }}>{new Date(job.deadline || job.created_at || job.event_date || Date.now()).toLocaleDateString()}</td>
-                  <td style={{ padding: '1rem' }}>
-                    {job.drive_link || job.raw_files_link ? (
-                      <a href={job.drive_link || job.raw_files_link} target="_blank" rel="noreferrer" className="btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', textDecoration: 'none' }}>Files</a>
-                    ) : (
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Queued</span>
-                    )}
-                  </td>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', width: '100%' }}>
+            <table className="data-table" style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--glass-border)', textAlign: 'left' }}>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Job ID</th>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Event / Project</th>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Type</th>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Assigned Editor</th>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Status</th>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Date</th>
+                  <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>Loading jobs...</td></tr>
+                ) : jobs.length === 0 ? (
+                  <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>No jobs submitted yet. Click "Submit New Job" to begin.</td></tr>
+                ) : jobs.map(job => (
+                  <tr key={job.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                    <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>#{(job.id || '').substring(0,8)}</td>
+                    <td style={{ padding: '1rem' }}>
+                      <p style={{ margin: 0, fontWeight: 500 }}>{job.title || job.client_name || 'Project'}</p>
+                      <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{job.event_type || 'Wedding'} ({job.region || 'AP/TS'})</p>
+                    </td>
+                    <td style={{ padding: '1rem', textTransform: 'capitalize' }}>{job.type || job.job_type || 'Photo'}</td>
+                    <td style={{ padding: '1rem' }}>{job.assigned_editor_id || job.editor_id ? 'Assigned' : 'Queued'}</td>
+                    <td style={{ padding: '1rem' }}>
+                      <span className="badge" style={{ 
+                        background: (job.status === 'Completed' || job.status === 'approved') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.1)', 
+                        color: (job.status === 'Completed' || job.status === 'approved') ? 'var(--accent-green)' : '#60a5fa', 
+                        padding: '4px 8px', borderRadius: '4px', textTransform: 'capitalize'
+                      }}>{job.status}</span>
+                    </td>
+                    <td style={{ padding: '1rem' }}>{new Date(job.deadline || job.created_at || job.event_date || Date.now()).toLocaleDateString()}</td>
+                    <td style={{ padding: '1rem' }}>
+                      {job.drive_link || job.raw_files_link ? (
+                        <a href={job.drive_link || job.raw_files_link} target="_blank" rel="noreferrer" className="btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', textDecoration: 'none' }}>Files</a>
+                      ) : (
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Queued</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Quick Actions */}
@@ -167,7 +169,7 @@ const B2BDashboard = () => {
               <Link to="/wallet" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', padding: '1rem', textDecoration: 'none' }}>
                 <Wallet size={18} color="var(--text-secondary)" /> Withdraw Wallet
               </Link>
-              <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', padding: '1rem', width: '100%', background: 'rgba(37,211,102,0.05)', borderColor: 'rgba(37,211,102,0.3)' }}>
+              <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', padding: '1rem', width: '100%', background: 'rgba(37,211,102,0.05)', borderColor: 'rgba(37,211,102,0.3)', cursor: 'pointer' }}>
                 <MessageSquare size={18} color="#25D366" /> WhatsApp Support
               </button>
             </div>

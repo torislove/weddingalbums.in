@@ -1,11 +1,45 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Flipbook from '../components/Flipbook';
 import Toast from '../components/Toast';
 import './OrderAlbum.css';
 
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+
 const ClientProofing = () => {
+  const { id } = useParams();
   const [toastMessage, setToastMessage] = useState(null);
   const [notes, setNotes] = useState('');
+
+  const handleApprove = async () => {
+    setToastMessage('Album approved! Sending to print...');
+    if (id && id !== 'sample') {
+      try {
+        await fetch(`${API}/api/orders/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Approved & Printing', notes })
+        });
+      } catch (e) {
+        console.warn('Proof approval sync notice:', e);
+      }
+    }
+  };
+
+  const handleRequestChanges = async () => {
+    setToastMessage('Revision requested. We will notify the editor.');
+    if (id && id !== 'sample') {
+      try {
+        await fetch(`${API}/api/orders/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Revision Requested', notes })
+        });
+      } catch (e) {
+        console.warn('Proof revision sync notice:', e);
+      }
+    }
+  };
 
   const mockPages = [
     'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800',
@@ -36,16 +70,18 @@ const ClientProofing = () => {
           onChange={(e) => setNotes(e.target.value)}
         ></textarea>
         
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3">
           <button 
-            className="btn btn-primary flex-1 py-3" 
-            onClick={() => setToastMessage('Album approved! Sending to print...')}
+            type="button"
+            className="btn btn-primary flex-1 min-w-[140px] py-3 cursor-pointer" 
+            onClick={handleApprove}
           >
             ✅ Approve for Print
           </button>
           <button 
-            className="btn btn-outline flex-1 py-3" 
-            onClick={() => setToastMessage('Revision requested. We will notify the editor.')}
+            type="button"
+            className="btn btn-outline flex-1 min-w-[140px] py-3 cursor-pointer" 
+            onClick={handleRequestChanges}
           >
             📝 Request Changes
           </button>

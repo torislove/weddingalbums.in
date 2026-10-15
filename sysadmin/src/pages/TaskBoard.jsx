@@ -22,7 +22,7 @@ const TaskQueue = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch(`${API}/api/tasks`, { headers: getHeaders() });
+      const res = await fetch(`${API}/api/admin/jobs`, { headers: getHeaders() });
       const data = await res.json();
       setTasks(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -34,7 +34,7 @@ const TaskQueue = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API}/api/orders`, { headers: getHeaders() });
+      const res = await fetch(`${API}/api/admin/orders`, { headers: getHeaders() });
       const data = await res.json();
       setOrders(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -58,7 +58,7 @@ const TaskQueue = () => {
     try {
       const body = { status: newStatus };
       if (editorId) body.assigned_editor_id = editorId;
-      await fetch(`${API}/api/tasks/${id}`, {
+      await fetch(`${API}/api/admin/jobs/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', ...getHeaders() },
         body: JSON.stringify(body)
@@ -70,13 +70,13 @@ const TaskQueue = () => {
   };
 
   return (
-    <div className="p-10 animate-slide-up h-full flex flex-col max-w-7xl mx-auto overflow-y-auto custom-scrollbar">
-      <div className="mb-8">
-        <h1 className="text-4xl font-serif text-white mb-2">Form Submissions Queue</h1>
-        <p className="text-gray-400">Manage incoming B2B editing jobs and B2C retail orders.</p>
+    <div className="p-4 md:p-8 lg:p-10 animate-slide-up h-full flex flex-col max-w-7xl mx-auto overflow-y-auto custom-scrollbar">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-4xl font-serif text-white mb-2">Form Submissions Queue</h1>
+        <p className="text-gray-400 text-sm md:text-base">Manage incoming B2B editing jobs and B2C retail orders.</p>
       </div>
       
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
         
         {/* Editor Tasks Column */}
         <div className="bg-black/20 p-6 rounded-2xl border border-white/5">
@@ -165,7 +165,7 @@ const TaskQueue = () => {
                   </span>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 text-sm text-gray-300 bg-black/40 p-4 rounded-lg mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-300 bg-black/40 p-4 rounded-lg mb-4">
                   <div>
                     <p className="text-gray-500 mb-1">Contact</p>
                     <p>{order.email}</p>

@@ -339,6 +339,15 @@ const ClientDashboard = () => {
           >
             <Phone size={15} />
           </a>
+          <button 
+            type="button"
+            onClick={handleLogout} 
+            className="cdash-mobile-btn cdash-mobile-logout-btn" 
+            title="Sign Out"
+            style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', padding: '7px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <LogOut size={15} />
+          </button>
           <Link to="/order" className="cdash-mobile-book-btn">
             + Book
           </Link>

@@ -41,17 +41,20 @@ const LoadingFallback = () => (
 );
 
 /* Layout wrapping sidebar + topbar — only shown inside protected routes */
-const MainLayout = ({ children, title }) => (
-  <div className="app-layout">
-    <Sidebar />
-    <div className="main-wrapper">
-      <TopBar title={title} />
-      <Suspense fallback={<LoadingFallback />}>
-        {children}
-      </Suspense>
+const MainLayout = ({ children, title }) => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  return (
+    <div className="app-layout">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="main-wrapper">
+        <TopBar title={title} onToggleSidebar={() => setSidebarOpen(v => !v)} />
+        <Suspense fallback={<LoadingFallback />}>
+          {children}
+        </Suspense>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* Wraps MainLayout with auth protection */
 const ProtectedPage = ({ children, title, roles = ['b2b', 'admin'] }) => (

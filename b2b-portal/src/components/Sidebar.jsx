@@ -13,8 +13,9 @@ import {
   BarChart3
 } from 'lucide-react';
 import Logo from './Logo';
+import { X } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Submit Job', path: '/submit', icon: UploadCloud },
@@ -28,34 +29,60 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-        <Logo size={35} />
-      </div>
-      
-      <nav className="sidebar-nav">
-        {navItems.map(item => (
-          <NavLink 
-            key={item.name} 
-            to={item.path}
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+    <>
+      {isOpen && (
+        <div 
+          className="sidebar-backdrop"
+          onClick={onClose}
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.65)',
+            zIndex: 998,
+            backdropFilter: 'blur(4px)'
+          }}
+        />
+      )}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem' }}>
+          <Logo size={32} />
+          <button
+            onClick={onClose}
+            className="mobile-close-btn"
+            style={{
+              background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)',
+              cursor: 'pointer', padding: '4px', borderRadius: '6px'
+            }}
+            aria-label="Close menu"
           >
-            <item.icon size={20} />
-            {item.name}
-          </NavLink>
-        ))}
-      </nav>
-      
-      <div style={{ padding: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
-        <div className="glass-panel" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <ShieldCheck size={24} color="var(--gold-primary)" />
-          <div>
-            <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Status</p>
-            <p style={{ fontSize: '0.9rem', margin: 0, fontWeight: 600 }}>Platinum Studio</p>
+            <X size={20} />
+          </button>
+        </div>
+        
+        <nav className="sidebar-nav">
+          {navItems.map(item => (
+            <NavLink 
+              key={item.name} 
+              to={item.path}
+              onClick={onClose}
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              <item.icon size={18} />
+              {item.name}
+            </NavLink>
+          ))}
+        </nav>
+        
+        <div style={{ padding: '1.25rem', borderTop: '1px solid var(--glass-border)' }}>
+          <div className="glass-panel" style={{ padding: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <ShieldCheck size={22} color="var(--gold-primary)" />
+            <div>
+              <p style={{ fontSize: '0.75rem', margin: 0, color: 'var(--text-secondary)' }}>Status</p>
+              <p style={{ fontSize: '0.85rem', margin: 0, fontWeight: 600 }}>Platinum Studio</p>
+            </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

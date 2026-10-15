@@ -8,21 +8,33 @@ import './B2B.css';
 const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
 
+const DEFAULT_SHEETS = [
+  { id: 'luster', name: 'Karizma Royal Luster (Standard)', price: 65, studioPrice: 42 },
+  { id: 'gloss', name: 'Crystal Ultra High-Gloss', price: 85, studioPrice: 55 },
+  { id: 'velvet', name: 'Velvet Feather Touch (Scuff-Free)', price: 95, studioPrice: 62 },
+  { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', price: 110, studioPrice: 72 },
+  { id: 'nt', name: 'Non-Tearable Waterproof NT Sheet', price: 90, studioPrice: 58 }
+];
+
 const B2B = () => {
   const [sheetCount, setSheetCount] = useState(30);
-  const [sheetTypes, setSheetTypes] = useState([]);
-  const [selectedSheetType, setSelectedSheetType] = useState(null);
+  const [sheetTypes, setSheetTypes] = useState(DEFAULT_SHEETS);
+  const [selectedSheetType, setSelectedSheetType] = useState(DEFAULT_SHEETS[0]);
   
   useEffect(() => {
     const fetchConfigs = async () => {
       try {
         const res = await fetch(`${API}/api/admin/configs`);
-        const data = await res.json();
-        const types = data.find(c => c.key === 'sheet_types')?.options || [];
-        setSheetTypes(types);
-        if (types.length > 0) setSelectedSheetType(types[0]);
+        if (res.ok) {
+          const data = await res.json();
+          const types = data.find(c => c.key === 'sheet_types')?.options || [];
+          if (types.length > 0) {
+            setSheetTypes(types);
+            setSelectedSheetType(types[0]);
+          }
+        }
       } catch (err) {
-        console.error('Error fetching sheet types', err);
+        console.warn('Configs live fetch notice:', err);
       }
     };
     fetchConfigs();

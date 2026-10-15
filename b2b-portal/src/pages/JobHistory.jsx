@@ -10,9 +10,9 @@ const JobHistory = () => {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       const res = await fetch(`${API}/api/b2b/jobs`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
       if (res.ok) {
         const data = await res.json();
@@ -36,11 +36,11 @@ const JobHistory = () => {
   });
 
   return (
-    <div className="page-content fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div className="page-content fade-in" style={{ width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Active & Past Jobs</h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Track all your studio's post-production tasks in real-time.</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem' }}>Active & Past Jobs</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>Track all your studio's post-production tasks in real-time.</p>
         </div>
         <button 
           onClick={fetchJobs} 
@@ -52,32 +52,33 @@ const JobHistory = () => {
         </button>
       </div>
 
-      <div className="glass-panel" style={{ padding: '1.5rem' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem' }}>
+      <div className="glass-panel" style={{ padding: 'clamp(1rem, 2vw, 1.5rem)' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: '0.25rem' }}>
           <button 
             onClick={() => setFilter('all')} 
             className={filter === 'all' ? "btn-gold" : "btn-outline"} 
-            style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', cursor: 'pointer' }}
+            style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
           >
             All Jobs ({jobs.length})
           </button>
           <button 
             onClick={() => setFilter('in_progress')} 
             className={filter === 'in_progress' ? "btn-gold" : "btn-outline"} 
-            style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', cursor: 'pointer' }}
+            style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
           >
             In Production ({jobs.filter(j => j.status !== 'Completed' && j.status !== 'approved').length})
           </button>
           <button 
             onClick={() => setFilter('completed')} 
             className={filter === 'completed' ? "btn-gold" : "btn-outline"} 
-            style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', cursor: 'pointer' }}
+            style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
           >
             Completed ({jobs.filter(j => j.status === 'Completed' || j.status === 'approved').length})
           </button>
         </div>
 
-        <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', width: '100%' }}>
+          <table className="data-table" style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--glass-border)', textAlign: 'left' }}>
               <th style={{ padding: '1rem', color: 'var(--text-muted)' }}>Job ID</th>
@@ -146,6 +147,7 @@ const JobHistory = () => {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

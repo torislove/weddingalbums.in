@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Monitor, Tablet, Smartphone, Bell, ExternalLink } from 'lucide-react';
+import { Monitor, Tablet, Smartphone, Bell, ExternalLink, Sliders, Eye } from 'lucide-react';
 import BlockEditor from '../components/BlockEditor';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const PushNotificationEditor = ({ adminState }) => {
   const { content, setContent, setIsDirty } = adminState;
   const [previewMode, setPreviewMode] = useState('desktop');
   const iframeRef = useRef(null);
+
+  const isMobile = useMediaQuery('(max-width: 1024px)');
+  const [mobileTab, setMobileTab] = useState('editor'); // 'editor' | 'preview'
 
   const previewUrl = typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')
     ? '/' 
@@ -46,32 +50,56 @@ const PushNotificationEditor = ({ adminState }) => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-black/20">
+    <div className="flex flex-col lg:flex-row h-screen overflow-hidden bg-black/20">
+      {/* Mobile Tab Switcher */}
+      {isMobile && (
+        <div className="flex bg-[#0e0e0e] border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">
+          <button
+            onClick={() => setMobileTab('editor')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              mobileTab === 'editor' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+            }`}
+          >
+            <Sliders size={13} /> Settings
+          </button>
+          <button
+            onClick={() => setMobileTab('preview')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              mobileTab === 'preview' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+            }`}
+          >
+            <Eye size={13} /> Live Preview
+          </button>
+        </div>
+      )}
       
       {/* 2. Editor Panel */}
-      <div className="w-[420px] flex flex-col border-r border-white/10 bg-[#050505] flex-shrink-0 relative">
-        <div className="p-5 border-b border-white/10 bg-black/40 backdrop-blur-md flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37]">
-            <Bell size={20} />
+      {(!isMobile || mobileTab === 'editor') && (
+        <div className={`${isMobile ? 'w-full flex-1' : 'w-[420px]'} flex flex-col border-r border-white/10 bg-[#050505] flex-shrink-0 relative`}>
+          <div className="p-4 sm:p-5 border-b border-white/10 bg-black/40 backdrop-blur-md flex items-center gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] shrink-0">
+              <Bell size={18} />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-serif text-white">Push Notifications</h2>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">Marketing & Alerts Banner</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-lg font-serif text-white">Push Notifications</h2>
-            <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">Marketing & Alerts Banner</p>
-          </div>
-        </div>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar animate-slide-up p-2">
-          <BlockEditor 
-            block={activeBlock} 
-            onChange={handleUpdate} 
-          />
+          <div className="flex-1 overflow-y-auto custom-scrollbar animate-slide-up p-2">
+            <BlockEditor 
+              block={activeBlock} 
+              onChange={handleUpdate} 
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 3. Live Preview Iframe */}
-      <div className="flex-1 flex flex-col bg-[#000000] relative overflow-hidden">
-        {/* Preview Toolbar */}
-        <div className="h-14 border-b border-white/10 bg-black/60 backdrop-blur-md flex items-center justify-between px-6 z-10">
+      {(!isMobile || mobileTab === 'preview') && (
+        <div className="flex-1 flex flex-col bg-[#000000] relative overflow-hidden">
+          {/* Preview Toolbar */}
+          <div className="h-14 border-b border-white/10 bg-black/60 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 z-10">
           <div className="flex items-center gap-2 text-sm text-gray-400">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             Real-Time Live Preview
@@ -158,7 +186,7 @@ const PushNotificationEditor = ({ adminState }) => {
           )}
         </div>
       </div>
-
+      )}
     </div>
   );
 };

@@ -14,7 +14,7 @@ const ClientReferral = () => {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('clientToken');
     if (!token) return;
     fetch(`${API}/api/client/referral`, { headers: { 'Authorization': `Bearer ${token}` } })
       .then(r => r.ok ? r.json() : null)

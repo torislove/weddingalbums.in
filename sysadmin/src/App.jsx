@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react
 import {
   LayoutDashboard, Users, CreditCard, ClipboardList,
   Briefcase, Scissors, ShieldCheck, IndianRupee,
-  LogOut, Bell, Activity, Settings, ChevronDown
+  LogOut, Bell, Activity, Settings, ChevronDown, Menu, X
 } from 'lucide-react';
+import { useMediaQuery } from './hooks/useMediaQuery';
 
 import UserManager from './pages/UserManager';
 import TaskBoard from './pages/TaskBoard';
@@ -113,11 +114,23 @@ const MENU = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
 
   return (
+    <>
+      {/* Mobile overlay backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.65)',
+            zIndex: 49,
+          }}
+        />
+      )}
     <aside style={{
       width: 250,
       background: 'rgba(0,6,15,0.95)',
@@ -131,6 +144,8 @@ const Sidebar = () => {
       overflowY: 'auto',
       scrollbarWidth: 'none',
       fontFamily: 'Inter, sans-serif',
+      transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+      transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
     }}>
       {/* Brand */}
       <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(14,165,233,0.08)' }}>
@@ -204,6 +219,7 @@ const Sidebar = () => {
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
       `}</style>
     </aside>
+    </>
   );
 };
 
@@ -275,6 +291,8 @@ const LoginBridge = () => {
 /* ── App ─────────────────────────────────────────────────────────────── */
 function AppInner() {
   const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
   return (
     <BrowserRouter>
       <Routes>
@@ -282,8 +300,33 @@ function AppInner() {
         <Route path="/*" element={
           <Guard>
             <div style={{ display: 'flex', minHeight: '100vh', background: '#00060f', color: '#e2e8f0' }}>
-              <Sidebar />
-              <main style={{ flex: 1, marginLeft: 250, minHeight: '100vh', overflowY: 'auto' }}>
+              {/* Mobile top bar */}
+              {isMobile && (
+                <div style={{
+                  position: 'fixed', top: 0, left: 0, right: 0, height: 56,
+                  background: 'rgba(0,6,15,0.98)', borderBottom: '1px solid rgba(14,165,233,0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '0 16px', zIndex: 60, fontFamily: 'Inter, sans-serif',
+                }}>
+                  <button
+                    onClick={() => setSidebarOpen(v => !v)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#22d3ee', padding: 8, borderRadius: 8 }}
+                    aria-label="Toggle menu"
+                  >
+                    {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+                  </button>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', fontFamily: 'JetBrains Mono, monospace', letterSpacing: 1 }}>OPS CENTER</span>
+                  <div style={{ width: 38 }} />
+                </div>
+              )}
+              <Sidebar isOpen={isMobile ? sidebarOpen : true} onClose={() => setSidebarOpen(false)} />
+              <main style={{
+                flex: 1,
+                marginLeft: isMobile ? 0 : 250,
+                minHeight: '100vh',
+                overflowY: 'auto',
+                paddingTop: isMobile ? 56 : 0,
+              }}>
                 <Routes>
                   <Route path="/"        element={<Dashboard />} />
                   <Route path="/users"   element={<UserManager />} />

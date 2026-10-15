@@ -82,6 +82,27 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/uploads', express.static(path.join('/tmp', 'uploads')));
 
 // =======================
+// DATABASE INITIALIZATION & READINESS
+// =======================
+let dbReadyPromise = null;
+const ensureDbReady = () => {
+  if (!dbReadyPromise) {
+    dbReadyPromise = initDatabase().catch(err => {
+      console.warn('⚠️ DB init notice:', err?.message);
+    });
+  }
+  return dbReadyPromise;
+};
+
+// Trigger DB init immediately on boot
+ensureDbReady();
+
+app.use(async (req, res, next) => {
+  await ensureDbReady();
+  next();
+});
+
+// =======================
 // MOUNT MODULAR ROUTES
 // =======================
 app.use('/api/auth', authRouter);
@@ -98,22 +119,6 @@ app.use('/api', contentRouter);
 app.use('/api', publicRouter);
 
 import { onRequest } from 'firebase-functions/v2/https';
-
-// =======================
-let dbReadyPromise = null;
-const ensureDbReady = () => {
-  if (!dbReadyPromise) {
-    dbReadyPromise = initDatabase().catch(err => {
-      console.warn('⚠️ DB init notice:', err?.message);
-    });
-  }
-  return dbReadyPromise;
-};
-
-app.use(async (req, res, next) => {
-  await ensureDbReady();
-  next();
-});
 
 // Export as Firebase 2nd-gen Cloud Function for serverless deployment
 export const api = onRequest({

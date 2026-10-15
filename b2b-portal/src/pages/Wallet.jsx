@@ -15,9 +15,9 @@ const Wallet = () => {
   const fetchWallet = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       const res = await fetch(`${API}/api/b2b/wallet`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
       if (res.ok) {
         const data = await res.json();
@@ -41,12 +41,12 @@ const Wallet = () => {
 
     setSubmitting(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       const res = await fetch(`${API}/api/b2b/payout-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify({ amount: Number(withdrawAmount), upiId: upiId || 'studio@upi' })
       });
@@ -68,11 +68,11 @@ const Wallet = () => {
   };
 
   return (
-    <div className="page-content fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div className="page-content fade-in" style={{ width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Studio Wallet</h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Manage your escrow balances, SLA penalty credits, and withdrawals.</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem' }}>Studio Wallet</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>Manage your escrow balances, SLA penalty credits, and withdrawals.</p>
         </div>
         <button 
           onClick={fetchWallet} 
@@ -90,14 +90,14 @@ const Wallet = () => {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2rem' }}>
         {/* Balance Card */}
-        <div className="glass-panel" style={{ padding: '2rem', background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0,0,0,0.5))', border: '1px solid var(--gold-primary)', height: 'fit-content' }}>
+        <div className="glass-panel" style={{ padding: 'clamp(1.25rem, 3vw, 2rem)', background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0,0,0,0.5))', border: '1px solid var(--gold-primary)', height: 'fit-content' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
             <WalletIcon color="var(--gold-primary)" size={24} />
             <h3 style={{ margin: 0 }}>Available Balance</h3>
           </div>
-          <h1 className="liquid-gold-text" style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>
+          <h1 className="liquid-gold-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '0.5rem' }}>
             ₹{Number(balance).toLocaleString('en-IN')}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '2rem' }}>

@@ -127,20 +127,20 @@ const PricingEngine = () => {
   if (loading) return <div className="p-10 text-white">Loading Engine...</div>;
 
   return (
-    <div className="p-10 min-h-screen bg-[#0a0a0a]">
-      <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-6">
+    <div className="p-4 sm:p-6 md:p-10 min-h-screen bg-[#0a0a0a]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8 border-b border-white/10 pb-6">
         <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
             <Settings className="text-[#D4AF37]" /> Dynamic Pricing Engine
           </h1>
-          <p className="text-gray-400 mt-2">Manage your A La Carte services, Album sizes & bubbles, Print Lab sheets, and pre-built bundles.</p>
+          <p className="text-gray-400 text-xs sm:text-sm mt-2">Manage your A La Carte services, Album sizes & bubbles, Print Lab sheets, and pre-built bundles.</p>
         </div>
-        <button onClick={() => openModal()} className="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold rounded-lg flex items-center gap-2 transition shadow-lg">
+        <button onClick={() => openModal()} className="w-full sm:w-auto px-5 py-2.5 bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold rounded-lg flex items-center justify-center gap-2 transition shadow-lg text-sm shrink-0">
           <Plus size={18} /> Add {activeTab === 'services' ? 'Service' : activeTab === 'sizes' ? 'Album Size' : activeTab === 'sheets' ? 'Sheet Type' : 'Bundle'}
         </button>
       </div>
 
-      <div className="flex gap-4 mb-8 flex-wrap">
+      <div className="flex gap-2 sm:gap-4 mb-8 overflow-x-auto pb-2 custom-scrollbar">
         {[
           { id: 'services', label: 'A La Carte Services', icon: Layers },
           { id: 'sizes', label: 'Album Sizes & Bubbles', icon: Box },
@@ -150,17 +150,17 @@ const PricingEngine = () => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition ${
+            className={`px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl flex items-center gap-2 font-medium transition text-xs sm:text-sm whitespace-nowrap ${
               activeTab === tab.id ? 'bg-[#D4AF37] text-black font-bold shadow-[0_0_15px_rgba(212,175,55,0.4)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'
             }`}
           >
-            <tab.icon size={18} /> {tab.label}
+            <tab.icon size={16} /> {tab.label}
           </button>
         ))}
       </div>
 
       {activeTab === 'services' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {services.map(s => (
             <div key={s._id || s.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
               <div className="flex justify-between items-start mb-2">
@@ -180,8 +180,7 @@ const PricingEngine = () => {
                 </div>
               </div>
               <div className="text-sm text-gray-400">ETA: {s.estimatedDaysToDeliver} Days</div>
-              
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+                      <div className="absolute top-4 right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex gap-2">
                 <button onClick={() => openModal(s)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
                 <button onClick={() => handleDelete(s._id || s.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
@@ -192,7 +191,7 @@ const PricingEngine = () => {
       )}
 
       {activeTab === 'sizes' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {albumSizes.map(sz => (
             <div key={sz._id || sz.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
               <div className="flex justify-between items-start mb-2">
@@ -202,7 +201,7 @@ const PricingEngine = () => {
                     {sz.orientation === 'portrait' ? '↕️ Portrait' : '↔️ Landscape'}
                   </span>
                 </div>
-                {sz.popular && <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-semibold">⭐ Most Popular</span>}
+                {sz.popular && <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2.5 py-0.5 rounded-full font-semibold">⭐ Most Popular</span>}
               </div>
               <h3 className="text-xl font-bold text-white mb-1">{sz.name}</h3>
               {sz.telugu && <div className="text-xs text-gray-400 mb-3 font-telugu">{sz.telugu}</div>}
@@ -221,7 +220,7 @@ const PricingEngine = () => {
               <p className="text-xs text-gray-400 mb-3">{sz.description}</p>
               {sz.isBundle && <div className="text-xs text-green-400 mb-2">🎁 Bundle discount: -₹{sz.bundleDiscount}</div>}
               
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+              <div className="absolute top-4 right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex gap-2">
                 <button onClick={() => openModal(sz)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
                 <button onClick={() => handleDelete(sz._id || sz.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
@@ -232,7 +231,7 @@ const PricingEngine = () => {
       )}
 
       {activeTab === 'sheets' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {sheets.map(s => (
             <div key={s._id || s.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[#D4AF37]/50 transition">
               <div className="flex justify-between items-start mb-2">
@@ -261,7 +260,7 @@ const PricingEngine = () => {
 
               {s.description && <div className="text-xs text-gray-400 mt-2">{s.description}</div>}
               
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+              <div className="absolute top-4 right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex gap-2">
                 <button onClick={() => openModal(s)} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg"><Edit2 size={16} /></button>
                 <button onClick={() => handleDelete(s._id || s.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg"><Trash2 size={16} /></button>
               </div>
@@ -272,20 +271,20 @@ const PricingEngine = () => {
       )}
 
       {activeTab === 'packages' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {packages.map(pkg => (
             <div key={pkg._id || pkg.id} className="bg-[#111] rounded-xl border relative group overflow-hidden" style={{ borderColor: pkg.color }}>
               {pkg.coverImage && (
                 <div className="h-40 w-full bg-cover bg-center" style={{ backgroundImage: `url(${pkg.coverImage})` }} />
               )}
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className="px-3 py-1 rounded-full text-xs font-bold bg-white/10">{pkg.b2bOrB2c.toUpperCase()} • {pkg.category}</div>
                   {!pkg.isActive && <span className="text-red-500 text-xs font-bold flex items-center gap-1"><EyeOff size={14}/> Hidden</span>}
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-1">{pkg.tier}</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-1">{pkg.tier}</h3>
                 
-                <div className="text-xl text-gray-300 font-medium mb-4">
+                <div className="text-lg sm:text-xl text-gray-300 font-medium mb-4">
                   {pkg.priceType === 'starting_at' && <span className="text-sm text-gray-500 block">Starting at</span>}
                   {pkg.price} {pkg.priceType === 'range' ? `- ${pkg.priceMax}` : ''} {pkg.suffix}
                 </div>
@@ -294,7 +293,7 @@ const PricingEngine = () => {
                   {pkg.features.map((f, i) => <li key={i} className="text-sm text-gray-400 flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0"/>{f}</li>)}
                 </ul>
                 
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+                <div className="absolute top-4 right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex gap-2">
                   <button onClick={() => openModal(pkg)} className="p-2 bg-black/50 hover:bg-black/80 text-white rounded-lg backdrop-blur-sm"><Edit2 size={16} /></button>
                   <button onClick={() => handleDelete(pkg._id || pkg.id)} className="p-2 bg-red-500/50 hover:bg-red-500/80 text-red-500 rounded-lg backdrop-blur-sm"><Trash2 size={16} /></button>
                 </div>
@@ -307,10 +306,10 @@ const PricingEngine = () => {
 
       {/* Dynamic Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4 overflow-y-auto">
-          <div className="bg-[#111] border border-white/10 w-full max-w-2xl rounded-2xl p-8 relative my-10 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-[#111] border border-white/10 w-full max-w-2xl rounded-2xl p-4 sm:p-8 relative my-6 sm:my-10 max-h-[92vh] overflow-y-auto">
             <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-white"><X size={24} /></button>
-            <h2 className="text-2xl font-bold text-white mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
               {editingItem ? 'Edit' : 'Add New'} {activeTab === 'services' ? 'Service' : activeTab === 'sizes' ? 'Album Size' : activeTab === 'sheets' ? 'Sheet Type' : 'Bundle'}
             </h2>
 
@@ -319,7 +318,7 @@ const PricingEngine = () => {
               {/* Form Fields for Services */}
               {activeTab === 'services' && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Category</label>
                       <select 
@@ -346,7 +345,7 @@ const PricingEngine = () => {
                     <label className="block text-sm text-gray-400 mb-1">Telugu Title (తెలుగు శీర్షిక)</label>
                     <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white font-telugu" value={formData.telugu || ''} onChange={e => setFormData({...formData, telugu: e.target.value})} placeholder="ఉదా: 4K సినిమాటిక్ టీజర్" />
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Customer Price (₹)</label>
                       <input type="number" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.basePrice || ''} onChange={e => setFormData({...formData, basePrice: Number(e.target.value)})} placeholder="e.g. 6000" />
@@ -380,7 +379,7 @@ const PricingEngine = () => {
               {/* Form Fields for Album Sizes */}
               {activeTab === 'sizes' && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Size Display Name</label>
                       <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="e.g. 12×36 Royal Spread" />
@@ -390,7 +389,7 @@ const PricingEngine = () => {
                       <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.dimensions || ''} onChange={e => setFormData({...formData, dimensions: e.target.value})} placeholder="12×36 inches" />
                     </div>
                   </div>
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Orientation (దిశ)</label>
                       <select
@@ -435,7 +434,7 @@ const PricingEngine = () => {
               {/* Form Fields for Sheets */}
               {activeTab === 'sheets' && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Sheet Market Name</label>
                       <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="e.g. Velvet Silk Touch" />
@@ -445,7 +444,7 @@ const PricingEngine = () => {
                       <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white font-telugu" value={formData.telugu || ''} onChange={e => setFormData({...formData, telugu: e.target.value})} placeholder="సిల్కీ వెల్వెట్ మ్యాట్" />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-xs text-gray-400 mb-1">Customer / Sheet (₹)</label>
                       <input type="number" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.pricePerSheet || ''} onChange={e => setFormData({...formData, pricePerSheet: Number(e.target.value)})} placeholder="e.g. 65" />
@@ -493,7 +492,7 @@ const PricingEngine = () => {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Package Name / Tier</label>
                       <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.tier || ''} onChange={e => setFormData({...formData, tier: e.target.value})} placeholder="e.g. Starter Memories" />
@@ -507,7 +506,7 @@ const PricingEngine = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Price Strategy</label>
                       <select className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.priceType || 'fixed'} onChange={e => setFormData({...formData, priceType: e.target.value})}>

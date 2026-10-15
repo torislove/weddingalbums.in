@@ -14,8 +14,8 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const headers = { 'Authorization': `Bearer ${token}` };
+      const token = localStorage.getItem('token') || localStorage.getItem('editorToken');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
       const [availRes, myRes] = await Promise.all([
         fetch(`${API}/api/editor/available-jobs${type ? `?type=${type.toLowerCase()}` : ''}`, { headers }),
@@ -43,12 +43,12 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
 
   const handleClaim = async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('editorToken');
       const res = await fetch(`${API}/api/editor/claim-job/${id}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         }
       });
       if (res.ok) {
@@ -70,12 +70,12 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
     
     setSubmitting(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('editorToken');
       const res = await fetch(`${API}/api/editor/submit-job/${submitJobId}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify({ workLink, notes })
       });
@@ -102,15 +102,15 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
   const completedJobs = myJobs.filter(j => j.status === 'approved' || j.status === 'completed');
 
   return (
-    <div className="page-content fade-in" style={{ maxWidth: '1400px', margin: '0 auto', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="page-content fade-in" style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', boxSizing: 'border-box', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
             {HeaderIcon && <HeaderIcon size={28} color={color || 'var(--accent-primary)'} />}
             {title ? `${title} Workspace` : 'Job Workspace'}
           </h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>
             {description || 'Claim available editing projects, download RAW footage, and submit deliverables for QC.'}
           </p>
         </div>
@@ -118,7 +118,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
         <button 
           onClick={fetchJobs} 
           className="btn-outline" 
-          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem', cursor: 'pointer' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem', cursor: 'pointer' }}
           title="Refresh Workspace"
         >
           <RefreshCw size={16} className={loading ? "spin" : ""} /> Refresh
@@ -126,7 +126,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
       </div>
 
       {/* KANBAN BOARD */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', flex: 1, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem', flex: 1, alignItems: 'start' }}>
         
         {/* COLUMN 1: Available Jobs */}
         <div className="glass-panel" style={{ padding: '1rem', background: 'rgba(255, 255, 255, 0.02)', display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: '550px' }}>

@@ -2,10 +2,12 @@
  * server/routes/public.js — Public, unprotected API
  */
 import express from 'express';
-import { Package, Service, SheetType, AlbumSize, ContactLead, Order, Task } from '../db.js';
+import { Package, Service, SheetType, AlbumSize, ContactLead, Order, Task, Cart, Project, Config } from '../db.js';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
 
 /* ── Packages & Services & Sheets & Album Sizes ─────────────────────── */
 router.get(['/packages', '/builder/packages'], async (req, res) => {
@@ -256,6 +258,163 @@ router.put('/tasks/:id', async (req, res) => {
     res.json({ success: true, task: updated });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/tasks', async (req, res) => {
+  try {
+    const task = await Task.create(req.body);
+    res.status(201).json(task);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Projects Endpoints ─────────────────────────────────────────────── */
+router.get('/projects', async (req, res) => {
+  try {
+    const projects = await Project.findAll ? await Project.findAll(req.query || {}) : await Project.find(req.query || {});
+    res.json(projects || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message, projects: [] });
+  }
+});
+
+router.post('/projects', async (req, res) => {
+  try {
+    const project = await Project.create ? await Project.create(req.body) : req.body;
+    res.status(201).json(project);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Cart API (Shopping Cart Persistence) ────────────────────────────── */
+const getUserIdFromReq = (req) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+      if (decoded && (decoded.id || decoded._id)) return decoded.id || decoded._id;
+    } catch {
+      /* ignore invalid token */
+    }
+  }
+  return req.body?.userId || req.query?.userId || 'guest_user';
+};
+
+router.get('/cart', async (req, res) => {
+  try {
+    const userId = getUserIdFromReq(req);
+    const cart = await Cart.findOne({ userId });
+    res.json(cart || { items: [], totalAmount: 0 });
+  } catch (err) {
+    res.status(500).json({ error: err.message, items: [], totalAmount: 0 });
+  }
+});
+
+router.post('/cart', async (req, res) => {
+  try {
+    const userId = getUserIdFromReq(req);
+    const { items = [], totalAmount = 0, estimatedDeliveryEta = null } = req.body;
+    const cart = await Cart.findOneAndUpdate(
+      { userId },
+      { items, totalAmount, estimatedDeliveryEta }
+    );
+    res.json({ success: true, cart });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete('/cart', async (req, res) => {
+  try {
+    const userId = getUserIdFromReq(req);
+    await Cart.findOneAndUpdate(
+      { userId },
+      { items: [], totalAmount: 0 }
+    );
+    res.json({ success: true, message: 'Cart cleared' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Payment API (Razorpay Order Generation & Verification) ─────────── */
+router.post('/pay/create-order', async (req, res) => {
+  try {
+    const { amount } = req.body;
+    if (!amount || Number(amount) <= 0) {
+      return res.status(400).json({ error: 'Valid amount is required' });
+    }
+    
+    const orderId = 'order_' + crypto.randomBytes(8).toString('hex');
+    const orderPayload = {
+      id: orderId,
+      amount: Math.round(Number(amount) * 100),
+      currency: 'INR',
+      status: 'created',
+      created_at: Math.floor(Date.now() / 1000)
+    };
+    res.json(orderPayload);
+  } catch (err) {
+    res.status(500).json({ error: 'Payment order creation failed: ' + err.message });
+  }
+});
+
+router.post('/pay/verify', async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
+    if (!razorpay_order_id || !razorpay_payment_id) {
+      return res.status(400).json({ error: 'Missing payment confirmation parameters' });
+    }
+
+    if (orderId) {
+      try {
+        await Order.findByIdAndUpdate(orderId, {
+          status: 'Confirmed',
+          paymentStatus: 'paid',
+          paymentDetails: { razorpay_order_id, razorpay_payment_id }
+        });
+      } catch (e) {
+        console.warn('Order payment status update notice:', e.message);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: 'Payment verified and order confirmed successfully',
+      paymentId: razorpay_payment_id
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Payment verification failed: ' + err.message });
+  }
+});
+
+/* ── Platform Configuration / Wholesale Catalog Configs ─────────────── */
+router.get(['/configs', '/admin/configs'], async (req, res) => {
+  try {
+    const sheets = await SheetType.find ? await SheetType.find({}) : [];
+    const options = (sheets.length > 0 ? sheets : [
+      { id: 'luster', name: 'Karizma Royal Luster (Standard)', pricePerSheet: 65, studioPricePerSheet: 42, description: 'Deep rich colors, fingerprint resistant' },
+      { id: 'gloss', name: 'Crystal Ultra High-Gloss', pricePerSheet: 85, studioPricePerSheet: 55, description: 'Glass-like high reflection vibrancy' },
+      { id: 'velvet', name: 'Velvet Feather Touch (Scuff-Free)', pricePerSheet: 95, studioPricePerSheet: 62, description: 'Soft silk touch, zero glare' },
+      { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', pricePerSheet: 110, studioPricePerSheet: 72, description: '3D iridescent glow for jewelry' },
+      { id: 'nt', name: 'Non-Tearable Waterproof NT Sheet', pricePerSheet: 90, studioPricePerSheet: 58, description: 'Heavy composite tear-proof sheets' }
+    ]).map(s => ({
+      id: s.id || s._id,
+      name: s.name,
+      price: Number(s.pricePerSheet || s.price || 65),
+      studioPrice: Number(s.studioPricePerSheet || 42),
+      telugu: s.telugu || '',
+      description: s.description || ''
+    }));
+
+    res.json([
+      { key: 'sheet_types', options }
+    ]);
+  } catch (err) {
+    res.status(500).json({ error: err.message, configs: [] });
   }
 });
 

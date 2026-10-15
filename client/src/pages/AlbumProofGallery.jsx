@@ -50,7 +50,7 @@ const AlbumProofGallery = () => {
       </div>
 
       {/* Info Guidelines */}
-      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(14px, 3vw, 24px)', border: '1px solid rgba(255,255,255,0.06)' }}>
         <h4 style={{ margin: '0 0 12px 0', fontSize: '1.1rem', color: '#fff' }}>Proofing Instructions</h4>
         <ul style={{ margin: 0, paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6' }}>
           <li>Flip through the virtual pages using arrow keys or clicking corner edges.</li>

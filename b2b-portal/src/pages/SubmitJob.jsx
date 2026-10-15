@@ -31,7 +31,7 @@ const SubmitJob = () => {
 
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       if (!token) {
         alert('Please login first');
         return;
@@ -69,14 +69,14 @@ const SubmitJob = () => {
   };
 
   return (
-    <div className="page-content reveal active" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '2.5rem' }}>
-        <h1 style={{ fontSize: '2.4rem', marginBottom: '0.5rem', fontWeight: 700, letterSpacing: '-0.5px' }}>Submit New Job</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>Send your RAW files and let our expert human editors handle the rest.</p>
+    <div className="page-content reveal active" style={{ maxWidth: '1000px', margin: '0 auto', padding: 'clamp(1rem, 3vw, 2rem)' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.4rem)', marginBottom: '0.5rem', fontWeight: 700, letterSpacing: '-0.5px' }}>Submit New Job</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.9rem, 2vw, 1.05rem)' }}>Send your RAW files and let our expert human editors handle the rest.</p>
       </div>
 
       {/* Stepper */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '3rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2.5rem', overflowX: 'auto', paddingBottom: '0.5rem', WebkitOverflowScrolling: 'touch' }}>
         {[
           { num: 1, label: 'Select Service' },
           { num: 2, label: 'Event Details' },
@@ -96,24 +96,24 @@ const SubmitJob = () => {
               }}>
                 {step > s.num ? <CheckCircle size={18} /> : s.num}
               </div>
-              <span style={{ fontWeight: step >= s.num ? 600 : 400 }}>{s.label}</span>
+              <span style={{ fontWeight: step >= s.num ? 600 : 400, fontSize: '13px' }}>{s.label}</span>
             </div>
-            {i < arr.length - 1 && <ChevronRight size={18} color={step > s.num ? "var(--gold-primary)" : "var(--glass-border)"} style={{ opacity: 0.5 }} />}
+            {i < arr.length - 1 && <ChevronRight size={18} color={step > s.num ? "var(--gold-primary)" : "var(--glass-border)"} style={{ opacity: 0.5, flexShrink: 0 }} />}
           </React.Fragment>
         ))}
       </div>
 
-      <div className="glass-panel" style={{ padding: '3rem', position: 'relative', overflow: 'hidden' }}>
+      <div className="glass-panel" style={{ padding: 'clamp(1.2rem, 3vw, 3rem)', position: 'relative', overflow: 'hidden' }}>
         {/* Glow orb */}
         <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         {/* STEP 1 */}
         {step === 1 && (
           <div style={{ animation: 'uiaFadeIn 0.4s ease forwards' }}>
-            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.6rem', fontWeight: 600 }}>What do you need edited?</h3>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2.5rem' }}>All services are handled manually by expert editors. No AI automation.</p>
+            <h3 style={{ marginBottom: '1rem', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 600 }}>What do you need edited?</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '14px' }}>All services are handled manually by expert editors. No AI automation.</p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.25rem' }}>
               {[
                 { id: 'culling', icon: Layers, title: 'Photo Culling', desc: 'Expert human curation of best shots' },
                 { id: 'retouch', icon: FileType, title: 'Photo Retouching', desc: 'Color grading & skin smoothing' },
@@ -126,7 +126,7 @@ const SubmitJob = () => {
                   onClick={() => setFormData({...formData, jobType: type.id})}
                   style={{ 
                     border: `2px solid ${formData.jobType === type.id ? 'var(--gold-primary)' : 'var(--glass-border)'}`, 
-                    padding: '2rem 1.5rem', 
+                    padding: '1.5rem 1rem', 
                     borderRadius: '16px', 
                     cursor: 'pointer', 
                     textAlign: 'center', 
@@ -136,9 +136,9 @@ const SubmitJob = () => {
                     boxShadow: formData.jobType === type.id ? '0 10px 25px rgba(212,175,55,0.1)' : 'none'
                   }}
                 >
-                  <type.icon size={42} color={formData.jobType === type.id ? 'var(--gold-primary)' : 'var(--text-muted)'} style={{ margin: '0 auto 1.2rem', transition: 'all 0.3s ease' }} />
-                  <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem', color: formData.jobType === type.id ? '#fff' : 'var(--text-secondary)' }}>{type.title}</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>{type.desc}</p>
+                  <type.icon size={36} color={formData.jobType === type.id ? 'var(--gold-primary)' : 'var(--text-muted)'} style={{ margin: '0 auto 1rem', transition: 'all 0.3s ease' }} />
+                  <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', color: formData.jobType === type.id ? '#fff' : 'var(--text-secondary)' }}>{type.title}</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>{type.desc}</p>
                 </div>
               ))}
             </div>
@@ -147,17 +147,17 @@ const SubmitJob = () => {
 
         {/* STEP 2 */}
         {step === 2 && (
-          <div style={{ animation: 'uiaFadeIn 0.4s ease forwards', display: 'grid', gap: '2rem' }}>
-            <h3 style={{ fontSize: '1.6rem', margin: 0, fontWeight: 600 }}>Event Details</h3>
+          <div style={{ animation: 'uiaFadeIn 0.4s ease forwards', display: 'grid', gap: '1.5rem' }}>
+            <h3 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', margin: 0, fontWeight: 600 }}>Event Details</h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Client / Event Name</label>
-                <input type="text" className="form-control" style={{ padding: '1rem' }} placeholder="e.g. Suresh & Ramya Wedding" value={formData.eventName} onChange={e => setFormData({...formData, eventName: e.target.value})} required />
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '13px' }}>Client / Event Name</label>
+                <input type="text" className="form-control" style={{ padding: '0.85rem' }} placeholder="e.g. Suresh & Ramya Wedding" value={formData.eventName} onChange={e => setFormData({...formData, eventName: e.target.value})} required />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Event Type</label>
-                <select className="form-control" style={{ padding: '1rem' }} value={formData.eventType} onChange={e => setFormData({...formData, eventType: e.target.value})}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '13px' }}>Event Type</label>
+                <select className="form-control" style={{ padding: '0.85rem' }} value={formData.eventType} onChange={e => setFormData({...formData, eventType: e.target.value})}>
                   <option>Pellikuturu</option>
                   <option>Haldi / Pellikoduku</option>
                   <option>Sangeet</option>
@@ -168,14 +168,14 @@ const SubmitJob = () => {
               </div>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Event Date</label>
-                <input type="date" className="form-control" style={{ padding: '1rem' }} value={formData.eventDate} onChange={e => setFormData({...formData, eventDate: e.target.value})} required />
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '13px' }}>Event Date</label>
+                <input type="date" className="form-control" style={{ padding: '0.85rem' }} value={formData.eventDate} onChange={e => setFormData({...formData, eventDate: e.target.value})} required />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Estimated Quantity</label>
-                <input type="text" className="form-control" style={{ padding: '1rem' }} placeholder="e.g. 2500 RAW photos, 4h footage" value={formData.fileCount} onChange={e => setFormData({...formData, fileCount: e.target.value})} required />
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '13px' }}>Estimated Quantity</label>
+                <input type="text" className="form-control" style={{ padding: '0.85rem' }} placeholder="e.g. 2500 RAW photos, 4h footage" value={formData.fileCount} onChange={e => setFormData({...formData, fileCount: e.target.value})} required />
               </div>
             </div>
           </div>

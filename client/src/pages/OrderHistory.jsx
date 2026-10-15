@@ -16,7 +16,7 @@ const OrderHistory = () => {
 
   const fetchOrders = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || localStorage.getItem('clientToken');
       const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
       const res = await fetch(`${API}/api/orders`, { headers });
       const data = await res.json();
@@ -176,7 +176,7 @@ const OrderHistory = () => {
                   </h5>
 
                   {itemsList.length > 0 ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '10px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 250px), 1fr))', gap: '10px' }}>
                       {itemsList.map((item, idx) => (
                         <div
                           key={idx}

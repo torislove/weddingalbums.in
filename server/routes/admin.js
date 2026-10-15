@@ -468,12 +468,30 @@ router.put(['/packages/:id', '/builder/packages/:id'], adminOnly, upload.single(
   }
 });
 
-router.delete(['/packages/:id', '/builder/packages/:id'], adminOnly, async (req, res) => {
+/* ── Configs & Sheet Types Catalog (Public read, admin write) ───────── */
+router.get('/configs', async (req, res) => {
   try {
-    await Package.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
+    const sheets = await SheetType.find ? await SheetType.find({}) : [];
+    const options = (sheets.length > 0 ? sheets : [
+      { id: 'luster', name: 'Karizma Royal Luster (Standard)', pricePerSheet: 65, studioPricePerSheet: 42, description: 'Deep rich colors, fingerprint resistant' },
+      { id: 'gloss', name: 'Crystal Ultra High-Gloss', pricePerSheet: 85, studioPricePerSheet: 55, description: 'Glass-like high reflection vibrancy' },
+      { id: 'velvet', name: 'Velvet Feather Touch (Scuff-Free)', pricePerSheet: 95, studioPricePerSheet: 62, description: 'Soft silk touch, zero glare' },
+      { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', pricePerSheet: 110, studioPricePerSheet: 72, description: '3D iridescent glow for jewelry' },
+      { id: 'nt', name: 'Non-Tearable Waterproof NT Sheet', pricePerSheet: 90, studioPricePerSheet: 58, description: 'Heavy composite tear-proof sheets' }
+    ]).map(s => ({
+      id: s.id || s._id,
+      name: s.name,
+      price: Number(s.pricePerSheet || s.price || 65),
+      studioPrice: Number(s.studioPricePerSheet || 42),
+      telugu: s.telugu || '',
+      description: s.description || ''
+    }));
+
+    res.json([
+      { key: 'sheet_types', options }
+    ]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message, configs: [] });
   }
 });
 

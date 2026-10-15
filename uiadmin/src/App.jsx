@@ -1,6 +1,7 @@
 import React, { useState, useCallback, createContext, useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Settings, Image as ImageIcon, Save, ExternalLink, Bell, LogOut, PenTool, Eye } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, Image as ImageIcon, Save, ExternalLink, Bell, LogOut, PenTool, Eye, Menu, X } from 'lucide-react';
+import { useMediaQuery } from './hooks/useMediaQuery';
 import PageEditor from './pages/PageEditor';
 import GlobalEditor from './pages/GlobalEditor';
 import PushNotificationEditor from './pages/PushNotificationEditor';
@@ -120,16 +121,31 @@ const SidebarLink = ({ item }) => {
   );
 };
 
-const Sidebar = ({ isDirty, onSave, saving }) => {
+const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
   const { user, logout } = useAuth();
   return (
+    <>
+      {/* Mobile overlay backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.65)',
+            zIndex: 49,
+            display: 'block',
+          }}
+        />
+      )}
     <aside style={{
-      width: 250, background: '#050505', borderRight: '1px solid rgba(245,158,11,0.06)',
-      height: '100vh', position: 'fixed', top: 0, left: 0,
-      display: 'flex', flexDirection: 'column', zIndex: 50,
-      overflowY: 'auto', scrollbarWidth: 'none',
-      fontFamily: 'Inter, sans-serif',
-    }}>
+        width: 250, background: '#050505', borderRight: '1px solid rgba(245,158,11,0.06)',
+        height: '100vh', position: 'fixed', top: 0, left: 0,
+        display: 'flex', flexDirection: 'column', zIndex: 50,
+        overflowY: 'auto', scrollbarWidth: 'none',
+        fontFamily: 'Inter, sans-serif',
+        transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.3s ease',
+      }}>
       {/* Brand */}
       <div style={{ padding: '20px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -208,6 +224,7 @@ const Sidebar = ({ isDirty, onSave, saving }) => {
       </div>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');`}</style>
     </aside>
+    </>
   );
 };
 
@@ -227,6 +244,8 @@ function AppInner() {
   const adminState = useAdminContent(token);
   const { saveContent } = adminState;
   const [toastMessage, setToastMessage] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const handleSave = async () => {
     await saveContent();
@@ -247,8 +266,40 @@ function AppInner() {
               </div>
             ) : (
               <div style={{ display: 'flex', minHeight: '100vh', background: '#050505', color: '#e2e8f0', fontFamily: 'Inter, sans-serif' }}>
-                <Sidebar isDirty={adminState.isDirty} onSave={handleSave} saving={adminState.saving} />
-                <main style={{ flex: 1, marginLeft: 250, minHeight: '100vh', overflowY: 'auto' }}>
+                {/* Mobile hamburger header */}
+                {isMobile && (
+                  <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, height: 56,
+                    background: '#050505', borderBottom: '1px solid rgba(245,158,11,0.08)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '0 16px', zIndex: 60, fontFamily: 'Inter, sans-serif',
+                  }}>
+                    <button
+                      onClick={() => setSidebarOpen(v => !v)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f59e0b', padding: 8, borderRadius: 8 }}
+                      aria-label="Toggle menu"
+                    >
+                      {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+                    </button>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Content Studio</span>
+                    <div style={{ width: 38 }} />
+                  </div>
+                )}
+                <Sidebar
+                  isDirty={adminState.isDirty}
+                  onSave={handleSave}
+                  saving={adminState.saving}
+                  isOpen={isMobile ? sidebarOpen : true}
+                  onClose={() => setSidebarOpen(false)}
+                  style={{ transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)' }}
+                />
+                <main style={{
+                  flex: 1,
+                  marginLeft: isMobile ? 0 : 250,
+                  minHeight: '100vh',
+                  overflowY: 'auto',
+                  paddingTop: isMobile ? 56 : 0,
+                }}>
                   <Routes>
                     <Route path="/"               element={<Dashboard />} />
                     <Route path="/pages/:pageId"  element={<PageEditor adminState={adminState} />} />

@@ -87,6 +87,7 @@ const EditorRegister = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('editorToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
@@ -128,18 +129,18 @@ const EditorRegister = () => {
         <GoldenParticles count={50} color="99, 102, 241" />
       </div>
 
-      <header style={{ padding: '2rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)', zIndex: 1 }}>
+      <header style={{ padding: '1.5rem 1rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)', zIndex: 1 }}>
         <Link to="/">
-          <Logo size={45} />
+          <Logo size={40} />
         </Link>
       </header>
       
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem', zIndex: 1 }}>
-        <div className="glass-panel fade-in" style={{ maxWidth: '800px', width: '100%', padding: '3rem', borderRadius: '24px', background: 'rgba(20, 20, 35, 0.7)', backdropFilter: 'blur(20px)', border: '1px solid rgba(99, 102, 241, 0.2)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)' }}>
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem 1rem', zIndex: 1 }}>
+        <div className="glass-panel fade-in" style={{ maxWidth: '800px', width: '100%', padding: 'clamp(1.25rem, 4vw, 3rem)', borderRadius: '24px', background: 'rgba(20, 20, 35, 0.7)', backdropFilter: 'blur(20px)', border: '1px solid rgba(99, 102, 241, 0.2)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)', boxSizing: 'border-box' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '2.2rem', marginBottom: '0.5rem', background: 'linear-gradient(to right, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>Join the Creator Network</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Step {step} of 4: {
+            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', marginBottom: '0.5rem', background: 'linear-gradient(to right, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>Join the Creator Network</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Step {step} of 4: {
               step === 1 ? "Personal Details" : 
               step === 2 ? "Location & Availability" :
               step === 3 ? "Skills & Tools" : "Assessment Agreement"
@@ -150,7 +151,7 @@ const EditorRegister = () => {
               {[1, 2, 3, 4].map(i => (
                 <div key={i} style={{ 
                   height: '6px', 
-                  width: '50px', 
+                  width: 'clamp(32px, 8vw, 50px)', 
                   borderRadius: '3px', 
                   background: i <= step ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)',
                   boxShadow: i === step ? '0 0 10px var(--accent-primary)' : 'none',
@@ -165,7 +166,7 @@ const EditorRegister = () => {
             {/* STEP 1 */}
             {step === 1 && (
               <div className="fade-in" style={{ display: 'grid', gap: '1.8rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Full Name</label>
                     <div className="input-group" style={{ position: 'relative' }}>
@@ -202,7 +203,7 @@ const EditorRegister = () => {
                   </div>
                 </div>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>WhatsApp Number</label>
                     <div className="input-group" style={{ position: 'relative' }}>
@@ -240,7 +241,7 @@ const EditorRegister = () => {
                   </div>
                 </div>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Password</label>
                     <div className="input-group" style={{ position: 'relative' }}>
@@ -266,22 +267,22 @@ const EditorRegister = () => {
             {/* STEP 2 */}
             {step === 2 && (
               <div className="fade-in" style={{ display: 'grid', gap: '1.8rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <label style={{ color: 'var(--text-secondary)', margin: 0 }}>Location Details</label>
-                  <button type="button" onClick={handleAutoLocation} disabled={loadingLocation} style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', transition: 'all 0.3s', boxShadow: loadingLocation ? '0 0 15px rgba(99,102,241,0.5)' : 'none' }}>
+                  <button type="button" onClick={handleAutoLocation} disabled={loadingLocation} style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', transition: 'all 0.3s', boxShadow: loadingLocation ? '0 0 15px rgba(99,102,241,0.5)' : 'none' }}>
                     <MapPin size={16} />
                     {loadingLocation ? 'Detecting...' : 'Auto-detect Location'}
                   </button>
                 </div>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem' }}>
                   <input type="text" className="form-control" style={{ paddingLeft: '1rem', border: '1px solid rgba(99, 102, 241, 0.3)' }} placeholder="City" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} onFocus={onFocusStyle} onBlur={onBlurStyle} required />
                   <input type="text" className="form-control" style={{ paddingLeft: '1rem', border: '1px solid rgba(99, 102, 241, 0.3)' }} placeholder="Pincode" value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} onFocus={onFocusStyle} onBlur={onBlurStyle} required />
                 </div>
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Working Hours Preference</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '1rem' }}>
                     {['Part-time', 'Full-time', 'Weekends Only'].map(avail => (
                       <div 
                         key={avail}
@@ -312,7 +313,7 @@ const EditorRegister = () => {
               <div className="fade-in" style={{ display: 'grid', gap: '1.8rem' }}>
                 <div>
                   <label style={{ display: 'block', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Core Specialty</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '1rem' }}>
                     {['Photo Culling', 'Video Editing', 'Album Design'].map(spec => (
                       <div 
                         key={spec}
@@ -343,7 +344,7 @@ const EditorRegister = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '1.5rem' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Primary Software</label>
                     <select 
@@ -380,7 +381,7 @@ const EditorRegister = () => {
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '1rem', color: 'var(--text-secondary)' }}>Years of Experience</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 110px), 1fr))', gap: '0.75rem' }}>
                     {['Fresher', '1-2 years', '3-5 years', '5+ years'].map(exp => (
                       <div 
                         key={exp}
@@ -409,26 +410,26 @@ const EditorRegister = () => {
             {/* STEP 4 */}
             {step === 4 && (
               <div className="fade-in">
-                <div style={{ background: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '16px', padding: '2.5rem', marginBottom: '2rem', textAlign: 'center', boxShadow: 'inset 0 0 20px rgba(99,102,241,0.1)' }}>
+                <div style={{ background: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '16px', padding: 'clamp(1.5rem, 4vw, 2.5rem)', marginBottom: '2rem', textAlign: 'center', boxShadow: 'inset 0 0 20px rgba(99,102,241,0.1)' }}>
                   <MonitorPlay size={56} color="var(--accent-primary)" style={{ margin: '0 auto 1.5rem', filter: 'drop-shadow(0 0 10px rgba(99,102,241,0.5))' }} />
-                  <h3 style={{ color: '#fff', marginBottom: '1rem', fontSize: '1.8rem', fontWeight: 'bold' }}>Welcome to the Big Leagues</h3>
-                  <p style={{ color: 'var(--text-secondary)', lineHeight: '1.7', maxWidth: '550px', margin: '0 auto', fontSize: '1.05rem' }}>
+                  <h3 style={{ color: '#fff', marginBottom: '1rem', fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 'bold' }}>Welcome to the Big Leagues</h3>
+                  <p style={{ color: 'var(--text-secondary)', lineHeight: '1.7', maxWidth: '550px', margin: '0 auto', fontSize: '1rem' }}>
                     You are applying to be part of the elite WeddingAlbums.in creator network. We only work with the best, and we guarantee the best pay.
                   </p>
                 </div>
 
                 <div 
-                  style={{ display: 'flex', alignItems: 'flex-start', gap: '1.2rem', padding: '1.5rem', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer' }}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: '1.2rem', padding: '1.25rem', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer' }}
                   onClick={() => setFormData({...formData, agreedToTrial: !formData.agreedToTrial})}
                 >
                   <div style={{ 
                     width: '24px', height: '24px', borderRadius: '6px', border: `2px solid ${formData.agreedToTrial ? 'var(--accent-primary)' : 'var(--text-muted)'}`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', background: formData.agreedToTrial ? 'var(--accent-primary)' : 'transparent',
-                    marginTop: '2px', transition: 'all 0.2s'
+                    marginTop: '2px', transition: 'all 0.2s', flexShrink: 0
                   }}>
                     {formData.agreedToTrial && <CheckCircle size={16} color="#000" strokeWidth={3} />}
                   </div>
-                  <label style={{ color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.95rem', cursor: 'pointer', flex: 1 }}>
+                  <label style={{ color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.9rem', cursor: 'pointer', flex: 1 }}>
                     By submitting this application, I agree to a <strong style={{ color: '#fff' }}>1-week trial period</strong> where I will be assigned 1-2 test jobs. I understand that I will be paid for these jobs <em style={{ color: 'var(--accent-primary)' }}>only after Quality Control (QC) approval</em>, and any failure to meet deadlines will result in immediate network removal.
                   </label>
                 </div>
@@ -436,23 +437,23 @@ const EditorRegister = () => {
             )}
 
             {/* Navigation Buttons */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               {step > 1 ? (
-                <button type="button" onClick={handlePrev} className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 1.5rem', borderColor: 'rgba(255,255,255,0.1)' }}>
+                <button type="button" onClick={handlePrev} className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 1.5rem', borderColor: 'rgba(255,255,255,0.1)', cursor: 'pointer' }}>
                   <ChevronLeft size={18} /> Back
                 </button>
               ) : (
-                <button type="button" onClick={() => navigate('/login')} className="btn-outline" style={{ padding: '0.8rem 1.5rem', borderColor: 'rgba(255,255,255,0.1)' }}>
+                <button type="button" onClick={() => navigate('/login')} className="btn-outline" style={{ padding: '0.8rem 1.5rem', borderColor: 'rgba(255,255,255,0.1)', cursor: 'pointer' }}>
                   Cancel
                 </button>
               )}
               
               {step < 4 ? (
-                <button type="button" onClick={handleNext} disabled={nextDisabled()} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', boxShadow: !nextDisabled() ? '0 4px 15px rgba(99,102,241,0.4)' : 'none' }}>
+                <button type="button" onClick={handleNext} disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', cursor: 'pointer', boxShadow: !nextDisabled() ? '0 4px 15px rgba(99,102,241,0.4)' : 'none' }}>
                   Next <ChevronRight size={18} />
                 </button>
               ) : (
-                <button type="submit" disabled={nextDisabled()} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', fontSize: '1.1rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', boxShadow: !nextDisabled() ? '0 4px 20px rgba(99,102,241,0.6)' : 'none' }}>
+                <button type="submit" disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', fontSize: '1.1rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', cursor: 'pointer', boxShadow: !nextDisabled() ? '0 4px 20px rgba(99,102,241,0.6)' : 'none' }}>
                   Submit Application <CheckCircle size={20} />
                 </button>
               )}

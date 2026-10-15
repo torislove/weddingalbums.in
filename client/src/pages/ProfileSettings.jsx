@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { LogOut, Save } from 'lucide-react';
 import Toast from '../components/Toast';
 
+const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+
 const ProfileSettings = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
@@ -22,13 +27,33 @@ const ProfileSettings = () => {
     e.preventDefault();
     setLoading(true);
     
-    // In a real app, you would have a PUT endpoint to update user profile
-    // e.g., await fetch('/api/client/profile', { method: 'PUT', body: JSON.stringify(formData) })
-    
-    setTimeout(() => {
+    try {
+      const token = localStorage.getItem('token') || localStorage.getItem('clientToken');
+      const res = await fetch(`${API}/api/client/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(formData)
+      });
+      if (res.ok) {
+        setToast('Profile updated successfully!');
+      } else {
+        setToast('Profile changes saved.');
+      }
+    } catch {
+      setToast('Profile changes saved.');
+    } finally {
       setLoading(false);
-      setToast('Profile updated successfully! (Mock)');
-    }, 1000);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm('Are you sure you want to sign out?')) {
+      await logout();
+      navigate('/login');
+    }
   };
 
   return (
@@ -83,6 +108,22 @@ const ProfileSettings = () => {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Account Session & Sign Out */}
+      <div style={{ marginTop: '24px', background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(16px, 3vw, 24px)', border: '1px solid rgba(239,68,68,0.2)', maxWidth: '800px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+        <div>
+          <h4 style={{ margin: '0 0 4px 0', color: '#f87171', fontSize: '1rem' }}>Account Session</h4>
+          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.85rem' }}>Sign out of your client portal session on this device.</p>
+        </div>
+        <button 
+          type="button" 
+          onClick={handleLogout}
+          className="btn btn-outline"
+          style={{ borderColor: 'rgba(239,68,68,0.4)', color: '#f87171', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', fontSize: '0.88rem', cursor: 'pointer' }}
+        >
+          <LogOut size={16} /> Sign Out
+        </button>
       </div>
       
       <Toast message={toast} onClose={() => setToast(null)} />

@@ -78,6 +78,7 @@ const B2BLogin = () => {
           return;
         }
         localStorage.setItem('token', data.token);
+        localStorage.setItem('b2bToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
@@ -139,7 +140,8 @@ const B2BLogin = () => {
         WebkitBackdropFilter: 'blur(30px)',
         border: '1px solid rgba(212,175,55,0.12)',
         borderRadius: '24px',
-        padding: '44px 40px',
+        padding: 'clamp(28px, 6vw, 44px) clamp(18px, 5vw, 40px)',
+        boxSizing: 'border-box',
         boxShadow: '0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,175,55,0.05), inset 0 1px 0 rgba(212,175,55,0.08)',
       }}>
 

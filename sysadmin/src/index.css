@@ -5,6 +5,7 @@ body {
   color: #f3f4f6;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: dark;
+  overflow-x: hidden;
 }
 
 select {
@@ -31,3 +32,65 @@ select option {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+/* ==============================
+   MOBILE RESPONSIVE UTILITIES
+   ============================== */
+
+/* Sidebar: hidden by default on mobile, JS adds translateX(0) when open */
+@media (max-width: 768px) {
+  /* Fixed sidebars default to offscreen */
+  aside[style*="position: fixed"] {
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  }
+  /* When sidebar is open (JS sets translateX(0) via transition) override with the inline style */
+  aside[style*="translateX(0)"] {
+    transform: translateX(0) !important;
+  }
+
+  /* Main content full-width */
+  main {
+    width: 100% !important;
+  }
+
+  /* Touch-friendly buttons */
+  button { min-height: 40px; }
+
+  /* Responsive padding utility overrides */
+  .p-10 { padding: 1rem !important; }
+  .p-8  { padding: 1rem !important; }
+  .px-10 { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+  /* Stack 2-col grids on mobile */
+  .grid-cols-2 { grid-template-columns: 1fr !important; }
+  .grid-cols-3 { grid-template-columns: 1fr !important; }
+  .grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Tables: horizontal scroll wrapper */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* Typography scale-down */
+  .text-4xl { font-size: 1.5rem !important; }
+  .text-3xl { font-size: 1.25rem !important; }
+  .text-2xl { font-size: 1.1rem !important; }
+}
+
+@media (max-width: 480px) {
+  .text-4xl { font-size: 1.25rem !important; }
+  .stat-value { font-size: 1.5rem !important; }
+}
+
+/* Table scroll wrapper class */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  width: 100%;
+}
+
