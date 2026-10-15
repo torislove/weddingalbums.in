@@ -9,6 +9,7 @@ import CalendarEditor from './pages/CalendarEditor';
 import MediaLibrary from './pages/MediaLibrary';
 import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
+import HubCatalogEditor from './pages/HubCatalogEditor';
 import Toast from './components/Toast';
 import Logo from './components/Logo';
 import { useAdminContent } from './hooks/useAdminContent';
@@ -93,6 +94,7 @@ const PAGES_MENU = [
   { name: 'Contact Page',       path: '/pages/contact',       icon: FileText },
 ];
 const TOOLS_MENU = [
+  { name: 'Hub Catalog & Pricing', path: '/catalog',   icon: PenTool },
   { name: 'Booking Calendar',   path: '/calendar',   icon: LayoutDashboard },
   { name: 'Push Notifications', path: '/push',        icon: Bell },
   { name: 'Global Elements',    path: '/global',      icon: Settings },
@@ -297,6 +299,7 @@ function AppInner() {
                   <Routes>
                     <Route path="/"               element={<Dashboard />} />
                     <Route path="/pages/:pageId"  element={<PageEditor adminState={adminState} />} />
+                    <Route path="/catalog"        element={<HubCatalogEditor adminState={adminState} />} />
                     <Route path="/calendar"        element={<CalendarEditor adminState={adminState} />} />
                     <Route path="/push"            element={<PushNotificationEditor adminState={adminState} />} />
                     <Route path="/global"          element={<GlobalEditor adminState={adminState} />} />

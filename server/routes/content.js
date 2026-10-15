@@ -61,12 +61,88 @@ const CURATED_DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800'
 ];
 
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
+
+function isStudioOrAdmin(req) {
+  try {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return false;
+    const token = authHeader.split(' ')[1];
+    if (!token) return false;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded && (decoded.role === 'b2b' || decoded.role === 'admin' || decoded.role === 'sysadmin');
+  } catch {
+    return false;
+  }
+}
+
+function sanitizeContentForClient(contentData, isB2B) {
+  if (isB2B || !contentData) return contentData;
+  const copy = JSON.parse(JSON.stringify(contentData));
+  const sanitizeCatalog = (catalog) => {
+    if (!catalog || typeof catalog !== 'object') return;
+    if (Array.isArray(catalog.photoEditing)) {
+      catalog.photoEditing.forEach(item => {
+        delete item.studioPrice;
+        delete item.studioPriceBadge;
+        delete item.tradePrice;
+      });
+    }
+    if (Array.isArray(catalog.videoEditing)) {
+      catalog.videoEditing.forEach(item => {
+        delete item.studioPrice;
+        delete item.studioPriceBadge;
+        delete item.tradePrice;
+      });
+    }
+    if (catalog.albumPrinting) {
+      if (Array.isArray(catalog.albumPrinting.sheetStyles)) {
+        catalog.albumPrinting.sheetStyles.forEach(item => {
+          delete item.studioPricePerSheet;
+          delete item.studioPriceBadge;
+        });
+      }
+      if (Array.isArray(catalog.albumPrinting.albumSizes)) {
+        catalog.albumPrinting.albumSizes.forEach(item => {
+          delete item.studioBasePrice;
+          delete item.studioPriceBadge;
+        });
+      }
+    }
+    if (Array.isArray(catalog.invitationsAndFlex)) {
+      catalog.invitationsAndFlex.forEach(item => {
+        delete item.studioPrice;
+        delete item.studioPriceBadge;
+      });
+    }
+    if (Array.isArray(catalog.bundles)) {
+      catalog.bundles.forEach(item => {
+        delete item.studioPrice;
+        delete item.studioPriceBadge;
+      });
+    }
+  };
+
+  if (copy.servicesCatalog) sanitizeCatalog(copy.servicesCatalog);
+  if (copy.global?.servicesCatalog) sanitizeCatalog(copy.global.servicesCatalog);
+  return copy;
+}
+
 /* ── Content API ────────────────────────────────────────────────────── */
 router.get('/content', async (req, res) => {
   try {
+    const isB2B = isStudioOrAdmin(req);
     const contentDoc = await Content.findOne({ key: 'main_site' });
     if (contentDoc && contentDoc.data && Object.keys(contentDoc.data).length > 0 && contentDoc.data.pages && Object.keys(contentDoc.data.pages).length > 0) {
-      return res.json(contentDoc.data);
+      const data = { ...contentDoc.data };
+      if ((!data.servicesCatalog || !data.global?.servicesCatalog) && fallbackContentData?.global?.servicesCatalog) {
+        if (!data.global) data.global = {};
+        if (!data.global.servicesCatalog) data.global.servicesCatalog = fallbackContentData.global.servicesCatalog;
+        if (!data.servicesCatalog) data.servicesCatalog = fallbackContentData.servicesCatalog || fallbackContentData.global.servicesCatalog;
+      }
+      return res.json(sanitizeContentForClient(data, isB2B));
     }
     
     // Fallback: If DB is empty or lacks pages, load from bundled fallback
@@ -90,14 +166,14 @@ router.get('/content', async (req, res) => {
     if (fallback && fallback.pages && Object.keys(fallback.pages).length > 0) {
       // Auto-seed into DB asynchronously so future queries read directly from DB
       Content.findOneAndUpdate({ key: 'main_site' }, { data: fallback }).catch(() => {});
-      return res.json(fallback);
+      return res.json(sanitizeContentForClient(fallback, isB2B));
     }
 
     res.json({ pages: {}, global: {} });
   } catch (err) {
     console.error('Content fetch error:', err);
     if (fallbackContentData) {
-      return res.json(fallbackContentData);
+      return res.json(sanitizeContentForClient(fallbackContentData, isStudioOrAdmin(req)));
     }
     res.json({ pages: {}, global: {} });
   }

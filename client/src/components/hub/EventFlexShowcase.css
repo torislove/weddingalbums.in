@@ -1,0 +1,172 @@
+/* ==========================================================================
+   EventFlexShowcase.css — Separated Invitations, Mandap Flex & Hoardings
+   ========================================================================== */
+
+.flex-showcase-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  box-sizing: border-box;
+}
+
+.flex-showcase-header {
+  margin-bottom: 36px;
+}
+
+.flex-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.flex-card {
+  background: rgba(18, 18, 22, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.flex-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+.flex-card.active {
+  border-color: #D4AF37;
+  box-shadow: 0 16px 40px rgba(212, 175, 55, 0.18);
+}
+
+.flex-card-image-box {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flex-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.flex-card:hover .flex-card-img {
+  transform: scale(1.05);
+}
+
+.flex-card-format-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+.flex-card-price-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(212, 175, 55, 0.95);
+  color: #0b0b0e;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.flex-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.flex-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.flex-card-telugu {
+  font-size: 12.5px;
+  color: #D4AF37;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.flex-card-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.flex-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.flex-feature-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: #cbd5e1;
+}
+
+.flex-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.flex-turnaround-badge {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.flex-whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #25D366;
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  padding: 6px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.flex-whatsapp-link:hover {
+  background: rgba(37, 211, 102, 0.2);
+  color: #fff;
+}

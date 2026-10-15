@@ -1,0 +1,542 @@
+/* ==========================================================================
+   SheetStylesViewer.css — Interactive 3D Sheet Texture & Mockup Simulator
+   ========================================================================== */
+
+.sheet-mock-viewer-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  box-sizing: border-box;
+}
+
+.sheet-viewer-header {
+  margin-bottom: 32px;
+}
+
+/* ── Swatch Navigation Tabs Grid ── */
+.sheet-swatch-tabs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.sheet-tab-card {
+  background: rgba(20, 20, 24, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.sheet-tab-card:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px);
+  background: rgba(28, 28, 34, 0.85);
+}
+
+.sheet-tab-card.active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%);
+  border-color: #D4AF37;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.18), inset 0 0 16px rgba(212, 175, 55, 0.08);
+}
+
+.sheet-tab-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent-color, #D4AF37);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sheet-tab-card.active::before {
+  opacity: 1;
+}
+
+.sheet-tab-badge-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.sheet-number {
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 1px;
+}
+
+.sheet-tab-gsm {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #bbb;
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-weight: 600;
+}
+
+.sheet-tab-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 3px;
+}
+
+.sheet-tab-telugu {
+  font-size: 11px;
+  color: rgba(212, 175, 55, 0.8);
+  margin-bottom: 6px;
+}
+
+.sheet-tab-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-family: monospace;
+}
+
+/* ── Interactive 3D Stage Layout ── */
+.sheet-interactive-stage {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 32px;
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .sheet-interactive-stage {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+/* ── 3D Sheet Simulation Card ── */
+.sheet-card-perspective-box {
+  perspective: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sheet-simulation-card {
+  width: 100%;
+  max-width: 580px;
+  aspect-ratio: 16 / 10;
+  background: #0d0d11;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  user-select: none;
+  cursor: grab;
+}
+
+.sheet-simulation-card:active {
+  cursor: grabbing;
+}
+
+.sheet-simulation-card.curled {
+  border-bottom-right-radius: 90px 45px;
+  box-shadow: 15px 35px 70px -10px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.25);
+}
+
+.sheet-photo-surface {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sheet-sample-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Dynamic Texture Shimmer Layers ── */
+.sheet-texture-shimmer-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+}
+
+/* 24K Metallic Gold */
+.sheet-simulation-card.metallic .sheet-texture-shimmer-layer {
+  background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(255, 215, 0, 0.45) 0%, rgba(218, 165, 32, 0.2) 35%, transparent 70%);
+  mix-blend-mode: color-dodge;
+}
+
+/* Royal Velvet Feather Touch (Peach Fuzz, Zero Glare) */
+.sheet-simulation-card.velvet-matte .sheet-texture-shimmer-layer {
+  background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(255, 255, 255, 0.12) 0%, rgba(114, 47, 55, 0.15) 40%, rgba(15, 15, 20, 0.4) 100%);
+  backdrop-filter: contrast(95%) brightness(102%);
+  mix-blend-mode: soft-light;
+}
+
+/* Pure Silk (Pattu) Micro-Woven Crosshatch */
+.sheet-simulation-card.silk-weave .sheet-texture-shimmer-layer {
+  background: 
+    repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.15) 0px, rgba(212, 175, 55, 0.15) 1.5px, transparent 1.5px, transparent 3px),
+    radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(255, 223, 128, 0.35) 0%, transparent 60%);
+  mix-blend-mode: hard-light;
+}
+
+/* Non-Tearable Poly-Luster */
+.sheet-simulation-card.poly-luster .sheet-texture-shimmer-layer {
+  background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(255, 255, 255, 0.3) 0%, rgba(74, 144, 226, 0.15) 40%, transparent 75%);
+  mix-blend-mode: screen;
+}
+
+/* HD Silver Halide Crystal */
+.sheet-simulation-card.crystal-reflection .sheet-texture-shimmer-layer {
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.45) 48%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.45) 52%, transparent 80%);
+  background-position: calc(var(--light-x, 50%) * 2) 0;
+  mix-blend-mode: screen;
+}
+
+/* Natural Matte Linen */
+.sheet-simulation-card.organic-matte .sheet-texture-shimmer-layer {
+  background: 
+    repeating-linear-gradient(0deg, rgba(200, 190, 180, 0.1) 0px, rgba(200, 190, 180, 0.1) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(200, 190, 180, 0.1) 0px, rgba(200, 190, 180, 0.1) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: overlay;
+}
+
+/* Specular Light Flare Sweep */
+.sheet-specular-light-flare {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(255, 215, 0, 0.25) 30%, transparent 70%);
+  pointer-events: none;
+  filter: blur(10px);
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  transition: opacity 0.2s ease;
+}
+
+.sheet-simulation-card.velvet-matte .sheet-specular-light-flare {
+  opacity: 0.2; /* Minimal specular glare on velvety matte */
+  filter: blur(24px);
+}
+
+/* ── Water Splash Simulation ── */
+.sheet-water-splash-simulation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: fadeInDroplets 0.3s ease-out forwards;
+}
+
+@keyframes fadeInDroplets {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.water-droplet {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9) 0%, rgba(180, 220, 255, 0.6) 45%, rgba(70, 130, 180, 0.3) 100%);
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
+  animation: beadWobble 2s ease-in-out infinite alternate;
+}
+
+.water-droplet.d1 { width: 22px; height: 20px; top: 25%; left: 35%; animation-delay: 0.1s; }
+.water-droplet.d2 { width: 16px; height: 18px; top: 45%; left: 62%; animation-delay: 0.4s; }
+.water-droplet.d3 { width: 26px; height: 24px; top: 60%; left: 40%; animation-delay: 0.2s; }
+.water-droplet.d4 { width: 14px; height: 13px; top: 32%; left: 75%; animation-delay: 0.6s; }
+.water-droplet.d5 { width: 19px; height: 18px; top: 68%; left: 22%; animation-delay: 0.3s; }
+
+@keyframes beadWobble {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.06) translate(1px, 2px); }
+}
+
+.water-splash-badge {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 40, 70, 0.92);
+  color: #67e8f9;
+  border: 1px solid #38bdf8;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+/* ── Fingerprint Test Simulation ── */
+.sheet-fingerprint-test-simulation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fingerprint-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #10b981, #34d399, transparent);
+  box-shadow: 0 0 16px #10b981;
+  animation: scanDown 2.2s ease-in-out infinite;
+}
+
+@keyframes scanDown {
+  0% { top: 0; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.fingerprint-badge {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(6, 40, 25, 0.92);
+  color: #6ee7b7;
+  border: 1px solid #10b981;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+/* Page Curl Corner */
+.sheet-curl-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, transparent 50%, rgba(212, 175, 55, 0.4) 50%, rgba(255, 255, 255, 0.6) 100%);
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.sheet-curl-corner:hover {
+  transform: scale(1.15);
+}
+
+.curl-hint {
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  text-transform: uppercase;
+}
+
+/* Watermark & Caption */
+.sheet-surface-watermark {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  right: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.sheet-material-type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  color: #e2e8f0;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sheet-material-type-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.sheet-caption-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  font-family: sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Interactive Stage Controls Bar ── */
+.sheet-stage-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stage-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stage-action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.stage-action-btn.btn-active {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: #D4AF37;
+  color: #fef08a;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
+}
+
+.sheet-tilt-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* ── Specs Detail Card (Right Side) ── */
+.specs-card-glass {
+  background: rgba(18, 18, 22, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.specs-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.specs-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #D4AF37;
+}
+
+.specs-pricing-badge {
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+
+.specs-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px 0;
+}
+
+.specs-telugu {
+  font-size: 14px;
+  color: #D4AF37;
+  margin: 0 0 14px 0;
+  font-weight: 600;
+}
+
+.specs-description {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+/* Metrics Grid */
+.specs-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.metric-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 12px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.metric-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+}
+
+.metric-value {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.25;
+}

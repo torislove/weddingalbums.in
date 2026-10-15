@@ -9,11 +9,35 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
 
+function isStudioOrAdmin(req) {
+  try {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return false;
+    const token = authHeader.split(' ')[1];
+    if (!token) return false;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded && (decoded.role === 'b2b' || decoded.role === 'admin' || decoded.role === 'sysadmin');
+  } catch {
+    return false;
+  }
+}
+
 /* ── Packages & Services & Sheets & Album Sizes ─────────────────────── */
 router.get(['/packages', '/builder/packages'], async (req, res) => {
   try {
+    const isB2B = isStudioOrAdmin(req);
     const packages = await Package.find(req.query || {});
-    res.json(packages || []);
+    const sanitized = (packages || []).map(p => {
+      const item = p.toObject ? p.toObject() : { ...p };
+      if (!isB2B) {
+        delete item.studioPrice;
+        delete item.b2bPrice;
+        delete item.b2bDiscount;
+        delete item.studioCost;
+      }
+      return item;
+    });
+    res.json(sanitized);
   } catch (err) {
     res.status(500).json({ error: err.message, packages: [] });
   }
@@ -21,8 +45,18 @@ router.get(['/packages', '/builder/packages'], async (req, res) => {
 
 router.get(['/services', '/builder/services'], async (req, res) => {
   try {
+    const isB2B = isStudioOrAdmin(req);
     const services = await Service.find(req.query || {});
-    res.json(services || []);
+    const sanitized = (services || []).map(s => {
+      const item = s.toObject ? s.toObject() : { ...s };
+      if (!isB2B) {
+        delete item.studioPrice;
+        delete item.studioBasePrice;
+        delete item.b2bPrice;
+      }
+      return item;
+    });
+    res.json(sanitized);
   } catch (err) {
     res.status(500).json({ error: err.message, services: [] });
   }
@@ -30,8 +64,17 @@ router.get(['/services', '/builder/services'], async (req, res) => {
 
 router.get(['/sheets', '/builder/sheets'], async (req, res) => {
   try {
+    const isB2B = isStudioOrAdmin(req);
     const sheets = await SheetType.find(req.query || {});
-    res.json(sheets || []);
+    const sanitized = (sheets || []).map(sh => {
+      const item = sh.toObject ? sh.toObject() : { ...sh };
+      if (!isB2B) {
+        delete item.studioPricePerSheet;
+        delete item.studioBasePrice;
+      }
+      return item;
+    });
+    res.json(sanitized);
   } catch (err) {
     res.status(500).json({ error: err.message, sheets: [] });
   }
@@ -39,8 +82,17 @@ router.get(['/sheets', '/builder/sheets'], async (req, res) => {
 
 router.get(['/album-sizes', '/builder/album-sizes'], async (req, res) => {
   try {
+    const isB2B = isStudioOrAdmin(req);
     const sizes = await AlbumSize.find(req.query || {});
-    res.json(sizes || []);
+    const sanitized = (sizes || []).map(sz => {
+      const item = sz.toObject ? sz.toObject() : { ...sz };
+      if (!isB2B) {
+        delete item.studioBasePrice;
+        delete item.studioCoverSurcharge;
+      }
+      return item;
+    });
+    res.json(sanitized);
   } catch (err) {
     res.status(500).json({ error: err.message, albumSizes: [] });
   }

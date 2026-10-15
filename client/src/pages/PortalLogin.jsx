@@ -58,6 +58,11 @@ const PortalLogin = () => {
     if (user && !authLoading) {
       if (user.role === 'b2c' || user.role === 'admin' || user.role === 'sysadmin') {
         navigate('/client');
+      } else if (user.role === 'b2b') {
+        const studioUrl = typeof window !== 'undefined' && window.location.hostname.includes('web.app')
+          ? 'https://weddingalbums-studio.web.app'
+          : 'http://localhost:5174';
+        window.location.href = studioUrl;
       }
     }
   }, [user, authLoading, navigate]);

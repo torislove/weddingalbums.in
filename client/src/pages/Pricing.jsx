@@ -1,53 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { Check, Info, PhoneCall } from 'lucide-react';
+import React from 'react';
+import { Info, PhoneCall, Building2, ExternalLink, Sparkles, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import PackageSection from '../components/PackageSection';
 import './Pricing.css';
 
-const Pricing = () => {
-  const [activeTab, setActiveTab] = useState('b2c');
+const STUDIO_PORTAL_URL = typeof window !== 'undefined' && window.location.hostname.includes('localhost')
+  ? 'http://localhost:5174'
+  : 'https://weddingalbums-studio.web.app';
 
+const Pricing = () => {
   return (
     <div className="pricing-page">
       {/* Hero Section */}
       <section className="pricing-hero">
         <div className="pricing-ambient-glow"></div>
         <ScrollReveal>
-          <div className="pricing-badge">100% TRANSPARENT</div>
-          <h1 className="text-gradient font-serif mb-4">Transparent Pricing</h1>
-          <p className="text-muted max-w-2xl mx-auto text-lg mb-8">
-            <span className="telugu-text text-white">ఎలాంటి దాచిన ఛార్జీలు లేవు</span> (No hidden charges). What you see is exactly what you pay. 
-            Choose your profile below to view our comprehensive pricing.
-          </p>
-
-          <div className="pricing-tab-switcher">
-            <button 
-              className={`ptab-btn ${activeTab === 'b2c' ? 'active' : ''}`}
-              onClick={() => setActiveTab('b2c')}
-            >
-              For Couples (B2C)
-            </button>
-            <button 
-              className={`ptab-btn ${activeTab === 'b2b' ? 'active' : ''}`}
-              onClick={() => setActiveTab('b2b')}
-            >
-              For Studios (B2B)
-            </button>
+          <div className="pricing-badge">
+            <Sparkles size={14} className="inline mr-1 text-[#D4AF37]" />
+            100% TRANSPARENT HEIRLOOM PRICING
           </div>
+          <h1 className="text-gradient font-serif mb-4">Transparent Pricing for Couples</h1>
+          <p className="text-muted max-w-2xl mx-auto text-lg mb-8">
+            <span className="telugu-text text-white font-semibold">ఎలాంటి దాచిన ఛార్జీలు లేవు</span> (No hidden charges). What you see is exactly what you pay for your heirloom wedding albums, 4K video edits, and event prints.
+          </p>
         </ScrollReveal>
       </section>
 
-      {/* Packages Section using dynamic API component */}
+      {/* Packages Section for Couples (B2C) */}
       <section className="pricing-content section bg-darker">
         <div className="container">
           <ScrollReveal>
-            <h2 className="text-center font-serif text-white mb-10">
-              {activeTab === 'b2c' ? 'Wedding Combo Packages' : 'Wholesale Studio Rates'}
+            <h2 className="text-center font-serif text-white mb-2">
+              Wedding Collections & Services
             </h2>
+            <p className="text-center text-gray-400 text-sm max-w-xl mx-auto mb-10">
+              Select any package below to configure custom sheet finishes, 4K video styles, and album dimensions.
+            </p>
           </ScrollReveal>
           
-          <PackageSection type={activeTab} />
+          <PackageSection type="b2c" />
           
+        </div>
+      </section>
+
+      {/* Studio Partner Dedicated Referral Section */}
+      <section className="section" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
+        <div className="container">
+          <ScrollReveal>
+            <div className="glass-3d p-6 sm:p-8 rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-black/90 via-[#D4AF37]/10 to-black/90 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start gap-2 text-xs uppercase tracking-widest font-bold text-[#D4AF37]">
+                  <Building2 size={16} />
+                  <span>Are you a Professional Photo Studio or Freelance Editor?</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
+                  Looking for Wholesale Studio Trade Pricing?
+                </h3>
+                <p className="text-sm text-gray-300 max-w-xl">
+                  Wholesale per-sheet lab rates, trade credit terms, raw camera asset ingestion, and white-label client drop-shipping are exclusively managed through the <strong>WeddingAlbums Studio Portal</strong>.
+                </p>
+              </div>
+              <a
+                href={STUDIO_PORTAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-gold-3d whitespace-nowrap px-6 py-3.5 text-sm font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(212,175,55,0.3)] shrink-0"
+              >
+                <span>Launch Studio Portal</span>
+                <ExternalLink size={16} />
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -60,31 +83,52 @@ const Pricing = () => {
           
           <div className="faq-grid">
             <ScrollReveal delay={100} className="faq-card glass-3d">
-              <h4 className="text-white flex items-center gap-2"><Info size={18} className="text-[#D4AF37]"/> Do you require an advance payment?</h4>
-              <p className="text-gray-400 mt-2">Yes, we require a 50% advance to start the editing or album design process. The remaining 50% is due before shipping.</p>
+              <h4 className="text-white flex items-center gap-2">
+                <Info size={18} className="text-[#D4AF37]"/> Do you require an advance payment?
+              </h4>
+              <p className="text-gray-400 mt-2">
+                Yes, we require a 50% advance to initiate the dedicated design, color grading, and proofing process. The remaining balance is payable upon your digital 3D proof approval before physical print binding.
+              </p>
             </ScrollReveal>
             
             <ScrollReveal delay={200} className="faq-card glass-3d">
-              <h4 className="text-white flex items-center gap-2"><Info size={18} className="text-[#D4AF37]"/> How long does printing take?</h4>
-              <p className="text-gray-400 mt-2">Once you approve the digital 3D proof, printing and binding take 3-5 working days. Shipping across AP/TS takes another 2-3 days.</p>
+              <h4 className="text-white flex items-center gap-2">
+                <Info size={18} className="text-[#D4AF37]"/> How long does printing take?
+              </h4>
+              <p className="text-gray-400 mt-2">
+                Once you approve the digital 3D flipbook proof, precision printing and hand-crafted binding take 3-5 working days. Priority courier delivery across AP and Telangana takes another 24-48 hours.
+              </p>
             </ScrollReveal>
 
             <ScrollReveal delay={300} className="faq-card glass-3d">
-              <h4 className="text-white flex items-center gap-2"><Info size={18} className="text-[#D4AF37]"/> Can B2B studios get samples?</h4>
-              <p className="text-gray-400 mt-2">Yes! We offer a heavily discounted sample album for studios to keep in their office and show clients.</p>
+              <h4 className="text-white flex items-center gap-2">
+                <ShieldCheck size={18} className="text-[#D4AF37]"/> Can wedding studios get wholesale rates?
+              </h4>
+              <p className="text-gray-400 mt-2">
+                Yes! Verified photo studios, wedding cinematographers, and freelance editors receive protected wholesale rates per sheet and white-label drop-shipping via the dedicated Studio Portal.
+              </p>
             </ScrollReveal>
             
             <ScrollReveal delay={400} className="faq-card glass-3d">
-              <h4 className="text-white flex items-center gap-2"><Info size={18} className="text-[#D4AF37]"/> Are there hidden shipping charges?</h4>
-              <p className="text-gray-400 mt-2">No. Shipping is calculated at checkout based on weight and location. We use premium couriers like DTDC and BlueDart.</p>
+              <h4 className="text-white flex items-center gap-2">
+                <Info size={18} className="text-[#D4AF37]"/> Are there hidden shipping charges?
+              </h4>
+              <p className="text-gray-400 mt-2">
+                No. Standard insured door delivery across Andhra Pradesh & Telangana is included in all premium heirloom packages. Express 24-hour rush dispatch is available during checkout.
+              </p>
             </ScrollReveal>
           </div>
 
           <ScrollReveal className="pricing-cta">
             <h3 className="font-serif text-white mb-4">Have custom requirements?</h3>
-            <p className="text-gray-400 mb-6">Talk directly to our founders on WhatsApp to discuss bulk orders or custom album sizes.</p>
-            <a href="https://wa.me/919000000000" target="_blank" rel="noreferrer" className="btn btn-gold-3d flex items-center gap-2 mx-auto w-fit">
-              <PhoneCall size={18} /> Chat on WhatsApp
+            <p className="text-gray-400 mb-6">Talk directly to our Vijayawada production team on WhatsApp to discuss custom dimensions, specialty sheets, or multi-album family suites.</p>
+            <a 
+              href="https://wa.me/919876543210?text=Hello!%20I%20would%20like%20to%20discuss%20a%20custom%20wedding%20album%20package." 
+              target="_blank" 
+              rel="noreferrer" 
+              className="btn btn-gold-3d flex items-center gap-2 mx-auto w-fit"
+            >
+              <PhoneCall size={18} /> Chat with Album Specialist
             </a>
           </ScrollReveal>
         </div>

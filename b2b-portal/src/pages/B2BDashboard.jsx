@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Clock, CheckCircle, TrendingUp, Star, FileText, Wallet, MessageSquare, MapPin } from 'lucide-react';
+import { Upload, Clock, CheckCircle, TrendingUp, Star, FileText, Wallet, MessageSquare, MapPin, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API } from '../apiConfig';
 
@@ -37,7 +37,54 @@ const B2BDashboard = () => {
     fetchData();
   }, []);
 
-  const activeJobsCount = jobs.filter(j => j.status !== 'Completed' && j.status !== 'approved' && j.status !== 'Rejected').length;
+  // Studio Live Margin Calculator State
+  const [calcSize, setCalcSize] = useState('12x36');
+  const [calcSheet, setCalcSheet] = useState('karizma');
+  const [calcSheetsCount, setCalcSheetsCount] = useState(30);
+  const [calcVideo, setCalcVideo] = useState('none');
+  const [clientQuote, setClientQuote] = useState(18500);
+
+  // Studio Pricing Catalog Data
+  const ALBUM_SIZES = [
+    { id: '14x40', name: '14×40 Magnum Royal Mandap', wholesaleBase: 10500, retailRef: 16500 },
+    { id: '12x36', name: '12×36 Grand Imperial (AP Standard)', wholesaleBase: 7800, retailRef: 12500 },
+    { id: '12x30', name: '12×30 Panoramic Cinema', wholesaleBase: 6800, retailRef: 10500 },
+    { id: '10x30', name: '10×30 Slim Cinema', wholesaleBase: 5900, retailRef: 9200 },
+    { id: '12x24', name: '12×24 Square Celebration', wholesaleBase: 5400, retailRef: 8500 },
+    { id: '10x20', name: '10×20 Compact Square', wholesaleBase: 4600, retailRef: 7200 },
+    { id: '12x18-vert', name: '12×18 Royal Vertical Portrait', wholesaleBase: 6200, retailRef: 9800 },
+    { id: '10x15-vert', name: '10×15 Editorial Vertical', wholesaleBase: 4900, retailRef: 7600 },
+    { id: '8x12-vert', name: '8×12 Traditional Vertical', wholesaleBase: 3800, retailRef: 5800 },
+    { id: '6x9-pocket', name: '6×9 Companion Pocket Parent Book', wholesaleBase: 2100, retailRef: 3200 },
+  ];
+
+  const SHEET_TYPES = [
+    { id: 'karizma', name: 'Karizma Royal Luster', rate: 42, retailRate: 65, gsm: '280 GSM' },
+    { id: 'gloss', name: 'Crystal Ultra High-Gloss', rate: 55, retailRate: 85, gsm: '300 GSM' },
+    { id: 'velvet', name: 'Velvet Feather Touch', rate: 62, retailRate: 95, gsm: '320 GSM Scuff-Free' },
+    { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', rate: 72, retailRate: 110, gsm: '310 GSM Pearl' },
+    { id: 'nt', name: 'Non-Tearable Waterproof NT', rate: 58, retailRate: 90, gsm: '350 Micron Poly' }
+  ];
+
+  const VIDEO_OPTIONS = [
+    { id: 'none', name: 'No Video Edit', wholesaleRate: 0, retailRef: 0 },
+    { id: 'reels', name: '5-Pack Viral 4K Reels', wholesaleRate: 2100, retailRef: 3500 },
+    { id: 'teaser', name: '3-5 Min 4K Teaser Trailer', wholesaleRate: 3600, retailRef: 6000 },
+    { id: 'feature', name: '4K Feature Film (15-20 min)', wholesaleRate: 6200, retailRef: 10000 },
+    { id: 'doc', name: 'Traditional 2-3h Documentary', wholesaleRate: 7500, retailRef: 12000 }
+  ];
+
+  // Derived calculation
+  const selSizeObj = ALBUM_SIZES.find(s => s.id === calcSize) || ALBUM_SIZES[1];
+  const selSheetObj = SHEET_TYPES.find(s => s.id === calcSheet) || SHEET_TYPES[0];
+  const selVideoObj = VIDEO_OPTIONS.find(v => v.id === calcVideo) || VIDEO_OPTIONS[0];
+
+  const wholesaleLabCost = selSizeObj.wholesaleBase + (selSheetObj.rate * calcSheetsCount) + selVideoObj.wholesaleRate;
+  const suggestedRetail = selSizeObj.retailRef + (selSheetObj.retailRate * calcSheetsCount) + selVideoObj.retailRef;
+  const studioProfit = Math.max(0, Number(clientQuote) - wholesaleLabCost);
+  const studioMarginPercent = clientQuote > 0 ? Math.round((studioProfit / Number(clientQuote)) * 100) : 0;
+
+  const activeJobsCount = jobs.filter(j => j.status !== 'Completed' && j.status !== 'approved').length;
   const completedJobsCount = jobs.filter(j => j.status === 'Completed' || j.status === 'approved').length;
 
   return (
@@ -69,7 +116,7 @@ const B2BDashboard = () => {
           </div>
         </div>
         <div className="glass-panel stat-card" style={{ padding: '1.5rem' }}>
-          <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
+          <div className="stat-icon" style={{ background: 'rgba(168, 85, 247, 0.1)' }}>
             <CheckCircle size={24} color="var(--accent-green)" />
           </div>
           <div className="stat-info">
@@ -93,6 +140,137 @@ const B2BDashboard = () => {
           <div className="stat-info">
             <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)' }}>Avg SLA Score</p>
             <h3 style={{ margin: 0, fontSize: '1.8rem' }}>4.9/5</h3>
+          </div>
+        </div>
+      </div>
+
+      {/* Live Studio Trade Margin Calculator & Slab Estimator */}
+      <div className="glass-panel" style={{ padding: 'clamp(1.2rem, 3vw, 2rem)', marginBottom: '2.5rem', border: '1px solid rgba(212,175,55,0.3)', background: 'linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0.7) 100%)', borderRadius: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '3px 10px', borderRadius: '99px', background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold-primary)', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>
+              ⚡ Protected Wholesale Rate Engine
+            </div>
+            <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', margin: 0, color: '#fff' }}>Studio Profit Margin Calculator</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: '4px 0 0' }}>Configure album specs, sheets, and video edits to view your retained profit margin.</p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)' }}>
+            <ShieldCheck size={16} /> 100% White-Label Drop-Shipping Included
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+          {/* Size Selector */}
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>1. Album Dimension</label>
+            <select 
+              value={calcSize} 
+              onChange={e => setCalcSize(e.target.value)}
+              className="form-control"
+              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+            >
+              {ALBUM_SIZES.map(s => (
+                <option key={s.id} value={s.id} style={{ background: '#111', color: '#fff' }}>
+                  {s.name} (Lab: ₹{s.wholesaleBase.toLocaleString('en-IN')})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sheet Selector */}
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>2. Luxury Sheet Finish</label>
+            <select 
+              value={calcSheet} 
+              onChange={e => setCalcSheet(e.target.value)}
+              className="form-control"
+              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+            >
+              {SHEET_TYPES.map(s => (
+                <option key={s.id} value={s.id} style={{ background: '#111', color: '#fff' }}>
+                  {s.name} (Trade: ₹{s.rate}/sheet)
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sheets Count */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+              <span>3. Sheet Count</span>
+              <span style={{ color: 'var(--gold-primary)' }}>{calcSheetsCount} Sheets ({calcSheetsCount * 2} Pages)</span>
+            </div>
+            <input 
+              type="range" 
+              min="15" 
+              max="60" 
+              value={calcSheetsCount} 
+              onChange={e => setCalcSheetsCount(Number(e.target.value))}
+              style={{ width: '100%', accentColor: 'var(--gold-primary)', cursor: 'pointer' }}
+            />
+          </div>
+
+          {/* Video Addon */}
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>4. Cinema Video Add-on</label>
+            <select 
+              value={calcVideo} 
+              onChange={e => setCalcVideo(e.target.value)}
+              className="form-control"
+              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+            >
+              {VIDEO_OPTIONS.map(v => (
+                <option key={v.id} value={v.id} style={{ background: '#111', color: '#fff' }}>
+                  {v.name} {v.wholesaleRate > 0 ? `(+₹${v.wholesaleRate.toLocaleString('en-IN')})` : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Live Calculation Bar */}
+        <div style={{ padding: '1.25rem', background: 'rgba(0,0,0,0.5)', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>Wholesale Lab Cost (Your Cost)</div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#fff', fontFamily: 'monospace' }}>
+              ₹{wholesaleLabCost.toLocaleString('en-IN')}
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>All Taxes + Courier Included</div>
+          </div>
+
+          <div>
+            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>You Bill Couple (Retail Quote)</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+              <span style={{ fontSize: '1.2rem', color: 'var(--gold-primary)', fontWeight: 'bold' }}>₹</span>
+              <input 
+                type="number" 
+                value={clientQuote} 
+                onChange={e => setClientQuote(Math.max(0, Number(e.target.value)))}
+                style={{ width: '140px', padding: '6px 10px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(212,175,55,0.4)', color: 'var(--gold-primary)', borderRadius: '6px', fontWeight: 700, fontSize: '1.2rem', fontFamily: 'monospace', outline: 'none' }}
+              />
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Suggested Retail: ₹{suggestedRetail.toLocaleString('en-IN')}</div>
+          </div>
+
+          <div>
+            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#10b981', letterSpacing: '0.5px', fontWeight: 'bold' }}>Your Retained Studio Margin</div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', fontFamily: 'monospace' }}>
+              +₹{studioProfit.toLocaleString('en-IN')}
+            </div>
+            <div style={{ fontSize: '12px', color: '#34d399', fontWeight: 600 }}>
+              {studioMarginPercent}% Profit Margin
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'right' }}>
+            <Link 
+              to={`/submit?size=${calcSize}&sheet=${calcSheet}&sheets=${calcSheetsCount}&video=${calcVideo}`}
+              className="liquid-btn"
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', whiteSpace: 'nowrap' }}
+            >
+              <span>Submit with This Spec</span>
+              <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </div>

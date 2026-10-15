@@ -1,42 +1,85 @@
-/* Ultra-smooth, non-intrusive cursor aura */
-.shutter-cursor {
+/* ==========================================================================
+   CustomCursor.css — Zero-Lag Luxury Gold Aperture Halo
+   ========================================================================== */
+
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+  body {
+    cursor: default;
+  }
+}
+
+.luxury-cursor-container {
   position: fixed;
   top: 0;
   left: 0;
-  width: 34px;
-  height: 34px;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
-  z-index: 99999;
-  margin-left: -17px;
-  margin-top: -17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
+  z-index: 999999;
+  overflow: hidden;
+}
+
+/* Precision Instant Dot: ABSOLUTELY ZERO transition on transform for true 1-to-1 mouse response */
+.luxury-cursor-dot {
+  position: fixed;
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background: #D4AF37;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.9), 0 0 16px rgba(255, 215, 0, 0.4);
+  /* CRITICAL: No transition on transform so it moves synchronously with the physical mouse */
+  transition: opacity 0.15s ease, background-color 0.15s ease;
   will-change: transform;
 }
 
-.shutter-svg {
+.luxury-cursor-dot.clicking {
+  background: #ffffff;
+}
+
+/* Snappy Trailing Gold Aperture Ring */
+.luxury-cursor-ring {
+  position: fixed;
+  top: -18px;
+  left: -18px;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  border-radius: 50%;
+  border: 1.5px solid rgba(212, 175, 55, 0.6);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+  /* Transitions only apply to scale/size/opacity, NOT transform position */
+  transition: opacity 0.15s ease, width 0.15s ease, height 0.15s ease, top 0.15s ease, left 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  will-change: transform;
+}
+
+.aperture-halo-inner {
   width: 100%;
   height: 100%;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.4);
+  animation: rotateApertureDash 16s linear infinite;
 }
 
-.inner-dashed {
-  transition: stroke-width 0.2s ease;
+@keyframes rotateApertureDash {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.center-dot {
-  transition: transform 0.2s ease;
-  transform-origin: 16px 16px;
+/* Hover State */
+.luxury-cursor-ring.hovering {
+  top: -24px;
+  left: -24px;
+  width: 48px;
+  height: 48px;
+  border-color: #D4AF37;
+  background-color: rgba(212, 175, 55, 0.12);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.45), inset 0 0 10px rgba(212, 175, 55, 0.15);
 }
 
-/* Hover States */
-.shutter-cursor.hovering .shutter-svg {
-  transform: scale(1.25) rotate(45deg);
-}
-
-.shutter-cursor.hovering .center-dot {
-  transform: scale(1.6);
+.luxury-cursor-ring.clicking {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.25);
 }

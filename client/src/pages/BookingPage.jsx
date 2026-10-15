@@ -33,7 +33,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'landscape',
     telugu: '12×36 రాయల్ పానోరమిక్ (ఆంధ్ర నెం.1 ఎంపిక ⭐)',
     basePrice: 9500,
-    studioBasePrice: 6800,
     popular: true,
     description: "36 inch wide panoramic lay-flat views. India's #1 wedding choice."
   },
@@ -44,7 +43,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'landscape',
     telugu: '12×30 క్లాసిక్ ల్యాండ్‌స్కేప్',
     basePrice: 8500,
-    studioBasePrice: 6000,
     popular: false,
     description: 'Traditional Telugu standard widescreen layout for mandap & stage spreads.'
   },
@@ -55,7 +53,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'landscape',
     telugu: '12×24 కాంపాక్ట్ ల్యాండ్‌స్కేప్',
     basePrice: 7500,
-    studioBasePrice: 5200,
     popular: false,
     description: 'Budget-friendly album with modern sleek aspect ratio.'
   },
@@ -66,7 +63,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'landscape',
     telugu: '12×18 ట్రెడిషనల్ ల్యాండ్‌స్కేప్',
     basePrice: 6500,
-    studioBasePrice: 4500,
     popular: false,
     description: 'Traditional portrait-landscape balance, timeless horizontal format.'
   },
@@ -77,7 +73,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'landscape',
     telugu: '10×24 కాంపాక్ట్ ఫీస్ట్ ల్యాండ్‌స్కేప్',
     basePrice: 5800,
-    studioBasePrice: 4000,
     popular: false,
     description: 'Lightweight easy-to-carry format for family functions.'
   },
@@ -88,7 +83,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'landscape',
     telugu: 'రాయల్ ఫ్యామిలీ బండిల్ (కపుల్ + 2 పేరెంట్ ఆల్బమ్స్)',
     basePrice: 11500,
-    studioBasePrice: 8200,
     popular: true,
     isBundle: true,
     description: 'Master 12×36 album for couple + 2 matching 6×18 parent duplicate copies.'
@@ -102,7 +96,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'portrait',
     telugu: '18×12 గ్రాండ్ వర్టికల్ పోర్ట్రెయిట్ (రాయల్ మ్యాగజైన్)',
     basePrice: 9000,
-    studioBasePrice: 6400,
     popular: true,
     description: 'Tall royal magazine format. Stunning full-length bridal silk & jewellery spreads.'
   },
@@ -113,7 +106,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'portrait',
     telugu: '15×12 క్లాసిక్ వర్టికల్ పోర్ట్రెయిట్',
     basePrice: 8000,
-    studioBasePrice: 5600,
     popular: false,
     description: 'Traditional vertical bridal album for stage portraits and couple framing.'
   },
@@ -124,7 +116,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'portrait',
     telugu: '14×11 ఫైన్ ఆర్ట్ పోర్ట్రెయిట్',
     basePrice: 7200,
-    studioBasePrice: 5000,
     popular: false,
     description: 'Editorial fashion photography format for candid contemporary stories.'
   },
@@ -135,7 +126,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'portrait',
     telugu: '12×9 కాంపాక్ట్ వర్టికల్ పోర్ట్రెయిట్',
     basePrice: 5500,
-    studioBasePrice: 3800,
     popular: false,
     description: 'Handy vertical book for intimate Haldi, Mehendi & Sangeet moments.'
   },
@@ -146,7 +136,6 @@ const DEFAULT_ALBUM_SIZES = [
     orientation: 'portrait',
     telugu: '10×8 ఫ్యామిలీ గిఫ్ట్ పోర్ట్రెయిట్',
     basePrice: 4500,
-    studioBasePrice: 3100,
     popular: false,
     description: 'Compact vertical keepsake gift album for parents and close relatives.'
   }
@@ -159,7 +148,6 @@ const DEFAULT_SHEETS = [
     name: 'Non-Tearable Velvet Touch',
     telugu: 'సిల్కీ వెల్వెట్ మ్యాట్ (వాటర్ ప్రూఫ్)',
     pricePerSheet: 65,
-    studioPricePerSheet: 42,
     note: 'Ultra-smooth matte finish, 100% waterproof, tear-resistant, feather touch.'
   },
   {
@@ -167,7 +155,6 @@ const DEFAULT_SHEETS = [
     name: 'Crystal High Gloss (Ultra Mirror)',
     telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్',
     pricePerSheet: 75,
-    studioPricePerSheet: 48,
     note: 'Super-reflective mirror gloss. Vivid colors, deep blacks and saturated wedding reds.'
   },
   {
@@ -175,7 +162,6 @@ const DEFAULT_SHEETS = [
     name: 'High-Gloss Metallic Pearl Sheen',
     telugu: 'రాయల్ హై-గ్లాస్ మెటాలిక్',
     pricePerSheet: 85,
-    studioPricePerSheet: 55,
     note: 'Lustrous high-contrast sheen that brings gold jewellery and wedding silks alive.'
   },
   {
@@ -183,7 +169,6 @@ const DEFAULT_SHEETS = [
     name: 'Royal Feather Touch Leatherette',
     telugu: 'రాయల్ ఫెదర్ టచ్ లెథరెట్',
     pricePerSheet: 110,
-    studioPricePerSheet: 72,
     note: 'Ultra-luxury textured sheets with genuine tactile grain and rich gold hot-stamping.'
   },
   {
@@ -191,15 +176,13 @@ const DEFAULT_SHEETS = [
     name: 'HD Thermal Lamination Matte',
     telugu: 'హై-డెఫినిషన్ థర్మల్ లామినేషన్',
     pricePerSheet: 50,
-    studioPricePerSheet: 32,
-    note: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday studio handling.'
+    note: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday handling.'
   },
   {
     id: 'silk_matte',
     name: 'Silk Matte Pearl Lustre',
     telugu: 'సిల్క్ మ్యాట్ పెర్ల్ లస్టర్',
     pricePerSheet: 95,
-    studioPricePerSheet: 62,
     note: 'Micro-pearlescent sheen with true-to-life skin tones and natural highlights without glare.'
   },
   {
@@ -207,7 +190,6 @@ const DEFAULT_SHEETS = [
     name: 'Silver Halide True Photographic (Fuji DP2)',
     telugu: 'సిల్వర్ హాలైడ్ ట్రూ ఫోటో పేపర్',
     pricePerSheet: 125,
-    studioPricePerSheet: 82,
     note: 'Continuous tone optical RGB exposure. 100-year archival laboratory rating without dots.'
   },
   {
@@ -215,45 +197,44 @@ const DEFAULT_SHEETS = [
     name: 'Embossed Canvas Texture Fine Art',
     telugu: 'కాన్వాస్ ఎంబోస్డ్ ఫైన్ ఆర్ట్ టెక్స్చర్',
     pricePerSheet: 105,
-    studioPricePerSheet: 68,
     note: 'Tactile painterly woven fabric texture with artistic micro-embossing for timeless art.'
   }
 ];
 
 // ALL VIDEO EDITING SERVICES
 const VIDEO_SERVICES = [
-  { id: 'teaser', name: '4K Cinematic Wedding Teaser (1-3 min)', telugu: '4K సినిమాటిక్ టీజర్', price: 6000, studioPrice: 4200, note: 'Fast-paced emotional cut, WhatsApp & family ready' },
-  { id: 'reels', name: 'Instagram Reels & Shorts 5-Pack (9:16)', telugu: 'ఇన్‌స్టాగ్రామ్ రీల్స్ 5-ప్యాక్', price: 3500, studioPrice: 2200, note: 'Trending music synced 9:16 vertical hooks' },
-  { id: 'highlights', name: 'Story Highlights Film (10-15 min)', telugu: 'స్టోరీ హైలైట్స్ ఫిలిం', price: 10000, studioPrice: 7000, note: 'Emotional story with couple vows & speech sync' },
-  { id: 'traditional', name: 'Full Traditional Long-Form Video (60+ min)', telugu: 'ఫుల్ ట్రెడిషనల్ వీడియో', price: 12000, studioPrice: 8500, note: 'All rituals: Talambralu, Agni Sakshi multi-cam' },
-  { id: 'sde', name: 'Same-Day Edit (SDE Express for Reception)', telugu: 'సేమ్-డే ఎడిట్ (రిసెప్షన్)', price: 12000, studioPrice: 8500, note: 'Morning wedding edited for reception night LED screen' },
-  { id: 'prewedding', name: 'Pre-Wedding Love Story Film', telugu: 'ప్రీ-వెడ్డింగ్ లవ్ స్టోరీ', price: 5000, studioPrice: 3500, note: 'Romantic couple teaser with licensed music' },
-  { id: 'sound', name: 'Mangalasnanam Sound & Mantra Mastering', telugu: 'సంప్రదాయ సౌండ్ మాస్టరింగ్', price: 3000, studioPrice: 1900, note: 'Mantra clarity, Purohit de-noise & Sannai Melam' }
+  { id: 'teaser', name: '4K Cinematic Wedding Teaser (1-3 min)', telugu: '4K సినిమాటిక్ టీజర్', price: 6000, note: 'Fast-paced emotional cut, WhatsApp & family ready' },
+  { id: 'reels', name: 'Instagram Reels & Shorts 5-Pack (9:16)', telugu: 'ఇన్‌స్టాగ్రామ్ రీల్స్ 5-ప్యాక్', price: 3500, note: 'Trending music synced 9:16 vertical hooks' },
+  { id: 'highlights', name: 'Story Highlights Film (10-15 min)', telugu: 'స్టోరీ హైలైట్స్ ఫిలిం', price: 10000, note: 'Emotional story with couple vows & speech sync' },
+  { id: 'traditional', name: 'Full Traditional Long-Form Video (60+ min)', telugu: 'ఫుల్ ట్రెడిషనల్ వీడియో', price: 12000, note: 'All rituals: Talambralu, Agni Sakshi multi-cam' },
+  { id: 'sde', name: 'Same-Day Edit (SDE Express for Reception)', telugu: 'సేమ్-డే ఎడిట్ (రిసెప్షన్)', price: 12000, note: 'Morning wedding edited for reception night LED screen' },
+  { id: 'prewedding', name: 'Pre-Wedding Love Story Film', telugu: 'ప్రీ-వెడ్డింగ్ లవ్ స్టోరీ', price: 5000, note: 'Romantic couple teaser with licensed music' },
+  { id: 'sound', name: 'Mangalasnanam Sound & Mantra Mastering', telugu: 'సంప్రదాయ సౌండ్ మాస్టరింగ్', price: 3000, note: 'Mantra clarity, Purohit de-noise & Sannai Melam' }
 ];
 
 // ALL PHOTO EDITING SERVICES
 const PHOTO_SERVICES = [
-  { id: 'retouching', name: 'Telugu Pelli Skin Retouching & Beauty Clean-up', telugu: 'స్కిన్ రీటచింగ్ & బ్యూటీ క్లీనప్', rate: 60, studioRate: 35, note: 'Blemish removal, eye brightening, gold jewelry shine' },
-  { id: 'karizma_psd', name: 'Traditional Karizma PSD Creative Designing', telugu: 'కరిజ్మా క్రియేటివ్ డిజైనింగ్', rate: 45, studioRate: 28, note: 'Custom Telugu shlokas, spread layouts & typography' },
-  { id: 'cinematic_luts', name: 'Cinematic Color Grading & Wedding LUTs', telugu: 'సినిమాటిక్ కలర్ గ్రేడింగ్', rate: 30, studioRate: 18, note: 'Warm golden Andhra wedding palette & LUTs' },
-  { id: 'background', name: 'AI Sky, Mandap & Lighting Background Replacement', telugu: 'బ్యాక్‌గ్రౌండ్ రీప్లేస్‌మెంట్', rate: 90, studioRate: 55, note: 'Replace cluttered venue with royal mandap/gardens' },
-  { id: 'restoration', name: 'Old & Vintage Photo Restoration', telugu: 'పాత ఫొటోల రీస్టోరేషన్', rate: 120, studioRate: 75, note: 'Fix scratched, faded, or torn ancestral photos' },
-  { id: 'culling', name: 'AI RAW Photo Culling & Best Selection', telugu: 'రా ఫొటోల కల్లింగ్ & సెలక్షన్', rate: 15, studioRate: 10, note: 'Filter blinks, blurs & tag top highlight moments' }
+  { id: 'retouching', name: 'Telugu Pelli Skin Retouching & Beauty Clean-up', telugu: 'స్కిన్ రీటచింగ్ & బ్యూటీ క్లీనప్', rate: 60, note: 'Blemish removal, eye brightening, gold jewelry shine' },
+  { id: 'karizma_psd', name: 'Traditional Karizma PSD Creative Designing', telugu: 'కరిజ్మా క్రియేటివ్ డిజైనింగ్', rate: 45, note: 'Custom Telugu shlokas, spread layouts & typography' },
+  { id: 'cinematic_luts', name: 'Cinematic Color Grading & Wedding LUTs', telugu: 'సినిమాటిక్ కలర్ గ్రేడింగ్', rate: 30, note: 'Warm golden Andhra wedding palette & LUTs' },
+  { id: 'background', name: 'AI Sky, Mandap & Lighting Background Replacement', telugu: 'బ్యాక్‌గ్రౌండ్ రీప్లేస్‌మెంట్', rate: 90, note: 'Replace cluttered venue with royal mandap/gardens' },
+  { id: 'restoration', name: 'Old & Vintage Photo Restoration', telugu: 'పాత ఫొటోల రీస్టోరేషన్', rate: 120, note: 'Fix scratched, faded, or torn ancestral photos' },
+  { id: 'culling', name: 'AI RAW Photo Culling & Best Selection', telugu: 'రా ఫొటోల కల్లింగ్ & సెలక్షన్', rate: 15, note: 'Filter blinks, blurs & tag top highlight moments' }
 ];
 
 // ALL FLEX & BANNER SERVICES
 const FLEX_SERVICES = [
-  { id: 'mandap', name: 'Grand Mandap Entrance Flex (10×8 ft Star Media)', telugu: 'మండపం ఎంట్రన్స్ ఫ్లెక్స్', price: 2400, studioPrice: 1500, note: 'Heavy Star Flex 340 GSM with brass eyelets' },
-  { id: 'hoarding', name: 'Roadside Wedding Hoarding (40×20 ft Heavy Duty)', telugu: 'రోడ్‌సైడ్ వెడ్డింగ్ హోర్డింగ్', price: 12000, studioPrice: 8000, note: 'Ultra-high visibility large format solvent press' },
-  { id: 'standee', name: 'Retractable Welcome Roll-Up Standee (6×3 ft)', telugu: 'వెల్‌కమ్ రోల్-అప్ స్టాండీ', price: 1800, studioPrice: 1150, note: 'Anodized aluminum stand with carry bag' },
-  { id: 'invite', name: 'Animated Telugu WhatsApp Video Invitation', telugu: 'వాట్సాప్ వీడియో ఆహ్వానం', price: 1999, studioPrice: 1200, note: 'Auspicious Sannai Melam BGM & temple motifs' }
+  { id: 'mandap', name: 'Grand Mandap Entrance Flex (10×8 ft Star Media)', telugu: 'మండపం ఎంట్రన్స్ ఫ్లెక్స్', price: 2400, note: 'Heavy Star Flex 340 GSM with brass eyelets' },
+  { id: 'hoarding', name: 'Roadside Wedding Hoarding (40×20 ft Heavy Duty)', telugu: 'రోడ్‌సైడ్ వెడ్డింగ్ హోర్డింగ్', price: 12000, note: 'Ultra-high visibility large format solvent press' },
+  { id: 'standee', name: 'Retractable Welcome Roll-Up Standee (6×3 ft)', telugu: 'వెల్‌కమ్ రోల్-అప్ స్టాండీ', price: 1800, note: 'Anodized aluminum stand with carry bag' },
+  { id: 'invite', name: 'Animated Telugu WhatsApp Video Invitation', telugu: 'వాట్సాప్ వీడియో ఆహ్వానం', price: 1999, note: 'Auspicious Sannai Melam BGM & temple motifs' }
 ];
 
 // ALL CALENDAR SERVICES
 const CALENDAR_SERVICES = [
-  { id: 'desk_easel', name: 'Personalized 12-Month Tabletop Desk Calendar', telugu: '12-నెలల టేబుల్‌టాప్ డెస్క్ క్యాలెండర్', price: 1200, studioPrice: 750, note: '12 Couple photos with wooden easel stand' },
-  { id: 'wall_poster', name: 'Grand Wall Hanging Poster Calendar (12×18 Metallic)', telugu: 'గ్రాండ్ వాల్ పోస్టర్ క్యాలెండర్', price: 650, studioPrice: 380, note: 'High-gloss metallic print with metal rim hanger' },
-  { id: 'pocket_pack', name: 'Pocket Mini Calendars (Pack of 10 Copies)', telugu: 'పాకెట్ మినీ క్యాలెండర్లు (10 కాపీలు)', price: 990, studioPrice: 550, note: 'Waterproof wallet cards with rounded corners' }
+  { id: 'desk_easel', name: 'Personalized 12-Month Tabletop Desk Calendar', telugu: '12-నెలల టేబుల్‌టాప్ డెస్క్ క్యాలెండర్', price: 1200, note: '12 Couple photos with wooden easel stand' },
+  { id: 'wall_poster', name: 'Grand Wall Hanging Poster Calendar (12×18 Metallic)', telugu: 'గ్రాండ్ వాల్ పోస్టర్ క్యాలెండర్', price: 650, note: 'High-gloss metallic print with metal rim hanger' },
+  { id: 'pocket_pack', name: 'Pocket Mini Calendars (Pack of 10 Copies)', telugu: 'పాకెట్ మినీ క్యాలెండర్లు (10 కాపీలు)', price: 990, note: 'Waterproof wallet cards with rounded corners' }
 ];
 
 // 5 PRIMARY SERVICE TILES FOR RESPONSIVE GRID (ZERO SCROLLBARS)
@@ -264,8 +245,7 @@ const SERVICE_CATEGORIES = [
     name: 'Karizma & Flush Mount Album',
     telugu: 'కరిజ్మా & ఫ్లష్ మౌంట్ ఆల్బమ్ డిజైన్',
     icon: BookOpen,
-    priceTag: 'from ₹5,200',
-    studioPriceTag: 'from ₹3,800 lab rate'
+    priceTag: 'from ₹5,200'
   },
   {
     id: 'video',
@@ -273,8 +253,7 @@ const SERVICE_CATEGORIES = [
     name: 'Cinematic Films & Reels',
     telugu: '4K సినిమాటిక్ వీడియో & రీల్స్',
     icon: Film,
-    priceTag: 'from ₹3,500',
-    studioPriceTag: 'from ₹2,200 lab rate'
+    priceTag: 'from ₹3,500'
   },
   {
     id: 'photo',
@@ -282,8 +261,7 @@ const SERVICE_CATEGORIES = [
     name: 'Photo Retouch & Color',
     telugu: 'ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్',
     icon: Palette,
-    priceTag: 'from ₹30/photo',
-    studioPriceTag: 'from ₹18/photo lab rate'
+    priceTag: 'from ₹30/photo'
   },
   {
     id: 'flex',
@@ -291,8 +269,7 @@ const SERVICE_CATEGORIES = [
     name: 'Flex, Banners & Invites',
     telugu: 'కళ్యాణ మండపం ఫ్లెక్స్ & ఆహ్వానాలు',
     icon: MonitorPlay,
-    priceTag: 'from ₹1,800',
-    studioPriceTag: 'from ₹1,150 lab rate'
+    priceTag: 'from ₹1,800'
   },
   {
     id: 'calendar',
@@ -300,8 +277,7 @@ const SERVICE_CATEGORIES = [
     name: 'Calendars & Keepsakes',
     telugu: 'కపుల్ టేబుల్‌టాప్ & వాల్ క్యాలెండర్లు',
     icon: Calendar,
-    priceTag: 'from ₹650',
-    studioPriceTag: 'from ₹380 lab rate'
+    priceTag: 'from ₹650'
   }
 ];
 
@@ -315,11 +291,6 @@ const BookingPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   
-  // B2B Wholesale vs B2C Retail Pricing Toggle
-  const [isStudioMode, setIsStudioMode] = useState(() => {
-    return user?.role === 'studio' || Boolean(user?.studioName);
-  });
-
   // SEPARATED EXPERIENCE MODE: 'bundles' (1-Click Fast Suites) vs 'custom' (A-la-carte Multi-Service)
   const [experienceMode, setExperienceMode] = useState('bundles'); 
   const [appliedBundle, setAppliedBundle] = useState('royal_telugu');
@@ -350,13 +321,6 @@ const BookingPage = () => {
       });
     }).catch(console.error);
   }, []);
-
-  // Sync user role with studio mode
-  useEffect(() => {
-    if (user?.role === 'studio' || user?.studioName) {
-      setIsStudioMode(true);
-    }
-  }, [user]);
 
   // Form State with Multi-Select and Itemized Per-Unit Configuration
   const [formData, setFormData] = useState({
@@ -642,20 +606,18 @@ const BookingPage = () => {
     });
   };
 
-  // Precise, 100% Itemized Pricing Calculation (Supports Arbitrary Per-Sheet Rates!)
-  const calculateTotal = (forceMode = null) => {
-    const studio = forceMode !== null ? forceMode : isStudioMode;
-
+  // Precise, 100% Itemized Pricing Calculation (Couple Retail Heirloom Suite)
+  const calculateTotal = () => {
     // Special curated bundle fast calculation if in bundles mode
     if (experienceMode === 'bundles') {
-      if (appliedBundle === 'royal_telugu') return studio ? 14999 : 17999;
-      if (appliedBundle === 'cinematic_duo') return studio ? 10800 : 13200;
-      if (appliedBundle === 'lab_express') return studio ? 6500 : 8200;
+      if (appliedBundle === 'royal_telugu') return 17999;
+      if (appliedBundle === 'cinematic_duo') return 13200;
+      if (appliedBundle === 'lab_express') return 8200;
       if (formData.dynamicPackage && appliedBundle === (formData.dynamicPackage.id || formData.dynamicPackage._id || formData.dynamicPackage.tier)) {
         const raw = String(formData.dynamicPackage.price || '').replace(/[^0-9]/g, '');
         const num = parseInt(raw, 10);
         if (!isNaN(num) && num > 0) {
-          return studio ? Math.round(num * 0.72) : num;
+          return num;
         }
       }
     }
@@ -664,7 +626,7 @@ const BookingPage = () => {
 
     // 1. Album Print & Design
     if (formData.services.albumPrint) {
-      let basePrice = studio ? 6800 : 9500;
+      let basePrice = 9500;
       
       const matchedSize = dynamicPricing.sizes.find(s =>
         s.id === formData.albumSize ||
@@ -674,15 +636,13 @@ const BookingPage = () => {
         s.name?.includes(formData.albumSize)
       );
       if (matchedSize) {
-        basePrice = studio && matchedSize.studioBasePrice !== undefined && matchedSize.studioBasePrice !== null
-          ? Number(matchedSize.studioBasePrice)
-          : Number(matchedSize.basePrice || (studio ? 6800 : 9500));
+        basePrice = Number(matchedSize.basePrice || matchedSize.clientBasePrice || 9500);
       }
 
       // Cover style surcharge
-      if (formData.albumType === 'acrylic') basePrice += (studio ? 1000 : 1500);
-      else if (formData.albumType === 'velvet') basePrice += (studio ? 700 : 1000);
-      else if (formData.albumType === 'leather') basePrice += (studio ? 800 : 1200);
+      if (formData.albumType === 'acrylic') basePrice += 1500;
+      else if (formData.albumType === 'velvet') basePrice += 1000;
+      else if (formData.albumType === 'leather') basePrice += 1200;
 
       // Multiple sheet types calculation with arbitrary per-sheet rates
       const activeSheets = dynamicPricing.sheets.filter(s =>
@@ -690,12 +650,10 @@ const BookingPage = () => {
         formData.selectedSheetTypes.includes(s._id) ||
         formData.selectedSheetTypes.some(sel => s.name?.toLowerCase().includes(String(sel).toLowerCase()))
       );
-      let avgSheetRate = studio ? 42 : 65;
+      let avgSheetRate = 65;
       if (activeSheets.length > 0) {
         const sumRates = activeSheets.reduce((acc, s) => {
-          const rate = studio && s.studioPricePerSheet !== undefined && s.studioPricePerSheet !== null
-            ? Number(s.studioPricePerSheet)
-            : Number(s.pricePerSheet || (studio ? 42 : 65));
+          const rate = Number(s.pricePerSheet || s.clientPricePerSheet || 65);
           return acc + rate;
         }, 0);
         avgSheetRate = Math.round(sumRates / activeSheets.length);
@@ -706,13 +664,13 @@ const BookingPage = () => {
       total += basePrice + (extraSheets * avgSheetRate);
 
       // Presentation box
-      if (formData.boxType === 'velvet_case') total += (studio ? 800 : 1200);
-      else if (formData.boxType === 'wooden_box') total += (studio ? 1200 : 1800);
-      else if (formData.boxType === 'acrylic_box') total += (studio ? 1500 : 2200);
+      if (formData.boxType === 'velvet_case') total += 1200;
+      else if (formData.boxType === 'wooden_box') total += 1800;
+      else if (formData.boxType === 'acrylic_box') total += 2200;
 
       // Duplicate parent albums
-      if (formData.parentAlbums === 1) total += (studio ? 1800 : 2500);
-      else if (formData.parentAlbums === 2) total += (studio ? 3200 : 4500);
+      if (formData.parentAlbums === 1) total += 2500;
+      else if (formData.parentAlbums === 2) total += 4500;
     }
 
     // 2. Video Editing
@@ -720,7 +678,7 @@ const BookingPage = () => {
       formData.selectedVideoServices.forEach(vId => {
         const item = VIDEO_SERVICES.find(v => v.id === vId);
         if (item) {
-          total += (studio ? item.studioPrice : item.price);
+          total += (item.price || item.clientPrice || 0);
         }
       });
     }
@@ -731,10 +689,10 @@ const BookingPage = () => {
       formData.selectedPhotoServices.forEach(pId => {
         const item = PHOTO_SERVICES.find(p => p.id === pId);
         if (item) {
-          combinedPerPhoto += (studio ? item.studioRate : item.rate);
+          combinedPerPhoto += (item.rate || item.clientRate || 0);
         }
       });
-      const photoMin = studio ? 800 : 1200;
+      const photoMin = 1200;
       total += Math.max(photoMin, combinedPerPhoto * formData.photoCount);
     }
 
@@ -743,7 +701,7 @@ const BookingPage = () => {
       formData.selectedFlexServices.forEach(fId => {
         const item = FLEX_SERVICES.find(f => f.id === fId);
         if (item) {
-          total += (studio ? item.studioPrice : item.price);
+          total += (item.price || item.clientPrice || 0);
         }
       });
     }
@@ -754,7 +712,7 @@ const BookingPage = () => {
       formData.selectedCalendarServices.forEach(cId => {
         const item = CALENDAR_SERVICES.find(c => c.id === cId);
         if (item) {
-          calendarUnitSum += (studio ? item.studioPrice : item.price);
+          calendarUnitSum += (item.price || item.clientPrice || 0);
         }
       });
       total += calendarUnitSum * (formData.calendarCopies || 1);
@@ -762,15 +720,11 @@ const BookingPage = () => {
 
     // Speed surcharge
     if (formData.deliverySpeed === 'express') {
-      total += (studio ? 1000 : 1500);
+      total += 1500;
     }
 
     return total;
   };
-
-  const retailTotal = calculateTotal(false);
-  const wholesaleTotal = calculateTotal(true);
-  const studioSavings = Math.max(0, retailTotal - wholesaleTotal);
 
   // Dynamic Stepper Definitions
   const wizardSteps = experienceMode === 'bundles'
@@ -860,7 +814,7 @@ const BookingPage = () => {
       const bundleNames = {
         royal_telugu: 'Royal Telugu Muhurtham Master Suite',
         cinematic_duo: 'Cinematic Story & Karizma Duo',
-        lab_express: 'Studio Fast-Track Printing Pack'
+        lab_express: 'Express Heirloom Printing Suite'
       };
       const bundleName = formData.dynamicPackage?.tier || bundleNames[appliedBundle] || 'Curated Wedding Luxury Suite';
       const bundleDetails = formData.dynamicPackage
@@ -887,7 +841,7 @@ const BookingPage = () => {
       });
     } else {
       if (formData.services.albumPrint) {
-        let albumItemPrice = isStudioMode ? 6800 : 9500;
+        let albumItemPrice = 9500;
         const matchedSize = dynamicPricing.sizes.find(s =>
           s.id === formData.albumSize ||
           s._id === formData.albumSize ||
@@ -896,33 +850,31 @@ const BookingPage = () => {
           s.name?.includes(formData.albumSize)
         );
         if (matchedSize) {
-          albumItemPrice = isStudioMode && matchedSize.studioBasePrice !== undefined && matchedSize.studioBasePrice !== null
-            ? Number(matchedSize.studioBasePrice)
-            : Number(matchedSize.basePrice || (isStudioMode ? 6800 : 9500));
+          albumItemPrice = Number(matchedSize.basePrice || matchedSize.clientBasePrice || 9500);
         }
-        if (formData.albumType === 'acrylic') albumItemPrice += (isStudioMode ? 1000 : 1500);
-        else if (formData.albumType === 'velvet') albumItemPrice += (isStudioMode ? 700 : 1000);
-        else if (formData.albumType === 'leather') albumItemPrice += (isStudioMode ? 800 : 1200);
+        if (formData.albumType === 'acrylic') albumItemPrice += 1500;
+        else if (formData.albumType === 'velvet') albumItemPrice += 1000;
+        else if (formData.albumType === 'leather') albumItemPrice += 1200;
 
         const activeSheets = dynamicPricing.sheets.filter(s =>
           formData.selectedSheetTypes.includes(s.id) ||
           formData.selectedSheetTypes.includes(s._id) ||
           formData.selectedSheetTypes.some(sel => s.name?.toLowerCase().includes(String(sel).toLowerCase()))
         );
-        let avgSheetRate = isStudioMode ? 42 : 65;
+        let avgSheetRate = 65;
         if (activeSheets.length > 0) {
-          const sumRates = activeSheets.reduce((acc, s) => acc + (isStudioMode && s.studioPricePerSheet !== undefined && s.studioPricePerSheet !== null ? Number(s.studioPricePerSheet) : Number(s.pricePerSheet || (isStudioMode ? 42 : 65))), 0);
+          const sumRates = activeSheets.reduce((acc, s) => acc + Number(s.pricePerSheet || s.clientPricePerSheet || 65), 0);
           avgSheetRate = Math.round(sumRates / activeSheets.length);
         }
         const extraSheets = Math.max(0, formData.pages - 30);
         albumItemPrice += (extraSheets * avgSheetRate);
 
-        if (formData.boxType === 'velvet_case') albumItemPrice += (isStudioMode ? 800 : 1200);
-        else if (formData.boxType === 'wooden_box') albumItemPrice += (isStudioMode ? 1200 : 1800);
-        else if (formData.boxType === 'acrylic_box') albumItemPrice += (isStudioMode ? 1500 : 2200);
+        if (formData.boxType === 'velvet_case') albumItemPrice += 1200;
+        else if (formData.boxType === 'wooden_box') albumItemPrice += 1800;
+        else if (formData.boxType === 'acrylic_box') albumItemPrice += 2200;
 
-        if (formData.parentAlbums === 1) albumItemPrice += (isStudioMode ? 1800 : 2500);
-        else if (formData.parentAlbums === 2) albumItemPrice += (isStudioMode ? 3200 : 4500);
+        if (formData.parentAlbums === 1) albumItemPrice += 2500;
+        else if (formData.parentAlbums === 2) albumItemPrice += 4500;
 
         const sheetNames = activeSheets.map(s => s.name).filter(Boolean);
         const sheetDisplay = sheetNames.length > 0 ? sheetNames.join(' + ') : formData.selectedSheetTypes.join(' + ');
@@ -948,7 +900,7 @@ const BookingPage = () => {
           name: `Cinematic Video Editing (${formData.selectedVideoServices.length} cut${formData.selectedVideoServices.length > 1 ? 's' : ''})`,
           type: 'video',
           details: `${vNames.join(', ')} | Audio: ${formData.musicStyle.replace('_', ' ')}`,
-          price: formData.selectedVideoServices.reduce((sum, id) => sum + (isStudioMode ? (VIDEO_SERVICES.find(v => v.id === id)?.studioPrice || 0) : (VIDEO_SERVICES.find(v => v.id === id)?.price || 0)), 0),
+          price: formData.selectedVideoServices.reduce((sum, id) => sum + (VIDEO_SERVICES.find(v => v.id === id)?.price || 0), 0),
           specs: {
             services: formData.selectedVideoServices,
             music: formData.musicStyle
@@ -961,7 +913,7 @@ const BookingPage = () => {
           name: `Photo Retouching & Color (${formData.photoCount} photos)`,
           type: 'photo',
           details: `${pNames.join(', ')}`,
-          price: formData.photoCount * formData.selectedPhotoServices.reduce((sum, id) => sum + (isStudioMode ? (PHOTO_SERVICES.find(p => p.id === id)?.studioRate || 0) : (PHOTO_SERVICES.find(p => p.id === id)?.rate || 0)), 0),
+          price: formData.photoCount * formData.selectedPhotoServices.reduce((sum, id) => sum + (PHOTO_SERVICES.find(p => p.id === id)?.rate || 0), 0),
           specs: {
             styles: formData.selectedPhotoServices,
             count: formData.photoCount
@@ -974,7 +926,7 @@ const BookingPage = () => {
           name: `Wedding Flex & Banners (${formData.selectedFlexServices.length} items)`,
           type: 'flex',
           details: fNames.join(', '),
-          price: formData.selectedFlexServices.reduce((sum, id) => sum + (isStudioMode ? (FLEX_SERVICES.find(f => f.id === id)?.studioPrice || 0) : (FLEX_SERVICES.find(f => f.id === id)?.price || 0)), 0),
+          price: formData.selectedFlexServices.reduce((sum, id) => sum + (FLEX_SERVICES.find(f => f.id === id)?.price || 0), 0),
           specs: {
             services: formData.selectedFlexServices
           }
@@ -986,7 +938,7 @@ const BookingPage = () => {
           name: `Personalized Calendars (${formData.calendarCopies} copies)`,
           type: 'calendar',
           details: `${cNames.join(', ')}`,
-          price: formData.calendarCopies * formData.selectedCalendarServices.reduce((sum, id) => sum + (isStudioMode ? (CALENDAR_SERVICES.find(c => c.id === id)?.studioPrice || 0) : (CALENDAR_SERVICES.find(c => c.id === id)?.price || 0)), 0),
+          price: formData.calendarCopies * formData.selectedCalendarServices.reduce((sum, id) => sum + (CALENDAR_SERVICES.find(c => c.id === id)?.price || 0), 0),
           specs: {
             services: formData.selectedCalendarServices,
             copies: formData.calendarCopies
@@ -1019,7 +971,7 @@ const BookingPage = () => {
         status: 'Confirmed',
         cloudLink: formData.uploadMethod === 'cloud' ? formData.cloudLink : '',
         uploadPreference: formData.uploadMethod,
-        instructions: `[${isStudioMode ? 'B2B STUDIO WHOLESALE' : 'B2C CUSTOMER'} | ${formData.eventType} in ${formData.city}] ${experienceMode === 'bundles' ? `Bundle: ${appliedBundle}` : `Custom: ${Object.keys(formData.services).filter(k => formData.services[k]).join(', ')}`}. Speed: ${formData.deliverySpeed}. Notes: ${formData.instructions || 'Standard order'}`,
+        instructions: `[COUPLE HEIRLOOM ORDER | ${formData.eventType} in ${formData.city}] ${experienceMode === 'bundles' ? `Bundle: ${appliedBundle}` : `Custom: ${Object.keys(formData.services).filter(k => formData.services[k]).join(', ')}`}. Speed: ${formData.deliverySpeed}. Notes: ${formData.instructions || 'Standard order'}`,
         items: itemsList,
         data: {
           packageType: experienceMode,
@@ -1055,11 +1007,7 @@ const BookingPage = () => {
             address: formData.address
           },
           pricing: {
-            total: totalAmount,
-            retailTotal,
-            wholesaleTotal,
-            savings: studioSavings,
-            isStudioMode
+            total: totalAmount
           },
           items: itemsList
         }
@@ -1080,7 +1028,7 @@ const BookingPage = () => {
           body: JSON.stringify({
             items: [{
               type: experienceMode === 'bundles' ? 'bundle_booking' : 'custom_booking',
-              name: `${experienceMode === 'bundles' ? 'Curated Suite' : 'Custom Package'} (${formData.eventType} - ${isStudioMode ? 'Studio Trade' : 'Retail'})`,
+              name: `${experienceMode === 'bundles' ? 'Curated Suite' : 'Custom Package'} (${formData.eventType} - Heirloom Suite)`,
               price: totalAmount,
               details: payload.data
             }],
@@ -1096,7 +1044,7 @@ const BookingPage = () => {
         body: JSON.stringify({
           phone: formData.phone,
           name: formData.name,
-          service: `Booking ${orderId} (${formData.eventType} - ${isStudioMode ? 'B2B Studio' : 'B2C'})`,
+          service: `Booking ${orderId} (${formData.eventType} - Direct Couple)`,
           note: `Total: ₹${totalAmount.toLocaleString('en-IN')}`
         })
       }).catch(() => {});
@@ -1125,12 +1073,12 @@ const BookingPage = () => {
       `--------------------------------\n` +
       `*Client:* ${formData.name || 'Valued Client'}\n` +
       `*Phone:* ${formData.phone || 'Not provided'}\n` +
-      `*Account Type:* ${isStudioMode ? '🏢 Studio Wholesale Trade (B2B)' : '👥 Customer Retail (B2C)'}\n` +
+      `*Account Type:* 👥 Couple Heirloom Suite (Retail)\n` +
       `*Event:* ${formData.eventType} in ${formData.city}\n` +
       `*Mode:* ${experienceMode === 'bundles' ? `⚡ Curated Bundle (${appliedBundle})` : '🛠️ Custom Multi-Service Builder'}\n` +
       `*Speed:* ${formData.deliverySpeed === 'express' ? '🚀 Express 24-48h' : '⚡ Standard 3-5 Days'}\n\n` +
       `*Selected Services:*\n• ${selectedServiceNames}\n\n` +
-      `*Total Estimate:* ₹${calculateTotal().toLocaleString('en-IN')}${isStudioMode && studioSavings > 0 ? ` (Saved ₹${studioSavings.toLocaleString('en-IN')} with Studio rates)` : ''}\n` +
+      `*Total Estimate:* ₹${calculateTotal().toLocaleString('en-IN')}\n` +
       `--------------------------------\n` +
       `Please confirm my booking and schedule design proofing!`;
 
@@ -1170,8 +1118,8 @@ const BookingPage = () => {
               <span className="text-white font-semibold">{experienceMode === 'bundles' ? '⚡ Curated Luxury Bundle' : '🛠️ Custom Multi-Service'}</span>
             </div>
             <div className="flex justify-between text-gray-400">
-              <span>Pricing Tier:</span>
-              <span className="text-white font-semibold">{isStudioMode ? '🏢 Studio Wholesale' : '👥 Retail Customer'}</span>
+              <span>Booking Type:</span>
+              <span className="text-white font-semibold">✨ Couple Heirloom Suite</span>
             </div>
             <div className="flex justify-between text-gray-400">
               <span>Total Estimated:</span>
@@ -1224,38 +1172,33 @@ const BookingPage = () => {
           </p>
         </div>
 
-        {/* 🏢 B2B STUDIO WHOLESALE VS B2C CUSTOMER RETAIL TOGGLE */}
+        {/* Couple Heirloom Suite with Professional Studio Redirect */}
         <div className="flex items-center justify-between p-4 rounded-2xl bg-black/70 border border-[#D4AF37]/30 mb-8 flex-wrap gap-4 shadow-lg backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-xl ${isStudioMode ? 'bg-[#D4AF37] text-black shadow-md' : 'bg-white/10 text-gray-300'}`}>
-              <Building2 size={22} />
+            <div className="p-2.5 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37]">
+              <Sparkles size={22} />
             </div>
             <div>
               <div className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                <span>{isStudioMode ? '🏢 Studio Wholesale Trade Rates (B2B)' : '👥 Customer Retail Pricing (B2C)'}</span>
-                <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${isStudioMode ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'}`}>
-                  {isStudioMode ? 'Wholesale Active' : 'Retail'}
+                <span>✨ Couple Heirloom Direct Booking Suite</span>
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30">
+                  Direct Lab Order
                 </span>
               </div>
               <div className="text-xs text-gray-400 mt-0.5">
-                {isStudioMode
-                  ? '⚡ Trade pricing applied: Discounted lab rates on sheets, album sizes, and editing.'
-                  : 'Are you a photo studio owner or freelance editor? Switch to Studio Mode for trade wholesale rates.'}
+                Order handcrafted luxury albums directly from Andhra Pradesh's premier post-production facility with 100% color fidelity.
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsStudioMode(!isStudioMode)}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border flex items-center gap-2 ${
-              isStudioMode
-                ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-                : 'bg-white/5 text-gray-200 border-white/20 hover:border-[#D4AF37] hover:text-white'
-            }`}
+          <a
+            href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-studio.web.app' : 'http://localhost:5174'}
+            target="_blank"
+            rel="noreferrer"
+            className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37]/15 flex items-center gap-2"
           >
-            <Zap size={14} />
-            {isStudioMode ? '✓ Studio Rates Active' : 'Unlock Studio Rates ⚡'}
-          </button>
+            <Building2 size={14} />
+            <span>Studio / Photographer Portal ↗</span>
+          </a>
         </div>
 
         {/* Dynamic Stepper Bar */}
@@ -1327,15 +1270,14 @@ const BookingPage = () => {
                   >
                     <div className="flex justify-between items-start mb-2">
                       <span className="bundle-badge">⭐ Best Value Master Suite</span>
-                      <span className="bundle-savings">Save ₹8,500 Wholesale!</span>
+                      <span className="bundle-savings">Save ₹8,500 with Bundle!</span>
                     </div>
                     <h4 className="text-lg font-bold text-white">Royal Telugu Muhurtham Master Suite</h4>
                     <div className="text-xs text-gray-400 font-telugu mb-3">రాయల్ తెలుగు ముహూర్తం మాస్టర్ సూట్</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹{isStudioMode ? '14,999' : '17,999'}</span>
+                      <span className="text-2xl font-black text-[#D4AF37]">₹17,999</span>
                       <span className="text-sm text-gray-500 line-through">₹26,499</span>
-                      {isStudioMode && <span className="text-xs text-emerald-400 font-bold ml-auto">⚡ Wholesale Active</span>}
                     </div>
 
                     <ul className="text-xs text-gray-300 space-y-2 mb-6">
@@ -1371,15 +1313,14 @@ const BookingPage = () => {
                   >
                     <div className="flex justify-between items-start mb-2">
                       <span className="bundle-badge">🎬 Most Popular Duo</span>
-                      <span className="bundle-savings">Save ₹6,200 Wholesale!</span>
+                      <span className="bundle-savings">Save ₹6,200 with Bundle!</span>
                     </div>
                     <h4 className="text-lg font-bold text-white">Cinematic Story & Karizma Duo</h4>
                     <div className="text-xs text-gray-400 font-telugu mb-3">సినిమాటిక్ స్టోరీ & కరిజ్మా డ్యుయో</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹{isStudioMode ? '10,800' : '13,200'}</span>
+                      <span className="text-2xl font-black text-[#D4AF37]">₹13,200</span>
                       <span className="text-sm text-gray-500 line-through">₹19,400</span>
-                      {isStudioMode && <span className="text-xs text-emerald-400 font-bold ml-auto">⚡ Wholesale Active</span>}
                     </div>
 
                     <ul className="text-xs text-gray-300 space-y-2 mb-6">
@@ -1414,16 +1355,15 @@ const BookingPage = () => {
                     className={`luxury-bundle-card ${appliedBundle === 'lab_express' ? 'active' : ''}`}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <span className="bundle-badge">🚀 Lab Express Printing Pack</span>
-                      <span className="bundle-savings">Save ₹4,200 Wholesale!</span>
+                      <span className="bundle-badge">🚀 Express Heirloom Printing Suite</span>
+                      <span className="bundle-savings">Save ₹4,200 with Bundle!</span>
                     </div>
-                    <h4 className="text-lg font-bold text-white">Studio Fast-Track Printing Pack</h4>
-                    <div className="text-xs text-gray-400 font-telugu mb-3">స్టూడియో ఫాస్ట్-ట్రాక్ ప్రింటింగ్ ప్యాక్</div>
+                    <h4 className="text-lg font-bold text-white">Express Heirloom Printing Suite</h4>
+                    <div className="text-xs text-gray-400 font-telugu mb-3">ఎక్స్‌ప్రెస్ ఎయిర్‌లూమ్ ప్రింటింగ్ సూట్</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹{isStudioMode ? '6,500' : '8,200'}</span>
+                      <span className="text-2xl font-black text-[#D4AF37]">₹8,200</span>
                       <span className="text-sm text-gray-500 line-through">₹12,400</span>
-                      {isStudioMode && <span className="text-xs text-emerald-400 font-bold ml-auto">⚡ Wholesale Active</span>}
                     </div>
 
                     <ul className="text-xs text-gray-300 space-y-2 mb-6">
@@ -1454,7 +1394,7 @@ const BookingPage = () => {
 
                   {/* Dynamic Packages Configured by SysAdmin */}
                   {dynamicPricing.packages && dynamicPricing.packages
-                    .filter(pkg => pkg.isActive !== false && (!pkg.b2bOrB2c || pkg.b2bOrB2c === (isStudioMode ? 'b2b' : 'b2c')))
+                    .filter(pkg => pkg.isActive !== false && (!pkg.b2bOrB2c || pkg.b2bOrB2c === 'b2c'))
                     .map(pkg => {
                       const isSelected = appliedBundle === (pkg.id || pkg._id || pkg.tier);
                       return (
@@ -1713,7 +1653,7 @@ const BookingPage = () => {
                         >
                           <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
                           <div className="text-[#D4AF37] mt-0.5 font-bold">
-                            {isStudioMode ? '+₹1,000 Rush' : '+₹1,500 Rush'}
+                            +₹1,500 Rush
                           </div>
                         </button>
                       </div>
@@ -1956,7 +1896,7 @@ const BookingPage = () => {
                         <div>
                           <div className="service-tile-title">{cat.name}</div>
                           <div className="service-tile-telugu font-telugu">{cat.telugu}</div>
-                          <div className="service-tile-price">{isStudioMode ? cat.studioPriceTag : cat.priceTag}</div>
+                          <div className="service-tile-price">{cat.priceTag}</div>
                         </div>
                       </div>
                     );
@@ -2071,9 +2011,9 @@ const BookingPage = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                           {[
                             { id: 'karizma', label: 'Karizma Royal Spread', note: "India's #1 Choice", surcharge: 'Standard' },
-                            { id: 'acrylic', label: 'Crystal Acrylic Glass 3D', note: 'Ultra-modern high-gloss face', surcharge: isStudioMode ? '+₹1,000' : '+₹1,500' },
-                            { id: 'velvet', label: 'Royal Velvet Touch', note: 'Soft luxury fabric feel', surcharge: isStudioMode ? '+₹700' : '+₹1,000' },
-                            { id: 'leather', label: 'Embossed Leatherette', note: 'Timeless gold foil heirloom', surcharge: isStudioMode ? '+₹800' : '+₹1,200' },
+                            { id: 'acrylic', label: 'Crystal Acrylic Glass 3D', note: 'Ultra-modern high-gloss face', surcharge: '+₹1,500' },
+                            { id: 'velvet', label: 'Royal Velvet Touch', note: 'Soft luxury fabric feel', surcharge: '+₹1,000' },
+                            { id: 'leather', label: 'Embossed Leatherette', note: 'Timeless gold foil heirloom', surcharge: '+₹1,200' },
                             { id: 'flushmount', label: 'Seamless Flush Mount', note: 'Edge-to-edge panoramic view', surcharge: 'Included' },
                           ].map(opt => (
                             <div
@@ -2128,7 +2068,7 @@ const BookingPage = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                           {filteredSizes.map(sz => {
-                            const szBase = isStudioMode && sz.studioBasePrice ? sz.studioBasePrice : sz.basePrice;
+                            const szBase = Number(sz.basePrice || sz.clientBasePrice || 9500);
                             const isSelected = formData.albumSize === sz.id || formData.albumSize === sz._id || formData.albumSize === sz.dimensions || (formData.albumSize && sz.dimensions && formData.albumSize.includes(sz.dimensions)) || (formData.albumSize && sz.id && formData.albumSize.includes(sz.id));
 
                             return (
@@ -2157,13 +2097,8 @@ const BookingPage = () => {
                                 {sz.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu">{sz.telugu}</div>}
                                 <div className="flex justify-between items-baseline mt-2 pt-1 border-t border-white/5">
                                   <span className="text-xs text-[#D4AF37] font-mono font-bold">
-                                    ₹{Number(szBase).toLocaleString('en-IN')}
+                                    ₹{szBase.toLocaleString('en-IN')}
                                   </span>
-                                  {isStudioMode && sz.basePrice > szBase && (
-                                    <span className="text-[10px] text-gray-500 line-through">
-                                      ₹{Number(sz.basePrice).toLocaleString('en-IN')}
-                                    </span>
-                                  )}
                                 </div>
                               </div>
                             );
@@ -2187,7 +2122,7 @@ const BookingPage = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                           {dynamicPricing.sheets.map(sht => {
-                            const shtRate = isStudioMode && sht.studioPricePerSheet ? sht.studioPricePerSheet : sht.pricePerSheet;
+                            const shtRate = Number(sht.pricePerSheet || sht.clientPricePerSheet || 65);
                             const isSelected = formData.selectedSheetTypes.includes(sht.id) || formData.selectedSheetTypes.includes(sht._id) || (sht.name && formData.selectedSheetTypes.some(st => sht.name.toLowerCase().includes(String(st).toLowerCase())));
 
                             return (
@@ -2247,9 +2182,9 @@ const BookingPage = () => {
                           <div className="grid grid-cols-2 gap-2">
                             {[
                               { id: 'standard', label: 'Standard Box', surcharge: 'Included' },
-                              { id: 'velvet_case', label: 'Velvet Briefcase', surcharge: isStudioMode ? '+₹800' : '+₹1,200' },
-                              { id: 'wooden_box', label: 'Wooden Box', surcharge: isStudioMode ? '+₹1,200' : '+₹1,800' },
-                              { id: 'acrylic_box', label: 'Acrylic Box', surcharge: isStudioMode ? '+₹1,500' : '+₹2,200' },
+                              { id: 'velvet_case', label: 'Velvet Briefcase', surcharge: '+₹1,200' },
+                              { id: 'wooden_box', label: 'Wooden Box', surcharge: '+₹1,800' },
+                              { id: 'acrylic_box', label: 'Acrylic Box', surcharge: '+₹2,200' },
                             ].map(box => (
                               <div
                                 key={box.id}
@@ -2272,8 +2207,8 @@ const BookingPage = () => {
                           <div className="flex gap-2">
                             {[
                               { cnt: 0, label: 'None' },
-                              { cnt: 1, label: isStudioMode ? '+1 Mini (+₹1,800)' : '+1 Mini (+₹2,500)' },
-                              { cnt: 2, label: isStudioMode ? '+2 Minis (+₹3,200)' : '+2 Minis (+₹4,500)' },
+                              { cnt: 1, label: '+1 Mini (+₹2,500)' },
+                              { cnt: 2, label: '+2 Minis (+₹4,500)' },
                             ].map(b => (
                               <button
                                 key={b.cnt}
@@ -2316,7 +2251,7 @@ const BookingPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                       {VIDEO_SERVICES.map(v => {
                         const isSelected = formData.selectedVideoServices.includes(v.id);
-                        const vPrice = isStudioMode ? v.studioPrice : v.price;
+                        const vPrice = v.price;
 
                         return (
                           <div
@@ -2331,7 +2266,7 @@ const BookingPage = () => {
                               <div className="flex justify-between items-start">
                                 <span className="font-bold text-xs text-white">{v.name}</span>
                                 <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
-                                  +₹{vPrice.toLocaleString('en-IN')}
+                                   +₹{vPrice.toLocaleString('en-IN')}
                                 </span>
                               </div>
                               <div className="text-[11px] text-gray-400 mt-1">{v.note}</div>
@@ -2382,7 +2317,7 @@ const BookingPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                       {PHOTO_SERVICES.map(p => {
                         const isSelected = formData.selectedPhotoServices.includes(p.id);
-                        const pRate = isStudioMode ? p.studioRate : p.rate;
+                        const pRate = p.rate;
 
                         return (
                           <div
@@ -2453,7 +2388,7 @@ const BookingPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {FLEX_SERVICES.map(f => {
                         const isSelected = formData.selectedFlexServices.includes(f.id);
-                        const fPrice = isStudioMode ? f.studioPrice : f.price;
+                        const fPrice = f.price;
 
                         return (
                           <div
@@ -2505,7 +2440,7 @@ const BookingPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                       {CALENDAR_SERVICES.map(c => {
                         const isSelected = formData.selectedCalendarServices.includes(c.id);
-                        const cPrice = isStudioMode ? c.studioPrice : c.price;
+                        const cPrice = c.price;
 
                         return (
                           <div
@@ -2774,7 +2709,7 @@ const BookingPage = () => {
                         >
                           <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
                           <div className="text-[#D4AF37] mt-0.5 font-bold">
-                            {isStudioMode ? '+₹1,000 Rush' : '+₹1,500 Rush'}
+                            +₹1,500 Rush
                           </div>
                         </button>
                       </div>
@@ -2953,11 +2888,9 @@ const BookingPage = () => {
               <ShoppingCart size={20} className="text-[#D4AF37]" />
               <span>{lang === 'TE' ? 'ఆర్డర్ రసీదు' : 'Itemized Quote'}</span>
             </div>
-            <span className={`text-xs font-semibold flex items-center gap-1 px-2.5 py-1 rounded-full border ${
-              isStudioMode ? 'bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-            }`}>
+            <span className="text-xs font-semibold flex items-center gap-1 px-2.5 py-1 rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
               <Clock size={12} />
-              {isStudioMode ? '⚡ Studio Trade' : (formData.deliverySpeed === 'express' ? '24-48h Rush' : '3-5 Days ETA')}
+              {formData.deliverySpeed === 'express' ? '24-48h Rush' : '3-5 Days ETA'}
             </span>
           </div>
 
@@ -2976,21 +2909,14 @@ const BookingPage = () => {
             {formData.deliverySpeed === 'express' && (
               <div className="flex justify-between text-[#D4AF37] text-xs py-1 border-b border-white/10">
                 <span>Express 24-48h Rush Delivery</span>
-                <span className="font-mono font-bold">+{isStudioMode ? '₹1,000' : '₹1,500'}</span>
-              </div>
-            )}
-
-            {isStudioMode && studioSavings > 0 && (
-              <div className="p-3 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-semibold flex items-center justify-between">
-                <span>⚡ Wholesale Trade Savings:</span>
-                <span className="font-mono font-bold">-₹{studioSavings.toLocaleString('en-IN')}</span>
+                <span className="font-mono font-bold">+₹1,500</span>
               </div>
             )}
 
             <div className="border-t border-white/10 pt-4 mt-2 flex justify-between items-baseline">
               <div>
                 <span className="text-xs text-gray-400 block font-medium">
-                  {isStudioMode ? 'Wholesale Trade Total' : 'Total Itemized Quote'}
+                  Total Itemized Quote
                 </span>
                 <span className="text-3xl font-bold font-mono text-[#D4AF37]">
                   ₹{calculateTotal().toLocaleString('en-IN')}
@@ -3027,7 +2953,7 @@ const BookingPage = () => {
       <div className="mobile-summary-bar">
         <div>
           <span className="text-[11px] text-gray-400 block">
-            {isStudioMode ? 'Wholesale Total' : 'Total Estimate'}
+            Total Estimate
           </span>
           <span className="text-xl font-bold text-[#D4AF37] font-mono">
             ₹{calculateTotal().toLocaleString('en-IN')}

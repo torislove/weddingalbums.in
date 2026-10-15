@@ -1,54 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { motion } from 'framer-motion';
-import BeforeAfter from '../components/BeforeAfter';
-import { UploadCloud, Scissors, BookOpen, Truck, CheckCircle2, Layers, ShieldCheck, Star } from 'lucide-react';
+import { 
+  UploadCloud, Scissors, BookOpen, Truck, CheckCircle2, 
+  Layers, ShieldCheck, Star, ExternalLink, Lock, PhoneCall, Sparkles, Building2 
+} from 'lucide-react';
 import './B2B.css';
 
-const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+const STUDIO_PORTAL_URL = typeof window !== 'undefined' && window.location.hostname.includes('localhost')
+  ? 'http://localhost:5174'
+  : 'https://weddingalbums-studio.web.app';
 
-
-const DEFAULT_SHEETS = [
-  { id: 'luster', name: 'Karizma Royal Luster (Standard)', price: 65, studioPrice: 42 },
-  { id: 'gloss', name: 'Crystal Ultra High-Gloss', price: 85, studioPrice: 55 },
-  { id: 'velvet', name: 'Velvet Feather Touch (Scuff-Free)', price: 95, studioPrice: 62 },
-  { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', price: 110, studioPrice: 72 },
-  { id: 'nt', name: 'Non-Tearable Waterproof NT Sheet', price: 90, studioPrice: 58 }
+const LUXURY_SHEET_SPECS = [
+  {
+    id: 'luster',
+    name: 'Karizma Royal Luster',
+    spec: '280 GSM Micro-Texture',
+    desc: 'Fine grain, anti-glare finish designed for cinematic Telugu wedding ceremonies and rich golden jewelry.',
+    durability: 'Archival 75+ Years'
+  },
+  {
+    id: 'gloss',
+    name: 'Crystal Ultra High-Gloss',
+    spec: '300 GSM High-Vibrancy',
+    desc: 'High-contrast, mirror-sheen surface that makes vivid reception lighting and colorful Mandap florals pop.',
+    durability: 'UV-Protected Coating'
+  },
+  {
+    id: 'velvet',
+    name: 'Velvet Feather Touch',
+    spec: '320 GSM Scuff-Free Matte',
+    desc: 'Ultra-luxurious tactile soft-touch surface. Zero fingerprints, zero glare, and museum-grade tactile elegance.',
+    durability: 'Scratch & Smudge Resistant'
+  },
+  {
+    id: 'metallic',
+    name: 'Metallic Pearl Shimmer',
+    spec: '310 GSM Pearl Luminescence',
+    desc: 'Iridescent pearl luster creating an ethereal 3D shimmer on bridal Kanjeevaram silks and diamond ornaments.',
+    durability: 'High-Luminescence Pigment'
+  },
+  {
+    id: 'nt',
+    name: 'Non-Tearable Waterproof NT',
+    spec: '350 Micron Synthetic Polymer',
+    desc: '100% waterproof, spill-proof, and indestructible synthetic sheets. The gold standard for lifetime heirloom longevity.',
+    durability: '100% Waterproof & Tear-Proof'
+  }
 ];
 
 const B2B = () => {
-  const [sheetCount, setSheetCount] = useState(30);
-  const [sheetTypes, setSheetTypes] = useState(DEFAULT_SHEETS);
-  const [selectedSheetType, setSelectedSheetType] = useState(DEFAULT_SHEETS[0]);
-  
-  useEffect(() => {
-    const fetchConfigs = async () => {
-      try {
-        const res = await fetch(`${API}/api/admin/configs`);
-        if (res.ok) {
-          const data = await res.json();
-          const types = data.find(c => c.key === 'sheet_types')?.options || [];
-          if (types.length > 0) {
-            setSheetTypes(types);
-            setSelectedSheetType(types[0]);
-          }
-        }
-      } catch (err) {
-        console.warn('Configs live fetch notice:', err);
-      }
-    };
-    fetchConfigs();
-  }, []);
-
-  // Calculator Math
-  const inHouseCostPerSheet = 250; // Approximated studio lab cost
-  const ourCost = selectedSheetType ? selectedSheetType.price * sheetCount : 0;
-  const inHouseCost = inHouseCostPerSheet * sheetCount;
-  const savings = Math.max(0, inHouseCost - ourCost);
-
   return (
     <div className="b2b-page">
-      
       {/* Abstract Ambient Glows */}
       <div className="b2b-ambient-1"></div>
       <div className="b2b-ambient-2"></div>
@@ -56,34 +58,68 @@ const B2B = () => {
       {/* Hero Section */}
       <section className="b2b-hero">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <div className="b2b-badge">
-            WHOLESALE PRINTING & EDITING FOR STUDIOS
+          <div className="b2b-badge flex items-center justify-center gap-1.5 mx-auto">
+            <Building2 size={14} />
+            <span>EXCLUSIVELY FOR WEDDING STUDIOS & PROFESSIONAL PHOTOGRAPHERS</span>
           </div>
           <h1 className="b2b-title">
-            Scale Your Studio. <br /> Maximize Margins.
+            Scale Your Studio. <br /> Maximize Your Margins.
           </h1>
           <p className="b2b-subtitle">
-            Outsource your album printing and editing at wholesale per-sheet rates. We handle the production so you can shoot more weddings.
+            Andhra Pradesh's dedicated B2B post-production lab. We handle photo retouching, 4K video editing, color-calibrated album printing, and white-label drop-shipping so you can focus on shooting weddings.
           </p>
-          <Link to="/login?role=b2b" className="btn btn-gold-3d">
-            Create Studio Account
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+            <a 
+              href={STUDIO_PORTAL_URL} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn btn-gold-3d flex items-center gap-2"
+            >
+              <span>Access Studio Wholesale Portal</span>
+              <ExternalLink size={16} />
+            </a>
+            <a 
+              href="https://wa.me/919876543210?text=Hi!%20I%20am%20a%20wedding%20photographer%20and%20would%20like%20to%20apply%20for%20a%20Studio%20Trade%20Account." 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn btn-outline flex items-center gap-2"
+            >
+              <PhoneCall size={16} />
+              <span>Apply for Trade Account</span>
+            </a>
+          </div>
         </motion.div>
       </section>
 
       {/* The Process Section (Bento Grid) */}
       <section className="b2b-workflow">
         <div className="b2b-section-header">
-          <h2 className="b2b-section-title">The Workflow</h2>
-          <p className="b2b-section-subtitle">Seamless integration with your studio.</p>
+          <h2 className="b2b-section-title">The Studio Trade Workflow</h2>
+          <p className="b2b-section-subtitle">Seamless, confidential integration designed for wedding production teams.</p>
         </div>
 
         <div className="b2b-bento-grid">
           {[
-            { icon: <UploadCloud size={28} />, title: '1. Upload RAWs', desc: 'Securely upload massive files via our high-speed studio portal.' },
-            { icon: <Scissors size={28} />, title: '2. Dedicated Editing', desc: 'Your assigned editor applies your signature LUTs and style.' },
-            { icon: <BookOpen size={28} />, title: '3. Client Proofing', desc: 'Send white-labeled 3D album links directly to your couples.' },
-            { icon: <Truck size={28} />, title: '4. Print & Ship', desc: 'We print, bind, and ship luxury albums in your name.' }
+            { 
+              icon: <UploadCloud size={28} />, 
+              title: '1. Ingest Camera RAWs', 
+              desc: 'Upload high-resolution camera RAWs and 4K footage at gigabit speeds via the dedicated Studio Portal.' 
+            },
+            { 
+              icon: <Scissors size={28} />, 
+              title: '2. Dedicated Style Matching', 
+              desc: 'Our team applies your studio LUTs, color profiles, and layout aesthetic for 100% brand consistency.' 
+            },
+            { 
+              icon: <BookOpen size={28} />, 
+              title: '3. White-Label Proofing', 
+              desc: 'Send interactive 3D digital flipbooks to your couples branded completely with your studio name and logo.' 
+            },
+            { 
+              icon: <Truck size={28} />, 
+              title: '4. Precision Print & Blind Ship', 
+              desc: 'We print on museum-grade sheets and ship directly to your client’s doorstep in your studio packaging.' 
+            }
           ].map((step, i) => (
             <motion.div 
               key={i} 
@@ -107,15 +143,33 @@ const B2B = () => {
       <section className="b2b-printing-arsenal">
         <div className="b2b-section-header">
           <h2 className="b2b-section-title">Our Printing Arsenal</h2>
-          <p className="b2b-section-subtitle">Wholesale printing with premium Indian market sheets.</p>
+          <p className="b2b-section-subtitle">Crafted on authentic Noritsu and HP Indigo presses with genuine Fuji and Kodak papers.</p>
         </div>
         
         <div className="b2b-printing-grid">
-          {sheetTypes.slice(0, 4).map((type, idx) => (
-            <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="b2b-sheet-card">
-              <Layers className="b2b-sheet-icon" />
-              <h3>{type.label.split('(')[0].trim()}</h3>
-              <p>Wholesale Rate: <strong>₹{type.price} / sheet</strong></p>
+          {LUXURY_SHEET_SPECS.map((type, idx) => (
+            <motion.div 
+              key={idx} 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ delay: idx * 0.1 }} 
+              className="b2b-sheet-card"
+            >
+              <div className="flex justify-between items-start mb-2">
+                <Layers className="b2b-sheet-icon" />
+                <span className="text-[10px] uppercase font-bold text-[#D4AF37] bg-[#D4AF37]/15 border border-[#D4AF37]/30 px-2 py-0.5 rounded-full">
+                  {type.spec}
+                </span>
+              </div>
+              <h3>{type.name}</h3>
+              <p className="text-xs text-gray-300 mt-1 mb-3">{type.desc}</p>
+              <div className="flex justify-between items-center pt-2 border-t border-white/10 text-[11px] text-gray-400">
+                <span>{type.durability}</span>
+                <span className="text-[#D4AF37] font-semibold flex items-center gap-1">
+                  <Lock size={11} /> Trade Rate Protected
+                </span>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -125,108 +179,94 @@ const B2B = () => {
       <section className="b2b-whitelabel-section">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="b2b-whitelabel-card">
           <ShieldCheck size={48} className="text-[#D4AF37] mb-4 mx-auto" />
-          <h2>100% White-Label Guarantee</h2>
-          <p>Your Brand. Our Execution. We drop-ship albums directly to your clients with NO branding from our side. They will think you printed it in-house.</p>
+          <h2>100% White-Label & Client Non-Poach Guarantee</h2>
+          <p>
+            Your Brand. Our Execution. We drop-ship luxury albums and video drives directly to your clients with <strong>ZERO</strong> branding from our lab. The shipping label, luxury box embossing, and invoice reflect your studio identity. We strictly never solicit or market to your couples.
+          </p>
         </motion.div>
       </section>
 
-      {/* The Math Calculator Section */}
+      {/* Studio Trade Rate Access Gate */}
       <section className="b2b-calculator-section">
-        <div className="b2b-calc-grid">
-          
-          <div className="b2b-calc-info">
-            <h2>Calculate Printing Margins</h2>
-            <p>
-              Standard retail print labs charge studios exorbitant per-sheet rates.
-            </p>
-            <p>
-              By outsourcing printing to us at our wholesale rates, you can instantly see how much profit you retain per album based on sheet count and finish type.
-            </p>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="b2b-savings-badge"
-            >
-              <h4>
-                <CheckCircle2 size={24}/> Save approx {savings > 0 ? `₹${savings.toLocaleString('en-IN')}` : '₹0'} per album.
-              </h4>
-              <p>Keep more money in your pocket on every wedding.</p>
-            </motion.div>
+        <div className="max-w-4xl mx-auto glass-3d p-8 sm:p-12 rounded-3xl border border-[#D4AF37]/40 bg-gradient-to-b from-black/90 to-zinc-950/90 text-center shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+            <Lock size={160} className="text-[#D4AF37]" />
           </div>
 
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }} 
-            whileInView={{ opacity: 1, x: 0 }} 
-            viewport={{ once: true }} 
-            className="b2b-calc-widget"
-          >
-            <h3 className="b2b-calc-title">Wholesale Estimator</h3>
-            
-            <div className="b2b-slider-container">
-              <div className="b2b-slider-header">
-                <span className="b2b-slider-label">Sheet Type</span>
-              </div>
-              <select 
-                className="w-full bg-black/50 border border-white/20 text-white p-3 rounded mt-2 outline-none"
-                value={selectedSheetType?.value || ''}
-                onChange={(e) => {
-                  const type = sheetTypes.find(t => t.value === e.target.value);
-                  setSelectedSheetType(type);
-                }}
-              >
-                {sheetTypes.map(type => (
-                  <option key={type.value} value={type.value}>{type.label} - ₹{type.price}/sheet</option>
-                ))}
-              </select>
-            </div>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-bold mb-4 tracking-wider uppercase">
+            <Lock size={14} />
+            <span>Protected Studio Trade Pricing</span>
+          </div>
 
-            <div className="b2b-slider-container mt-6">
-              <div className="b2b-slider-header">
-                <span className="b2b-slider-label">Number of Sheets</span>
-                <span className="b2b-slider-value">{sheetCount}</span>
-              </div>
-              <input 
-                type="range" 
-                min="10" 
-                max="100" 
-                value={sheetCount} 
-                onChange={(e) => setSheetCount(Number(e.target.value))}
-                className="b2b-range"
-              />
+          <h2 className="text-2xl sm:text-4xl font-serif font-bold text-white mb-4">
+            Access Wholesale Sheet Rates & Trade Terms
+          </h2>
+
+          <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+            To protect photography studio margins and client relationships, raw per-sheet wholesale pricing, batch volume discounts, and 30-day billing terms are strictly guarded. Trade pricing is accessible exclusively inside the Studio Portal for authenticated studio partners.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-left">
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <CheckCircle2 size={20} className="text-emerald-400 mb-2" />
+              <div className="font-bold text-white text-sm">Wholesale Sheet Rates</div>
+              <div className="text-xs text-gray-400 mt-1">Tiered pricing on Karizma, Velvet & NT sheets.</div>
             </div>
-            
-            <div className="b2b-comparison">
-              <div className="b2b-comp-row">
-                <span className="b2b-comp-label">Avg Retail Lab Cost</span>
-                <span className="b2b-comp-val">₹{inHouseCost.toLocaleString('en-IN')}</span>
-              </div>
-              <div className="b2b-comp-row highlight">
-                <span className="b2b-comp-label">Our Wholesale Cost</span>
-                <span className="b2b-comp-val">₹{ourCost.toLocaleString('en-IN')}</span>
-              </div>
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <CheckCircle2 size={20} className="text-emerald-400 mb-2" />
+              <div className="font-bold text-white text-sm">Rapid 48-Hour SLA</div>
+              <div className="text-xs text-gray-400 mt-1">Guaranteed express dispatch during wedding season.</div>
             </div>
-            
-            <div className="b2b-total-savings">
-              <p className="b2b-total-label">Margin Retained</p>
-              <p className="b2b-total-val">
-                {savings > 0 ? `₹${savings.toLocaleString('en-IN')}` : '₹0'}
-              </p>
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <CheckCircle2 size={20} className="text-emerald-400 mb-2" />
+              <div className="font-bold text-white text-sm">Multi-Editor Pods</div>
+              <div className="text-xs text-gray-400 mt-1">Assigned colorist matching your studio presets.</div>
             </div>
-          </motion.div>
-          
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a 
+              href={STUDIO_PORTAL_URL} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn btn-gold-3d px-8 py-4 font-bold text-base flex items-center justify-center gap-2 w-full sm:w-auto shadow-[0_0_25px_rgba(212,175,55,0.4)]"
+            >
+              <span>Launch Studio Portal</span>
+              <ExternalLink size={18} />
+            </a>
+            <a 
+              href="https://wa.me/919876543210?text=Hi!%20I%20am%20a%20wedding%20photographer%20and%20would%20like%20to%20apply%20for%20a%20Studio%20Trade%20Account." 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn btn-outline px-8 py-4 font-semibold text-base flex items-center justify-center gap-2 w-full sm:w-auto text-[#25D366] border-[#25D366]/40 hover:bg-[#25D366]/15"
+            >
+              <PhoneCall size={18} />
+              <span>Apply via WhatsApp</span>
+            </a>
+          </div>
         </div>
       </section>
 
       {/* Testimonials */}
       <section className="b2b-testimonials" style={{ padding: '80px 5%', textAlign: 'center' }}>
-        <h2>Trusted by Andhra's Top Studios</h2>
+        <h2>Trusted by Over 180+ Studios Across AP & Telangana</h2>
         <div className="grid grid-3" style={{ gap: '30px', marginTop: '40px' }}>
           {[
-            { name: "Srikanth Photography", location: "Vijayawada", text: "అద్భుతమైన క్వాలిటీ! మా కస్టమర్లు NT షీట్స్ చూసి చాలా సంతోషపడ్డారు. డెలివరీ కూడా ఆన్ టైం లో జరిగింది." },
-            { name: "Rajesh Weddings", location: "Hyderabad", text: "The white-label shipping is a game changer for my studio. I just send the order and my clients get a luxury box with zero hassle for me." },
-            { name: "Suresh Clicks", location: "Vizag", text: "హోల్ సేల్ ప్రైసింగ్ చాలా బాగుంది. 12x18 కరిజ్మా ఆల్బమ్స్ క్వాలిటీ టాప్ క్లాస్. Highly recommended for studio owners!" }
+            { 
+              name: "Srikanth Photography", 
+              location: "Vijayawada", 
+              text: "అద్భుతమైన క్వాలిటీ! మా కస్టమర్లు NT షీట్స్ చూసి చాలా సంతోషపడ్డారు. డెలివరీ కూడా ఆన్ టైం లో జరిగింది." 
+            },
+            { 
+              name: "Rajesh Weddings", 
+              location: "Hyderabad", 
+              text: "The white-label drop-shipping is a game changer for my studio. I just send the order via the studio portal and my couples receive a luxury box in my name." 
+            },
+            { 
+              name: "Suresh Clicks", 
+              location: "Vizag", 
+              text: "కరిజ్మా మరియు వెల్వెట్ ఆల్బమ్స్ క్వాలిటీ టాప్ క్లాస్. 48-గంటల ప్రింటింగ్ టర్నరౌండ్ వల్ల సీజన్ లో ఎలాంటి టెన్షన్ లేదు. Highly recommended for studio owners!" 
+            }
           ].map((t, i) => (
             <div key={i} className="glass-3d p-8 rounded-xl text-left">
               <div className="flex text-[#D4AF37] mb-4">
@@ -240,15 +280,21 @@ const B2B = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="b2b-hero" style={{ paddingBottom: '180px' }}>
-         <h2 className="b2b-section-title">Ready to scale?</h2>
-         <p className="b2b-section-subtitle">Join hundreds of top studios optimizing their workflow.</p>
-         <Link to="/login?role=b2b" className="btn btn-gold-3d" style={{ marginTop: '20px' }}>
-           Create Studio Account
-         </Link>
+      {/* Bottom CTA */}
+      <section className="b2b-hero" style={{ paddingBottom: '140px' }}>
+        <h2 className="b2b-section-title">Ready to Elevate Your Studio?</h2>
+        <p className="b2b-section-subtitle">Join Andhra's elite network of professional studios and cinematographers.</p>
+        <div className="flex justify-center gap-4 mt-6">
+          <a 
+            href={STUDIO_PORTAL_URL} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn btn-gold-3d px-8 py-3.5 font-bold"
+          >
+            Launch Studio Portal →
+          </a>
+        </div>
       </section>
-      
     </div>
   );
 };
