@@ -4,35 +4,42 @@ const useScrollReveal = (options = {}) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
+  const threshold = options.threshold ?? 0.1;
+  const rootMargin = options.rootMargin ?? '0px';
+  const root = options.root ?? null;
+
   useEffect(() => {
+    // If element is already visible, no need to observe again
+    if (isVisible) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Unobserve once revealed to keep it visible
           if (ref.current) {
             observer.unobserve(ref.current);
           }
         }
       },
       {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1, // Trigger when 10% visible
-        ...options,
+        root,
+        rootMargin,
+        threshold,
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const el = ref.current;
+    if (el) {
+      observer.observe(el);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (el) {
+        observer.unobserve(el);
       }
+      observer.disconnect();
     };
-  }, [options]);
+  }, [threshold, rootMargin, root, isVisible]);
 
   return [ref, isVisible];
 };

@@ -6,6 +6,7 @@ import {
   Mail, Lock, Eye, EyeOff, AlertCircle, Heart, Palette,
   Phone, KeyRound, CheckCircle2, X, RefreshCw, Shield, Sliders
 } from 'lucide-react';
+import Logo from '../components/Logo';
 import './PortalLogin.css';
 
 const PortalLogin = () => {
@@ -226,8 +227,7 @@ const PortalLogin = () => {
 
         <div className="cpl-visual-content">
           <div className="cpl-brand">
-            <div className="cpl-brand-dot">💍</div>
-            <span className="cpl-brand-name">WeddingAlbums.in</span>
+            <Logo size={42} portalTag="Client Portal" />
           </div>
 
           <div className="cpl-tagline-block">
@@ -269,6 +269,9 @@ const PortalLogin = () => {
             </div>
 
             <div className="cpl-auth-header">
+              <div className="cpl-mobile-logo">
+                <Logo size={36} portalTag="Client Portal" />
+              </div>
               <div className="cpl-portal-badge">
                 <Heart size={12} /> Client Portal
               </div>

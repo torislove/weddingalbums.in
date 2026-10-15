@@ -148,13 +148,11 @@ const Sidebar = ({ isOpen, onClose }) => {
       transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
     }}>
       {/* Brand */}
-      <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(14,165,233,0.08)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-          <Logo size={32} />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ height: 72, padding: '0 16px', boxSizing: 'border-box', borderBottom: '1px solid rgba(14,165,233,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Logo size={32} portalTag="Ops Center" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '3px 8px', borderRadius: 20, background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.2)' }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22d3ee', boxShadow: '0 0 6px #22d3ee', animation: 'blink 1.5s infinite' }} />
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: 'rgba(14,165,233,0.6)', letterSpacing: 2 }}>OPS CENTER ONLINE</span>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 700, color: '#22d3ee', letterSpacing: 1 }}>ONLINE</span>
         </div>
       </div>
 
@@ -303,19 +301,20 @@ function AppInner() {
               {/* Mobile top bar */}
               {isMobile && (
                 <div style={{
-                  position: 'fixed', top: 0, left: 0, right: 0, height: 56,
-                  background: 'rgba(0,6,15,0.98)', borderBottom: '1px solid rgba(14,165,233,0.1)',
+                  position: 'fixed', top: 0, left: 0, right: 0, height: 60,
+                  background: 'rgba(0,6,15,0.98)', borderBottom: '1px solid rgba(14,165,233,0.15)',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '0 16px', zIndex: 60, fontFamily: 'Inter, sans-serif',
+                  boxSizing: 'border-box'
                 }}>
                   <button
                     onClick={() => setSidebarOpen(v => !v)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#22d3ee', padding: 8, borderRadius: 8 }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#22d3ee', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     aria-label="Toggle menu"
                   >
                     {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
                   </button>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', fontFamily: 'JetBrains Mono, monospace', letterSpacing: 1 }}>OPS CENTER</span>
+                  <Logo size={28} portalTag="Ops Center" />
                   <div style={{ width: 38 }} />
                 </div>
               )}
@@ -325,8 +324,40 @@ function AppInner() {
                 marginLeft: isMobile ? 0 : 250,
                 minHeight: '100vh',
                 overflowY: 'auto',
-                paddingTop: isMobile ? 56 : 0,
+                paddingTop: isMobile ? 60 : 0,
               }}>
+                {/* Desktop top header bar aligned with 72px sidebar */}
+                {!isMobile && (
+                  <header style={{
+                    height: 72,
+                    boxSizing: 'border-box',
+                    borderBottom: '1px solid rgba(14,165,233,0.08)',
+                    background: 'rgba(0,6,15,0.7)',
+                    backdropFilter: 'blur(12px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 36px',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 40,
+                    fontFamily: 'Inter, sans-serif',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: 'rgba(14,165,233,0.7)', letterSpacing: 2, fontWeight: 700 }}>OPS CENTER</span>
+                      <span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>Operations Management</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(34,211,238,0.8)', fontFamily: 'JetBrains Mono, monospace', padding: '4px 10px', borderRadius: 20, background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)' }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22d3ee', boxShadow: '0 0 6px #22d3ee' }} />
+                        <span>NETWORK HEALTH 100%</span>
+                      </div>
+                      <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.08)' }} />
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', fontFamily: 'JetBrains Mono, monospace' }}>{user?.email || 'ops@weddingalbums.in'}</span>
+                    </div>
+                  </header>
+                )}
                 <Routes>
                   <Route path="/"        element={<Dashboard />} />
                   <Route path="/users"   element={<UserManager />} />

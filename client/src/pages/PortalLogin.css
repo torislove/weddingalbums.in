@@ -15,11 +15,20 @@
   position: relative;
 }
 
+.cpl-mobile-logo {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .cpl-root {
     grid-template-columns: 1fr;
   }
   .cpl-visual { display: none; }
+  .cpl-mobile-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
   .cpl-form-panel { padding: 90px 20px 40px; } /* Clean clearance below fixed navbar */
 }
 

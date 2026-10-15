@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Shield, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight, Terminal } from 'lucide-react';
+import Logo from '../components/Logo';
 
 const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
@@ -125,6 +126,11 @@ const AdminLogin = ({ setToken }) => {
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(14,165,233,0.3), transparent)', zIndex: 10 }} />
 
       <div style={{ position: 'relative', zIndex: 5, width: '100%', maxWidth: '460px' }}>
+
+        {/* Brand Header */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+          <Logo size={36} portalTag="Ops Center" />
+        </div>
 
         {/* Status bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', padding: '10px 14px', background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: '8px' }}>

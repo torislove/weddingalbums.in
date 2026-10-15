@@ -172,7 +172,7 @@ const EditorLogin = () => {
         {/* Brand */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
           <Link to="/" style={{ display: 'inline-block', marginBottom: '20px' }}>
-            <Logo size={42} />
+            <Logo size={40} portalTag="Creator Suite" />
           </Link>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(129,140,248,0.1)', border: '1px solid rgba(129,140,248,0.2)', borderRadius: '20px', padding: '6px 16px' }}>
             <Zap size={12} color="#818cf8" />

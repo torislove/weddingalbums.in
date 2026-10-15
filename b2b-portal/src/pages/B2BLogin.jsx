@@ -122,7 +122,7 @@ const B2BLogin = () => {
       {/* Header */}
       <header style={{ marginBottom: '40px', textAlign: 'center', position: 'relative', zIndex: 2 }}>
         <Link to="/" style={{ display: 'inline-block', marginBottom: '24px' }}>
-          <Logo size={44} />
+          <Logo size={42} portalTag="Studio Partner" />
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
           <div style={{ height: '1px', width: '40px', background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.4))' }} />

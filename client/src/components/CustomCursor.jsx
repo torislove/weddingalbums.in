@@ -1,34 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './CustomCursor.css';
 
 const CustomCursor = () => {
   const cursorRef = useRef(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(true);
 
   useEffect(() => {
-    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
-      setIsDesktop(false);
+    // Disable on touch devices or small screens
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches || window.innerWidth < 1024) {
       return;
     }
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-    
+    let mouseX = -100;
+    let mouseY = -100;
+    let cursorX = -100;
+    let cursorY = -100;
+    let rafId = null;
+    let isVisible = false;
+
     const render = () => {
-      cursorX += (mouseX - cursorX) * 0.2;
-      cursorY += (mouseY - cursorY) * 0.2;
-      
+      // Snappy, high-refresh interpolation
+      cursorX += (mouseX - cursorX) * 0.45;
+      cursorY += (mouseY - cursorY) * 0.45;
+
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+        if (!isVisible && mouseX > 0) {
+          cursorRef.current.style.opacity = '1';
+          isVisible = true;
+        }
       }
-      
-      requestAnimationFrame(render);
+
+      rafId = requestAnimationFrame(render);
     };
-    
-    requestAnimationFrame(render);
+
+    rafId = requestAnimationFrame(render);
 
     const onMouseMove = (e) => {
       mouseX = e.clientX;
@@ -36,54 +41,46 @@ const CustomCursor = () => {
     };
 
     const handleMouseOver = (e) => {
+      if (!cursorRef.current) return;
       const target = e.target;
-      if (
-        target.tagName.toLowerCase() === 'a' ||
-        target.tagName.toLowerCase() === 'button' ||
+      const isClickable = Boolean(
+        target.tagName === 'A' ||
+        target.tagName === 'BUTTON' ||
         target.closest('a') ||
         target.closest('button') ||
-        target.classList.contains('masonry-item')
-      ) {
-        setIsHovering(true);
+        target.classList.contains('clickable')
+      );
+      if (isClickable) {
+        cursorRef.current.classList.add('hovering');
       } else {
-        setIsHovering(false);
+        cursorRef.current.classList.remove('hovering');
       }
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
 
-  if (!isDesktop) return null;
-
   return (
     <div 
       ref={cursorRef} 
-      className={`shutter-cursor ${isHovering ? 'hovering' : ''}`}
+      className="shutter-cursor"
+      style={{ opacity: 0 }}
+      aria-hidden="true"
     >
-      <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="shutter-svg logo-svg">
-        <circle cx="16" cy="16" r="14" stroke="#D4AF37" strokeWidth="1.5" />
-        <circle cx="16" cy="16" r="8" stroke="#D4AF37" strokeWidth="1" strokeDasharray="4 2" className="inner-dashed" />
-        <circle cx="16" cy="16" r="4" fill="#D4AF37" className="center-dot" />
-        {/* aperture blades */}
-        <g className="aperture-lines">
-          {[0,60,120,180,240,300].map((a,i)=>{
-            const r = (a * Math.PI) / 180;
-            const x1 = 16 + 8 * Math.cos(r);
-            const y1 = 16 + 8 * Math.sin(r);
-            const x2 = 16 + 13 * Math.cos(r + Math.PI/6);
-            const y2 = 16 + 13 * Math.sin(r + Math.PI/6);
-            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#D4AF37" strokeWidth="1.5" opacity="0.6" />;
-          })}
-        </g>
+      <svg width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="shutter-svg">
+        <circle cx="16" cy="16" r="14" stroke="#D4AF37" strokeWidth="1.2" opacity="0.6" />
+        <circle cx="16" cy="16" r="8" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 3" className="inner-dashed" />
+        <circle cx="16" cy="16" r="3" fill="#D4AF37" className="center-dot" />
       </svg>
     </div>
   );
 };
 
-export default CustomCursor;
+export default React.memo(CustomCursor);

@@ -49,11 +49,11 @@ const EditorLanding = () => {
           <GoldenParticles count={40} color="99, 102, 241" />
         </div>
         
-        <header style={{ position: 'relative', zIndex: 1, padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-          <Logo size={45} />
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} style={{ display: 'flex', gap: '1rem' }}>
-            <button onClick={() => navigate('/login')} style={{ background: 'transparent', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Login</button>
-            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '0.5rem 1.5rem', borderRadius: '8px', cursor: 'pointer' }}>Join Network</button>
+        <header style={{ position: 'relative', zIndex: 10, padding: 'clamp(1rem, 3vw, 1.75rem)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1240px', margin: '0 auto', width: '100%', boxSizing: 'border-box', flexWrap: 'wrap', gap: '1rem' }}>
+          <Logo size={40} portalTag="Creator Suite" />
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <button onClick={() => navigate('/login')} style={{ background: 'transparent', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>Login</button>
+            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>Join Network</button>
           </motion.div>
         </header>
 
@@ -71,7 +71,7 @@ const EditorLanding = () => {
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-            style={{ fontSize: '6rem', marginBottom: '1.5rem', lineHeight: '1.1', fontWeight: 900, background: 'linear-gradient(to right, #818cf8, #c084fc, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 20px rgba(99,102,241,0.3))' }}
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '1.5rem', lineHeight: '1.1', fontWeight: 900, background: 'linear-gradient(to right, #818cf8, #c084fc, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 20px rgba(99,102,241,0.3))' }}
           >
             Edit. Deliver.<br />Get Paid.
           </motion.h1>

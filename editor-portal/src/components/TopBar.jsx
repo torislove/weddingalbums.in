@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Bell, ChevronDown, LogOut, User, Settings, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Logo from './Logo';
 
 const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
   const { user, logout } = useAuth();
@@ -20,7 +21,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
 
   return (
     <header className="topbar" style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flex: 1, minWidth: 0 }}>
         {/* Mobile Hamburger Button */}
         <button
           onClick={onToggleSidebar}
@@ -42,7 +43,11 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
           <Menu size={20} />
         </button>
 
-        {title && <h1 style={{ margin: 0, fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', fontWeight: '600', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</h1>}
+        <div className="mobile-only-logo">
+          <Logo size={28} portalTag="Creator Suite" />
+        </div>
+
+        {title && <h1 style={{ margin: 0, fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)', fontWeight: '600', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</h1>}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(0.6rem, 2vw, 1.2rem)', flexShrink: 0 }}>

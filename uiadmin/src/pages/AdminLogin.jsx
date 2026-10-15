@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PenTool, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight, FileText, Image, Settings } from 'lucide-react';
+import Logo from '../components/Logo';
 
 const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
@@ -102,11 +103,8 @@ const AdminLogin = ({ setToken }) => {
 
         {/* Brand */}
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '60px' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <PenTool size={18} color="#f59e0b" />
-            </div>
-            <span style={{ fontSize: '1.1rem', fontWeight: '600', color: '#fff', letterSpacing: '-0.2px' }}>WeddingAlbums.in</span>
+          <div style={{ marginBottom: '50px' }}>
+            <Logo size={36} portalTag="CMS Studio" />
           </div>
 
           <div style={{ marginBottom: '48px' }}>

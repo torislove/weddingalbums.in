@@ -14,6 +14,12 @@ import PageHero from './components/blocks/PageHero';
 import PillarsList from './components/blocks/PillarsList';
 import SimpleCTA from './components/blocks/SimpleCTA';
 
+// New Visual Showcase & Interactive Blocks
+import VisualPillarsShowcase from './components/blocks/VisualPillarsShowcase';
+import InteractiveBeforeAfter from './components/blocks/InteractiveBeforeAfter';
+import CraftsmanshipDetails from './components/blocks/CraftsmanshipDetails';
+import InstantEstimator from './components/blocks/InstantEstimator';
+
 // Registry maps component string names to the actual React components
 const componentRegistry = {
   Hero,
@@ -31,6 +37,10 @@ const componentRegistry = {
   PageHero,
   PillarsList,
   SimpleCTA,
+  VisualPillarsShowcase,
+  InteractiveBeforeAfter,
+  CraftsmanshipDetails,
+  InstantEstimator,
 };
 
 export default componentRegistry;

@@ -39,15 +39,34 @@ const Navbar = () => {
 
   const ctaText = navData.ctaText || (lang === 'TE' ? 'ఆర్డర్ చేయండి' : 'Order Album');
   const ctaLink = navData.ctaLink || '/order';
+  const progressRef = React.useRef(null);
+  const isScrolledRef = React.useRef(false);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      const totalHeight = document.body.scrollHeight - window.innerHeight;
-      const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
-      setScrollProgress(progress);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentY = window.scrollY;
+          const shouldScroll = currentY > 50;
+          if (shouldScroll !== isScrolledRef.current) {
+            isScrolledRef.current = shouldScroll;
+            setIsScrolled(shouldScroll);
+          }
+
+          if (progressRef.current) {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = totalHeight > 0 ? (currentY / totalHeight) * 100 : 0;
+            progressRef.current.style.width = `${progress}%`;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -57,14 +76,14 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
+      {/* Scroll Progress Bar (Direct GPU Accelerated Width) */}
+      <div ref={progressRef} className="scroll-progress" style={{ width: '0%' }} />
 
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Logo */}
           <Link to="/" className="nav-logo" style={{ textDecoration: 'none' }}>
-            <Logo size={40} />
+            <Logo size={38} portalTag="Heirloom Studio" />
           </Link>
 
           {/* Desktop Nav */}

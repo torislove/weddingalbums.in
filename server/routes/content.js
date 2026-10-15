@@ -38,27 +38,27 @@ try {
 
 // Curated stock and catalog images extracted from fallback catalog
 const CURATED_DEFAULT_IMAGES = [
+  '/images/luxury-album-craftsmanship.jpg',
+  '/images/cinematic-video-suite.jpg',
+  '/images/bride-polished.jpg',
+  '/images/bride-raw.jpg',
   '/images/weddingalbums-home-hero.png',
   '/images/weddingalbums-talambralu.png',
   '/images/weddingalbums-layflat-album.png',
+  '/images/mangalya-dharana.png',
+  '/images/saptapadi.png',
+  '/images/appagintalu-farewell.png',
+  '/images/family-blessings.png',
+  '/images/bridal.jpg',
+  '/images/cinematic.jpg',
+  '/images/prewedding.jpg',
   'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=2000',
   'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800',
   'https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800',
   'https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80&w=800',
   'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800',
   'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1583391733958-d25e07fac662?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1530103862676-de8892b125f4?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1555529733-0e67056058e1?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1522715204671-e4aac94a7b7d?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1529024502020-3792eb5a54b1?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1485470733090-0aae1788d5af?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=900'
+  'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800'
 ];
 
 /* ── Content API ────────────────────────────────────────────────────── */

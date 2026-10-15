@@ -116,6 +116,105 @@
         }
       },
       {
+        "id": "block-visual-pillars",
+        "type": "VisualPillarsShowcase",
+        "props": {
+          "eyebrow": "✦ COMPLETE IN-HOUSE POST-PRODUCTION SUITE ✦",
+          "title": "Crafted with Precision. Delivered with Reverence.",
+          "subtitle": "From raw memory cards to museum-grade physical heirlooms and cinematic films. Here is what we create for you:",
+          "pillars": [
+            {
+              "number": "01",
+              "badge": "100% Lay-Flat Binding · Non-Tearable Archival Core",
+              "title": "Heirloom Karizma & Lay-Flat Albums",
+              "telugu": "కరిజ్మా & లే-ఫ్లాట్ వెడ్డింగ్ ఆల్బమ్స్",
+              "subtitle": "Printed on state-of-the-art European digital presses with archival inks guaranteed to retain rich color fidelity for 100+ years.",
+              "image": "/images/luxury-album-craftsmanship.jpg",
+              "tag": "AP & Telangana #1 Choice",
+              "ctaText": "Explore Album Specs & Finishes",
+              "ctaLink": "/albums",
+              "features": [
+                "12×36 Royal Panoramic spreads with seamless zero-gutter binding",
+                "4mm diamond-polished Crystal Acrylic 3D glass covers",
+                "Plush Royal Velvet Touch fabric covers with gold foil typography",
+                "Non-Tearable (NT) waterproof synthetic composite core sheets"
+              ]
+            },
+            {
+              "number": "02",
+              "badge": "Netflix-Grade Color Grading · Licensed Telugu Audio",
+              "title": "4K Cinematic Wedding Films & Reels",
+              "telugu": "4K సినిమాటిక్ వీడియో ఎడిటింగ్ & రీల్స్",
+              "subtitle": "Story-driven post-production crafted specifically for Telugu rituals, highlighting vows, emotional moments, and family traditions.",
+              "image": "/images/cinematic-video-suite.jpg",
+              "tag": "Rapid 48-Hour Rush Available",
+              "ctaText": "Browse Video Editing Packages",
+              "ctaLink": "/services",
+              "features": [
+                "Multi-camera ceremony synchronization (Talambralu, Mangala Snanam, Jeelakarra)",
+                "Cinematic LUT-based warm golden color grading & noise reduction",
+                "Audio mixing with licensed Mangala Vaadhyam, classical & trending Telugu scores",
+                "5-Pack viral 9:16 vertical Instagram Reels & YouTube Shorts included"
+              ]
+            },
+            {
+              "number": "03",
+              "badge": "Micro-Pore Preservation · 24K Gold Jewelry Specular Shine",
+              "title": "High-End Photo Retouching & Color Correction",
+              "telugu": "హై-ఎండ్ ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్",
+              "subtitle": "No cheap blur filters. Our 20-member unit performs high-end frequency separation to preserve authentic skin micro-texture while perfecting tones.",
+              "image": "/images/weddingalbums-talambralu.png",
+              "tag": "Batch RAW Discounts for Studios",
+              "ctaText": "Order Custom Retouching",
+              "ctaLink": "/order",
+              "features": [
+                "Natural skin retouching eliminating blemishes while preserving authentic texture",
+                "Specular highlight boost on 22K/24K temple gold and diamond jewelry",
+                "Vibrant color restoration for Kanjeevaram and Dharmavaram silk sarees",
+                "Mandap venue cleanup: removal of distracting cables, clutter & harsh shadows"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "block-before-after",
+        "type": "InteractiveBeforeAfter",
+        "props": {
+          "eyebrow": "✦ 100% IN-HOUSE RETOUCHING EXCELLENCE ✦",
+          "title": "The Art of Telugu Wedding Retouching",
+          "subtitle": "Drag the gold slider below to see the difference between a raw camera capture and our master color-graded heirloom finish.",
+          "rawImage": "/images/bride-raw.jpg",
+          "polishedImage": "/images/bride-polished.jpg",
+          "rawLabel": "RAW Unedited (DSLR Sensor)",
+          "polishedLabel": "Master Polished (22K Gold Luster)",
+          "ctaText": "Book Retouching Consultation",
+          "ctaLink": "/order"
+        }
+      },
+      {
+        "id": "block-craftsmanship",
+        "type": "CraftsmanshipDetails",
+        "props": {
+          "eyebrow": "✦ OBSESSIVE ATTENTION TO DETAIL ✦",
+          "title": "Anatomy of an Heirloom Wedding Album",
+          "subtitle": "Every volume is precision-assembled by master bookbinders using archival-grade materials built to outlast generations.",
+          "ctaText": "View Complete Swatch Kit",
+          "ctaLink": "/albums"
+        }
+      },
+      {
+        "id": "block-instant-estimator",
+        "type": "InstantEstimator",
+        "props": {
+          "eyebrow": "✦ TRANSPARENT STUDIO PRICING ✦",
+          "title": "Instant Album & Video Cost Estimator",
+          "subtitle": "Customize your dimensions, cover finishes, and post-production add-ons to get a real-time price and delivery schedule.",
+          "ctaText": "Lock In Estimate & Start Order",
+          "ctaLink": "/order"
+        }
+      },
+      {
         "id": "block-inhouse",
         "type": "InHouseAdvantage",
         "props": {
@@ -277,21 +376,21 @@
           "btnLink": "/portfolio",
           "images": [
             {
-              "img": "https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800",
+              "img": "/images/mangalya-dharana.png",
               "tag": "wedding",
               "title": "Sacred Muhurtham",
               "location": "Vijayawada · విజయవాడ"
             },
             {
-              "img": "https://images.unsplash.com/photo-1605663737330-9b63a9cf3181?auto=format&fit=crop&q=80&w=800",
+              "img": "/images/weddingalbums-talambralu.png",
               "tag": "half-saree",
               "title": "Langa Voni Ceremony",
               "location": "Rajahmundry · రాజమహేంద్రి"
             },
             {
-              "img": "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800",
+              "img": "/images/saptapadi.png",
               "tag": "corporate",
-              "title": "Grand Corporate Gala",
+              "title": "Grand Reception & Vows",
               "location": "Vizag · విశాఖపట్నం"
             }
           ]

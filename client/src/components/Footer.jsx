@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Youtube, MapPin, Phone, Mail } from 'lucide-react';
 import GoldenMandala from './GoldenMandala';
+import Logo from './Logo';
 import { useContent } from '../context/ContentContext';
 import './Footer.css';
 
@@ -51,7 +52,9 @@ const Footer = () => {
         <div className="footer-grid">
           {/* Brand & Description */}
           <div className="footer-col">
-            <h3 className="text-gradient">{brandName}</h3>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <Logo size={36} portalTag="Heirloom Studio" />
+            </div>
             <p className="footer-desc">
               {description}
             </p>

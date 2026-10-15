@@ -132,11 +132,79 @@ const PageEditor = ({ adminState }) => {
     }
   };
 
+  const DEFAULT_BLOCK_PROPS = {
+    VisualPillarsShowcase: {
+      eyebrow: '✦ COMPLETE IN-HOUSE POST-PRODUCTION SUITE ✦',
+      title: 'Crafted with Precision. Delivered with Reverence.',
+      subtitle: 'From raw memory cards to museum-grade physical heirlooms and cinematic films.',
+      pillars: [
+        {
+          number: '01',
+          badge: '100% Lay-Flat Binding · Archival Core',
+          title: 'Heirloom Karizma & Lay-Flat Albums',
+          telugu: 'కరిజ్మా & లే-ఫ్లాట్ వెడ్డింగ్ ఆల్బమ్స్',
+          subtitle: 'Printed on state-of-the-art European digital presses with archival inks.',
+          image: '/images/luxury-album-craftsmanship.jpg',
+          tag: 'AP & Telangana #1 Choice',
+          ctaText: 'Explore Album Specs & Finishes',
+          ctaLink: '/albums'
+        },
+        {
+          number: '02',
+          badge: 'Netflix-Grade Color Grading',
+          title: '4K Cinematic Wedding Films & Reels',
+          telugu: '4K సినిమాటిక్ వీడియో ఎడిటింగ్ & రీల్స్',
+          subtitle: 'Story-driven post-production crafted specifically for Telugu rituals.',
+          image: '/images/cinematic-video-suite.jpg',
+          tag: 'Rapid 48-Hour Rush Available',
+          ctaText: 'Browse Video Editing Packages',
+          ctaLink: '/services'
+        },
+        {
+          number: '03',
+          badge: '24K Gold Jewelry Specular Shine',
+          title: 'High-End Photo Retouching & Color Correction',
+          telugu: 'హై-ఎండ్ ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్',
+          subtitle: 'High-end frequency separation to preserve authentic skin micro-texture.',
+          image: '/images/weddingalbums-talambralu.png',
+          tag: 'Batch RAW Discounts for Studios',
+          ctaText: 'Order Custom Retouching',
+          ctaLink: '/order'
+        }
+      ]
+    },
+    InteractiveBeforeAfter: {
+      eyebrow: '✦ 100% IN-HOUSE RETOUCHING EXCELLENCE ✦',
+      title: 'The Art of Telugu Wedding Retouching',
+      subtitle: 'Drag the gold slider below to see the difference between raw camera capture and our master finish.',
+      rawImage: '/images/bride-raw.jpg',
+      polishedImage: '/images/bride-polished.jpg',
+      rawLabel: 'RAW Unedited (DSLR Sensor)',
+      polishedLabel: 'Master Polished (22K Gold Luster)',
+      ctaText: 'Book Retouching Consultation',
+      ctaLink: '/order'
+    },
+    CraftsmanshipDetails: {
+      eyebrow: '✦ OBSESSIVE ATTENTION TO DETAIL ✦',
+      title: 'Anatomy of an Heirloom Wedding Album',
+      subtitle: 'Every volume is precision-assembled by master bookbinders using archival-grade materials.',
+      ctaText: 'View Complete Swatch Kit',
+      ctaLink: '/albums'
+    },
+    InstantEstimator: {
+      eyebrow: '✦ TRANSPARENT STUDIO PRICING ✦',
+      title: 'Instant Album & Video Cost Estimator',
+      subtitle: 'Customize dimensions, covers, and add-ons to get a real-time price and delivery schedule.',
+      ctaText: 'Lock In Estimate & Start Order',
+      ctaLink: '/order'
+    }
+  };
+
   const handleAddBlock = (type) => {
     const newBlock = {
       id: `block-${Date.now()}`,
       type,
-      props: {}
+      props: DEFAULT_BLOCK_PROPS[type] ? JSON.parse(JSON.stringify(DEFAULT_BLOCK_PROPS[type])) : {}
     };
     updatePage(pageId, [...blocks, newBlock]);
     setActiveBlockId(newBlock.id);
@@ -163,9 +231,10 @@ const PageEditor = ({ adminState }) => {
   const activeBlock = blocks.find(b => b.id === activeBlockId);
 
   const availableComponents = [
-    'Hero', 'PageHero', 'MarqueeTicker', 'StatsBar', 'InHouseAdvantage', 'AboutTeaser', 
-    'ServicesTeaser', 'PillarsList', 'KolamDivider', 'RitualsScroll', 'FeaturedGallery', 
-    'TestimonialsCarousel', 'ReviewsBar', 'CTABanner', 'SimpleCTA'
+    'Hero', 'VisualPillarsShowcase', 'InteractiveBeforeAfter', 'CraftsmanshipDetails', 
+    'InstantEstimator', 'PageHero', 'MarqueeTicker', 'StatsBar', 'InHouseAdvantage', 
+    'AboutTeaser', 'ServicesTeaser', 'PillarsList', 'KolamDivider', 'RitualsScroll', 
+    'FeaturedGallery', 'TestimonialsCarousel', 'ReviewsBar', 'CTABanner', 'SimpleCTA'
   ];
 
   const isLocal = typeof window !== 'undefined' && (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1'));
@@ -181,7 +250,7 @@ const PageEditor = ({ adminState }) => {
   const [mobileTab, setMobileTab] = useState('sections');
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen overflow-hidden bg-black/30">
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-60px)] lg:h-screen overflow-hidden bg-black/30">
       {/* Mobile/Tablet View Switcher */}
       {isMobileOrTablet && (
         <div className="flex bg-[#0e0e0e] border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">

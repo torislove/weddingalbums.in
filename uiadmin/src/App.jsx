@@ -147,14 +147,8 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
         transition: 'transform 0.3s ease',
       }}>
       {/* Brand */}
-      <div style={{ padding: '20px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <PenTool size={15} color="#f59e0b" />
-        </div>
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Content Studio</div>
-          <div style={{ fontSize: 10, color: 'rgba(245,158,11,0.5)', letterSpacing: 1 }}>CMS v2</div>
-        </div>
+      <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', height: 72, boxSizing: 'border-box' }}>
+        <Logo size={32} portalTag="CMS Studio" />
       </div>
 
       {/* User */}
@@ -269,19 +263,20 @@ function AppInner() {
                 {/* Mobile hamburger header */}
                 {isMobile && (
                   <div style={{
-                    position: 'fixed', top: 0, left: 0, right: 0, height: 56,
-                    background: '#050505', borderBottom: '1px solid rgba(245,158,11,0.08)',
+                    position: 'fixed', top: 0, left: 0, right: 0, height: 60,
+                    background: '#050505', borderBottom: '1px solid rgba(245,158,11,0.12)',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '0 16px', zIndex: 60, fontFamily: 'Inter, sans-serif',
+                    boxSizing: 'border-box'
                   }}>
                     <button
                       onClick={() => setSidebarOpen(v => !v)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f59e0b', padding: 8, borderRadius: 8 }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f59e0b', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       aria-label="Toggle menu"
                     >
                       {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
                     </button>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Content Studio</span>
+                    <Logo size={28} portalTag="CMS Studio" />
                     <div style={{ width: 38 }} />
                   </div>
                 )}
@@ -291,14 +286,13 @@ function AppInner() {
                   saving={adminState.saving}
                   isOpen={isMobile ? sidebarOpen : true}
                   onClose={() => setSidebarOpen(false)}
-                  style={{ transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)' }}
                 />
                 <main style={{
                   flex: 1,
                   marginLeft: isMobile ? 0 : 250,
                   minHeight: '100vh',
                   overflowY: 'auto',
-                  paddingTop: isMobile ? 56 : 0,
+                  paddingTop: isMobile ? 60 : 0,
                 }}>
                   <Routes>
                     <Route path="/"               element={<Dashboard />} />

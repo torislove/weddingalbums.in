@@ -57,7 +57,7 @@ function AppContent() {
   return (
     <>
       {!isIframe && <ScrollToTop />}
-      <CustomCursor />
+      {!isClientDashboard && <CustomCursor />}
       <div className={`app-container ${isClientDashboard ? 'portal-mode' : ''} ${isAuthPage ? 'auth-mode' : ''}`}>
         {!isClientDashboard && <PushNotification />}
         {!isClientDashboard && <Navbar />}

@@ -38,7 +38,7 @@ const GlobalEditor = ({ adminState }) => {
   const previewUrl = `${clientBase}/`;
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen overflow-hidden bg-black/30">
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-60px)] lg:h-screen overflow-hidden bg-black/30">
       {/* Mobile/Tablet View Switcher */}
       {isMobileOrTablet && (
         <div className="flex bg-[#0e0e0e] border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">

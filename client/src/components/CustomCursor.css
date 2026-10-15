@@ -1,60 +1,42 @@
-@media (pointer: fine) {
-  *, *::before, *::after {
-    cursor: none !important;
-  }
-}
-
+/* Ultra-smooth, non-intrusive cursor aura */
 .shutter-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   pointer-events: none;
   z-index: 99999;
-  transform: translate(-50%, -50%);
-  margin-left: -20px;
-  margin-top: -20px;
+  margin-left: -17px;
+  margin-top: -17px;
   display: flex;
   align-items: center;
   justify-content: center;
-  mix-blend-mode: difference;
+  transition: opacity 0.2s ease;
+  will-change: transform;
 }
 
 .shutter-svg {
   width: 100%;
   height: 100%;
-  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.aperture-lines {
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  transform-origin: 16px 16px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
 }
 
 .inner-dashed {
-  transition: stroke-width 0.3s ease;
+  transition: stroke-width 0.2s ease;
 }
 
 .center-dot {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   transform-origin: 16px 16px;
 }
 
 /* Hover States */
 .shutter-cursor.hovering .shutter-svg {
-  transform: scale(0.7) rotate(90deg);
-}
-
-.shutter-cursor.hovering .aperture-lines {
-  transform: rotate(60deg) scale(1.1);
-  opacity: 1;
-}
-
-.shutter-cursor.hovering .inner-dashed {
-  stroke-width: 2;
+  transform: scale(1.25) rotate(45deg);
 }
 
 .shutter-cursor.hovering .center-dot {
-  transform: scale(1.5);
+  transform: scale(1.6);
 }

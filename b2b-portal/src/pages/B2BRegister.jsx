@@ -116,7 +116,7 @@ const B2BRegister = () => {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
       <header style={{ padding: '1.5rem 1rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)' }}>
         <Link to="/">
-          <Logo size={40} />
+          <Logo size={40} portalTag="Studio Partner" />
         </Link>
       </header>
       

@@ -131,7 +131,7 @@ const EditorRegister = () => {
 
       <header style={{ padding: '1.5rem 1rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)', zIndex: 1 }}>
         <Link to="/">
-          <Logo size={40} />
+          <Logo size={40} portalTag="Creator Suite" />
         </Link>
       </header>
       

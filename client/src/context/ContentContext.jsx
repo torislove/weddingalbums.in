@@ -151,13 +151,13 @@ export const ContentProvider = ({ children }) => {
     );
   }
 
-  const contextValue = {
+  const contextValue = React.useMemo(() => ({
     content,
     global: content?.global || {},
     pages: content?.pages || {},
     reload: loadContent,
     setContent
-  };
+  }), [content, loadContent]);
 
   return (
     <ContentContext.Provider value={contextValue}>

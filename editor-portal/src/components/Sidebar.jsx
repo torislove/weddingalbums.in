@@ -33,7 +33,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
 
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem' }}>
-          <Logo size={35} />
+          <Logo size={34} portalTag="Creator Suite" />
           {/* Close button on mobile */}
           <button
             onClick={onClose}

@@ -8,6 +8,7 @@ import {
   ChevronDown, ChevronUp, Wallet, ExternalLink,
   Home, ArrowLeft
 } from 'lucide-react';
+import Logo from '../components/Logo';
 import './ClientDashboard.css';
 
 const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
@@ -319,13 +320,9 @@ const ClientDashboard = () => {
     <div className="cdash-root">
       {/* ── Mobile Top Header Bar ───────────────────────────────── */}
       <header className="cdash-mobile-header">
-        <div className="cdash-mobile-user">
-          <div className="cdash-mobile-avatar">{initials}</div>
-          <div>
-            <div className="cdash-mobile-name">{user?.coupleNames || user?.name || 'Client Portal'}</div>
-            <div className="cdash-mobile-sub">💍 WeddingAlbums.in</div>
-          </div>
-        </div>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Logo size={32} portalTag="Client Portal" />
+        </Link>
         <div className="cdash-mobile-actions">
           <Link to="/" className="cdash-mobile-btn cdash-mobile-home-btn" title="Back to Main Site">
             <Home size={16} />
@@ -357,10 +354,9 @@ const ClientDashboard = () => {
       {/* ── Sidebar ──────────────────────────────────────────────── */}
       <aside className="cdash-sidebar">
         {/* Brand */}
-        <div className="cdash-sb-brand">
-          <div className="cdash-sb-brand-dot">💍</div>
-          <span className="cdash-sb-brand-name">WeddingAlbums.in</span>
-        </div>
+        <Link to="/" className="cdash-sb-brand" style={{ textDecoration: 'none' }}>
+          <Logo size={36} portalTag="Client Portal" />
+        </Link>
 
         {/* User */}
         <div className="cdash-sb-user">

@@ -138,10 +138,16 @@ const isRunningInFirebase = Boolean(
   process.argv.some(arg => typeof arg === 'string' && (arg.includes('firebase') || arg.includes('functions-framework')))
 );
 
-const isDirectRun = !isRunningInFirebase && process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+const isDirectRun = !isRunningInFirebase && (
+  !process.env.FUNCTION_TARGET && (
+    !process.argv[1] || 
+    path.resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase() ||
+    process.argv[1].endsWith('index.js')
+  )
+);
 
 if (isDirectRun) {
-  const standalonePort = process.env.SERVER_PORT || 4000;
+  const standalonePort = process.env.PORT || process.env.SERVER_PORT || 4000;
   app.listen(standalonePort, () => {
     console.log(`🚀 Standalone server running on http://localhost:${standalonePort}`);
   });

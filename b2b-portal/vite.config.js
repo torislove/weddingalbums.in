@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 1000,
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -14,7 +15,7 @@ export default defineConfig({
             if (id.includes('lucide-react')) {
               return 'icons';
             }
-            if (id.includes('react')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
               return 'vendor-react';
             }
             return 'vendor';
