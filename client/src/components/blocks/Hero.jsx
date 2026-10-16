@@ -19,8 +19,8 @@ const Hero = (props) => {
   const {
     eyebrow = "✦ weddingalbums.in ✦",
     titlePart1 = "Cinematic Storytelling",
-    titleScramble = "& Heirloom Wedding Albums",
-    subtitle = "Crafting heirloom-quality Telugu wedding albums, flush mount keepsakes, and cinematic wedding highlights for couples across Andhra Pradesh.",
+    titleScramble = "& Wedding Albums",
+    subtitle = "Crafting timeless Telugu wedding albums, flush mount keepsakes, and cinematic wedding highlights for couples across Andhra Pradesh.",
     btn1Text = "Explore Wedding Packages",
     btn1Link = "/pricing",
     btn2Text = "Instant Cost Estimator",

@@ -56,7 +56,7 @@ const Footer = () => {
           {/* Brand & Description */}
           <div className="footer-col">
             <div style={{ marginBottom: '1.25rem' }}>
-              <Logo size={36} portalTag="Heirloom Studio" />
+              <Logo size={36} />
             </div>
             <p className="footer-desc">
               {description}

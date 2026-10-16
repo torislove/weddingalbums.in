@@ -1171,7 +1171,7 @@ const BookingPage = () => {
           </p>
         </div>
 
-        {/* Couple Heirloom Suite with Professional Studio Redirect */}
+        {/* Couple Direct Booking Suite */}
         <div className="flex items-center justify-between p-4 rounded-2xl bg-black/70 border border-[#D4AF37]/30 mb-8 flex-wrap gap-4 shadow-lg backdrop-blur-md">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37]">
@@ -1179,7 +1179,7 @@ const BookingPage = () => {
             </div>
             <div>
               <div className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                <span>✨ Couple Heirloom Direct Booking Suite</span>
+                <span>✨ Couple Direct Booking Suite</span>
                 <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30">
                   Direct Lab Order
                 </span>
@@ -1189,15 +1189,6 @@ const BookingPage = () => {
               </div>
             </div>
           </div>
-          <a
-            href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-studio.web.app' : 'http://localhost:5174'}
-            target="_blank"
-            rel="noreferrer"
-            className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37]/15 flex items-center gap-2"
-          >
-            <Building2 size={14} />
-            <span>Studio / Photographer Portal ↗</span>
-          </a>
         </div>
 
         {/* Dynamic Stepper Bar */}

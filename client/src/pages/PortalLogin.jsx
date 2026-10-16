@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   Camera, Users, ChevronRight, ArrowLeft,
   Mail, Lock, Eye, EyeOff, AlertCircle, Heart, Palette,
-  Phone, KeyRound, CheckCircle2, X, RefreshCw, Shield, Sliders
+  Phone, KeyRound, CheckCircle2, X, RefreshCw
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import './PortalLogin.css';
@@ -627,20 +627,6 @@ const PortalLogin = () => {
                   onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
                 >
                   <Palette size={14} /> Editor Portal
-                </a>
-                <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-sysadmin.web.app' : 'http://localhost:5176'} 
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#38bdf8'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
-                >
-                  <Shield size={14} /> Operations Panel
-                </a>
-                <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-uiadmin.web.app' : 'http://localhost:4001'} 
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#f59e0b'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
-                >
-                  <Sliders size={14} /> CMS Admin
                 </a>
               </div>
             </div>

@@ -1,12 +1,8 @@
 import React from 'react';
-import { Info, PhoneCall, Building2, ExternalLink, Sparkles, ShieldCheck } from 'lucide-react';
+import { Info, PhoneCall, Sparkles, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import PackageSection from '../components/PackageSection';
 import './Pricing.css';
-
-const STUDIO_PORTAL_URL = typeof window !== 'undefined' && window.location.hostname.includes('localhost')
-  ? 'http://localhost:5174'
-  : 'https://weddingalbums-studio.web.app';
 
 const Pricing = () => {
   return (
@@ -43,37 +39,6 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* Studio Partner Dedicated Referral Section */}
-      <section className="section" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
-        <div className="container">
-          <ScrollReveal>
-            <div className="glass-3d p-6 sm:p-8 rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-black/90 via-[#D4AF37]/10 to-black/90 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
-              <div className="space-y-2 text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-2 text-xs uppercase tracking-widest font-bold text-[#D4AF37]">
-                  <Building2 size={16} />
-                  <span>Are you a Professional Photo Studio or Freelance Editor?</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
-                  Looking for Wholesale Studio Trade Pricing?
-                </h3>
-                <p className="text-sm text-gray-300 max-w-xl">
-                  Wholesale per-sheet lab rates, trade credit terms, raw camera asset ingestion, and white-label client drop-shipping are exclusively managed through the <strong>WeddingAlbums Studio Portal</strong>.
-                </p>
-              </div>
-              <a
-                href={STUDIO_PORTAL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-gold-3d whitespace-nowrap px-6 py-3.5 text-sm font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(212,175,55,0.3)] shrink-0"
-              >
-                <span>Launch Studio Portal</span>
-                <ExternalLink size={16} />
-              </a>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
       {/* FAQ & CTA */}
       <section className="pricing-faq section">
         <div className="container">
@@ -102,10 +67,10 @@ const Pricing = () => {
 
             <ScrollReveal delay={300} className="faq-card glass-3d">
               <h4 className="text-white flex items-center gap-2">
-                <ShieldCheck size={18} className="text-[#D4AF37]"/> Can wedding studios get wholesale rates?
+                <ShieldCheck size={18} className="text-[#D4AF37]"/> Can we request changes before printing?
               </h4>
               <p className="text-gray-400 mt-2">
-                Yes! Verified photo studios, wedding cinematographers, and freelance editors receive protected wholesale rates per sheet and white-label drop-shipping via the dedicated Studio Portal.
+                Yes! We share an interactive 3D digital flipbook proof directly to your Couples Portal and WhatsApp. You can review every spread, leave notes, and approve the design before it goes to the lab.
               </p>
             </ScrollReveal>
             

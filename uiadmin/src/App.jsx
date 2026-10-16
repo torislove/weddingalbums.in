@@ -30,7 +30,7 @@ const AuthProvider = ({ children }) => {
     if (saved && savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        if (parsed.role === 'admin' || parsed.role === 'content_admin') {
+        if (parsed.role === 'admin' || parsed.role === 'sysadmin' || parsed.role === 'content_admin') {
           setToken(saved);
           setUser(parsed);
         } else {

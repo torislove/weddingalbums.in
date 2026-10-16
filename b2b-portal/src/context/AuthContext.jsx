@@ -16,7 +16,7 @@ export const AuthProvider = ({ children, requiredRole }) => {
       try {
         const parsed = JSON.parse(savedUser);
         // Role guard: only allow the role this portal is configured for
-        if (!requiredRole || parsed.role === requiredRole || parsed.role === 'admin') {
+        if (!requiredRole || parsed.role === requiredRole || parsed.role === 'admin' || parsed.role === 'sysadmin') {
           setUser(parsed);
         } else {
           localStorage.removeItem('token');

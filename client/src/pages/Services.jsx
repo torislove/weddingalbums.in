@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ImageIcon, Video, BookOpen, Flag, Package, ArrowRight, Sparkles, Building2, ExternalLink } from 'lucide-react';
+import { ImageIcon, Video, BookOpen, Flag, Package, ArrowRight, Sparkles } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import ScrollReveal from '../components/ScrollReveal';
 import KolamDivider from '../components/KolamDivider';
@@ -96,31 +96,6 @@ const Services = () => {
         </ScrollReveal>
       </div>
 
-      {/* B2B Studio Partner Trade Notice Banner */}
-      <div className="studio-partner-trade-strip">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] shrink-0 font-bold">
-              <Building2 size={18} />
-            </div>
-            <div>
-              <div className="text-sm font-bold text-white">
-                Are you a professional Photo Studio or Freelance Editor in AP / TS?
-              </div>
-              <div className="text-xs text-gray-400">
-                Studio Trade Partners receive exclusive wholesale price per sheet, white-label packaging, and 48-hour turnarounds.
-              </div>
-            </div>
-          </div>
-          <a
-            href="/portal/login?portal=b2b"
-            className="btn btn-outline text-xs py-2 px-4 whitespace-nowrap text-[#D4AF37] border-[#D4AF37]/50 hover:bg-[#D4AF37]/15 flex items-center gap-1.5 font-bold"
-          >
-            <span>Access Studio Wholesale Portal</span>
-            <ExternalLink size={13} />
-          </a>
-        </div>
-      </div>
 
       {/* Sticky Tab Navigation with 5 Distinct Pillars */}
       <div className="services-nav">

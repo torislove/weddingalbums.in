@@ -48,7 +48,7 @@ const AdminLogin = ({ setToken }) => {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Login failed. Please check your credentials.');
-      } else if (data.user?.role !== 'admin' && data.user?.role !== 'content_admin') {
+      } else if (data.user?.role !== 'admin' && data.user?.role !== 'sysadmin' && data.user?.role !== 'content_admin') {
         setError('Unauthorized: Content Admin or Admin access only.');
       } else {
         localStorage.setItem('uiadminToken', data.token);

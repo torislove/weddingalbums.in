@@ -83,7 +83,7 @@ const Navbar = () => {
         <div className="nav-container">
           {/* Logo */}
           <Link to="/" className="nav-logo" style={{ textDecoration: 'none' }}>
-            <Logo size={38} portalTag="Heirloom Studio" />
+            <Logo size={38} />
           </Link>
 
           {/* Desktop Nav */}

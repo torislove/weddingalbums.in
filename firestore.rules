@@ -3,23 +3,26 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Public & client access to album proofs and reviews
     match /albums/{albumId} {
-      allow read: if true;
+      // Single album lookup via direct proof link allowed; listing all albums requires auth
+      allow get: if true;
+      allow list: if request.auth != null;
       allow write: if request.auth != null;
 
       match /comments/{commentId} {
         allow read: if true;
-        allow create: if request.auth != null || request.resource.data.author != null;
+        allow create: if request.auth != null || (request.resource.data.author != null && request.resource.data.text != null);
         allow update, delete: if request.auth != null;
       }
     }
 
-    // Order status tracking
+    // Order status tracking: direct order lookup by ID allowed; bulk scraping disabled
     match /orders/{orderId} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if request.auth != null;
       allow write: if request.auth != null;
     }
 
-    // User accounts locked down to owner
+    // User accounts locked down strictly to the verified owner
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }

@@ -320,14 +320,14 @@ const ClientDashboard = () => {
       {/* ── Mobile Top Header Bar ───────────────────────────────── */}
       <header className="cdash-mobile-header">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <Logo size={32} portalTag="Client Portal" />
+          <Logo size={32} portalTag="Couples Portal" />
         </Link>
         <div className="cdash-mobile-actions">
           <Link to="/" className="cdash-mobile-btn cdash-mobile-home-btn" title="Back to Main Site">
             <Home size={16} />
           </Link>
           <a
-            href={`https://wa.me/919876543210?text=${encodeURIComponent('నమస్కారం WeddingAlbums.in టీమ్! నా క్లయింట్ పోర్టల్ ఆర్డర్ల గురించి సహాయం కావాలి.')}`}
+            href={`https://wa.me/919876543210?text=${encodeURIComponent('నమస్కారం WeddingAlbums.in టీమ్! నా కపుల్స్ వెడ్డింగ్ ఆల్బమ్ ఆర్డర్ల గురించి సహాయం కావాలి.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="cdash-mobile-btn cdash-mobile-wa-btn"
@@ -354,15 +354,15 @@ const ClientDashboard = () => {
       <aside className="cdash-sidebar">
         {/* Brand */}
         <Link to="/" className="cdash-sb-brand" style={{ textDecoration: 'none' }}>
-          <Logo size={36} portalTag="Client Portal" />
+          <Logo size={36} portalTag="Couples Portal" />
         </Link>
 
         {/* User */}
         <div className="cdash-sb-user">
           <div className="cdash-sb-avatar">{initials}</div>
           <div>
-            <div className="cdash-sb-name">{user?.coupleNames || user?.name || 'Client'}</div>
-            <div className="cdash-sb-role">💑 Client</div>
+            <div className="cdash-sb-name">{user?.coupleNames || user?.name || 'Couple'}</div>
+            <div className="cdash-sb-role">💑 Couple</div>
           </div>
         </div>
 
@@ -412,7 +412,7 @@ const ClientDashboard = () => {
             {user?.isGuest && (
               <div style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', padding: '12px 16px', borderRadius: '12px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: '#d4af37' }}>
-                  <strong>Guest Mode Active:</strong> You are viewing a demo of the client dashboard.
+                  <strong>Guest Mode Active:</strong> You are viewing a demo of the couples sanctuary.
                 </span>
                 <Link to="/login" style={{ fontSize: '0.8rem', color: '#fff', background: '#d4af37', padding: '6px 12px', borderRadius: '6px', textDecoration: 'none', fontWeight: 600 }}>Sign In</Link>
               </div>
@@ -420,7 +420,7 @@ const ClientDashboard = () => {
             
             {/* Page Header */}
             <div className="cdash-page-header">
-              <div className="overline">Client Portal</div>
+              <div className="overline">Couples Wedding Sanctuary</div>
               <h1>Welcome back, {user?.name?.split(' ')[0] || 'there'} 👋</h1>
               <p>Here's the latest on your album journey. Your memories are in safe hands.</p>
             </div>
