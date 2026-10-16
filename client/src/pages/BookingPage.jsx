@@ -140,63 +140,181 @@ const DEFAULT_ALBUM_SIZES = [
   }
 ];
 
-// COMPREHENSIVE SHEET FINISHES (8 INDUSTRY LAB TYPES)
-const DEFAULT_SHEETS = [
+// ============================================================================
+// SERVICE INTENT MODES (FOR COUPLES & CLIENTS)
+// ============================================================================
+const SERVICE_INTENTS = [
   {
-    id: 'velvet',
-    name: 'Non-Tearable Velvet Touch',
-    telugu: 'సిల్కీ వెల్వెట్ మ్యాట్ (వాటర్ ప్రూఫ్)',
-    pricePerSheet: 65,
-    note: 'Ultra-smooth matte finish, 100% waterproof, tear-resistant, feather touch.'
+    id: 'edit_and_print',
+    title: '✨ Complete Suite (Editing + Printing)',
+    telugu: 'ఎడిటింగ్ + డిజైనింగ్ + ఆల్బమ్ ప్రింటింగ్',
+    badge: 'Couples #1 Choice ⭐',
+    shortDesc: 'End-to-end Telugu wedding album creation. Raw photo culling, skin retouching, Karizma PSD layout design, WhatsApp 3D flipbook proof review, and commercial lab printing on archival sheets.',
+    inclusions: ['Photo Culling & Skin Retouching', 'Custom Karizma Telugu PSD Design', 'Interactive 3D Digital Flipbook Proof', 'Lab Lay-Flat Printing (NTR/Silver Halide)', 'Handcrafted Presentation Box'],
+    clientProvides: 'Raw or original wedding photos via Google Drive / WhatsApp',
+    turnaround: '3-5 Working Days after Digital Proof Approval'
   },
   {
-    id: 'gloss',
-    name: 'Crystal High Gloss (Ultra Mirror)',
+    id: 'only_editing',
+    title: '🎨 Only Editing (Digital Master Delivery)',
+    telugu: 'ఫొటో & వీడియో ఎడిటింగ్ మాత్రమే (నో ప్రింట్)',
+    badge: '100% Digital Delivery',
+    shortDesc: 'Professional photo culling, Telugu Pelli skin retouching, Karizma PSD creative layout design, cinematic color grading, or video editing without physical album printing.',
+    inclusions: ['Telugu Pelli Skin Retouching & Beauty Clean-up', 'Custom Karizma PSD Spread Layouts (300 DPI)', 'Cinematic Color Grading & Telugu LUTs', 'High-Res Digital Files via Cloud Link', 'Zero Physical Printing Charges'],
+    clientProvides: 'Original RAW or high-resolution JPEG photos / Camera video files',
+    turnaround: '48-72 Hours Express Cloud Delivery'
+  },
+  {
+    id: 'only_printing',
+    title: '🖨️ Only Printing & Binding (Existing Spreads)',
+    telugu: 'ఆల్బమ్ ల్యాబ్ ప్రింటింగ్ & బైండింగ్ మాత్రమే',
+    badge: 'Direct Lab Press',
+    shortDesc: 'Direct commercial lab printing and binding. Ideal if you already have pre-designed 12×36 / 12×30 album PSD or high-resolution JPEG spreads ready. Choice of 8 surface finishes and luxury covers.',
+    inclusions: ['100% Waterproof NTR Synthetic or Fine Art Substrate', 'Choice of 8 Surface Finishes (Matte, Gloss, Velvet, Metallic...)', 'Seamless 180° Lay-Flat Thermal Core Binding', 'Luxury Acrylic, Velvet, or Leatherette Cover', 'Secure Door Delivery across AP & TS'],
+    clientProvides: 'Pre-designed 12×36, 12×30, or 18×12 spreads in 300 DPI (PSD, PDF, or JPG)',
+    turnaround: '3-4 Working Days to Dispatch'
+  },
+  {
+    id: 'standalone_services',
+    title: '🎬 Any Video or Event Print A-la-Carte',
+    telugu: 'వీడియో రీల్స్, టీజర్లు, వాట్సాప్ ఆహ్వానాలు & ఫ్లెక్స్',
+    badge: 'A-la-Carte Direct',
+    shortDesc: 'Order individual creative media items directly: 9:16 Instagram Wedding Reels 5-Pack, 4K Cinematic Teaser Trailer, Animated WhatsApp Video Invitation with Sannai Melam, Welcome Roll-Up Standees, or Tabletop Desk Calendars.',
+    inclusions: ['4K Cinematic Wedding Teaser Trailers (1-3 min)', 'Instagram Reels & Shorts 5-Pack (9:16 Vertical)', 'Animated WhatsApp Video Invitation with Devotional BGM', 'Mandap Welcome Roll-Up Standees & Entrance Flex', 'Personalized Tabletop Desk Calendars'],
+    clientProvides: 'Event footage, couple photos, wedding date & venue details',
+    turnaround: '24-48 Hours for Digital Media / 2 Days for Flex'
+  },
+  {
+    id: 'bundles',
+    title: '⚡ 1-Click Curated Luxury Bundles',
+    telugu: 'తక్షణ లగ్జరీ ప్యాకేజీలు (బెస్ట్ సెల్లర్స్)',
+    badge: 'Max Bundle Value',
+    shortDesc: 'Pre-configured all-in-one Telugu wedding packages combining master album, cinematic video, parent duplicate books, and entrance standees with massive package savings.',
+    inclusions: ['Pre-Configured Master Heirloom Album', 'Cinematic 4K Teaser + Instagram Reels', 'Matching Mini Duplicate Parent Albums', 'Velvet Presentation Briefcase', 'Free Express Insured Dispatch'],
+    clientProvides: 'Event date & photos / video link',
+    turnaround: '5-7 Working Days Total'
+  }
+];
+
+// 2-DIMENSIONAL LAB SHEET FINISHES (STANDARD INCLUDED VS LUXURY UPGRADES)
+const DEFAULT_SHEETS = [
+  // STANDARD FINISHES (INCLUDED IN BASE PRICE - ₹0 EXTRA)
+  {
+    id: 'ntr_matte',
+    name: 'NTR Anti-Glare Matte',
+    telugu: 'నాన్-టియరబుల్ మ్యాట్ (స్టాండర్డ్)',
+    tier: 'standard',
+    pricePerSheet: 0,
+    surchargePerSheet: 0,
+    priceLabel: 'Included in Base Price (₹0 Extra)',
+    note: 'Smooth non-reflective matte lamination over non-tearable core. Zero glare, 100% waterproof.'
+  },
+  {
+    id: 'ntr_gloss',
+    name: 'NTR Crystal High Gloss',
     telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్',
-    pricePerSheet: 75,
-    note: 'Super-reflective mirror gloss. Vivid colors, deep blacks and saturated wedding reds.'
+    tier: 'standard',
+    pricePerSheet: 0,
+    surchargePerSheet: 0,
+    priceLabel: 'Included in Base Price (₹0 Extra)',
+    note: 'Ultra-glossy clear thermal finish. Deep saturated reds and high contrast mirror clarity.'
+  },
+  // LUXURY FINISHES (PER-SHEET SURCHARGES)
+  {
+    id: 'silky_matte',
+    name: 'Silky / Silk Matte Pearl',
+    telugu: 'సిల్కీ / సిల్క్ మ్యాట్ పెర్ల్ లస్టర్',
+    tier: 'luxury',
+    pricePerSheet: 25,
+    surchargePerSheet: 25,
+    priceLabel: '+₹25 / sheet upgrade',
+    note: 'Micro-pearlescent satin texture. True-to-life skin tones with silky tactile glide.'
+  },
+  {
+    id: 'velvet',
+    name: 'Velvet / Feather Touch Soft',
+    telugu: 'రాయల్ వెల్వెట్ ఫెదర్ టచ్',
+    tier: 'luxury',
+    pricePerSheet: 35,
+    surchargePerSheet: 35,
+    priceLabel: '+₹35 / sheet upgrade',
+    note: 'Peach-fuzz tactile velvet, 100% anti-scratch & zero fingerprint smudge.'
   },
   {
     id: 'metallic',
-    name: 'High-Gloss Metallic Pearl Sheen',
-    telugu: 'రాయల్ హై-గ్లాస్ మెటాలిక్',
-    pricePerSheet: 85,
-    note: 'Lustrous high-contrast sheen that brings gold jewellery and wedding silks alive.'
+    name: '24K Metallic Pearl Sheen',
+    telugu: '24K మెటాలిక్ పెర్ల్ గోల్డ్ గ్లోస్',
+    tier: 'luxury',
+    pricePerSheet: 45,
+    surchargePerSheet: 45,
+    priceLabel: '+₹45 / sheet upgrade',
+    note: 'Archival pearlized metallic film with specular shimmer that elevates 22K gold jewelry.'
+  },
+  {
+    id: 'sparkle',
+    name: 'Sparkle / Glitter Film',
+    telugu: 'స్పార్కిల్ / గ్లిట్టర్ లామినేషన్',
+    tier: 'luxury',
+    pricePerSheet: 50,
+    surchargePerSheet: 50,
+    priceLabel: '+₹50 / sheet upgrade',
+    note: 'Micro-crystalline diamond glitter sparkle for high-energy Sangeet and fireworks.'
+  },
+  {
+    id: 'luster',
+    name: 'Luster / Satin Archival',
+    telugu: 'లస్టర్ / శాటిన్ ఆర్కైవల్ ఫినిష్',
+    tier: 'luxury',
+    pricePerSheet: 30,
+    surchargePerSheet: 30,
+    priceLabel: '+₹30 / sheet upgrade',
+    note: 'Classic lab orange-peel fine-grain luster. Balanced contrast and anti-glare viewing.'
   },
   {
     id: 'leatherette',
-    name: 'Royal Feather Touch Leatherette',
-    telugu: 'రాయల్ ఫెదర్ టచ్ లెథరెట్',
-    pricePerSheet: 110,
-    note: 'Ultra-luxury textured sheets with genuine tactile grain and rich gold hot-stamping.'
+    name: 'Canvas / Leatherette Embossed',
+    telugu: 'లెథరెట్ / కాన్వాస్ ఎంబోస్డ్ టెక్స్చర్',
+    tier: 'luxury',
+    pricePerSheet: 40,
+    surchargePerSheet: 40,
+    priceLabel: '+₹40 / sheet upgrade',
+    note: 'Deep tactile woven canvas weave and soft leatherette relief for timeless heirlooms.'
+  }
+];
+
+// 4 BASE SUBSTRATES & CORE MEDIA
+const DEFAULT_BASE_SUBSTRATES = [
+  {
+    id: 'ntr_bopp',
+    name: 'NTR (Non-Tearable BOPP Synthetic)',
+    telugu: 'నాన్-టియరబుల్ సింథటిక్ షీట్ (100% వాటర్‌ప్రూఫ్)',
+    surchargePerSheet: 0,
+    priceLabel: 'Included Standard (100% Waterproof)',
+    note: '100% unbreakable, tear-proof, moisture-proof polymer. 80%+ of Indian weddings.'
   },
   {
-    id: 'thermal',
-    name: 'HD Thermal Lamination Matte',
-    telugu: 'హై-డెఫినిషన్ థర్మల్ లామినేషన్',
-    pricePerSheet: 50,
-    note: 'Durable, crystal scratch-resistant thermal coating. Ideal for everyday handling.'
-  },
-  {
-    id: 'silk_matte',
-    name: 'Silk Matte Pearl Lustre',
-    telugu: 'సిల్క్ మ్యాట్ పెర్ల్ లస్టర్',
-    pricePerSheet: 95,
-    note: 'Micro-pearlescent sheen with true-to-life skin tones and natural highlights without glare.'
+    id: 'art_paper',
+    name: 'Regular Wood-Pulp Art Paper (170-300 GSM)',
+    telugu: 'రెగ్యులర్ ఆర్ట్ పేపర్ (వుడ్-పల్ప్)',
+    surchargePerSheet: 0,
+    priceLabel: 'Budget Friendly',
+    note: 'Standard coated paper stock for lightweight pocket books and budget albums.'
   },
   {
     id: 'silver_halide',
-    name: 'Silver Halide True Photographic (Fuji DP2)',
-    telugu: 'సిల్వర్ హాలైడ్ ట్రూ ఫోటో పేపర్',
-    pricePerSheet: 125,
-    note: 'Continuous tone optical RGB exposure. 100-year archival laboratory rating without dots.'
+    name: 'Silver Halide True Chemical Photographic (Fuji DP2)',
+    telugu: 'ట్రూ సిల్వర్ హాలైడ్ కెమికల్ పేపర్',
+    surchargePerSheet: 40,
+    priceLabel: '+₹40 / sheet upgrade',
+    note: 'Continuous-tone optical RGB exposure with wet chemistry. Zero digital dots, 100-year archival.'
   },
   {
-    id: 'canvas',
-    name: 'Embossed Canvas Texture Fine Art',
-    telugu: 'కాన్వాస్ ఎంబోస్డ్ ఫైన్ ఆర్ట్ టెక్స్చర్',
-    pricePerSheet: 105,
-    note: 'Tactile painterly woven fabric texture with artistic micro-embossing for timeless art.'
+    id: 'cotton_rag',
+    name: '100% Cotton Rag Fine Art (Hahnemühle / Giclée)',
+    telugu: '100% కాటన్ రాగ్ ఫైన్ ఆర్ట్ (మ్యూజియం గ్రేడ్)',
+    surchargePerSheet: 60,
+    priceLabel: '+₹60 / sheet upgrade',
+    note: 'Museum conservation grade, 100% natural cotton fibers, acid-free watercolor texture.'
   }
 ];
 
@@ -290,8 +408,11 @@ const BookingPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   
+  // SERVICE INTENT: 'edit_and_print' | 'only_editing' | 'only_printing' | 'standalone_services' | 'bundles'
+  const [serviceIntent, setServiceIntent] = useState('edit_and_print');
+
   // SEPARATED EXPERIENCE MODE: 'bundles' (1-Click Fast Suites) vs 'custom' (A-la-carte Multi-Service)
-  const [experienceMode, setExperienceMode] = useState('bundles'); 
+  const [experienceMode, setExperienceMode] = useState('custom'); 
   const [appliedBundle, setAppliedBundle] = useState('royal_telugu');
 
   // Orientation filter for album sizes: 'all' | 'landscape' | 'portrait'
@@ -300,6 +421,7 @@ const BookingPage = () => {
   const [dynamicPricing, setDynamicPricing] = useState({
     sizes: DEFAULT_ALBUM_SIZES,
     sheets: DEFAULT_SHEETS,
+    substrates: DEFAULT_BASE_SUBSTRATES,
     services: [],
     packages: []
   });
@@ -315,6 +437,7 @@ const BookingPage = () => {
       setDynamicPricing({
         sizes: (sizes && sizes.length > 0) ? sizes : DEFAULT_ALBUM_SIZES,
         sheets: (sheets && sheets.length > 0) ? sheets : DEFAULT_SHEETS,
+        substrates: DEFAULT_BASE_SUBSTRATES,
         services: services || [],
         packages: packages || []
       });
@@ -337,7 +460,7 @@ const BookingPage = () => {
     services: {
       albumPrint: true,
       videoEdit: false,
-      photoEdit: false,
+      photoEdit: true,
       flexBanner: false,
       calendars: false,
     },
@@ -345,7 +468,8 @@ const BookingPage = () => {
     // Album Specifications
     albumType: 'karizma',
     albumSize: '12x36',
-    selectedSheetTypes: ['velvet'],
+    baseSubstrate: 'ntr_bopp',
+    selectedSheetTypes: ['ntr_matte'],
     pages: 30,
     boxType: 'standard',
     parentAlbums: 0,
@@ -500,13 +624,79 @@ const BookingPage = () => {
     }
   };
 
+  // Fast Service Intent Switcher for Couples
+  const selectServiceIntent = (intentId) => {
+    setServiceIntent(intentId);
+    if (intentId === 'bundles') {
+      setExperienceMode('bundles');
+      setStep(1);
+    } else if (intentId === 'only_editing') {
+      setExperienceMode('custom');
+      setFormData(prev => ({
+        ...prev,
+        services: {
+          albumPrint: false,
+          photoEdit: true,
+          videoEdit: prev.services.videoEdit,
+          flexBanner: false,
+          calendars: false,
+        }
+      }));
+      setStep(1);
+    } else if (intentId === 'only_printing') {
+      setExperienceMode('custom');
+      setFormData(prev => ({
+        ...prev,
+        services: {
+          albumPrint: true,
+          photoEdit: false,
+          videoEdit: false,
+          flexBanner: false,
+          calendars: false,
+        }
+      }));
+      setStep(1);
+    } else if (intentId === 'edit_and_print') {
+      setExperienceMode('custom');
+      setFormData(prev => ({
+        ...prev,
+        services: {
+          albumPrint: true,
+          photoEdit: true,
+          videoEdit: prev.services.videoEdit,
+          flexBanner: false,
+          calendars: false,
+        }
+      }));
+      setStep(1);
+    } else if (intentId === 'standalone_services') {
+      setExperienceMode('custom');
+      setFormData(prev => ({
+        ...prev,
+        services: {
+          albumPrint: false,
+          photoEdit: false,
+          videoEdit: true,
+          flexBanner: true,
+          calendars: false,
+        }
+      }));
+      setStep(1);
+    }
+  };
+
   const [searchParams] = useSearchParams();
 
-  // Prepopulate from URL params (?date=YYYY-MM-DD, ?bundle=..., ?mode=...)
+  // Prepopulate from URL params (?date=YYYY-MM-DD, ?bundle=..., ?mode=..., ?intent=..., ?finish=..., ?sheets=...)
   useEffect(() => {
     const urlDate = searchParams.get('date');
     const urlBundle = searchParams.get('bundle');
     const urlMode = searchParams.get('mode');
+    const urlIntent = searchParams.get('intent') || urlMode;
+    const urlService = searchParams.get('service');
+    const urlFinish = searchParams.get('finish');
+    const urlSheets = searchParams.get('sheets');
+    const urlSubstrate = searchParams.get('substrate');
 
     if (urlDate) {
       setFormData(prev => ({ ...prev, eventDate: urlDate }));
@@ -514,8 +704,35 @@ const BookingPage = () => {
     if (urlBundle) {
       applyBundle(urlBundle, false);
     }
-    if (urlMode === 'custom') {
-      setExperienceMode('custom');
+    
+    if (urlIntent === 'only_editing' || urlService?.includes('photo') || urlService?.includes('culling')) {
+      selectServiceIntent('only_editing');
+    } else if (urlIntent === 'only_printing' || urlService?.includes('print') || urlService?.includes('sheet')) {
+      selectServiceIntent('only_printing');
+    } else if (urlIntent === 'standalone_services' || urlService?.includes('video') || urlService?.includes('flex') || urlService?.includes('invite')) {
+      selectServiceIntent('standalone_services');
+    } else if (urlIntent === 'bundles' || urlBundle) {
+      selectServiceIntent('bundles');
+    } else if (urlIntent === 'edit_and_print') {
+      selectServiceIntent('edit_and_print');
+    }
+
+    if (urlFinish) {
+      const matched = DEFAULT_SHEETS.find(s => s.id === urlFinish || s.id.includes(urlFinish) || urlFinish.includes(s.id));
+      if (matched) {
+        setFormData(prev => ({ ...prev, selectedSheetTypes: [matched.id] }));
+      }
+    }
+
+    if (urlSubstrate) {
+      setFormData(prev => ({ ...prev, baseSubstrate: urlSubstrate }));
+    }
+
+    if (urlSheets) {
+      const num = parseInt(urlSheets, 10);
+      if (!isNaN(num) && num >= 20) {
+        setFormData(prev => ({ ...prev, pages: num }));
+      }
     }
   }, [searchParams]);
 
@@ -608,7 +825,7 @@ const BookingPage = () => {
   // Precise, 100% Itemized Pricing Calculation (Couple Retail Heirloom Suite)
   const calculateTotal = () => {
     // Special curated bundle fast calculation if in bundles mode
-    if (experienceMode === 'bundles') {
+    if (experienceMode === 'bundles' || serviceIntent === 'bundles') {
       if (appliedBundle === 'royal_telugu') return 17999;
       if (appliedBundle === 'cinematic_duo') return 13200;
       if (appliedBundle === 'lab_express') return 8200;
@@ -623,7 +840,7 @@ const BookingPage = () => {
 
     let total = 0;
 
-    // 1. Album Print & Design
+    // 1. Album Print & Lab Binding (Only if albumPrint is active)
     if (formData.services.albumPrint) {
       let basePrice = 9500;
       
@@ -643,33 +860,36 @@ const BookingPage = () => {
       else if (formData.albumType === 'velvet') basePrice += 1000;
       else if (formData.albumType === 'leather') basePrice += 1200;
 
-      // Multiple sheet types calculation with arbitrary per-sheet rates
-      const activeSheets = dynamicPricing.sheets.filter(s =>
-        formData.selectedSheetTypes.includes(s.id) ||
-        formData.selectedSheetTypes.includes(s._id) ||
-        formData.selectedSheetTypes.some(sel => s.name?.toLowerCase().includes(String(sel).toLowerCase()))
-      );
-      let avgSheetRate = 65;
-      if (activeSheets.length > 0) {
-        const sumRates = activeSheets.reduce((acc, s) => {
-          const rate = Number(s.pricePerSheet || s.clientPricePerSheet || 65);
-          return acc + rate;
-        }, 0);
-        avgSheetRate = Math.round(sumRates / activeSheets.length);
-      }
+      // Base Substrate surcharge (Silver Halide +₹40/sheet, Cotton Rag +₹60/sheet)
+      let substrateSurcharge = 0;
+      if (formData.baseSubstrate === 'silver_halide') substrateSurcharge = 40;
+      else if (formData.baseSubstrate === 'cotton_rag') substrateSurcharge = 60;
+      basePrice += (formData.pages * substrateSurcharge);
 
-      // Extra sheets above 30 calculated at arbitrary sheet rate
-      const extraSheets = Math.max(0, formData.pages - 30);
-      total += basePrice + (extraSheets * avgSheetRate);
+      // Surface Finish surcharge (Matte/Gloss = ₹0, Silky = ₹25, Velvet = ₹35, Metallic = ₹45, Sparkle = ₹50, Luster = ₹30, Leatherette = ₹40)
+      let maxFinishSurcharge = 0;
+      formData.selectedSheetTypes.forEach(shtId => {
+        const s = DEFAULT_SHEETS.find(sh => sh.id === shtId || sh.name?.toLowerCase().includes(String(shtId).toLowerCase()));
+        if (s && s.surchargePerSheet) {
+          maxFinishSurcharge = Math.max(maxFinishSurcharge, s.surchargePerSheet);
+        }
+      });
+      basePrice += (formData.pages * maxFinishSurcharge);
+
+      // Extra sheets above 30 calculated at base sheet rate (₹70/sheet)
+      const sheetDelta = formData.pages - 30;
+      basePrice += (sheetDelta * 70);
 
       // Presentation box
-      if (formData.boxType === 'velvet_case') total += 1200;
-      else if (formData.boxType === 'wooden_box') total += 1800;
-      else if (formData.boxType === 'acrylic_box') total += 2200;
+      if (formData.boxType === 'velvet_case') basePrice += 1200;
+      else if (formData.boxType === 'wooden_box') basePrice += 1800;
+      else if (formData.boxType === 'acrylic_box') basePrice += 2200;
 
       // Duplicate parent albums
-      if (formData.parentAlbums === 1) total += 2500;
-      else if (formData.parentAlbums === 2) total += 4500;
+      if (formData.parentAlbums === 1) basePrice += 2500;
+      else if (formData.parentAlbums === 2) basePrice += 4500;
+
+      total += basePrice;
     }
 
     // 2. Video Editing
@@ -740,6 +960,108 @@ const BookingPage = () => {
       ];
 
   const totalSteps = wizardSteps.length;
+
+  const renderServiceIntentSelector = () => {
+    const activeIntentObj = SERVICE_INTENTS.find(i => i.id === serviceIntent) || SERVICE_INTENTS[0];
+
+    return (
+      <div className="service-intent-box p-5 rounded-2xl bg-black/60 border border-[#D4AF37]/30 mb-6 backdrop-blur-md">
+        <div className="mb-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-xs font-mono font-bold text-[#D4AF37] uppercase tracking-wider block">
+              Step 1: Choose Your Service Scope
+            </span>
+            <span className="text-[11px] text-gray-400">
+              {lang === 'TE' ? 'మీ అవసరానికి సరిపోయే సర్వీస్‌ను ఎంచుకోండి' : 'Select the exact service combination you need'}
+            </span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mt-1">
+            {lang === 'TE' ? 'మీ వివాహానికి ఏ సేవలు కావాలి?' : 'What Service Do You Need Today?'}
+          </h3>
+          <p className="text-xs text-gray-300 mt-1">
+            {lang === 'TE'
+              ? 'ఎడిటింగ్ మాత్రమే, ల్యాబ్ ప్రింటింగ్ మాత్రమే, లేదా పూర్తి సూట్ — పూర్తి పారదర్శకతతో ఎంచుకోండి.'
+              : 'Choose pure digital editing, pure lab printing, complete master design+print suite, or a-la-carte media.'}
+          </p>
+        </div>
+
+        {/* 5 INTENT CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+          {SERVICE_INTENTS.map(intent => {
+            const isSelected = serviceIntent === intent.id;
+            return (
+              <div
+                key={intent.id}
+                onClick={() => selectServiceIntent(intent.id)}
+                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
+                  isSelected
+                    ? 'bg-gradient-to-br from-[#D4AF37]/25 via-black to-black border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.25)] scale-[1.02]'
+                    : 'bg-white/5 border-white/10 hover:border-white/20'
+                }`}
+              >
+                <div>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mb-1.5 ${
+                    isSelected ? 'bg-[#D4AF37] text-black font-extrabold' : 'bg-white/10 text-gray-300'
+                  }`}>
+                    {intent.badge}
+                  </span>
+                  <div className="font-bold text-xs text-white leading-snug">{intent.title}</div>
+                  <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{intent.telugu}</div>
+                </div>
+                <div className="text-[10px] text-gray-400 mt-2 line-clamp-2">
+                  {intent.shortDesc}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* DYNAMIC SERVICE EXPLANATION & INCLUSION ACCORDION/BANNER */}
+        <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-white/10">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-sm">{activeIntentObj.title}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] font-mono">
+                  {activeIntentObj.badge}
+                </span>
+              </div>
+              <p className="text-gray-300 text-[11px] mt-0.5">{activeIntentObj.shortDesc}</p>
+            </div>
+            <div className="sm:text-right shrink-0">
+              <span className="text-[10px] text-gray-400 block">Turnaround Time</span>
+              <span className="text-xs font-mono font-bold text-emerald-400 flex items-center sm:justify-end gap-1">
+                <Clock size={12} /> {activeIntentObj.turnaround}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+            <div>
+              <span className="font-bold text-gray-400 uppercase tracking-wider block mb-1 text-[10px]">What is Included:</span>
+              <div className="space-y-1">
+                {activeIntentObj.inclusions.map((inc, i) => (
+                  <div key={i} className="flex items-center gap-1.5 text-gray-300 text-[11px]">
+                    <CheckCircle2 size={12} className="text-[#D4AF37] shrink-0" />
+                    <span>{inc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <span className="font-bold text-gray-400 uppercase tracking-wider block mb-1 text-[10px]">What You Provide:</span>
+              <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-gray-300 text-[11px] mb-1.5">
+                📂 {activeIntentObj.clientProvides}
+              </div>
+              <div className="text-[10px] text-gray-400">
+                💬 After booking, our Vijayawada lab team connects on WhatsApp to confirm files and share digital 3D proofs.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const proceedToNextStep = () => {
     if (experienceMode === 'bundles') {
@@ -1220,25 +1542,8 @@ const BookingPage = () => {
             {/* STEP 1 (BUNDLES): PICK CURATED BUNDLE */}
             {step === 1 && (
               <div className="space-y-6">
-                {/* Mode Switcher */}
-                <div className="mode-switch-bar">
-                  <button
-                    type="button"
-                    onClick={() => { setExperienceMode('bundles'); setStep(1); }}
-                    className="mode-switch-btn active"
-                  >
-                    <Sparkles size={18} className="text-[#D4AF37]" />
-                    <span>{lang === 'TE' ? '⚡ తక్షణ బండిల్స్ (1-క్లిక్)' : '⚡ 1-Click Curated Bundles'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setExperienceMode('custom'); setStep(1); }}
-                    className="mode-switch-btn"
-                  >
-                    <Layers size={18} className="text-[#D4AF37]" />
-                    <span>{lang === 'TE' ? '🛠️ కస్టమ్ మల్టీ-సర్వీస్ బిల్డర్' : '🛠️ Custom Multi-Service Builder'}</span>
-                  </button>
-                </div>
+                {/* 5 SERVICE INTENT MODES SELECTOR */}
+                {renderServiceIntentSelector()}
 
                 <div className="flex justify-between items-center flex-wrap gap-2">
                   <div>
@@ -1830,25 +2135,8 @@ const BookingPage = () => {
             {/* STEP 1 (CUSTOM): CHOOSE SERVICES (ZERO SCROLLBARS - RESPONSIVE TILES) */}
             {step === 1 && (
               <div className="space-y-6">
-                {/* Mode Switcher */}
-                <div className="mode-switch-bar">
-                  <button
-                    type="button"
-                    onClick={() => { setExperienceMode('bundles'); setStep(1); }}
-                    className="mode-switch-btn"
-                  >
-                    <Sparkles size={18} className="text-[#D4AF37]" />
-                    <span>{lang === 'TE' ? '⚡ తక్షణ బండిల్స్ (1-క్లిక్)' : '⚡ 1-Click Curated Bundles'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setExperienceMode('custom'); setStep(1); }}
-                    className="mode-switch-btn active"
-                  >
-                    <Layers size={18} className="text-[#D4AF37]" />
-                    <span>{lang === 'TE' ? '🛠️ కస్టమ్ మల్టీ-సర్వీస్ బిల్డర్' : '🛠️ Custom Multi-Service Builder'}</span>
-                  </button>
-                </div>
+                {/* 5 SERVICE INTENT MODES SELECTOR */}
+                {renderServiceIntentSelector()}
 
                 <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
                   <div>
@@ -1914,9 +2202,70 @@ const BookingPage = () => {
                   <h3 className="text-xl font-bold text-white mb-2">
                     2. {lang === 'TE' ? 'ఎంచుకున్న సేవల కాన్ఫిగరేషన్' : 'Customize Selected Services'}
                   </h3>
-                  <p className="text-sm text-gray-400 mb-6">
+                  <p className="text-sm text-gray-400 mb-4">
                     Only the services you picked in Step 1 are shown below. Configure sizes, sheets, cuts, and quantities.
                   </p>
+
+                  {/* Contextual Mode Explanation Banner */}
+                  {serviceIntent === 'only_editing' && (
+                    <div className="p-4 rounded-xl bg-purple-950/40 border border-purple-500/40 mb-4 flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 rounded-lg bg-purple-500/20 text-purple-300"><Palette size={20} /></span>
+                        <div>
+                          <h4 className="font-bold text-sm text-white">🎨 Only Editing Mode Active (Digital Master Delivery)</h4>
+                          <p className="text-xs text-gray-300">Physical album printing is excluded (₹0 printing charge). Choose your photo retouching styles and video cuts below. We deliver 300 DPI high-resolution files via Cloud.</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/30">
+                        Zero Print Cost
+                      </span>
+                    </div>
+                  )}
+
+                  {serviceIntent === 'only_printing' && (
+                    <div className="p-4 rounded-xl bg-blue-950/40 border border-blue-500/40 mb-4 flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 rounded-lg bg-blue-500/20 text-blue-300"><BookOpen size={20} /></span>
+                        <div>
+                          <h4 className="font-bold text-sm text-white">🖨️ Only Printing & Binding Active</h4>
+                          <p className="text-xs text-gray-300">Photo editing is excluded (₹0 design fee). Upload your pre-designed 12×36 / 12×30 spreads. Configure your base substrate, surface finish, and presentation box below.</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-blue-300 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/30">
+                        Direct Lab Press
+                      </span>
+                    </div>
+                  )}
+
+                  {serviceIntent === 'edit_and_print' && (
+                    <div className="p-4 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 mb-4 flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 rounded-lg bg-[#D4AF37]/20 text-[#D4AF37]"><Sparkles size={20} /></span>
+                        <div>
+                          <h4 className="font-bold text-sm text-white">✨ Complete Master Suite Active (Editing + Printing)</h4>
+                          <p className="text-xs text-gray-300">Full end-to-end craftsmanship: photo culling, Telugu skin retouching, custom Karizma design, 3D flipbook proof approval on WhatsApp, and archival lab printing.</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-[#D4AF37] bg-[#D4AF37]/20 px-2.5 py-1 rounded-full border border-[#D4AF37]/30">
+                        End-to-End Suite
+                      </span>
+                    </div>
+                  )}
+
+                  {serviceIntent === 'standalone_services' && (
+                    <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 mb-4 flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300"><Film size={20} /></span>
+                        <div>
+                          <h4 className="font-bold text-sm text-white">🎬 Standalone Services Active (A-la-carte)</h4>
+                          <p className="text-xs text-gray-300">Individual creative media items selected. Configure video styles, invitations, or welcome flex standees below.</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
+                        A-la-Carte
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Empty State Guard if user deselected all services */}
@@ -2096,73 +2445,160 @@ const BookingPage = () => {
                         </div>
                       </div>
 
-                      {/* Paper Sheet Finishes with Multi-Select & Transparent Per-Sheet Rates */}
+                      {/* DIMENSION 1: BASE SUBSTRATES & CORE MEDIA */}
                       <div>
                         <div className="flex justify-between items-center mb-1 flex-wrap gap-2">
-                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">
-                            3. Paper Sheet Finishes (Select 1 or More)
+                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                            <Layers size={13} className="text-[#D4AF37]" />
+                            3. Dimension 1: Base Substrates & Core Media
                           </label>
-                          <span className="text-xs text-emerald-400 font-semibold">
-                            {formData.selectedSheetTypes.length} Sheet Finish(es) Active
+                          <span className="text-xs text-[#D4AF37] font-semibold">
+                            {formData.baseSubstrate === 'ntr_bopp' ? '100% Waterproof BOPP Core' : 'Specialty Lab Core'}
                           </span>
                         </div>
-                        <p className="text-[11px] text-gray-400 mb-2">
-                          Multi-select sheet finishes (e.g. Velvet for candid rituals + Metallic Pearl for stage jewellery).
+                        <p className="text-[11px] text-gray-400 mb-2.5">
+                          The physical core layer determines sheet stiffness, tear resistance, and archival lifespan.
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                          {dynamicPricing.sheets.map(sht => {
-                            const shtRate = Number(sht.pricePerSheet || sht.clientPricePerSheet || 65);
-                            const isSelected = formData.selectedSheetTypes.includes(sht.id) || formData.selectedSheetTypes.includes(sht._id) || (sht.name && formData.selectedSheetTypes.some(st => sht.name.toLowerCase().includes(String(st).toLowerCase())));
-
+                          {DEFAULT_BASE_SUBSTRATES.map(sub => {
+                            const isSelected = formData.baseSubstrate === sub.id;
                             return (
                               <div
-                                key={sht.id || sht._id}
-                                onClick={() => toggleSheetType(sht.id || sht._id)}
-                                className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                                key={sub.id}
+                                onClick={() => setFormData(p => ({ ...p, baseSubstrate: sub.id }))}
+                                className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                                  isSelected
+                                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+                                    : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
+                                }`}
                               >
-                                <div className="service-checkbox-circle">
-                                  {isSelected && <Check size={14} />}
+                                <div className="flex justify-between items-start mb-1">
+                                  <span className="font-bold text-xs text-white leading-snug">{sub.name}</span>
                                 </div>
-                                <div className="flex-1">
-                                  <div className="flex items-start justify-between gap-1">
-                                    <h5 className="font-bold text-xs text-white">{sht.name}</h5>
-                                    {sht.popular && (
-                                      <span className="text-[10px] bg-[#D4AF37]/25 text-[#D4AF37] px-2 py-0.5 rounded-full font-bold border border-[#D4AF37]/40 shrink-0">
-                                        ⭐ Most Popular
-                                      </span>
-                                    )}
-                                  </div>
-                                  {sht.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>}
-                                  <div className="text-xs font-mono font-bold text-[#D4AF37] mt-1">₹{shtRate} / sheet</div>
-                                  <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note || sht.description}</div>
-                                </div>
+                                <div className="text-[10px] text-[#D4AF37] font-telugu">{sub.telugu}</div>
+                                <div className="text-xs font-mono font-bold text-emerald-400 mt-1">{sub.priceLabel}</div>
+                                <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sub.note}</div>
                               </div>
                             );
                           })}
                         </div>
                       </div>
 
-                      {/* Sheet Count Bubbles */}
+                      {/* DIMENSION 2: SURFACE FINISHES & COATINGS */}
                       <div>
-                        <div className="flex justify-between items-center mb-2">
-                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">4. Total Sheets</label>
+                        <div className="flex justify-between items-center mb-1 flex-wrap gap-2">
+                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                            <Sparkles size={13} className="text-[#D4AF37]" />
+                            4. Dimension 2: Surface Finishes & Lamination
+                          </label>
+                          <span className="text-xs text-emerald-400 font-semibold">
+                            {formData.selectedSheetTypes.length} Surface Finish(es) Active
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-400 mb-2.5">
+                          Standard finishes (Matte & Gloss) are included at normal price; luxury finishes carry itemized per-sheet surcharges.
+                        </p>
+
+                        {/* Standard Finishes (Included in Base Price) */}
+                        <div className="mb-3">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 block mb-1.5">
+                            ⭐ Standard Finishes (Included in Base Price - ₹0 Extra)
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            {DEFAULT_SHEETS.filter(s => s.tier === 'standard').map(sht => {
+                              const isSelected = formData.selectedSheetTypes.includes(sht.id);
+                              return (
+                                <div
+                                  key={sht.id}
+                                  onClick={() => toggleSheetType(sht.id)}
+                                  className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                                >
+                                  <div className="service-checkbox-circle">
+                                    {isSelected && <Check size={14} />}
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-start justify-between gap-1">
+                                      <h5 className="font-bold text-xs text-white">{sht.name}</h5>
+                                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
+                                        Included (₹0)
+                                      </span>
+                                    </div>
+                                    <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>
+                                    <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note}</div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Luxury Surface Upgrades (Itemized Surcharge) */}
+                        <div>
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#D4AF37] block mb-1.5">
+                            ✨ Luxury Surface Upgrades (Itemized Per-Sheet Surcharges)
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                            {DEFAULT_SHEETS.filter(s => s.tier === 'luxury').map(sht => {
+                              const isSelected = formData.selectedSheetTypes.includes(sht.id);
+                              return (
+                                <div
+                                  key={sht.id}
+                                  onClick={() => toggleSheetType(sht.id)}
+                                  className={`service-check-card ${isSelected ? 'checked' : ''}`}
+                                >
+                                  <div className="service-checkbox-circle">
+                                    {isSelected && <Check size={14} />}
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-start justify-between gap-1">
+                                      <h5 className="font-bold text-xs text-white">{sht.name}</h5>
+                                      <span className="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-mono font-bold border border-[#D4AF37]/30">
+                                        +₹{sht.surchargePerSheet}/sheet
+                                      </span>
+                                    </div>
+                                    <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>
+                                    <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note}</div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Total Sheets (1 Sheet = 2 Pages) */}
+                      <div>
+                        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">
+                            5. Total Sheets (1 Sheet = 2 Sides = 2 Pages)
+                          </label>
                           <span className="text-[#D4AF37] font-bold text-xs bg-[#D4AF37]/15 px-2.5 py-0.5 rounded-full border border-[#D4AF37]/30">
-                            {formData.pages} Sheets (~{formData.pages * 6} photos)
+                            {formData.pages} Sheets = {formData.pages * 2} Pages (~{formData.pages * 5}-{formData.pages * 6} photos)
                           </span>
                         </div>
                         <div className="flex gap-2 flex-wrap">
-                          {[30, 40, 50, 60, 80, 100].map(cnt => (
+                          {[
+                            { count: 20, label: '20 Sheets (40 Pages)' },
+                            { count: 25, label: '25 Sheets (50 Pages)' },
+                            { count: 30, label: '30 Sheets (60 Pages - Base Standard)' },
+                            { count: 35, label: '35 Sheets (70 Pages)' },
+                            { count: 40, label: '40 Sheets (80 Pages)' },
+                            { count: 50, label: '50 Sheets (100 Pages)' },
+                          ].map(item => (
                             <button
-                              key={cnt}
+                              key={item.count}
                               type="button"
-                              onClick={() => setFormData(p => ({ ...p, pages: cnt }))}
-                              className={`bubble-pill ${formData.pages === cnt ? 'active' : ''}`}
+                              onClick={() => setFormData(p => ({ ...p, pages: item.count }))}
+                              className={`bubble-pill ${formData.pages === item.count ? 'active' : ''}`}
                             >
-                              {cnt} Sheets
+                              {item.label}
                             </button>
                           ))}
                         </div>
+                        <p className="text-[11px] text-gray-400 mt-2">
+                          💡 30 sheets are included in the base album price. Additional sheets above 30 cost ₹70/sheet for the base substrate plus any selected luxury finish upgrade.
+                        </p>
                       </div>
 
                       {/* Luxury Box & Duplicate Parent Albums */}

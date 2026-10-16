@@ -97,6 +97,75 @@ const Services = () => {
       </div>
 
 
+      {/* 4 Flexible Pathways Quick Bar */}
+      <div className="container" style={{ marginTop: '-2rem', marginBottom: '2.5rem', position: 'relative', zIndex: 10 }}>
+        <div className="p-4 sm:p-6 rounded-2xl bg-black/85 border border-[#D4AF37]/30 shadow-2xl backdrop-blur-md">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+            <div>
+              <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-wider block">
+                Flexible Service Models for Couples
+              </span>
+              <h3 className="text-base sm:text-xl font-serif font-bold text-white">
+                Choose Only Editing, Only Printing, Complete Suite, or A-la-carte Media
+              </h3>
+            </div>
+            <span className="text-xs text-gray-400">
+              Direct Couple Pricing • No Hidden Lab Fees
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <a
+              href="/order?intent=edit_and_print"
+              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-[#D4AF37]/30 hover:border-[#D4AF37] transition text-left flex flex-col justify-between"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-[#D4AF37] uppercase block mb-1">⭐ Complete Suite</span>
+                <div className="font-bold text-sm text-white">Editing + Printing</div>
+                <div className="text-[11px] text-gray-400 mt-1">Culling, retouching, Karizma PSD layout & archival lab printing.</div>
+              </div>
+              <span className="text-xs text-[#D4AF37] font-bold mt-3 inline-flex items-center gap-1">Order Complete Suite →</span>
+            </a>
+
+            <a
+              href="/order?intent=only_editing"
+              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-purple-500/30 hover:border-purple-400 transition text-left flex flex-col justify-between"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-purple-400 uppercase block mb-1">🎨 Digital Master</span>
+                <div className="font-bold text-sm text-white">Only Editing</div>
+                <div className="text-[11px] text-gray-400 mt-1">RAW culling, skin retouching, Karizma PSDs & 4K video cuts (Zero print cost).</div>
+              </div>
+              <span className="text-xs text-purple-400 font-bold mt-3 inline-flex items-center gap-1">Order Editing Only →</span>
+            </a>
+
+            <a
+              href="/order?intent=only_printing"
+              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-blue-500/30 hover:border-blue-400 transition text-left flex flex-col justify-between"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-blue-400 uppercase block mb-1">🖨️ Lab Press</span>
+                <div className="font-bold text-sm text-white">Only Printing & Binding</div>
+                <div className="text-[11px] text-gray-400 mt-1">Have spreads ready? Print on NTR / Silver Halide with 8 surface finishes.</div>
+              </div>
+              <span className="text-xs text-blue-400 font-bold mt-3 inline-flex items-center gap-1">Order Printing Only →</span>
+            </a>
+
+            <a
+              href="/order?intent=standalone_services"
+              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-emerald-500/30 hover:border-emerald-400 transition text-left flex flex-col justify-between"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-emerald-400 uppercase block mb-1">🎬 A-la-Carte Media</span>
+                <div className="font-bold text-sm text-white">Reels, Teasers & Invites</div>
+                <div className="text-[11px] text-gray-400 mt-1">Instagram Reels 5-Pack, 4K Teaser, WhatsApp animated invites, or welcome standees.</div>
+              </div>
+              <span className="text-xs text-emerald-400 font-bold mt-3 inline-flex items-center gap-1">Order A-la-Carte →</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Sticky Tab Navigation with 5 Distinct Pillars */}
       <div className="services-nav">
         {CATEGORIES.map(({ id, label, icon: Icon }) => (

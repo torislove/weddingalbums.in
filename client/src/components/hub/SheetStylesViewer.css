@@ -540,3 +540,40 @@
   font-weight: 600;
   line-height: 1.25;
 }
+
+/* ── Standard vs Luxury Finish Cards ── */
+.sheet-tab-card.standard-tier-card {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.sheet-tab-card.standard-tier-card:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.sheet-tab-card.standard-tier-card.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%);
+  border-color: #10B981;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.18), inset 0 0 16px rgba(16, 185, 129, 0.08);
+}
+
+.sheet-tab-card.luxury-tier-card {
+  border-color: rgba(212, 175, 55, 0.15);
+}
+
+.sheet-tab-card.luxury-tier-card.active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(20, 20, 24, 0.95) 100%);
+  border-color: #D4AF37;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2), inset 0 0 16px rgba(212, 175, 55, 0.08);
+}
+
+.finishes-dimension-view,
+.substrates-dimension-view {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
