@@ -190,7 +190,7 @@ const SERVICE_INTENTS = [
     telugu: 'తక్షణ లగ్జరీ ప్యాకేజీలు (బెస్ట్ సెల్లర్స్)',
     badge: 'Max Bundle Value',
     shortDesc: 'Pre-configured all-in-one Telugu wedding packages combining master album, cinematic video, parent duplicate books, and entrance standees with massive package savings.',
-    inclusions: ['Pre-Configured Master Heirloom Album', 'Cinematic 4K Teaser + Instagram Reels', 'Matching Mini Duplicate Parent Albums', 'Velvet Presentation Briefcase', 'Free Express Insured Dispatch'],
+    inclusions: ['Pre-Configured Master Royal Album', 'Cinematic 4K Teaser + Instagram Reels', 'Matching Mini Duplicate Parent Albums', 'Velvet Presentation Briefcase', 'Free Express Insured Dispatch'],
     clientProvides: 'Event date & photos / video link',
     turnaround: '5-7 Working Days Total'
   }
@@ -1135,7 +1135,7 @@ const BookingPage = () => {
       const bundleNames = {
         royal_telugu: 'Royal Telugu Muhurtham Master Suite',
         cinematic_duo: 'Cinematic Story & Karizma Duo',
-        lab_express: 'Express Heirloom Printing Suite'
+        lab_express: 'Express Archival Lab Printing Suite'
       };
       const bundleName = formData.dynamicPackage?.tier || bundleNames[appliedBundle] || 'Curated Wedding Luxury Suite';
       const bundleDetails = formData.dynamicPackage
@@ -1292,7 +1292,7 @@ const BookingPage = () => {
         status: 'Confirmed',
         cloudLink: formData.uploadMethod === 'cloud' ? formData.cloudLink : '',
         uploadPreference: formData.uploadMethod,
-        instructions: `[COUPLE HEIRLOOM ORDER | ${formData.eventType} in ${formData.city}] ${experienceMode === 'bundles' ? `Bundle: ${appliedBundle}` : `Custom: ${Object.keys(formData.services).filter(k => formData.services[k]).join(', ')}`}. Speed: ${formData.deliverySpeed}. Notes: ${formData.instructions || 'Standard order'}`,
+        instructions: `[COUPLE ROYAL ORDER | ${formData.eventType} in ${formData.city}] ${experienceMode === 'bundles' ? `Bundle: ${appliedBundle}` : `Custom: ${Object.keys(formData.services).filter(k => formData.services[k]).join(', ')}`}. Speed: ${formData.deliverySpeed}. Notes: ${formData.instructions || 'Standard order'}`,
         items: itemsList,
         data: {
           packageType: experienceMode,
@@ -1349,7 +1349,7 @@ const BookingPage = () => {
           body: JSON.stringify({
             items: [{
               type: experienceMode === 'bundles' ? 'bundle_booking' : 'custom_booking',
-              name: `${experienceMode === 'bundles' ? 'Curated Suite' : 'Custom Package'} (${formData.eventType} - Heirloom Suite)`,
+              name: `${experienceMode === 'bundles' ? 'Curated Suite' : 'Custom Package'} (${formData.eventType} - Royal Suite)`,
               price: totalAmount,
               details: payload.data
             }],
@@ -1394,7 +1394,7 @@ const BookingPage = () => {
       `--------------------------------\n` +
       `*Client:* ${formData.name || 'Valued Client'}\n` +
       `*Phone:* ${formData.phone || 'Not provided'}\n` +
-      `*Account Type:* 👥 Couple Heirloom Suite (Retail)\n` +
+      `*Account Type:* 👥 Couple Direct Order (Retail)\n` +
       `*Event:* ${formData.eventType} in ${formData.city}\n` +
       `*Mode:* ${experienceMode === 'bundles' ? `⚡ Curated Bundle (${appliedBundle})` : '🛠️ Custom Multi-Service Builder'}\n` +
       `*Speed:* ${formData.deliverySpeed === 'express' ? '🚀 Express 24-48h' : '⚡ Standard 3-5 Days'}\n\n` +
@@ -1440,7 +1440,7 @@ const BookingPage = () => {
             </div>
             <div className="flex justify-between text-gray-400">
               <span>Booking Type:</span>
-              <span className="text-white font-semibold">✨ Couple Heirloom Suite</span>
+              <span className="text-white font-semibold">✨ Couple Royal Wedding Suite</span>
             </div>
             <div className="flex justify-between text-gray-400">
               <span>Total Estimated:</span>
@@ -1650,11 +1650,11 @@ const BookingPage = () => {
                     className={`luxury-bundle-card ${appliedBundle === 'lab_express' ? 'active' : ''}`}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <span className="bundle-badge">🚀 Express Heirloom Printing Suite</span>
+                      <span className="bundle-badge">🚀 Express Archival Lab Printing Suite</span>
                       <span className="bundle-savings">Save ₹4,200 with Bundle!</span>
                     </div>
-                    <h4 className="text-lg font-bold text-white">Express Heirloom Printing Suite</h4>
-                    <div className="text-xs text-gray-400 font-telugu mb-3">ఎక్స్‌ప్రెస్ ఎయిర్‌లూమ్ ప్రింటింగ్ సూట్</div>
+                    <h4 className="text-lg font-bold text-white">Express Archival Lab Printing Suite</h4>
+                    <div className="text-xs text-gray-400 font-telugu mb-3">ఎక్స్‌ప్రెస్ ల్యాబ్ ప్రింటింగ్ సూట్</div>
                     
                     <div className="flex items-baseline gap-2 mb-4">
                       <span className="text-2xl font-black text-[#D4AF37]">₹8,200</span>

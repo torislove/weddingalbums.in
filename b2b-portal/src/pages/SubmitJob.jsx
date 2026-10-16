@@ -20,13 +20,23 @@ const ALBUM_SIZES = [
   { id: '6x9-pocket', name: '6×9 Companion Pocket Parent Book', openSpread: '6" × 18"', wholesaleBase: 2100, suggestedRetail: 3200, category: 'Parent Mini Book' }
 ];
 
-// Luxury Sheet Types with Trade Wholesale Rates
+// 2-Dimensional Sheet Taxonomy: Base Substrates & Surface Finishes
+const BASE_SUBSTRATES = [
+  { id: 'ntr', name: 'NTR Synthetic BOPP (100% Waterproof / Tear-Proof)', wholesaleExtra: 0, suggestedRetailExtra: 0, desc: '80%+ Indian Wedding Industry Standard. Will not crease or sag.' },
+  { id: 'art-paper', name: 'Regular Wood-Pulp Art Paper (250 GSM)', wholesaleExtra: 0, suggestedRetailExtra: 0, desc: 'Budget-friendly digital press substrate.' },
+  { id: 'silver-halide', name: 'Silver Halide Fuji Crystal Archive RA-4 (+₹25/sheet)', wholesaleExtra: 25, suggestedRetailExtra: 40, desc: 'True optical continuous-tone photographic paper.' },
+  { id: 'cotton-rag', name: 'Cotton Rag Fine Art (Hahnemühle Giclée +₹40/sheet)', wholesaleExtra: 40, suggestedRetailExtra: 60, desc: '100% cotton museum acid-free archival substrate.' }
+];
+
 const SHEET_TYPES = [
-  { id: 'karizma', name: 'Karizma Royal Luster', rate: 42, suggestedRetail: 65, gsm: '280 GSM Micro-Texture' },
-  { id: 'gloss', name: 'Crystal Ultra High-Gloss', rate: 55, suggestedRetail: 85, gsm: '300 GSM High-Vibrancy' },
-  { id: 'velvet', name: 'Velvet Feather Touch', rate: 62, suggestedRetail: 95, gsm: '320 GSM Scuff-Free Matte' },
-  { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', rate: 72, suggestedRetail: 110, gsm: '310 GSM Pearl Luminescence' },
-  { id: 'nt', name: 'Non-Tearable Waterproof NT', rate: 58, suggestedRetail: 90, gsm: '350 Micron Poly Indestructible' }
+  { id: 'ntr-matte', name: 'NTR Anti-Glare Matte (Standard ₹0 Extra)', rate: 0, suggestedRetail: 0, gsm: 'Standard Lab Finish' },
+  { id: 'ntr-gloss', name: 'NTR Crystal High-Gloss (Standard ₹0 Extra)', rate: 0, suggestedRetail: 0, gsm: 'Standard Lab Finish' },
+  { id: 'silky', name: 'Silky / Silk Matte Pattu Texture (+₹15/sheet)', rate: 15, suggestedRetail: 25, gsm: 'Luxury Surface' },
+  { id: 'velvet', name: 'Velvet Feather Touch Soft-Touch (+₹22/sheet)', rate: 22, suggestedRetail: 35, gsm: 'Luxury Surface' },
+  { id: 'metallic', name: '24K Metallic Pearl Luxury Sheen (+₹28/sheet)', rate: 28, suggestedRetail: 45, gsm: 'Luxury Surface' },
+  { id: 'sparkle', name: 'Sparkle Glitter Micro-Crystal (+₹32/sheet)', rate: 32, suggestedRetail: 50, gsm: 'Luxury Surface' },
+  { id: 'luster', name: 'Luster / Satin Micro-Grain (+₹18/sheet)', rate: 18, suggestedRetail: 30, gsm: 'Luxury Surface' },
+  { id: 'embossed', name: 'Leatherette / Canvas Embossed (+₹25/sheet)', rate: 25, suggestedRetail: 40, gsm: 'Luxury Surface' }
 ];
 
 // Master Cover Finishes
@@ -93,7 +103,8 @@ const SubmitJob = () => {
     
     // Album Specs
     albumSize: '12x36',
-    sheetType: 'karizma',
+    substrateType: 'ntr',
+    sheetType: 'ntr-matte',
     sheetsCount: 30,
     coverFinish: 'acrylic',
     
@@ -118,6 +129,7 @@ const SubmitJob = () => {
 
   // Calculate Wholesale Lab Cost
   const sizeObj = ALBUM_SIZES.find(s => s.id === formData.albumSize) || ALBUM_SIZES[1];
+  const substrateObj = BASE_SUBSTRATES.find(s => s.id === formData.substrateType) || BASE_SUBSTRATES[0];
   const sheetObj = SHEET_TYPES.find(s => s.id === formData.sheetType) || SHEET_TYPES[0];
   const coverObj = COVER_FINISHES.find(c => c.id === formData.coverFinish) || COVER_FINISHES[1];
   
@@ -125,8 +137,13 @@ const SubmitJob = () => {
   let suggestedRetailTotal = 0;
 
   if (formData.jobType === 'album' || formData.jobType === 'bundle') {
-    wholesaleTotal += sizeObj.wholesaleBase + (sheetObj.rate * formData.sheetsCount) + coverObj.wholesaleExtra;
-    suggestedRetailTotal += sizeObj.suggestedRetail + (sheetObj.suggestedRetail * formData.sheetsCount) + (coverObj.wholesaleExtra * 1.5);
+    const extraSheets = Math.max(0, formData.sheetsCount - 30);
+    const extraSheetsCost = extraSheets * 45; // wholesale base rate per extra sheet
+    const finishCost = formData.sheetsCount * sheetObj.rate;
+    const substrateCost = formData.sheetsCount * substrateObj.wholesaleExtra;
+
+    wholesaleTotal += sizeObj.wholesaleBase + extraSheetsCost + finishCost + substrateCost + coverObj.wholesaleExtra;
+    suggestedRetailTotal += sizeObj.suggestedRetail + (extraSheets * 70) + (formData.sheetsCount * sheetObj.suggestedRetail) + (formData.sheetsCount * substrateObj.suggestedRetailExtra) + (coverObj.wholesaleExtra * 1.5);
   }
 
   if (formData.jobType === 'video' || formData.jobType === 'bundle') {
@@ -353,7 +370,23 @@ const SubmitJob = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>Sheet Material</label>
+                    <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>Base Substrate (Core Media)</label>
+                    <select 
+                      value={formData.substrateType} 
+                      onChange={e => setFormData({...formData, substrateType: e.target.value})}
+                      className="form-control"
+                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+                    >
+                      {BASE_SUBSTRATES.map(sub => (
+                        <option key={sub.id} value={sub.id} style={{ background: '#111', color: '#fff' }}>
+                          {sub.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>Surface Finish / Lamination</label>
                     <select 
                       value={formData.sheetType} 
                       onChange={e => setFormData({...formData, sheetType: e.target.value})}

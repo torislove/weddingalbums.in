@@ -9,7 +9,7 @@ const DEFAULT_PILLARS = [
     id: 'albums',
     number: '01',
     badge: '100% Lay-Flat Binding · Non-Tearable Archival Core',
-    title: 'Heirloom Karizma & Lay-Flat Albums',
+    title: 'Royal Karizma & Lay-Flat Albums',
     telugu: 'కరిజ్మా & లే-ఫ్లాట్ వెడ్డింగ్ ఆల్బమ్స్',
     subtitle: 'Printed on state-of-the-art European digital presses with archival inks guaranteed to retain rich color fidelity for 100+ years.',
     image: '/images/luxury-album-craftsmanship.jpg',
@@ -64,7 +64,7 @@ const DEFAULT_PILLARS = [
 const VisualPillarsShowcase = ({ 
   eyebrow = '✦ COMPLETE IN-HOUSE POST-PRODUCTION SUITE ✦',
   title = 'Crafted with Precision. Delivered with Reverence.',
-  subtitle = 'From raw memory cards to museum-grade physical heirlooms and cinematic films. Here is what we create for you:',
+  subtitle = 'From raw memory cards to museum-grade physical royal albums and cinematic films. Here is what we create for you:',
   pillars = DEFAULT_PILLARS
 }) => {
   const activePillars = Array.isArray(pillars) && pillars.length > 0 

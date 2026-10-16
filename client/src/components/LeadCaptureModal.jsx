@@ -81,7 +81,7 @@ const LeadCaptureModal = () => {
         <div className="quote-drawer-header">
           <div className="quote-header-badge">
             <Sparkles size={13} />
-            <span>INSTANT HEIRLOOM ESTIMATE</span>
+            <span>INSTANT WEDDING ESTIMATE</span>
           </div>
           <button 
             type="button" 

@@ -157,7 +157,7 @@ export default function InstantEstimator({
         'pure-silk': 6
       });
       setTotalSheetsCount(32);
-    } else if (presetKey === 'heirloom-archival') {
+    } else if (presetKey === 'archival-longevity') {
       setMultiSheetAllocations({
         'royal-velvet': 18,
         'non-tearable': 12
@@ -313,7 +313,7 @@ export default function InstantEstimator({
                   className={`est-tab-btn ${activeTab === 'album' ? 'active' : ''}`}
                 >
                   <BookOpen size={16} />
-                  <span>1. Heirloom Album & Sheets</span>
+                  <span>1. Royal Wedding Album & Sheets</span>
                 </button>
                 <button
                   type="button"
@@ -431,7 +431,7 @@ export default function InstantEstimator({
                           </button>
                           <button
                             type="button"
-                            onClick={() => applyPresetCombo('heirloom-archival')}
+                            onClick={() => applyPresetCombo('archival-longevity')}
                             className="preset-btn"
                           >
                             🛡️ Velvet + Poly-Luster (Anti-Tear)

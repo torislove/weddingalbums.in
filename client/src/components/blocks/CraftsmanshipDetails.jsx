@@ -33,7 +33,7 @@ const DEFAULT_COVERS = [
     id: 'linen',
     tag: 'Minimalist',
     title: 'Textured Natural Linen',
-    description: 'Unbleached natural woven organic linen fabric with blind debossed typography. Understated European heirloom aesthetic.',
+    description: 'Unbleached natural woven organic linen fabric with blind debossed typography. Understated European luxury aesthetic.',
     image: '/images/family-blessings.png',
     specs: ['100% organic cotton weave', 'Blind deboss stamping', 'Eco-friendly archival binding']
   }
@@ -76,7 +76,7 @@ const DEFAULT_PAPERS = [
 
 const CraftsmanshipDetails = ({
   eyebrow = '✦ OBSESSIVE ATTENTION TO DETAIL ✦',
-  title = 'Anatomy of an Heirloom Wedding Album',
+  title = 'Anatomy of an Archival Wedding Album',
   subtitle = 'Every volume is precision-assembled by our master bookbinders using archival-grade materials built to outlast generations.',
   covers = DEFAULT_COVERS,
   papers = DEFAULT_PAPERS,

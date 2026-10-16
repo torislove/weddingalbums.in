@@ -43,7 +43,7 @@ const LUXURY_SHEET_SPECS = [
     id: 'nt',
     name: 'Non-Tearable Waterproof NT',
     spec: '350 Micron Synthetic Polymer',
-    desc: '100% waterproof, spill-proof, and indestructible synthetic sheets. The gold standard for lifetime heirloom longevity.',
+    desc: '100% waterproof, spill-proof, and indestructible synthetic BOPP sheets. The gold standard for lifetime wedding album longevity.',
     durability: '100% Waterproof & Tear-Proof'
   }
 ];

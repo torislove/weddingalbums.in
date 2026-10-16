@@ -48,7 +48,7 @@ const B2C = () => {
           <p className="b2c-subtitle" style={{ fontSize: '1.4rem' }}>
             <span className="telugu-text">మీ జ్ఞాపకాలు మా బాధ్యత</span> (Your memories are our responsibility).
             <br />
-            Upload your digital gallery and let our expert designers craft a luxury physical heirloom.
+            Upload your digital gallery and let our expert designers craft a luxury physical royal album.
           </p>
           <Link to="/order" className="btn btn-gold-3d">
             Start Your Album Order
@@ -99,7 +99,7 @@ const B2C = () => {
       <section className="b2c-process-section">
         <div className="b2c-process-header">
           <h2>How It Works</h2>
-          <p className="b2c-subtitle">From digital gallery to physical heirloom.</p>
+          <p className="b2c-subtitle">From digital gallery to physical royal masterpiece.</p>
         </div>
 
         <div className="b2c-process-grid">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useContent } from '../context/ContentContext';
 import Logo from './Logo';
@@ -73,6 +73,16 @@ const Navbar = () => {
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1024) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
@@ -165,6 +175,18 @@ const Navbar = () => {
 
         {/* Mobile Menu Drawer */}
         <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
+          <div className="drawer-header">
+            <Link to="/" className="drawer-logo" onClick={() => setMenuOpen(false)}>
+              <Logo size={30} />
+            </Link>
+            <button 
+              className="drawer-close-btn" 
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X size={20} />
+            </button>
+          </div>
           <div className="drawer-content">
             {navLinks.map((link) => (
               <Link key={link.name} to={link.path} className="drawer-link" onClick={() => setMenuOpen(false)}>

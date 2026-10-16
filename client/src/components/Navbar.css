@@ -206,10 +206,44 @@
   pointer-events: auto;
 }
 
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drawer-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.drawer-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(212, 175, 55, 0.2);
+  color: #D4AF37;
+  transform: rotate(90deg);
+}
+
 .drawer-content {
   display: flex;
   flex-direction: column;
-  padding: 5.5rem 1.75rem 2rem;
+  padding: 1.5rem 1.75rem 2rem;
   gap: 1.25rem;
 }
 
@@ -225,6 +259,17 @@
 .drawer-link:hover {
   color: #D4AF37;
   transform: translateX(5px);
+}
+
+@media (min-width: 1025px) {
+  .mobile-drawer,
+  .mobile-backdrop,
+  .mobile-nav-controls,
+  .hamburger {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
 }
 
 @media (max-width: 1024px) {

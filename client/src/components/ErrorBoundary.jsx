@@ -64,7 +64,7 @@ class ErrorBoundary extends Component {
               color: 'var(--color-secondary, #D4AF37)',
               marginBottom: '8px'
             }}>
-              ✦ HEIRLOOM RECOVERY ✦
+              ✦ WEDDINGALBUMS.IN SYSTEM RECOVERY ✦
             </div>
 
             <h2 style={{

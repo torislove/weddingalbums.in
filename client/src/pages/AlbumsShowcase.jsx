@@ -23,7 +23,7 @@ const ALBUM_TYPES = [
     name: 'Flush Mount Seamless Lay-Flat',
     desc: 'Pages open 100% flat with zero gutter loss. Mounted on heavy archival core sheets designed to resist humidity and sagging.',
     img: '/images/weddingalbums-home-hero.png',
-    tags: ['100% Lay-Flat', 'Heirloom']
+    tags: ['100% Lay-Flat', 'Royal Archival']
   },
   {
     id: 'velvet',

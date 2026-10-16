@@ -136,12 +136,12 @@ const PageEditor = ({ adminState }) => {
     VisualPillarsShowcase: {
       eyebrow: '✦ COMPLETE IN-HOUSE POST-PRODUCTION SUITE ✦',
       title: 'Crafted with Precision. Delivered with Reverence.',
-      subtitle: 'From raw memory cards to museum-grade physical heirlooms and cinematic films.',
+      subtitle: 'From raw memory cards to museum-grade physical royal albums and cinematic films.',
       pillars: [
         {
           number: '01',
           badge: '100% Lay-Flat Binding · Archival Core',
-          title: 'Heirloom Karizma & Lay-Flat Albums',
+          title: 'Royal Karizma & Lay-Flat Albums',
           telugu: 'కరిజ్మా & లే-ఫ్లాట్ వెడ్డింగ్ ఆల్బమ్స్',
           subtitle: 'Printed on state-of-the-art European digital presses with archival inks.',
           image: '/images/luxury-album-craftsmanship.jpg',
@@ -186,7 +186,7 @@ const PageEditor = ({ adminState }) => {
     },
     CraftsmanshipDetails: {
       eyebrow: '✦ OBSESSIVE ATTENTION TO DETAIL ✦',
-      title: 'Anatomy of an Heirloom Wedding Album',
+      title: 'Anatomy of an Archival Wedding Album',
       subtitle: 'Every volume is precision-assembled by master bookbinders using archival-grade materials.',
       ctaText: 'View Complete Swatch Kit',
       ctaLink: '/albums'

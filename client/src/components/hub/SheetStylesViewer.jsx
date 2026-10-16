@@ -78,7 +78,7 @@ const SURFACE_FINISHES = [
     color: "#722F37",
     waterResistance: "Hydrophobic & Scuff-Proof",
     bestFor: "Candid emotional portraits, editorial shots, premium handling",
-    description: "Premium European soft-touch thermal lamination. When hands touch the album spread, the peach-fuzz tactile velvet feel evokes heirloom luxury. Completely resists fingerprint oils.",
+    description: "Premium European soft-touch thermal lamination. When hands touch the album spread, the peach-fuzz tactile velvet feel evokes royal luxury. Completely resists fingerprint oils.",
     sampleCaption: "Peach-Fuzz Tactile Velvet Anti-Smudge (+₹35/sheet)",
     mockImage: "/images/weddingalbums-talambralu.png"
   },
@@ -154,7 +154,7 @@ const SURFACE_FINISHES = [
     color: "#F59E0B",
     waterResistance: "Tough Protective Film",
     bestFor: "Fine art weddings, royal palace themes, timeless family keepsakes",
-    description: "Mechanically embossed with tactile canvas weave and soft leatherette relief. Transforms modern digital photographic prints into timeless oil-painting style heirlooms.",
+    description: "Mechanically embossed with tactile canvas weave and soft leatherette relief. Transforms modern digital photographic prints into timeless oil-painting style royal masterpieces.",
     sampleCaption: "Deep Tactile Woven Canvas Embossed (+₹40/sheet)",
     mockImage: "/images/client-album-preview.png"
   }

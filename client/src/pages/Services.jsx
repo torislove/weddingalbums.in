@@ -98,73 +98,121 @@ const Services = () => {
 
 
       {/* 4 Flexible Pathways Quick Bar */}
-      <div className="container" style={{ marginTop: '-2rem', marginBottom: '2.5rem', position: 'relative', zIndex: 10 }}>
-        <div className="p-4 sm:p-6 rounded-2xl bg-black/85 border border-[#D4AF37]/30 shadow-2xl backdrop-blur-md">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+      <section className="service-pathways-container" aria-label="Flexible Service Models">
+        <div className="pathways-panel">
+          <div className="pathways-header">
             <div>
-              <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-wider block">
-                Flexible Service Models for Couples
+              <span className="pathways-eyebrow">
+                ✦ Flexible Service Architecture for Couples & Families ✦
               </span>
-              <h3 className="text-base sm:text-xl font-serif font-bold text-white">
-                Choose Only Editing, Only Printing, Complete Suite, or A-la-carte Media
-              </h3>
+              <h2 className="pathways-title">
+                Choose Only Editing, Only Printing, Complete Suite, or Any A-la-Carte Media
+              </h2>
             </div>
-            <span className="text-xs text-gray-400">
-              Direct Couple Pricing • No Hidden Lab Fees
+            <span className="pathways-tagline">
+              Direct Couple Wholesale-Equivalent Pricing • Zero Hidden Lab Markups
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <a
-              href="/order?intent=edit_and_print"
-              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-[#D4AF37]/30 hover:border-[#D4AF37] transition text-left flex flex-col justify-between"
-            >
+          <div className="service-pathways-grid">
+            {/* Card 1: Complete Suite */}
+            <a href="/order?intent=edit_and_print" className="pathway-card pathway-suite">
               <div>
-                <span className="text-[10px] font-bold text-[#D4AF37] uppercase block mb-1">⭐ Complete Suite</span>
-                <div className="font-bold text-sm text-white">Editing + Printing</div>
-                <div className="text-[11px] text-gray-400 mt-1">Culling, retouching, Karizma PSD layout & archival lab printing.</div>
+                <span className="pathway-badge badge-gold">⭐ Complete Master Suite</span>
+                <div className="pathway-title-text">Editing + Physical Album</div>
+                <div className="pathway-subtitle-text text-gold">End-to-End Master Delivery</div>
+                <p className="pathway-desc">
+                  From raw camera memory cards to finished 12×36 lay-flat albums, 4K cinematic film, and presentation briefcase.
+                </p>
+                <ul className="pathway-points">
+                  <li><span>Includes:</span> RAW culling, skin retouch, Karizma PSDs, HP Indigo press & binding</li>
+                  <li><span>Provide:</span> Unedited RAW photo cards / video files</li>
+                  <li><span>Turnaround:</span> 7–10 Business Days</li>
+                </ul>
               </div>
-              <span className="text-xs text-[#D4AF37] font-bold mt-3 inline-flex items-center gap-1">Order Complete Suite →</span>
+              <div className="pathway-footer">
+                <div className="pathway-price">
+                  <span className="pathway-price-label">Starts From</span>
+                  <span className="pathway-price-val">₹12,999</span>
+                </div>
+                <span className="pathway-cta-btn btn-gold-subtle">Order Complete Suite →</span>
+              </div>
             </a>
 
-            <a
-              href="/order?intent=only_editing"
-              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-purple-500/30 hover:border-purple-400 transition text-left flex flex-col justify-between"
-            >
+            {/* Card 2: Only Editing */}
+            <a href="/order?intent=only_editing" className="pathway-card pathway-editing">
               <div>
-                <span className="text-[10px] font-bold text-purple-400 uppercase block mb-1">🎨 Digital Master</span>
-                <div className="font-bold text-sm text-white">Only Editing</div>
-                <div className="text-[11px] text-gray-400 mt-1">RAW culling, skin retouching, Karizma PSDs & 4K video cuts (Zero print cost).</div>
+                <span className="pathway-badge badge-purple">🎨 Digital Master • Only Editing</span>
+                <div className="pathway-title-text">Photo & Video Editing Only</div>
+                <div className="pathway-subtitle-text text-purple">100% Digital • Zero Print Fee</div>
+                <p className="pathway-desc">
+                  Have your own printing lab? Get pristine RAW photo retouching, 300 DPI Karizma PSD spreads & 4K cinematic edits.
+                </p>
+                <ul className="pathway-points">
+                  <li><span>Includes:</span> Frequency-separation retouch, color grading, 300 DPI print PSDs, 4K cuts</li>
+                  <li><span>Provide:</span> RAW camera captures (CR2/NEF/ARW)</li>
+                  <li><span>Turnaround:</span> 3–5 Business Days (Cloud Download)</li>
+                </ul>
               </div>
-              <span className="text-xs text-purple-400 font-bold mt-3 inline-flex items-center gap-1">Order Editing Only →</span>
+              <div className="pathway-footer">
+                <div className="pathway-price">
+                  <span className="pathway-price-label">Starts From</span>
+                  <span className="pathway-price-val">₹3,499</span>
+                </div>
+                <span className="pathway-cta-btn btn-purple-subtle">Order Editing Only →</span>
+              </div>
             </a>
 
-            <a
-              href="/order?intent=only_printing"
-              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-blue-500/30 hover:border-blue-400 transition text-left flex flex-col justify-between"
-            >
+            {/* Card 3: Only Printing */}
+            <a href="/order?intent=only_printing" className="pathway-card pathway-printing">
               <div>
-                <span className="text-[10px] font-bold text-blue-400 uppercase block mb-1">🖨️ Lab Press</span>
-                <div className="font-bold text-sm text-white">Only Printing & Binding</div>
-                <div className="text-[11px] text-gray-400 mt-1">Have spreads ready? Print on NTR / Silver Halide with 8 surface finishes.</div>
+                <span className="pathway-badge badge-blue">🖨️ Lab Press • Only Printing</span>
+                <div className="pathway-title-text">Archival Printing & Binding</div>
+                <div className="pathway-subtitle-text text-blue">Spreads Ready • Zero Design Fee</div>
+                <p className="pathway-desc">
+                  Already have finished album layouts? Print directly on HP Indigo 12000 or Silver Halide minilabs with 8 surface finishes.
+                </p>
+                <ul className="pathway-points">
+                  <li><span>Includes:</span> HP Indigo press, 8 surface laminations, seamless lay-flat core, luxury cover</li>
+                  <li><span>Provide:</span> Pre-designed 300 DPI PSD/TIFF/JPEG spreads</li>
+                  <li><span>Turnaround:</span> 48–72 Hours Express Dispatch</li>
+                </ul>
               </div>
-              <span className="text-xs text-blue-400 font-bold mt-3 inline-flex items-center gap-1">Order Printing Only →</span>
+              <div className="pathway-footer">
+                <div className="pathway-price">
+                  <span className="pathway-price-label">Starts From</span>
+                  <span className="pathway-price-val">₹6,499</span>
+                </div>
+                <span className="pathway-cta-btn btn-blue-subtle">Order Printing Only →</span>
+              </div>
             </a>
 
-            <a
-              href="/order?intent=standalone_services"
-              className="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-emerald-500/30 hover:border-emerald-400 transition text-left flex flex-col justify-between"
-            >
+            {/* Card 4: A-la-Carte */}
+            <a href="/order?intent=standalone_services" className="pathway-card pathway-alacarte">
               <div>
-                <span className="text-[10px] font-bold text-emerald-400 uppercase block mb-1">🎬 A-la-Carte Media</span>
-                <div className="font-bold text-sm text-white">Reels, Teasers & Invites</div>
-                <div className="text-[11px] text-gray-400 mt-1">Instagram Reels 5-Pack, 4K Teaser, WhatsApp animated invites, or welcome standees.</div>
+                <span className="pathway-badge badge-green">🎬 A-la-Carte Media & Flex</span>
+                <div className="pathway-title-text">Reels, Teasers & Invites</div>
+                <div className="pathway-subtitle-text text-green">Pick Any Individual Service</div>
+                <p className="pathway-desc">
+                  Select standalone digital or physical event media without ordering a full wedding package.
+                </p>
+                <ul className="pathway-points">
+                  <li><span>Options:</span> WhatsApp video invites, 9:16 Reels 5-pack, 4K Teaser trailer, Welcome standees</li>
+                  <li><span>Provide:</span> Event details, names, or wedding video clips</li>
+                  <li><span>Turnaround:</span> 24–48 Hours Express Delivery</li>
+                </ul>
               </div>
-              <span className="text-xs text-emerald-400 font-bold mt-3 inline-flex items-center gap-1">Order A-la-Carte →</span>
+              <div className="pathway-footer">
+                <div className="pathway-price">
+                  <span className="pathway-price-label">Starts From</span>
+                  <span className="pathway-price-val">₹1,499</span>
+                </div>
+                <span className="pathway-cta-btn btn-green-subtle">Explore A-la-Carte →</span>
+              </div>
             </a>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Sticky Tab Navigation with 5 Distinct Pillars */}
       <div className="services-nav">
