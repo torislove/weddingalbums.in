@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import './PackageSection.css';
-
-const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
-
+import { API } from '../apiConfig';
 
 const PACKAGE_TABS = [
   { id: 'combo', label: 'Combo Packages' },

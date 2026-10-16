@@ -6,6 +6,7 @@ import express from 'express';
 import crypto from 'crypto';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { Task, Order, User, PayoutRequest, Package } from '../db.js';
+import { eventBus } from '../events.js';
 
 const router = express.Router();
 const b2bOnly = requireRole('b2b', 'b2b-portal');
@@ -39,6 +40,15 @@ router.post('/jobs', b2bOnly, async (req, res) => {
       notes: finalNotes,
       status: 'pending',
       created_at: new Date().toISOString(),
+    });
+
+    // Broadcast real-time event to all connected editors and ops admins
+    eventBus.broadcast('task:created', {
+      task,
+      id: task.id,
+      title: task.title,
+      type: task.type,
+      studioName: req.user.name || 'Partner Studio'
     });
 
     res.status(201).json({ success: true, task, id: task.id });

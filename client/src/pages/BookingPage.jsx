@@ -20,8 +20,7 @@ import {
   Calendar, CheckSquare, Zap, Building2, Eye, Tag
 } from 'lucide-react';
 import './OrderAlbum.css';
-
-const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+import { API } from '../apiConfig';
 
 // COMPREHENSIVE ALBUM SIZES (LANDSCAPE ↔️ & PORTRAIT ↕️)
 const DEFAULT_ALBUM_SIZES = [

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Flipbook from '../components/Flipbook';
 import LoginModal from '../components/LoginModal';
 import Toast from '../components/Toast';
+import { API } from '../apiConfig';
 import './OrderAlbum.css'; // Reuse form styles
 import './PhotographerDashboard.css';
 
@@ -35,7 +36,6 @@ const PhotographerDashboard = () => {
   const fetchProjects = async () => {
     if (!user) return; // Don't fetch projects if not logged in
     try {
-      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       const res = await fetch(`${API}/api/projects`);
       const data = await res.json();
       setProjects(data);
@@ -55,7 +55,6 @@ const PhotographerDashboard = () => {
       const fd = new FormData();
       fd.append('image', file);
       try {
-        const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
         const res = await fetch(`${API}/api/upload`, {
           method: 'POST',
           body: fd
@@ -84,7 +83,6 @@ const PhotographerDashboard = () => {
 
     try {
       // Create Project
-      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       const projectRes = await fetch(`${API}/api/projects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

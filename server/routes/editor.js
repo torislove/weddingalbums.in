@@ -6,6 +6,7 @@ import express from 'express';
 import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
 import { Task, User, PayoutRequest } from '../db.js';
+import { eventBus } from '../events.js';
 
 const router = express.Router();
 const editorOnly = requireRole('editor', 'editor-portal');

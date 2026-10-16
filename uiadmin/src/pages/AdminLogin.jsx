@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PenTool, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight, FileText, Image, Settings } from 'lucide-react';
 import Logo from '../components/Logo';
-
-const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+import { API } from '../apiConfig';
 
 /* ── Typewriter hook ── */
 const useTypewriter = (text, speed = 55) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
+import { API } from '../apiConfig';
 import './PhotographerDashboard.css'; // Reusing layout CSS
 
 const EditorDashboard = () => {
@@ -24,7 +25,6 @@ const EditorDashboard = () => {
 
   const fetchTasks = async () => {
     try {
-      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       const res = await fetch(`${API}/api/tasks`);
       const data = await res.json();
       setTasks(data);
@@ -35,7 +35,6 @@ const EditorDashboard = () => {
 
   const fetchWallet = async () => {
     try {
-      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       const res = await fetch(`${API}/api/wallet`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
@@ -50,7 +49,6 @@ const EditorDashboard = () => {
 
   const requestPayout = async () => {
     try {
-      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       const res = await fetch(`${API}/api/payout`, {
         method: 'POST',
         headers: { 
@@ -73,7 +71,6 @@ const EditorDashboard = () => {
 
   const claimTask = async (id) => {
     try {
-      const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
       await fetch(`${API}/api/tasks/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

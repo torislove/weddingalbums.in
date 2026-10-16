@@ -16,8 +16,7 @@ import JobQC from './pages/JobQC';
 import Payouts from './pages/Payouts';
 import AdminLogin from './pages/AdminLogin';
 import Logo from './components/Logo';
-
-const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
+import { API } from './apiConfig';
 
 /* ── Auth Context ──────────────────────────────────────────────────── */
 const AuthCtx = createContext(null);
@@ -67,8 +66,25 @@ const AuthProvider = ({ children }) => {
     setUser(null);
   }, []);
 
+  const refreshToken = useCallback(async () => {
+    try {
+      const res = await fetch(`${API}/api/auth/refresh`, { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (res.ok && data.token) {
+        localStorage.setItem('sysadminToken', data.token);
+        setToken(data.token);
+        return data.token;
+      }
+      logout();
+      return null;
+    } catch {
+      logout();
+      return null;
+    }
+  }, [logout]);
+
   return (
-    <AuthCtx.Provider value={{ user, token, loading, login, logout }}>
+    <AuthCtx.Provider value={{ user, token, loading, login, logout, refreshToken, api: API }}>
       {children}
     </AuthCtx.Provider>
   );

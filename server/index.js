@@ -16,6 +16,9 @@ import contentRouter from './routes/content.js';
 import publicRouter from './routes/public.js';
 
 import { initDatabase } from './db.js';
+import { eventBus } from './events.js';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -118,7 +121,8 @@ app.get(['/api/health', '/health'], async (req, res) => {
       database: {
         status: isDbReady ? 'connected' : 'initializing',
         engine: 'postgresql-hybrid'
-      }
+      },
+      realtime: eventBus.getClientStats()
     });
   } catch (err) {
     res.status(503).json({
@@ -127,6 +131,42 @@ app.get(['/api/health', '/health'], async (req, res) => {
       timestamp: new Date().toISOString()
     });
   }
+});
+
+// =======================
+// REAL-TIME SERVER-SENT EVENTS (SSE) STREAM
+// =======================
+app.get('/api/events/stream', (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = (authHeader && authHeader.split(' ')[1]) || req.query.token;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication required for real-time event stream' });
+  }
+
+  const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
+
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid or expired stream token' });
+    }
+
+    // Set streaming SSE headers
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no'
+    });
+    if (res.flushHeaders) res.flushHeaders();
+
+    const clientId = crypto.randomUUID();
+    eventBus.addClient(clientId, res, decoded);
+
+    req.on('close', () => {
+      eventBus.removeClient(clientId);
+    });
+  });
 });
 
 // =======================

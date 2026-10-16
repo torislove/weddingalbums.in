@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Download, ShoppingBag, Clock, Truck, MessageCircle, Eye, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API } from '../apiConfig';
 
 const OrderHistory = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const API = (typeof window !== 'undefined' && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1') ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:4000'));
 
   useEffect(() => {
     fetchOrders();
