@@ -232,7 +232,7 @@ const PortalLogin = () => {
 
         <div className="cpl-visual-content">
           <div className="cpl-brand">
-            <Logo size={42} portalTag="Client Portal" />
+            <Logo size={42} portalTag="Couples Sanctuary" />
           </div>
 
           <div className="cpl-tagline-block">
@@ -275,10 +275,10 @@ const PortalLogin = () => {
 
             <div className="cpl-auth-header">
               <div className="cpl-mobile-logo">
-                <Logo size={36} portalTag="Client Portal" />
+                <Logo size={36} portalTag="Couples Sanctuary" />
               </div>
               <div className="cpl-portal-badge">
-                <Heart size={12} /> Client Portal
+                <Heart size={12} /> Couples Wedding Portal
               </div>
               <h2>{isRegistering ? 'Create Your Vault' : 'Welcome Back'}</h2>
               <p>

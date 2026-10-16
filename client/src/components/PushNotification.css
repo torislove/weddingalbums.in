@@ -138,9 +138,11 @@
 @media (max-width: 768px) {
   .push-notification-wrapper {
     bottom: auto;
-    top: 20px;
-    left: 20px;
-    right: 20px;
+    top: 14px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: calc(100vw - 24px);
     transform: translateY(-150%);
   }
   
@@ -149,6 +151,8 @@
   }
   
   .push-notification-card {
-    width: auto;
+    width: 100%;
+    padding: 1.15rem;
+    border-radius: 16px;
   }
 }

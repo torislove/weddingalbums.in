@@ -1,4 +1,8 @@
 .footer {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
   background-color: var(--bg-darker);
   padding: 4rem 0 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);

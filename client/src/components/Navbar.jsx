@@ -115,7 +115,7 @@ const Navbar = () => {
               {lang === 'EN' ? 'తెలుగు' : 'English'}
             </button>
             <Link to="/login" className="btn btn-outline" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
-              Client Portal
+              Couples Portal
             </Link>
             <button onClick={toggleCart} className="cart-toggle-btn" aria-label="Open cart">
               <ShoppingBag size={22} />
@@ -174,7 +174,7 @@ const Navbar = () => {
             
             <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <Link to="/login" className="btn btn-outline" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
-                Client Portal
+                Couples Portal
               </Link>
               <Link to={ctaLink} className="btn btn-gold-3d" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
                 {ctaText}

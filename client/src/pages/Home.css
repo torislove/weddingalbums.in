@@ -347,6 +347,21 @@
     max-width: 320px;
     justify-content: center;
   }
+  .stats-bar {
+    padding: 2.25rem 0;
+  }
+  .stat-ring {
+    width: 66px;
+    height: 66px;
+    margin-bottom: 0.35rem;
+  }
+  .stat-ring svg {
+    width: 66px;
+    height: 66px;
+  }
+  .stat-value {
+    font-size: 1.2rem;
+  }
   .rituals-scroll { grid-template-columns: 1fr; }
   .testimonial-card { padding: 1.5rem; }
   .scroll-indicator { display: none; }

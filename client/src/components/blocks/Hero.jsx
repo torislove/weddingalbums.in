@@ -15,17 +15,17 @@ const Hero = (props) => {
   const magneticBtn1 = useMagneticButton();
   const magneticBtn2 = useMagneticButton();
 
-  // Ensure default props for safe rendering if content is missing
+  // Ensure default props tailored strictly for couples
   const {
     eyebrow = "✦ weddingalbums.in ✦",
-    titlePart1 = "Beautiful Wedding",
-    titleScramble = "Albums & Edits",
-    subtitle = "Whether you're a couple looking to print your dream wedding album, or a photographer needing expert photo and video editing—we are here to help.",
-    btn1Text = "I am a Photographer",
-    btn1Link = "/login?role=b2b",
-    btn2Text = "I am a Couple",
-    btn2Link = "/login?role=b2c",
-    bgImage = "/kalamkari-bg.jpg"
+    titlePart1 = "Cinematic Storytelling",
+    titleScramble = "& Heirloom Wedding Albums",
+    subtitle = "Crafting heirloom-quality Telugu wedding albums, flush mount keepsakes, and cinematic wedding highlights for couples across Andhra Pradesh.",
+    btn1Text = "Explore Wedding Packages",
+    btn1Link = "/pricing",
+    btn2Text = "Instant Cost Estimator",
+    btn2Link = "#estimator",
+    bgImage = "/images/weddingalbums-home-hero.png"
   } = props;
 
   return (

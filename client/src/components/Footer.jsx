@@ -33,10 +33,12 @@ const Footer = () => {
         { name: 'Contact', path: '/contact' }
       ];
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <footer className="footer">
       <GoldenMandala 
-        size={800} 
+        size={isMobile ? 320 : 700} 
         opacity={0.03} 
         style={{ 
           position: 'absolute', 
@@ -45,7 +47,8 @@ const Footer = () => {
           transform: 'translate(-50%, -50%)', 
           animation: 'spin 120s linear infinite',
           zIndex: 0,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          maxWidth: '100%'
         }} 
       />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
