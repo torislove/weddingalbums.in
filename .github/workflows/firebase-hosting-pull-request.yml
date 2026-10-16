@@ -19,6 +19,7 @@ jobs:
           node-version: 22
       - name: Install Dependencies
         run: |
+          cd server && npm install --no-audit && cd ..
           cd client && npm install --no-audit && cd ..
           cd b2b-portal && npm install --no-audit && cd ..
           cd editor-portal && npm install --no-audit && cd ..

@@ -40,4 +40,4 @@ jobs:
 
       - name: Deploy All (5 Hosting Targets, Cloud Functions & Security Rules)
         run: |
-          npx --yes firebase-tools@latest deploy --project weddingalbums-b4bcd --non-interactive
+          npx --yes firebase-tools@latest deploy --only hosting,functions,firestore:rules --project weddingalbums-b4bcd --non-interactive
