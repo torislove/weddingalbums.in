@@ -56,3 +56,28 @@
   text-align: center;
   margin-top: 2rem;
 }
+
+@media (max-width: 768px) {
+  .package-tabs {
+    gap: 0.4rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding: 4px 8px 10px;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    scrollbar-width: none;
+  }
+  .package-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .package-tab-btn {
+    padding: 0.55rem 1rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .package-grid {
+    margin-top: 1.5rem;
+  }
+}
