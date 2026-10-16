@@ -195,7 +195,7 @@ export const api = onRequest({
   maxInstances: 10
 }, app);
 
-// Run local HTTP server only if executed standalone directly
+// Run local HTTP server only if executed standalone directly as the main entrypoint
 const isRunningInFirebase = Boolean(
   process.env.FIREBASE_CONFIG ||
   process.env.FUNCTION_TARGET ||
@@ -205,12 +205,9 @@ const isRunningInFirebase = Boolean(
   process.argv.some(arg => typeof arg === 'string' && (arg.includes('firebase') || arg.includes('functions-framework')))
 );
 
-const isDirectRun = !isRunningInFirebase && (
-  !process.env.FUNCTION_TARGET && (
-    !process.argv[1] || 
-    path.resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase() ||
-    process.argv[1].endsWith('index.js')
-  )
+const isDirectRun = !isRunningInFirebase && Boolean(
+  process.argv[1] &&
+  path.resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase()
 );
 
 if (isDirectRun) {
