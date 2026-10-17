@@ -749,6 +749,104 @@ export const STRINGS = {
   'pdash.client_name_required': { EN: "Please enter the client's name", TE: 'దయచేసి క్లయింట్ పేరు నమోదు చేయండి' },
   'pdash.submitted': { EN: 'Job successfully submitted to the editing team!', TE: 'జాబ్ విజయవంతంగా ఎడిటింగ్ టీమ్‌కు సమర్పించబడింది!' },
   'pdash.client_link': { EN: 'Client Link: {url}', TE: 'క్లయింట్ లింక్: {url}' },
+
+  // ── Album proof gallery ────────────────────────────────────────────────
+  'apg.title': { EN: 'Album Proofing Studio', TE: 'ఆల్బమ్ ప్రూఫింగ్ స్టూడియో' },
+  'apg.sub': {
+    EN: 'Review high-resolution spreads, leave margin notes, and approve your photobook design.',
+    TE: 'హై-రిజల్యూషన్ స్ప్రెడ్‌లను సమీక్షించండి, మార్జిన్ నోట్స్ పెట్టండి, మీ ఫోటోబుక్ డిజైన్‌ను ఆమోదించండి.',
+  },
+  'apg.badge': { EN: '3D Interactive Proof', TE: '3D ఇంటరాక్టివ్ ప్రూఫ్' },
+  'apg.updated': { EN: 'Updated 2 hours ago', TE: '2 గంటల క్రితం నవీకరించబడింది' },
+  'apg.proof_title': { EN: 'Royal Wedding Photobook — First Draft Spreads', TE: 'రాయల్ వెడ్డింగ్ ఫోటోబుక్ — మొదటి డ్రాఫ్ట్ స్ప్రెడ్‌లు' },
+  'apg.specs': { EN: '40 Pages • Flush Mount 12x18 • Matte Velvet Finish', TE: '40 పేజీలు • ఫ్లష్ మౌంట్ 12x18 • మ్యాట్ వెల్వెట్ ఫినిష్' },
+  'apg.open': { EN: 'Open 3D Viewer', TE: '3D వ్యూయర్ తెరవండి' },
+  'apg.spread1': { EN: 'Cover & Title Spread', TE: 'కవర్ & టైటిల్ స్ప్రెడ్' },
+  'apg.spread2': { EN: 'Ceremony & Vows', TE: 'వేడుక & ప్రమాణాలు' },
+  'apg.spread3': { EN: 'Reception Highlights', TE: 'రిసెప్షన్ ముఖ్యాంశాలు' },
+  'apg.instructions_title': { EN: 'Proofing Instructions', TE: 'ప్రూఫింగ్ సూచనలు' },
+  'apg.li1': { EN: 'Flip through the virtual pages using arrow keys or clicking corner edges.', TE: 'అమ్ముల కీలు లేదా మూలల అంచులపై క్లిక్ చేసి వర్చువల్ పేజీలను తిప్పండి.' },
+  'apg.li2': { EN: 'Check that all names, dates, and religious inscriptions are spelled correctly.', TE: 'పేర్లు, తేదీలు, మతపరమైన శాసనాలు సరిగ్గా ఉన్నాయో తనిఖీ చేయండి.' },
+  'apg.li3': { EN: 'Once approved, your file is immediately sent to our laser printing lab in Hyderabad.', TE: 'ఆమోదించిన వెంటనే, మీ ఫైల్ హైదరాబాద్‌లోని మా లేజర్ ప్రింటింగ్ ల్యాబ్‌కు పంపబడుతుంది.' },
+
+  // ── Client proofing (approve/revision) ─────────────────────────────────
+  'cproof.toast_approved': { EN: 'Album approved! Sending to print...', TE: 'ఆల్బమ్ ఆమోదించబడింది! ప్రింట్‌కు పంపుతోంది...' },
+  'cproof.toast_revision': { EN: 'Revision requested. We will notify the editor.', TE: 'సవరణ అభ్యర్థించబడింది. మేము ఎడిటర్‌కు తెలియజేస్తాం.' },
+  'cproof.prepared': {
+    EN: 'Prepared by {studio}. Please review your 3D album design.',
+    TE: '{studio} తయారు చేసింది. దయచేసి మీ 3D ఆల్బమ్ డిజైన్‌ను సమీక్షించండి.',
+  },
+  'cproof.approval': { EN: 'Approval & Revisions', TE: 'ఆమోదం & సవరణలు' },
+  'cproof.approval_sub': {
+    EN: "If everything looks perfect, approve it for print! Otherwise, let us know what changes you'd like.",
+    TE: 'అంతా సరిగ్గా ఉంటే, ప్రింట్ కోసం ఆమోదించండి! లేకపోతే, మీకు కావాల్సిన మార్పులు మాకు తెలియజేయండి.',
+  },
+  'cproof.notes_ph': { EN: 'e.g. Please swap the photo on page 2 with the Haldi group photo...', TE: 'ఉదా. పేజీ 2 లోని ఫోటోను హల్దీ గ్రూప్ ఫోటోతో మార్చండి...' },
+  'cproof.approve': { EN: '✅ Approve for Print', TE: '✅ ప్రింట్ కోసం ఆమోదించండి' },
+  'cproof.request': { EN: '📝 Request Changes', TE: '📝 మార్పులు అభ్యర్థించండి' },
+
+  // ── AI photo culling ───────────────────────────────────────────────────
+  'cull.title_pre': { EN: 'AI Photo', TE: 'AI ఫోటో' },
+  'cull.title_span': { EN: 'Culling', TE: 'కల్లింగ్' },
+  'cull.sub': {
+    EN: 'Upload 1000s of RAWs. Let AI pick the best shots, remove duplicates, and discard blurry images in minutes.',
+    TE: 'వేలాది RAWలు అప్‌లోడ్ చేయండి. ఉత్తమ షాట్‌లను AI ఎంచుకోనివ్వండి, డూప్లికేట్లను తొలగించి, బ్లర్ చిత్రాలను నిమిషాల్లో వదిలించుకోండి.',
+  },
+  'cull.upload_title': { EN: 'Upload Wedding Folder', TE: 'వెడ్డింగ్ ఫోల్డర్ అప్‌లోడ్ చేయండి' },
+  'cull.upload_sub': { EN: 'Supports JPG, RAW, CR3, NEF (Max 5000 images)', TE: 'JPG, RAW, CR3, NEF మద్దతు (గరిష్ఠం 5000 చిత్రాలు)' },
+  'cull.queued': { EN: '{n} images queued for analysis.', TE: '{n} చిత్రాలు విశ్లేషణ కోసం క్యూలో ఉన్నాయి.' },
+  'cull.analyzing': { EN: 'AI is Analyzing...', TE: 'AI విశ్లేషిస్తోంది...' },
+  'cull.run': { EN: 'Run AI Culling', TE: 'AI కల్లింగ్ అమలు చేయండి' },
+  'cull.done': { EN: 'Culling Complete!', TE: 'కల్లింగ్ పూర్తయింది!' },
+  'cull.selected': { EN: 'Selected (Best)', TE: 'ఎంపిక చేయబడినవి (ఉత్తమం)' },
+  'cull.blurry': { EN: 'Blurry / Blink', TE: 'బ్లర్ / బ్లింక్' },
+  'cull.duplicates': { EN: 'Duplicates', TE: 'డూప్లికేట్లు' },
+  'cull.new_batch': { EN: 'Start New Batch', TE: 'కొత్త బ్యాచ్ ప్రారంభించండి' },
+
+  // ── Client wallet ──────────────────────────────────────────────────────
+  'wallet.title': { EN: 'Client Wallet & Credits', TE: 'క్లయింట్ వాలెట్ & క్రెడిట్‌లు' },
+  'wallet.sub': {
+    EN: 'Use your credits towards album printing, gold foiling, and express shipping.',
+    TE: 'మీ క్రెడిట్‌లను ఆల్బమ్ ప్రింటింగ్, గోల్డ్ ఫాయిలింగ్, ఎక్స్‌ప్రెస్ షిప్పింగ్ కోసం ఉపయోగించండి.',
+  },
+  'wallet.available': { EN: 'Available Balance', TE: 'అందుబాటులో ఉన్న నిల్వ' },
+  'wallet.redeemable': { EN: '100% redeemable on any custom album checkout', TE: 'ఏదైనా కస్టమ్ ఆల్బమ్ చెకౌట్‌లో 100% వినియోగించవచ్చు' },
+  'wallet.redeem_title': { EN: 'Redeem Gift Card / Promo Code', TE: 'గిఫ్ట్ కార్డ్ / ప్రోమో కోడ్ వినియోగించండి' },
+  'wallet.redeem_sub': {
+    EN: 'Have a promotional voucher from an exhibition or your wedding photographer?',
+    TE: 'ప్రదర్శన లేదా మీ వెడ్డింగ్ ఫోటోగ్రాఫర్ నుండి ప్రోమో వోచర్ ఉందా?',
+  },
+  'wallet.apply': { EN: 'Apply Code', TE: 'కోడ్ వర్తించండి' },
+  'wallet.voucher_ok': { EN: 'Voucher successfully applied! ₹{amount} added to your wallet.', TE: 'వోచర్ విజయవంతంగా వర్తించబడింది! ₹{amount} మీ వాలెట్‌కు జోడించబడింది.' },
+  'wallet.voucher_bad': { EN: 'Invalid or expired voucher code.', TE: 'చెల్లని లేదా గడువు ముగిసిన వోచర్ కోడ్.' },
+  'wallet.activity': { EN: 'Recent Wallet Activity', TE: 'ఇటీవలి వాలెట్ కార్యకలాపం' },
+  'wallet.welcome_bonus': { EN: 'Welcome Bonus Credit', TE: 'స్వాగత బోనస్ క్రెడిట్' },
+  'wallet.signup_promo': { EN: 'Sign-up promotion', TE: 'సైన్-అప్ ప్రోమోషన్' },
+  'wallet.referral_reward': { EN: 'Referral Reward', TE: 'రెఫరల్ రివార్డ్' },
+  'wallet.friend_joined': { EN: 'Friend joined & ordered', TE: 'స్నేహితుడు చేరి ఆర్డర్ చేశారు' },
+
+  // ── Client referral ────────────────────────────────────────────────────
+  'ref.title': { EN: 'Refer & Earn Credits', TE: 'రెఫర్ చేసి క్రెడిట్‌లు సంపాదించండి' },
+  'ref.sub': {
+    EN: 'Gift fellow newlywed couples ₹500 off and earn ₹1,000 wallet credits for each album printed.',
+    TE: 'కొత్తగా పెళ్లయిన జంటలకు ₹500 తగ్గింపు బహుమతిగా ఇవ్వండి, ప్రతి ఆల్బమ్ ప్రింట్‌కు ₹1,000 వాలెట్ క్రెడిట్‌లు సంపాదించండి.',
+  },
+  'ref.give_get': { EN: 'Give ₹500, Get ₹1,000', TE: '₹500 ఇవ్వండి, ₹1,000 పొందండి' },
+  'ref.share_sub': {
+    EN: 'Share your personal link with newlywed friends or family planning their album. When they order, credits are automatically added to your wallet!',
+    TE: 'మీ వ్యక్తిగత లింక్‌ను కొత్తగా పెళ్లయిన స్నేహితులు లేదా ఆల్బమ్ ప్లాన్ చేస్తున్న కుటుంబంతో పంచుకోండి. వారు ఆర్డర్ చేసినప్పుడు, క్రెడిట్‌లు స్వయంచాలకంగా మీ వాలెట్‌కు జోడించబడతాయి!',
+  },
+  'ref.copied': { EN: 'Copied!', TE: 'కాపీ అయింది!' },
+  'ref.copy': { EN: 'Copy Link', TE: 'లింక్ కాపీ చేయండి' },
+  'ref.referred': { EN: 'Couples Referred', TE: 'రెఫర్ చేసిన జంటలు' },
+  'ref.earned': { EN: 'Total Credits Earned', TE: 'మొత్తం సంపాదించిన క్రెడిట్‌లు' },
+  'ref.how': { EN: 'How the Referral Program Works', TE: 'రెఫరల్ ప్రోగ్రామ్ ఎలా పనిచేస్తుంది' },
+  'ref.s1_t': { EN: 'Send Your Invite', TE: 'మీ ఆహ్వానం పంపండి' },
+  'ref.s1_d': { EN: 'Share your link on WhatsApp, Instagram, or email with couples planning their photobook.', TE: 'మీ లింక్‌ను వాట్సాప్, ఇన్‌స్టాగ్రామ్ లేదా ఇమెయిల్‌లో ఫోటోబుక్ ప్లాన్ చేస్తున్న జంటలతో పంచుకోండి.' },
+  'ref.s2_t': { EN: 'They Save ₹500', TE: 'వారు ₹500 ఆదా చేస్తారు' },
+  'ref.s2_d': { EN: 'When they design their custom album, ₹500 is instantly deducted from their checkout price.', TE: 'వారు తమ కస్టమ్ ఆల్బమ్ డిజైన్ చేసినప్పుడు, వారి చెకౌట్ ధర నుండి ₹500 వెంటనే తగ్గించబడుతుంది.' },
+  'ref.s3_t': { EN: 'You Receive ₹1,000', TE: 'మీరు ₹1,000 పొందుతారు' },
+  'ref.s3_d': { EN: 'As soon as their order is confirmed, ₹1,000 drops into your wallet for future albums.', TE: 'వారి ఆర్డర్ నిర్ధారించబడిన వెంటనే, భవిష్యత్ ఆల్బమ్‌ల కోసం ₹1,000 మీ వాలెట్‌లోకి వస్తుంది.' },
 };
 
 const TE_FALLBACK_CACHE = new Map();

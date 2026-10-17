@@ -4,14 +4,16 @@ import Flipbook from '../components/Flipbook';
 import Toast from '../components/Toast';
 import './OrderAlbum.css';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 
 const ClientProofing = () => {
+  const t = useT();
   const { id } = useParams();
   const [toastMessage, setToastMessage] = useState(null);
   const [notes, setNotes] = useState('');
 
   const handleApprove = async () => {
-    setToastMessage('Album approved! Sending to print...');
+    setToastMessage(t('cproof.toast_approved'));
     if (id && id !== 'sample') {
       try {
         await fetch(`${API}/api/orders/${id}`, {
@@ -26,7 +28,7 @@ const ClientProofing = () => {
   };
 
   const handleRequestChanges = async () => {
-    setToastMessage('Revision requested. We will notify the editor.');
+    setToastMessage(t('cproof.toast_revision'));
     if (id && id !== 'sample') {
       try {
         await fetch(`${API}/api/orders/${id}`, {
@@ -50,7 +52,7 @@ const ClientProofing = () => {
     <div className="order-container">
       <div className="order-header text-center mb-10">
         <h1 className="text-4xl font-serif text-[var(--brand)] mb-4">Priya & Rahul's Wedding Album</h1>
-        <p className="text-gray-400">Prepared by Dream Studios. Please review your 3D album design.</p>
+        <p className="text-gray-400">{t('cproof.prepared', { studio: 'Dream Studios' })}</p>
       </div>
 
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', background: 'rgba(0,0,0,0.5)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -58,13 +60,13 @@ const ClientProofing = () => {
       </div>
 
       <div className="mt-12 max-w-2xl mx-auto bg-black/40 p-6 rounded-xl border border-white/10">
-        <h3 className="text-xl text-white mb-4">Approval & Revisions</h3>
-        <p className="text-sm text-gray-400 mb-4">If everything looks perfect, approve it for print! Otherwise, let us know what changes you'd like.</p>
+        <h3 className="text-xl text-white mb-4">{t('cproof.approval')}</h3>
+        <p className="text-sm text-gray-400 mb-4">{t('cproof.approval_sub')}</p>
         
         <textarea 
           className="form-textarea w-full mb-4" 
           rows="4" 
-          placeholder="e.g. Please swap the photo on page 2 with the Haldi group photo..."
+          placeholder={t('cproof.notes_ph')}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         ></textarea>
@@ -75,14 +77,14 @@ const ClientProofing = () => {
             className="btn btn-primary flex-1 min-w-[140px] py-3 cursor-pointer" 
             onClick={handleApprove}
           >
-            ✅ Approve for Print
+            {t('cproof.approve')}
           </button>
           <button 
             type="button"
             className="btn btn-outline flex-1 min-w-[140px] py-3 cursor-pointer" 
             onClick={handleRequestChanges}
           >
-            📝 Request Changes
+            {t('cproof.request')}
           </button>
         </div>
       </div>

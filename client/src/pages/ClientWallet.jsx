@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Wallet, IndianRupee, ArrowUpRight, Gift, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 
 const ClientWallet = () => {
+  const t = useT();
   const { user } = useAuth();
   const [balance, setBalance] = useState(user?.wallet_balance || 0);
   const [voucherCode, setVoucherCode] = useState('');
@@ -24,30 +26,30 @@ const ClientWallet = () => {
     if (voucherCode.toUpperCase() === 'WEDDING1000' || voucherCode.toUpperCase() === 'ROYAL500') {
       const bonus = voucherCode.toUpperCase() === 'WEDDING1000' ? 1000 : 500;
       setBalance(prev => prev + bonus);
-      setMsg({ type: 'success', text: `Voucher successfully applied! ₹${bonus} added to your wallet.` });
+      setMsg({ type: 'success', text: t('wallet.voucher_ok', { amount: bonus }) });
       setVoucherCode('');
     } else {
-      setMsg({ type: 'error', text: 'Invalid or expired voucher code.' });
+      setMsg({ type: 'error', text: t('wallet.voucher_bad') });
     }
   };
 
   return (
     <div className="dashboard-page" style={{ maxWidth: '850px', margin: '0 auto', padding: 'clamp(12px, 3vw, 24px)' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0' }}>Client Wallet & Credits</h2>
-        <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>Use your credits towards album printing, gold foiling, and express shipping.</p>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0' }}>{t('wallet.title')}</h2>
+        <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>{t('wallet.sub')}</p>
       </div>
 
       {/* Balance Card */}
       <div style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(18,19,24,0.9))', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '16px', padding: 'clamp(18px, 4vw, 30px)', marginBottom: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.4)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div>
-            <span style={{ fontSize: '0.82rem', color: 'var(--brand)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Available Balance</span>
+            <span style={{ fontSize: '0.82rem', color: 'var(--brand)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>{t('wallet.available')}</span>
             <h1 style={{ fontSize: 'clamp(2rem, 6vw, 2.8rem)', margin: '8px 0 4px', color: 'var(--paper)', fontWeight: 800 }}>
               ₹{Number(balance).toLocaleString('en-IN')}
             </h1>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              100% redeemable on any custom album checkout
+              {t('wallet.redeemable')}
             </p>
           </div>
           <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(212,175,55,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -59,10 +61,10 @@ const ClientWallet = () => {
       {/* Redeem Voucher */}
       <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: 'clamp(16px, 3vw, 24px)', marginBottom: '24px' }}>
         <h3 style={{ margin: '0 0 8px 0', fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Gift size={20} color="#D4AF37" /> Redeem Gift Card / Promo Code
+          <Gift size={20} color="#D4AF37" /> {t('wallet.redeem_title')}
         </h3>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '16px' }}>
-          Have a promotional voucher from an exhibition or your wedding photographer?
+          {t('wallet.redeem_sub')}
         </p>
 
         {msg && (
@@ -80,14 +82,14 @@ const ClientWallet = () => {
             style={{ flex: '1 1 200px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px 16px', color: 'var(--paper)', fontSize: '0.95rem' }}
           />
           <button type="submit" className="btn btn-primary" style={{ padding: '10px 24px', whiteSpace: 'nowrap' }}>
-            Apply Code
+            {t('wallet.apply')}
           </button>
         </form>
       </div>
 
       {/* Transaction History */}
       <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: 'clamp(14px, 3vw, 24px)' }}>
-        <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem' }}>Recent Wallet Activity</h3>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem' }}>{t('wallet.activity')}</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -95,8 +97,8 @@ const ClientWallet = () => {
                 <CheckCircle2 size={18} color="#10b981" />
               </div>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--paper)' }}>Welcome Bonus Credit</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sign-up promotion</div>
+                <div style={{ fontWeight: 600, color: 'var(--paper)' }}>{t('wallet.welcome_bonus')}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('wallet.signup_promo')}</div>
               </div>
             </div>
             <span style={{ color: 'var(--ok)', fontWeight: 700 }}>+₹500</span>
@@ -108,8 +110,8 @@ const ClientWallet = () => {
                 <ShieldCheck size={18} color="#D4AF37" />
               </div>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--paper)' }}>Referral Reward</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Friend joined & ordered</div>
+                <div style={{ fontWeight: 600, color: 'var(--paper)' }}>{t('wallet.referral_reward')}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('wallet.friend_joined')}</div>
               </div>
             </div>
             <span style={{ color: 'var(--brand)', fontWeight: 700 }}>+₹1,000</span>
