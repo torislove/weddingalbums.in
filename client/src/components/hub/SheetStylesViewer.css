@@ -43,7 +43,7 @@
 
 .sheet-tab-card.active {
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   box-shadow: 0 8px 24px rgba(212, 175, 55, 0.18), inset 0 0 16px rgba(212, 175, 55, 0.08);
 }
 
@@ -54,7 +54,7 @@
   left: 0;
   bottom: 0;
   width: 4px;
-  background: var(--accent-color, #D4AF37);
+  background: var(--accent-color, var(--brand));
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -74,7 +74,7 @@
   font-family: monospace;
   font-size: 11px;
   font-weight: 700;
-  color: #D4AF37;
+  color: var(--brand);
   letter-spacing: 1px;
 }
 
@@ -91,7 +91,7 @@
   font-family: 'Playfair Display', serif;
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
   line-height: 1.25;
   margin-bottom: 3px;
 }
@@ -305,8 +305,8 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, #10b981, #34d399, transparent);
-  box-shadow: 0 0 16px #10b981;
+  background: linear-gradient(90deg, transparent, var(--ok), #34d399, transparent);
+  box-shadow: 0 0 16px var(--ok);
   animation: scanDown 2.2s ease-in-out infinite;
 }
 
@@ -324,7 +324,7 @@
   transform: translateX(-50%);
   background: rgba(6, 40, 25, 0.92);
   color: #6ee7b7;
-  border: 1px solid #10b981;
+  border: 1px solid var(--ok);
   padding: 6px 14px;
   border-radius: 99px;
   font-size: 11px;
@@ -359,7 +359,7 @@
 .curl-hint {
   font-size: 9px;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
   text-shadow: 0 1px 2px #000;
   text-transform: uppercase;
 }
@@ -434,13 +434,13 @@
 
 .stage-action-btn:hover {
   background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  color: var(--paper);
   transform: translateY(-1px);
 }
 
 .stage-action-btn.btn-active {
   background: rgba(212, 175, 55, 0.2);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   color: #fef08a;
   box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
 }
@@ -474,14 +474,14 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #D4AF37;
+  color: var(--brand);
 }
 
 .specs-pricing-badge {
   font-family: monospace;
   font-size: 15px;
   font-weight: 800;
-  color: #fff;
+  color: var(--paper);
   background: rgba(212, 175, 55, 0.2);
   border: 1px solid rgba(212, 175, 55, 0.4);
   padding: 4px 12px;
@@ -492,13 +492,13 @@
   font-family: 'Playfair Display', serif;
   font-size: 24px;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
   margin: 0 0 4px 0;
 }
 
 .specs-telugu {
   font-size: 14px;
-  color: #D4AF37;
+  color: var(--brand);
   margin: 0 0 14px 0;
   font-weight: 600;
 }
@@ -553,7 +553,7 @@
 
 .sheet-tab-card.standard-tier-card.active {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%);
-  border-color: #10B981;
+  border-color: var(--ok);
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.18), inset 0 0 16px rgba(16, 185, 129, 0.08);
 }
 
@@ -563,7 +563,7 @@
 
 .sheet-tab-card.luxury-tier-card.active {
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(20, 20, 24, 0.95) 100%);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2), inset 0 0 16px rgba(212, 175, 55, 0.08);
 }
 

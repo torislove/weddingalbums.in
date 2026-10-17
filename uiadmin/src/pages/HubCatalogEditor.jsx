@@ -94,11 +94,11 @@ export default function HubCatalogEditor({ adminState }) {
       {/* Top Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 99, background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: '#f59e0b', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 99, background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', color: 'var(--warn)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
             <Sparkles size={12} />
             <span>Post-Production Hub Pricing Engine</span>
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: '#fff', margin: 0 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--paper)', margin: 0 }}>
             Hub Services, Sheet Styles & Indian Market Sizes
           </h1>
           <p style={{ fontSize: 13, color: '#94a3b8', margin: '4px 0 0 0' }}>
@@ -113,7 +113,7 @@ export default function HubCatalogEditor({ adminState }) {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '10px 20px', borderRadius: 10, border: 'none',
-            background: isDirty && !saving ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'rgba(255,255,255,0.06)',
+            background: isDirty && !saving ? 'linear-gradient(135deg, var(--warn), #d97706)' : 'rgba(255,255,255,0.06)',
             color: isDirty && !saving ? '#000' : 'rgba(255,255,255,0.3)',
             fontWeight: 700, fontSize: 13, cursor: isDirty && !saving ? 'pointer' : 'not-allowed',
             transition: 'all 0.2s', boxShadow: isDirty && !saving ? '0 4px 16px rgba(245,158,11,0.3)' : 'none'
@@ -133,6 +133,22 @@ export default function HubCatalogEditor({ adminState }) {
         </button>
       </div>
 
+      {/* Price ownership note — two admin surfaces can set these numbers */}
+      <div style={{
+        display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 13px',
+        marginBottom: 18, borderRadius: 10,
+        background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.22)'
+      }}>
+        <AlertCircle size={16} style={{ color: 'var(--warn)', flexShrink: 0, marginTop: 2 }} />
+        <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.55, color: '#cbd5e1' }}>
+          <strong style={{ color: 'var(--warn)' }}>Two ways to set prices — you win.</strong> What you publish
+          here (<strong>CMS Studio</strong>) is the live catalog the couple estimator reads, and your value
+          is authoritative. <strong> SysAdmin → Pricing Engine</strong> builder rows can also set prices,
+          but they only <em>fill items you have left blank</em> here — they never overwrite a CMS Studio
+          price. Leave a field empty to let the SysAdmin engine price it.
+        </p>
+      </div>
+
       {/* Navigation Tabs */}
       <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 12, marginBottom: 24, overflowX: 'auto' }}>
         {[
@@ -148,10 +164,10 @@ export default function HubCatalogEditor({ adminState }) {
             style={{
               padding: '8px 16px', borderRadius: 8, border: 'none',
               background: activeTab === t.id ? 'rgba(245,158,11,0.15)' : 'transparent',
-              color: activeTab === t.id ? '#f59e0b' : '#94a3b8',
+              color: activeTab === t.id ? 'var(--warn)' : '#94a3b8',
               fontWeight: activeTab === t.id ? 700 : 500,
               fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap',
-              borderBottom: activeTab === t.id ? '2px solid #f59e0b' : '2px solid transparent'
+              borderBottom: activeTab === t.id ? '2px solid var(--warn)' : '2px solid transparent'
             }}
           >
             {t.label}
@@ -173,8 +189,8 @@ export default function HubCatalogEditor({ adminState }) {
                 <div key={sheet.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ width: 14, height: 14, borderRadius: '50%', background: sheet.color || '#D4AF37', display: 'inline-block' }} />
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{sheet.title}</span>
+                      <span style={{ width: 14, height: 14, borderRadius: '50%', background: sheet.color || 'var(--brand)', display: 'inline-block' }} />
+                      <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--paper)' }}>{sheet.title}</span>
                     </div>
                     <span style={{ fontSize: 11, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>
                       Studio Profit: ₹{studioMargin} ({marginPercent}%)
@@ -188,21 +204,21 @@ export default function HubCatalogEditor({ adminState }) {
                       type="text"
                       value={sheet.telugu || ''}
                       onChange={e => updateSheetStyle(idx, 'telugu', e.target.value)}
-                      style={{ width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 13, boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--paper)', fontSize: 13, boxSizing: 'border-box' }}
                     />
                   </div>
 
                   {/* Dual Pricing Grid: Client vs Studio */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#f59e0b', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--warn)', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>
                         Client Retail (₹ / sheet)
                       </label>
                       <input
                         type="number"
                         value={sheet.clientPricePerSheet || 0}
                         onChange={e => updateSheetStyle(idx, 'clientPricePerSheet', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                     <div>
@@ -213,7 +229,7 @@ export default function HubCatalogEditor({ adminState }) {
                         type="number"
                         value={sheet.studioPricePerSheet || 0}
                         onChange={e => updateSheetStyle(idx, 'studioPricePerSheet', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
@@ -226,7 +242,7 @@ export default function HubCatalogEditor({ adminState }) {
                         type="text"
                         value={sheet.gsm || ''}
                         onChange={e => updateSheetStyle(idx, 'gsm', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 12, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--paper)', fontSize: 12, boxSizing: 'border-box' }}
                       />
                     </div>
                     <div>
@@ -235,7 +251,7 @@ export default function HubCatalogEditor({ adminState }) {
                         type="text"
                         value={sheet.waterResistance || ''}
                         onChange={e => updateSheetStyle(idx, 'waterResistance', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 12, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--paper)', fontSize: 12, boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
@@ -271,8 +287,8 @@ export default function HubCatalogEditor({ adminState }) {
                 <div key={size.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <div>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{size.title}</span>
-                      <span style={{ marginLeft: 8, fontSize: 10, background: 'rgba(245,158,11,0.15)', color: '#f59e0b', padding: '1px 6px', borderRadius: 4, textTransform: 'uppercase', fontWeight: 700 }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--paper)' }}>{size.title}</span>
+                      <span style={{ marginLeft: 8, fontSize: 10, background: 'rgba(245,158,11,0.15)', color: 'var(--warn)', padding: '1px 6px', borderRadius: 4, textTransform: 'uppercase', fontWeight: 700 }}>
                         {size.orientation || 'landscape'}
                       </span>
                     </div>
@@ -288,21 +304,21 @@ export default function HubCatalogEditor({ adminState }) {
                       type="text"
                       value={size.openSpread || ''}
                       onChange={e => updateAlbumSize(idx, 'openSpread', e.target.value)}
-                      style={{ width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 13, boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '8px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--paper)', fontSize: 13, boxSizing: 'border-box' }}
                     />
                   </div>
 
                   {/* Dual Pricing Grid: Client Retail vs Studio Trade */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#f59e0b', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--warn)', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>
                         Client Retail Base (₹)
                       </label>
                       <input
                         type="number"
                         value={size.clientBasePrice || 0}
                         onChange={e => updateAlbumSize(idx, 'clientBasePrice', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                     <div>
@@ -313,7 +329,7 @@ export default function HubCatalogEditor({ adminState }) {
                         type="number"
                         value={size.studioBasePrice || 0}
                         onChange={e => updateAlbumSize(idx, 'studioBasePrice', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
@@ -325,7 +341,7 @@ export default function HubCatalogEditor({ adminState }) {
                       <select
                         value={size.orientation || 'landscape'}
                         onChange={e => updateAlbumSize(idx, 'orientation', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', background: '#1c1c24', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 12, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '7px 10px', background: '#1c1c24', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--paper)', fontSize: 12, boxSizing: 'border-box' }}
                       >
                         <option value="landscape">Landscape / Panoramic</option>
                         <option value="vertical">Royal Vertical / Portrait</option>
@@ -338,7 +354,7 @@ export default function HubCatalogEditor({ adminState }) {
                       <select
                         value={size.scaleCategory || 'big'}
                         onChange={e => updateAlbumSize(idx, 'scaleCategory', e.target.value)}
-                        style={{ width: '100%', padding: '7px 10px', background: '#1c1c24', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: 12, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '7px 10px', background: '#1c1c24', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--paper)', fontSize: 12, boxSizing: 'border-box' }}
                       >
                         <option value="big">Big / Grand Edition</option>
                         <option value="medium">Medium Standard</option>
@@ -365,7 +381,7 @@ export default function HubCatalogEditor({ adminState }) {
               return (
                 <div key={v.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{v.title}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--paper)' }}>{v.title}</span>
                     <span style={{ fontSize: 11, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>
                       Studio Profit: ₹{studioMargin.toLocaleString('en-IN')}
                     </span>
@@ -373,12 +389,12 @@ export default function HubCatalogEditor({ adminState }) {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#f59e0b', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>Client Retail (₹)</label>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--warn)', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>Client Retail (₹)</label>
                       <input
                         type="number"
                         value={v.clientPrice || 0}
                         onChange={e => updateVideoService(idx, 'clientPrice', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                     <div>
@@ -387,7 +403,7 @@ export default function HubCatalogEditor({ adminState }) {
                         type="number"
                         value={v.studioPrice || 0}
                         onChange={e => updateVideoService(idx, 'studioPrice', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
@@ -420,7 +436,7 @@ export default function HubCatalogEditor({ adminState }) {
               return (
                 <div key={f.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{f.title}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--paper)' }}>{f.title}</span>
                     <span style={{ fontSize: 11, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>
                       Studio Profit: ₹{studioMargin.toLocaleString('en-IN')}
                     </span>
@@ -428,12 +444,12 @@ export default function HubCatalogEditor({ adminState }) {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#f59e0b', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>Client Retail (₹)</label>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--warn)', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>Client Retail (₹)</label>
                       <input
                         type="number"
                         value={f.clientPrice || 0}
                         onChange={e => updateFlexItem(idx, 'clientPrice', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                     <div>
@@ -442,7 +458,7 @@ export default function HubCatalogEditor({ adminState }) {
                         type="number"
                         value={f.studioPrice || 0}
                         onChange={e => updateFlexItem(idx, 'studioPrice', Number(e.target.value))}
-                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
@@ -470,8 +486,8 @@ export default function HubCatalogEditor({ adminState }) {
             {catalog.bundles?.map((b, idx) => (
               <div key={b.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{b.title}</span>
-                  <span style={{ fontSize: 10, background: 'rgba(245,158,11,0.2)', color: '#f59e0b', padding: '2px 7px', borderRadius: 99, fontWeight: 700 }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--paper)' }}>{b.title}</span>
+                  <span style={{ fontSize: 10, background: 'rgba(245,158,11,0.2)', color: 'var(--warn)', padding: '2px 7px', borderRadius: 99, fontWeight: 700 }}>
                     {b.badge}
                   </span>
                 </div>
@@ -479,7 +495,7 @@ export default function HubCatalogEditor({ adminState }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {b.inclusions?.map((inc, iIdx) => (
                     <div key={iIdx} style={{ fontSize: 11, color: '#cbd5e1', display: 'flex', gap: 6, alignItems: 'center' }}>
-                      <span style={{ color: '#f59e0b' }}>✓</span> <span>{inc}</span>
+                      <span style={{ color: 'var(--warn)' }}>✓</span> <span>{inc}</span>
                     </div>
                   ))}
                 </div>

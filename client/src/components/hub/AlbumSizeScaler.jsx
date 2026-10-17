@@ -207,7 +207,7 @@ export default function AlbumSizeScaler({ sizes = DEFAULT_INDIAN_SIZES }) {
     <div className="album-scaler-container">
       {/* Header */}
       <div className="album-scaler-header text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-semibold mb-3 tracking-widest uppercase">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--brand)]/10 border border-[var(--brand)]/30 text-[var(--brand)] text-xs font-semibold mb-3 tracking-widest uppercase">
           <Maximize2 size={13} />
           <span>Interactive Dimensions Scaler</span>
         </div>
@@ -340,7 +340,7 @@ export default function AlbumSizeScaler({ sizes = DEFAULT_INDIAN_SIZES }) {
           <div className="scaler-metrics-row">
             <div className="scaler-metric">
               <span className="m-label">Open Panoramic Spread</span>
-              <span className="m-val text-[#D4AF37] font-mono">{selectedSize.openSpread}</span>
+              <span className="m-val text-[var(--brand)] font-mono">{selectedSize.openSpread}</span>
             </div>
             <div className="scaler-metric">
               <span className="m-label">Closed Book Dimensions</span>
@@ -384,7 +384,7 @@ export default function AlbumSizeScaler({ sizes = DEFAULT_INDIAN_SIZES }) {
                 <div className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Selected Edition</div>
                 <div className="font-serif text-lg text-white font-bold">{selectedSize.title}</div>
               </div>
-              <div className="font-mono text-base font-bold text-[#D4AF37] bg-[#D4AF37]/15 px-3 py-1 rounded-full border border-[#D4AF37]/30">
+              <div className="font-mono text-base font-bold text-[var(--brand)] bg-[var(--brand)]/15 px-3 py-1 rounded-full border border-[var(--brand)]/30">
                 {selectedSize.clientPriceBadge}
               </div>
             </div>

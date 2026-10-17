@@ -1,297 +1,796 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Calculator, Clock, CheckCircle2, ArrowRight, Sparkles, Shield, 
-  Truck, BookOpen, Video, Send, Layers, Award, Film, MessageCircle, CheckSquare, Square
+import { useLanguage } from '../../context/LanguageContext';
+import {
+  ArrowRight, ArrowLeft, Crown, Scissors, Printer, Film,
+  Truck, MessageCircle, CheckCircle2, Sparkles,
 } from 'lucide-react';
 import { useContent } from '../../context/ContentContext';
 import ScrollReveal from '../ScrollReveal';
+import OptionCard from '../wizard/OptionCard';
+import SmartPageSlider from '../wizard/SmartPageSlider';
+import PageBudgetAdvisor from '../wizard/PageBudgetAdvisor';
+import QuoteReceipt from '../wizard/QuoteReceipt';
+import {
+  priceQuote, normaliseCatalog, scaleMixToSheets, pageCapacity,
+  perSheetOfSize,
+  SERVICE_INTENTS, PRICE_RULES,
+} from '../../lib/pricing';
+import { DEFAULT_B2C_PACKAGES, loadPackages, pkgQuote, resolveVideoMap } from '../../lib/packages';
 import './InstantEstimator.css';
 
-// Fallback catalog if API content is still loading
-const FALLBACK_SIZES = [
-  { id: "size-14x40", title: "14×40 Magnum Royal Mandap", openSpread: "14\" × 40\"", clientBasePrice: 16500, orientation: "landscape", scaleCategory: "big", tag: "Grand Landscape" },
-  { id: "size-12x36", title: "12×36 Grand Imperial (AP Standard)", openSpread: "12\" × 36\"", clientBasePrice: 12500, orientation: "landscape", scaleCategory: "big", popular: true, tag: "Most Popular in AP" },
-  { id: "size-12x30", title: "12×30 Royal Wide Panoramic", openSpread: "12\" × 30\"", clientBasePrice: 10500, orientation: "landscape", scaleCategory: "big", tag: "Cinema Landscape" },
-  { id: "size-10x30", title: "10×30 Slim Cinema Landscape", openSpread: "10\" × 30\"", clientBasePrice: 9200, orientation: "landscape", scaleCategory: "medium", tag: "Slim Landscape" },
-  { id: "size-12x24", title: "12×24 Classic Celebration Square", openSpread: "12\" × 24\"", clientBasePrice: 8500, orientation: "square", scaleCategory: "medium", tag: "Square Classic" },
-  { id: "size-10x20", title: "10×20 Compact Celebration Square", openSpread: "10\" × 20\"", clientBasePrice: 7200, orientation: "square", scaleCategory: "small", tag: "Square Compact" },
-  { id: "size-12x18-vert", title: "12×18 Royal Vertical Portrait", openSpread: "18\" × 24\" (18\"H)", clientBasePrice: 9800, orientation: "vertical", scaleCategory: "big", popular: true, tag: "Vertical Portrait" },
-  { id: "size-10x15-vert", title: "10×15 Editorial Vertical Portrait", openSpread: "15\" × 20\" (15\"H)", clientBasePrice: 7600, orientation: "vertical", scaleCategory: "medium", tag: "Vertical Editorial" },
-  { id: "size-8x12-vert", title: "8×12 Traditional Vertical", openSpread: "12\" × 16\" (12\"H)", clientBasePrice: 5800, orientation: "vertical", scaleCategory: "small", tag: "Vertical Compact" },
-  { id: "size-6x9-pocket", title: "6×9 Companion Pocket Parent Book", openSpread: "6\" × 18\"", clientBasePrice: 3200, orientation: "pocket", scaleCategory: "small", tag: "Parent Mini Book" }
+/* Video service groups for the dedicated video panel */
+const VIDEO_GROUPS = [
+  { id: 'social', icon: '📱', en: 'Reels & Social teasers', te: 'రీల్స్ & సోషల్ టీజ‌ర్లు' },
+  { id: 'film', icon: '🎬', en: 'Cinematic wedding films', te: '4K సినిమాటిక్ ఫిల్మ్స్' },
+  { id: 'live', icon: '🎥', en: 'Live & same-day edits', te: 'లైవ్ & సేమ్-డే యిడిట్స్' },
+  { id: 'audio', icon: '🎚️', en: 'Audio & post-production', te: 'ఆడియో & పోస్ట్-ప్రొడ‌క్షన్' },
 ];
 
-const FALLBACK_SHEETS = [
-  { id: "metallic-gold", title: "24K Metallic Gold Gloss", telugu: "24K మెటాలిక్ గోల్డ్", gsm: "350 GSM Archival", clientPricePerSheet: 110, color: "#E6C667", bestFor: "Muhurtham & 22K Gold Jewelry", ritualSection: "Muhurtham & Talambralu Spreads" },
-  { id: "royal-velvet", title: "Royal Velvet Feather Touch", telugu: "రాయల్ వెల్వెట్ టచ్", gsm: "400 GSM Rigid", clientPricePerSheet: 135, color: "#722F37", bestFor: "Zero Glare Candid Portraits", ritualSection: "Reception & Couple Portraits" },
-  { id: "pure-silk", title: "Pure Silk Texture (Pattu)", telugu: "ప్యూర్ సిల్క్ (పట్టు)", gsm: "380 GSM Textured", clientPricePerSheet: 145, color: "#D4AF37", bestFor: "Traditional Saree Moments", ritualSection: "Kanyadaanam & Saptapadi" },
-  { id: "non-tearable", title: "Non-Tearable Poly-Luster", telugu: "నాన్-టియరబుల్ పాలీ", gsm: "300 GSM Poly", clientPricePerSheet: 85, color: "#4A90E2", bestFor: "100% Waterproof Durability", ritualSection: "Extended Family & Group Spreads" },
-  { id: "crystal-gloss", title: "HD Silver Halide Crystal", telugu: "సిల్వర్ హాలైడ్ క్రిస్టల్", gsm: "320 GSM Photographic", clientPricePerSheet: 120, color: "#E0E0E0", bestFor: "True Optical Continuous Tone", ritualSection: "Stage Fireworks & Close-ups" },
-  { id: "matte-linen", title: "Natural Matte Fine Art Linen", telugu: "ఫైన్ ఆర్ట్ లినెన్", gsm: "350 GSM Cotton", clientPricePerSheet: 105, color: "#E8DFD8", bestFor: "European Understated Elegance", ritualSection: "Pre-Wedding Outdoor Shoots" }
-];
+/* ────────────────────────── tiny shared atoms ────────────────────────── */
 
-const FALLBACK_COVERS = [
-  { id: 'acrylic', label: 'Diamond Acrylic 3D Glass', sub: '+₹2,500', extra: 2500 },
-  { id: 'leatherette', label: 'Italian Leatherette + Presentation Box', sub: '+₹2,800', extra: 2800 },
-  { id: 'velvet-foil', label: 'Royal Velvet Hardcover + 24K Gold Foil', sub: '+₹2,200', extra: 2200 },
-  { id: 'matte-hardcover', label: 'Anti-Scratch Scuff-Free Hardcover Matte', sub: 'Standard (Included)', extra: 0 }
-];
+/** Compact quantity control (reels packs, patrika, flex pieces, mix sheets). */
+const Qty = ({ value, onChange, max = 9, min = 0, step = 1, label = 'Quantity' }) => (
+  <div className="wz-stepper tiny" role="group" aria-label={label}>
+    <button type="button" onClick={() => onChange(Math.max(min, (Number(value) || 0) - step))} aria-label="Less">−</button>
+    <span className="wz-qty" aria-live="polite">{Number(value) || 0}</span>
+    <button type="button" onClick={() => onChange(Math.min(max, (Number(value) || 0) + step))} aria-label="More">+</button>
+  </div>
+);
 
-const FALLBACK_VIDEOS = [
-  { id: "video-feature", title: "4K Cinematic Wedding Feature Film (15-20 min)", price: 10000, turnaround: "5-7 Days" },
-  { id: "video-traditional", title: "Traditional Long-Form Documentary (2-3 hrs)", price: 12000, turnaround: "7-10 Days" },
-  { id: "video-teaser", title: "3-5 Min 4K Cinematic Teaser Trailer", price: 6000, turnaround: "48-72 Hrs" },
-  { id: "video-sde", title: "Same-Day Edit (SDE) Reception Screening", price: 12000, turnaround: "Same Evening" },
-  { id: "video-reels", title: "Viral Instagram Reels & Shorts Pack (5 Reels)", price: 3500, turnaround: "48 Hrs" },
-  { id: "video-audio", title: "Audio Mixing, Noise Cleanup & Devotional Score", price: 3000, turnaround: "24-48 Hrs" }
-];
+/** Gold switch row (engraving / express). Real switch semantics. */
+const ToggleRow = ({ checked, onChange, icon, title, badge, sub, testid }) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    data-testid={testid}
+    onClick={() => onChange(!checked)}
+    className={`wz-toggle-row ${checked ? 'on' : ''}`}
+  >
+    <span className="wz-toggle-track" aria-hidden="true"><span className="wz-toggle-knob" /></span>
+    <span className="wz-toggle-icon">{icon}</span>
+    <span className="wz-toggle-main">
+      <span className="wz-toggle-title">{title} {badge && <em className="wz-toggle-badge">{badge}</em>}</span>
+      {sub && <span className="wz-toggle-sub">{sub}</span>}
+    </span>
+  </button>
+);
 
-const FALLBACK_FLEX = [
-  { id: "flex-whatsapp", title: "60s 4K WhatsApp Animated Video Invitation", price: 1800 },
-  { id: "flex-patrika", title: "Traditional Gold Foil Wedding Patrika (100 Cards)", price: 4500 },
-  { id: "flex-mandap", title: "Grand Mandap & Entrance Flex Banner (10×8 ft)", price: 1800 },
-  { id: "flex-hoarding", title: "Highway & Roadside Wedding Hoarding (40×20 ft)", price: 4200 },
-  { id: "flex-standee", title: "Welcome Roll-Up Standee with Aluminum Stand (6×2.5 ft)", price: 1400 }
-];
+const fmt = (n) => `₹${Number(n || 0).toLocaleString('en-IN')}`;
+
+/* Bilingual micro-dictionary (module scope — avoids TDZ issues in useMemo) */
+function tService(key, lang) {
+  const M = {
+    edit_print: lang === 'TE' ? 'ఎడిటింగ్ + ప్రింటింగ్' : 'Editing + Printing',
+    only_editing: lang === 'TE' ? 'ఫోటో ఎడిటింగ్ మాత్రమే' : 'Photo Editing only',
+    only_printing: lang === 'TE' ? 'ఆల్బమ్ ప్రింటింగ్ మాత్రమే' : 'Album Printing only',
+    standalone_services: lang === 'TE' ? 'వీడియో / ఇన్విటేషన్ / ఫ్లెక్స్' : 'Video / Invitation / Flex',
+  };
+  return M[key] || key;
+}
+
+const tIncluded = (lang) => (lang === 'TE' ? 'ఇన్‌క్లూడెడ్' : 'Included');
+
+/* ─────────────────────────── main component ─────────────────────────── */
 
 export default function InstantEstimator({
   eyebrow = '✦ ANDHRA PRADESH #1 POST-PRODUCTION HUB ✦',
-  title = 'Instant Album & Video Cost Estimator',
-  subtitle = 'Customize your dimensions, multi-sheet material mix, cover finishes, and cinema video options for real-time pricing and guaranteed SLA schedules.',
-  ctaText = 'Lock In Estimate & Start Order',
-  ctaLink = '/order'
+  title = 'Wedding Album & Video — Instant Quote',
+  subtitle = 'Answer 3 simple questions. Get an honest, itemised price — edited, printed and delivered to your home.',
+  ctaText = 'Start My Order',
+  ctaLink = '/booking',
 }) {
   const { content } = useContent();
-
   const catalog = content?.global?.servicesCatalog || content?.servicesCatalog;
-  
-  const albumSizes = useMemo(() => {
-    return catalog?.albumPrinting?.albumSizes?.length ? catalog.albumPrinting.albumSizes : FALLBACK_SIZES;
-  }, [catalog]);
+  const cat = useMemo(() => normaliseCatalog(catalog), [catalog]);
 
-  const sheetStyles = useMemo(() => {
-    return catalog?.albumPrinting?.sheetStyles?.length ? catalog.albumPrinting.sheetStyles : FALLBACK_SHEETS;
-  }, [catalog]);
+  const { lang, toggleLang } = useLanguage();
+  const [step, setStep] = useState(1);
+  const [intent, setIntent] = useState(SERVICE_INTENTS.EDIT_PRINT);
 
-  const videoServices = useMemo(() => {
-    return catalog?.videoEditing?.length 
-      ? catalog.videoEditing.map(v => ({ id: v.id, title: v.title, price: v.clientPrice || 6000, turnaround: v.turnaround || '3-5 Days' }))
-      : FALLBACK_VIDEOS;
-  }, [catalog]);
+  /* SysAdmin bundled packages (fallback to curated estimator presets when offline) */
+  const [livePackages, setLivePackages] = useState([]);
+  const [appliedPackage, setAppliedPackage] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    loadPackages().then((rows) => { if (alive && rows.length) setLivePackages(rows); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
-  const flexItems = useMemo(() => {
-    return catalog?.invitationsAndFlex?.length
-      ? catalog.invitationsAndFlex.map(f => ({ id: f.id, title: f.title, price: f.clientPrice || 1800 }))
-      : FALLBACK_FLEX;
-  }, [catalog]);
-
-  // Orientation filter state for album sizes
-  const [sizeFilter, setSizeFilter] = useState('all'); // 'all' | 'landscape' | 'vertical' | 'square' | 'pocket'
-
-  // Estimator Selection States
-  const [selectedSizeId, setSelectedSizeId] = useState('size-12x36');
-  
-  // Sheet Selection Mode: 'single' | 'multi'
-  const [sheetMode, setSheetMode] = useState('multi'); // default to Indian market multi-sheet standard
+  /* Album setup */
+  const [sizeFilter, setSizeFilter] = useState('all');
+  const [sizeId, setSizeId] = useState('size-12x36');
+  const [pages, setPages] = useState(60);
+  const [photos, setPhotos] = useState('');
+  const [finishMode, setFinishMode] = useState('mix'); // 'single' | 'mix'
   const [singleSheetId, setSingleSheetId] = useState('metallic-gold');
-  
-  // Multi-sheet selection map: sheetId -> count
-  const [multiSheetAllocations, setMultiSheetAllocations] = useState({
-    'metallic-gold': 12, // Muhurtham & Talambralu
-    'royal-velvet': 12,  // Reception & Candid Portraits
-    'pure-silk': 6       // Sacred Pattu & Saptapadi
-  });
+  const [mix, setMix] = useState({ 'metallic-gold': 12, 'royal-velvet': 12, 'pure-silk': 6 });
 
-  const [totalSheetsCount, setTotalSheetsCount] = useState(30); // 30 sheets = 60 pages
-  const [selectedCoverId, setSelectedCoverId] = useState('acrylic');
-  const [selectedVideoIds, setSelectedVideoIds] = useState([]);
-  const [selectedFlexIds, setSelectedFlexIds] = useState([]);
-  const [isExpressDelivery, setIsExpressDelivery] = useState(false);
+  /* Cover & extras */
+  const [coverId, setCoverId] = useState('acrylic');
+  const [engrave, setEngrave] = useState(false);
+  const [parentBooks, setParentBooks] = useState(0);
+  const [express, setExpress] = useState(false);
+  const [videos, setVideos] = useState({});
+  const [flex, setFlex] = useState({});
 
-  // Active category tab in estimator controls
-  const [activeTab, setActiveTab] = useState('album'); // 'album' | 'video' | 'flex'
+  /* Contact (optional; flows into booking + WhatsApp) */
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
 
-  // Filtered album sizes based on orientation filter
-  const filteredSizes = useMemo(() => {
-    if (sizeFilter === 'all') return albumSizes;
-    return albumSizes.filter(s => s.orientation === sizeFilter);
-  }, [albumSizes, sizeFilter]);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const cardRef = useRef(null);
 
-  // Selected Objects
-  const selectedSize = albumSizes.find(s => s.id === selectedSizeId) || albumSizes[1] || FALLBACK_SIZES[1];
-  const selectedCover = FALLBACK_COVERS.find(c => c.id === selectedCoverId) || FALLBACK_COVERS[0];
+  const albumIntent = intent !== SERVICE_INTENTS.STANDALONE;
+  const printingIntent = intent === SERVICE_INTENTS.EDIT_PRINT || intent === SERVICE_INTENTS.ONLY_PRINTING;
 
-  // Toggle helper for multi-sheet selection
-  const toggleMultiSheet = (sheetId) => {
-    setMultiSheetAllocations(prev => {
+  /* Live quote — ONE source of truth (lib/pricing.js) */
+  const quote = useMemo(
+    () => priceQuote(
+      { intent, sizeId, pages, photos: Number(photos) || 0, finishMode, singleSheetId, mix, coverId, engrave, parentBooks, express, videos, flex },
+      catalog,
+    ),
+    [intent, sizeId, pages, photos, finishMode, singleSheetId, mix, coverId, engrave, parentBooks, express, videos, flex, catalog],
+  );
+
+  /* Pages are the master; in mix mode groups auto-scale to the new sheet count */
+  const changePages = (p) => {
+    setPages(p);
+    if (finishMode === 'mix') setMix((prev) => scaleMixToSheets(prev, Math.ceil(p / 2)));
+  };
+
+  /* Absolute-count setter for a mix row (kept even; ≥1 group guaranteed) */
+  const setMixCount = (id, count) => {
+    if ((Number(count) || 0) === 0 && Object.keys(mix).length <= 1) return;
+    let v = Math.max(0, Math.min(60, Number(count) || 0));
+    if (v % 2 !== 0) v += 1;
+    const next = { ...mix };
+    if (v === 0) delete next[id]; else next[id] = v;
+    setMix(next);
+    setPages(Object.values(next).reduce((s, n) => s + n, 0) * 2);
+  };
+
+  const applyPreset = (preset) => {
+    const presets = {
+      'royal-ap': { 'metallic-gold': 14, 'royal-velvet': 12, 'pure-silk': 6 },
+      archival: { 'royal-velvet': 18, 'non-tearable': 12 },
+      fashion: { 'crystal-gloss': 15, 'matte-linen': 15 },
+      // How most AP studios actually allocate: ~26 standard sheets + a few premium
+      'standard-30': { 'ntr-matte': 24, 'non-tearable': 2, 'metallic-gold': 2, 'royal-velvet': 2 },
+    };
+    setMix(scaleMixToSheets(presets[preset], Math.ceil(pages / 2)));
+    setFinishMode('mix');
+  };
+
+  const toggleVideo = (id) => {
+    setVideos((prev) => {
       const next = { ...prev };
-      if (next[sheetId]) {
-        // Only delete if there is at least 1 other sheet selected
-        if (Object.keys(next).length > 1) {
-          delete next[sheetId];
-        }
-      } else {
-        // Add with default 8 sheets
-        next[sheetId] = 8;
-      }
+      if (next[id]) delete next[id]; else next[id] = 1;
       return next;
     });
   };
 
-  const updateSheetAllocation = (sheetId, count) => {
-    const val = Math.max(2, Math.min(60, Number(count) || 2));
-    setMultiSheetAllocations(prev => ({
-      ...prev,
-      [sheetId]: val
-    }));
-  };
-
-  // Indian Wedding Preset Combos
-  const applyPresetCombo = (presetKey) => {
-    setSheetMode('multi');
-    if (presetKey === 'royal-ap') {
-      setMultiSheetAllocations({
-        'metallic-gold': 14,
-        'royal-velvet': 12,
-        'pure-silk': 6
-      });
-      setTotalSheetsCount(32);
-    } else if (presetKey === 'archival-longevity') {
-      setMultiSheetAllocations({
-        'royal-velvet': 18,
-        'non-tearable': 12
-      });
-      setTotalSheetsCount(30);
-    } else if (presetKey === 'fashion-fineart') {
-      setMultiSheetAllocations({
-        'crystal-gloss': 15,
-        'matte-linen': 15
-      });
-      setTotalSheetsCount(30);
+  /* Scroll near the card top (not the page top) when the step changes */
+  useEffect(() => {
+    if (cardRef.current && step > 1) {
+      const y = cardRef.current.getBoundingClientRect().top + window.scrollY - 110;
+      if (Math.abs(window.scrollY - y) > 40) window.scrollTo({ top: y, behavior: 'smooth' });
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
-  // Toggle helpers for video & flex
-  const toggleVideo = (id) => {
-    setSelectedVideoIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
+  /* Deep-link contract → /booking (BookingPage parses ?service&size&pages&…) */
+  const orderUrl = useMemo(() => {
+    const p = new URLSearchParams();
+    p.set('service', intent);
+    p.set('size', sizeId);
+    p.set('pages', String(pages));
+    p.set('sheets', String(quote.sheets));
+    if (photos) p.set('photos', String(photos));
+    p.set('finishmode', finishMode);
+    p.set('finish', finishMode === 'mix'
+      ? Object.entries(mix).filter(([, n]) => n > 0).map(([id, n]) => `${id}:${n}`).join('+')
+      : singleSheetId);
+    p.set('cover', coverId);
+    if (engrave) p.set('engrave', '1');
+    if (parentBooks > 0) p.set('parentbooks', String(parentBooks));
+    if (express) p.set('express', '1');
+    if (name) p.set('name', name);
+    if (phone) p.set('phone', phone);
+    if (city) p.set('city', city);
+    p.set('price', String(quote.total));
+    return `${ctaLink}?${p.toString()}`;
+  }, [intent, sizeId, pages, photos, finishMode, mix, singleSheetId, coverId, engrave, parentBooks, express, name, phone, city, quote, ctaLink]);
 
-  const toggleFlex = (id) => {
-    setSelectedFlexIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  };
-
-  // Calculation logic supporting Multi-Sheet Hybrid combinations
-  const calculation = useMemo(() => {
-    const baseAlbumPrice = selectedSize.clientBasePrice || 12500;
-    const coverExtra = selectedCover.extra || 0;
-
-    let computedSheetsCount = totalSheetsCount;
-    let sheetCostBreakdown = [];
-    let extraSheetsCost = 0;
-
-    if (sheetMode === 'multi') {
-      const selectedKeys = Object.keys(multiSheetAllocations);
-      computedSheetsCount = selectedKeys.reduce((sum, k) => sum + (multiSheetAllocations[k] || 0), 0);
-
-      // In Indian album pricing, baseline 30 sheets is covered by baseAlbumPrice.
-      // Weighted per-sheet cost calculation for multi-sheet mixes:
-      sheetCostBreakdown = selectedKeys.map(k => {
-        const sheetObj = sheetStyles.find(s => s.id === k) || FALLBACK_SHEETS[0];
-        const count = multiSheetAllocations[k] || 0;
-        const rate = sheetObj.clientPricePerSheet || 110;
-        return {
-          id: k,
-          title: sheetObj.title,
-          count,
-          rate,
-          total: count * rate,
-          ritualSection: sheetObj.ritualSection || sheetObj.bestFor
-        };
-      });
-
-      // Extra sheets above base 30 calculated proportionally
-      const extraSheets = Math.max(0, computedSheetsCount - 30);
-      const avgRate = sheetCostBreakdown.reduce((sum, item) => sum + item.rate, 0) / (sheetCostBreakdown.length || 1);
-      extraSheetsCost = Math.round(extraSheets * avgRate);
-    } else {
-      const singleObj = sheetStyles.find(s => s.id === singleSheetId) || sheetStyles[0] || FALLBACK_SHEETS[0];
-      const rate = singleObj.clientPricePerSheet || 110;
-      const extraSheets = Math.max(0, totalSheetsCount - 30);
-      extraSheetsCost = extraSheets * rate;
-      sheetCostBreakdown = [{
-        id: singleObj.id,
-        title: singleObj.title,
-        count: totalSheetsCount,
-        rate,
-        total: totalSheetsCount * rate,
-        ritualSection: "100% of Album Pages"
-      }];
-    }
-
-    // Video Services total
-    const videoCost = selectedVideoIds.reduce((sum, id) => {
-      const match = videoServices.find(v => v.id === id);
-      return sum + (match ? match.price : 0);
-    }, 0);
-
-    // Flex items total
-    const flexCost = selectedFlexIds.reduce((sum, id) => {
-      const match = flexItems.find(f => f.id === id);
-      return sum + (match ? match.price : 0);
-    }, 0);
-
-    // Express priority fee
-    const expressCost = isExpressDelivery ? 1999 : 0;
-
-    const total = baseAlbumPrice + coverExtra + extraSheetsCost + videoCost + flexCost + expressCost;
-
-    let turnaroundText = '5-7 Business Days (Standard Air/Ground Courier)';
-    if (isExpressDelivery) {
-      turnaroundText = '48-72 Hours Express SLA (Priority Courier Dispatch)';
-    } else if (selectedVideoIds.includes('video-sde')) {
-      turnaroundText = 'Same Evening for SDE + 5 Days for Master Album';
-    }
-
-    return {
-      total,
-      baseAlbumPrice,
-      coverExtra,
-      computedSheetsCount,
-      extraSheetsCost,
-      sheetCostBreakdown,
-      videoCost,
-      flexCost,
-      expressCost,
-      turnaround: turnaroundText,
-      photoCapacity: computedSheetsCount * 5
-    };
-  }, [selectedSize, sheetMode, singleSheetId, multiSheetAllocations, totalSheetsCount, selectedCover, selectedVideoIds, selectedFlexIds, isExpressDelivery, sheetStyles, videoServices, flexItems]);
-
-  // Construct WhatsApp enquiry message with full customized quote
-  const whatsappQuoteText = useMemo(() => {
-    const sheetDetails = calculation.sheetCostBreakdown.map(
-      s => `• ${s.title}: ${s.count} షీట్లు (${s.ritualSection})`
-    ).join('\n');
-
+  /* WhatsApp-able quote (Telugu when lang=TE) */
+  const waText = useMemo(() => {
+    const L = lang === 'TE';
+    const mixLines = (quote.allocation || [])
+      .map((a) => `• ${a.count} sh — ${a.title}${a.ritualSection ? ` (${a.ritualSection})` : ''}`)
+      .join('\n');
     const lines = [
-      `నమస్కారం! నేను WeddingAlbums.in ద్వారా ఈ కొటేషన్ తయారు చేసుకున్నాను:`,
-      `📖 ఆల్బమ్ సైజు: ${selectedSize.title} (${selectedSize.openSpread})`,
-      `✨ షీట్ మెటీరియల్స్:\n${sheetDetails}`,
-      `📄 మొత్తం షీట్లు: ${calculation.computedSheetsCount} షీట్లు (${calculation.computedSheetsCount * 2} పేజీలు)`,
-      `💎 కవర్ ఫినిష్: ${selectedCover.label}`,
-      selectedVideoIds.length ? `🎥 వీడియో సర్వీసెస్: ${selectedVideoIds.length} ఎంపిక చేయబడ్డాయి` : null,
-      selectedFlexIds.length ? `💌 ఫ్లెక్స్ & ఇన్విటేషన్స్: ${selectedFlexIds.length} ఎంపిక చేయబడ్డాయి` : null,
-      `💰 మొత్తం కొటేషన్: ₹${calculation.total.toLocaleString('en-IN')}`,
-      `⏱️ డెలివరీ: ${calculation.turnaround}`
+      L ? 'నమస్కారం! WeddingAlbums.in లో నా కొటేషన్:' : 'Namaste! My quote from WeddingAlbums.in:',
+      `📌 ${tService(intent, lang)}`,
+      quote.albumInScope
+        ? `📖 ${quote.size.title} · ${quote.pages} pages (${quote.sheets} sheets)`
+        : (L ? '📖 ఆల్బమ్ లేదు — అదనపు సేవలు' : '📖 No album — extras only'),
+      quote.albumInScope && mixLines ? `✨ ${L ? 'పేజీ ఫినిష్' : 'Page finish'}:\n${mixLines}` : null,
+      quote.albumInScope ? `💎 ${L ? 'కవర్' : 'Cover'}: ${quote.cover.label}` : null,
+      engrave ? (L ? '🖊 24K పేరు ఎన్‌గ్రేవింగ్' : '24K name engraving') : null,
+      parentBooks > 0 ? (L ? `📚 పేరెంట్ బుక్స్ × ${parentBooks}` : `Parent books × ${parentBooks}`) : null,
+      express ? (L ? '⚡ 48 గంటల ఎక్స్‌ప్రెస్' : '48h Express') : null,
+      city ? `📍 ${city}` : null,
+      name ? `🙂 ${name}${phone ? ` · ${phone}` : ''}` : null,
+      `💰 ${fmt(quote.total)} (${L ? 'GST తో' : 'incl. GST'})`,
+      `🕒 ${quote.deliveryEtaText}`,
     ].filter(Boolean);
     return lines.join('\n');
-  }, [selectedSize, calculation, selectedCover, selectedVideoIds, selectedFlexIds]);
+  }, [lang, quote, engrave, parentBooks, express, city, name, phone, intent]);
+
+  const steps = albumIntent
+    ? [lang === 'TE' ? 'మీకు ఏమి కావాలి' : 'What you need',
+       lang === 'TE' ? 'మీ ఆల్బమ్' : 'Your album',
+       lang === 'TE' ? 'కవర్ & అదనపు' : 'Cover & extras']
+    : [lang === 'TE' ? 'మీకు ఏమి కావాలి' : 'What you need',
+       lang === 'TE' ? 'వీడియో సేవలు' : 'Video services',
+       lang === 'TE' ? 'సేవలు & మోతాదు' : 'Extras & delivery'];
+
+  /* ────────────────────────── step renderers ────────────────────────── */
+
+  const renderSizes = () => {
+    const sizes = cat.albumSizes.filter((s) => s.orientation !== 'pocket');
+    const filtered = sizeFilter === 'all' ? sizes : sizes.filter((s) => s.orientation === sizeFilter);
+    const filters = [
+      { id: 'all', en: 'All', te: 'అన్నీ' },
+      { id: 'landscape', en: 'Landscape', te: 'ల్యాండ్‌స్కేప్' },
+      { id: 'vertical', en: 'Portrait', te: 'పోర్ట్రెయిట్' },
+      { id: 'square', en: 'Square', te: 'స్క్వేర్' },
+    ];
+    const sel = filtered.find((s) => s.id === sizeId) || filtered[0];
+    return (
+      <div className="est-block">
+        <div className="est-block-label">
+          <span>{lang === 'TE' ? 'ఆల్బమ్ సైజు' : 'Album size'}</span>
+          <span className="est-block-hint">
+            {`${sizes.length} ${lang === 'TE' ? 'ఫార్మాట్లు · నిజమైన కొలతలు' : 'formats · true proportions'}`}
+          </span>
+        </div>
+        <div className="est-pills" role="group" aria-label="Orientation filter">
+          {filters.map((f) => (
+            <button key={f.id} type="button" className={`wz-chip ${sizeFilter === f.id ? 'on' : ''}`} onClick={() => setSizeFilter(f.id)}>
+              {lang === 'TE' ? f.te : f.en}
+            </button>
+          ))}
+        </div>
+        <div className="est-size-grid" role="radiogroup" aria-label="Album size">
+          {filtered.map((s) => (
+            <OptionCard
+              key={s.id}
+              selected={sizeId === s.id}
+              onClick={() => setSizeId(s.id)}
+              title={lang === 'TE' && s.telugu ? s.telugu : s.title}
+              sub={s.closedSize ? `${s.openSpread} → ${s.closedSize}` : s.openSpread}
+              meta={`${fmt(s.clientBasePrice)}${s.tag ? ` · ${s.tag}` : ''} · ≈${fmt(perSheetOfSize(s.clientBasePrice))}/${lang === 'TE' ? 'షీట్' : 'sh'}`}
+              badge={s.popular ? (lang === 'TE' ? 'జనప్రియం' : 'Popular') : null}
+            />
+          ))}
+        </div>
+        {sel && (
+          <div className="est-size-detail" key={sel.id}>
+            <div className="est-size-detail-head">
+              <strong>{lang === 'TE' && sel.telugu ? sel.telugu : sel.title}</strong>
+              {sel.tradeName && <em className="est-trade-tag">✦ {sel.tradeName}</em>}
+            </div>
+            <div className="est-size-meta">
+              {sel.closedSize && (
+                <span>{lang === 'TE' ? `మూసిన పుస్తకం: ${sel.closedSize}` : `Closed book: ${sel.closedSize}`}</span>
+              )}
+              <span>{lang === 'TE' ? `బేస్: ${fmt(sel.clientBasePrice)}` : `Base: ${fmt(sel.clientBasePrice)}`}</span>
+              <span className="est-size-sheets">
+                {lang === 'TE'
+                  ? `≈ ${fmt(perSheetOfSize(sel.clientBasePrice))}/షీట్ · 30 షీట్లు ఇందులో`
+                  : `≈ ${fmt(perSheetOfSize(sel.clientBasePrice))}/sheet · 30 sheets in base`}
+              </span>
+            </div>
+            {(lang === 'TE' ? (sel.teluguNote || sel.description) : sel.description) && (
+              <p>{lang === 'TE' ? (sel.teluguNote || sel.description) : sel.description}</p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderPagesBlock = () => (
+    <div className="est-block">
+      <div className="est-block-label">
+        <span>{lang === 'TE' ? 'ఎన్ని పేజీలు?' : 'How many pages?'}</span>
+        <span className="est-block-hint">{lang === 'TE' ? '60 పేజీలు = 30 షీట్లు ప్రింటింగ్' : '60 pages = 30 printed sheets'}</span>
+      </div>
+      <SmartPageSlider
+        pages={pages}
+        onChange={changePages}
+        min={PRICE_RULES.PAGE_MIN}
+        max={PRICE_RULES.PAGE_MAX}
+        help={lang === 'TE'
+          ? `${pages} పేజీల ఆల్బమ్‌లో సుమారు ${pageCapacity(pages).photosComfort}-${pageCapacity(pages).photosComfort + 120} ఫోటోలు ఆరామంగా ఉంటాయి.`
+          : `A ${pages}-page album holds about ${pageCapacity(pages).photosComfort}-${pageCapacity(pages).photosComfort + 120} photos comfortably.`}
+      />
+    </div>
+  );
+
+  const renderFinish = () => {
+    if (!printingIntent) return null;
+    const sel = cat.sheetStyles.find((x) => x.id === singleSheetId) || cat.sheetStyles[0];
+    return (
+      <div className="est-block">
+        <div className="est-block-label">
+          <span>{lang === 'TE' ? 'పేజీ ఫినిష్ · షీట్ టైప్' : 'Page finish · sheet type'}</span>
+          <div className="est-pills inline">
+            <button type="button" className={`wz-chip ${finishMode === 'single' ? 'on' : ''}`} onClick={() => setFinishMode('single')}>
+              {lang === 'TE' ? 'ఒకే ఫినిష్' : 'Single finish'}
+            </button>
+            <button type="button" className={`wz-chip ${finishMode === 'mix' ? 'on' : ''}`} onClick={() => setFinishMode('mix')}>
+              {lang === 'TE' ? 'రిచువల్ మిక్స్' : 'Ritual mix'}
+            </button>
+          </div>
+        </div>
+
+        {/* Honesty note: what other studios give vs what WE let you choose */}
+        <p className="est-standard-note">
+          {lang === 'TE'
+            ? '💡 ఫోటోగ్రాఫర్లు సాధారణంగా 30 షీట్లలో ~26 స్టాండ‌ర్డ్ (NTR మ్యాట్) + ~4 ప్రీమియం ఇస్తూ ఉంటారు — మేమైతే ఆ విభజన మొత్తం మీ చేతుల్లో.'
+            : '💡 Most AP photographers give 30 sheets as ~26 standard (NTR Matte style) + ~4 premium. Here, the split is entirely your choice.'}
+        </p>
+
+        {finishMode === 'single' ? (
+          <>
+            <div className="est-finish-grid" role="radiogroup" aria-label="Page finish">
+              {cat.sheetStyles.map((s) => (
+                <OptionCard
+                  key={s.id}
+                  selected={singleSheetId === s.id}
+                  onClick={() => setSingleSheetId(s.id)}
+                  swatch={s.color}
+                  title={lang === 'TE' && s.telugu ? s.telugu : s.title}
+                  sub={s.alias || s.gsm}
+                  meta={`${fmt(s.clientPricePerSheet)}/${lang === 'TE' ? 'షీట్' : 'sheet'}`}
+                />
+              ))}
+            </div>
+            {sel && (
+              <div className="est-sheet-detail" key={sel.id}>
+                <div className="est-sheet-detail-head">
+                  <span className="est-sheet-swatch" style={{ background: sel.color }} aria-hidden="true" />
+                  <strong>{lang === 'TE' && sel.telugu ? sel.telugu : sel.title}</strong>
+                  {sel.tier && (
+                    <span className={`est-tier tier-${sel.tier}`}>
+                      {sel.tier === 'luxury' ? (lang === 'TE' ? 'లగ్జరీ' : 'Luxury')
+                        : sel.tier === 'special' ? (lang === 'TE' ? 'స్పెషల్' : 'Special')
+                          : (lang === 'TE' ? 'స్టాండ‌ర్డ్' : 'Standard')}
+                    </span>
+                  )}
+                  <span className="est-sheet-rate">
+                    {fmt(sel.clientPricePerSheet)}
+                    <i> /{lang === 'TE' ? 'షీట్' : 'sheet'}</i>
+                  </span>
+                </div>
+                {sel.alias && <em className="est-sheet-alias">{sel.alias}</em>}
+                {(lang === 'TE' ? (sel.teluguDesc || sel.description) : sel.description) && (
+                  <p>{lang === 'TE' ? (sel.teluguDesc || sel.description) : sel.description}</p>
+                )}
+                {Array.isArray(sel.points) && sel.points.length > 0 && (
+                  <ul className="est-sheet-points">
+                    {sel.points.map((pt) => (
+                      <li key={pt}><CheckCircle2 size={13} /> {pt}</li>
+                    ))}
+                  </ul>
+                )}
+                <div className="est-sheet-mini">
+                  {sel.gsm && <span>📄 {sel.gsm}</span>}
+                  {sel.waterResistance && <span>💧 {sel.waterResistance}</span>}
+                  {sel.bestFor && <span>✦ {lang === 'TE' ? 'సరైనది' : 'Best for'}: {sel.bestFor}</span>}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="est-mix">
+            <p className="est-mix-note">
+              {lang === 'TE'
+                ? 'గోల్డ్ = ముహూర్తం · వెల్వెట్ = రిసెప్షన్ · సిల్క్ = సప్తపది — ఆంధ్ర ఆల్బమ్స్ ఇలానే తయారవుతాయి.'
+                : 'Gold for Muhurtham · Velvet for Reception · Silk for Saptapadi — how AP albums are traditionally made.'}
+            </p>
+            <div className="est-pills">
+              <span className="est-pills-label">{lang === 'TE' ? 'AP కాంబోలు:' : 'AP combos:'}</span>
+              <button type="button" className="wz-chip" onClick={() => applyPreset('royal-ap')}>👑 {lang === 'TE' ? 'రాయల్ ట్రయో' : 'Royal Trio'}</button>
+              <button type="button" className="wz-chip" onClick={() => applyPreset('standard-30')}>🧑‍🔧 {lang === 'TE' ? 'ఫోటోగ్రాఫర్ స్టాండ‌ర్డ్' : 'Photographer Standard'}</button>
+              <button type="button" className="wz-chip" onClick={() => applyPreset('archival')}>🛡 {lang === 'TE' ? 'యాంటీ-టియర్' : 'Anti-tear'}</button>
+              <button type="button" className="wz-chip" onClick={() => applyPreset('fashion')}>🎨 {lang === 'TE' ? 'ఫ్యాషన్' : 'Fashion'}</button>
+            </div>
+            <div className="est-mix-rows">
+              {cat.sheetStyles.map((s) => {
+                const count = mix[s.id] || 0;
+                return (
+                  <div key={s.id} className={`est-mix-row ${count > 0 ? 'active' : ''}`} title={s.description || s.alias || ''}>
+                    <span className="est-mix-dot" style={{ background: s.color }} aria-hidden="true" />
+                    <span className="est-mix-name">
+                      {lang === 'TE' && s.telugu ? s.telugu : s.title}
+                      <em>{s.ritualSection || s.bestFor}</em>
+                    </span>
+                    <span className="est-mix-money">
+                      <em>{count > 0 ? `${count} ${lang === 'TE' ? 'షీట్లు' : 'sh'} · ${count * 2} ${lang === 'TE' ? 'పేజీలు' : 'pg'} · ${fmt(count * s.clientPricePerSheet)}` : `${fmt(s.clientPricePerSheet)}/${lang === 'TE' ? 'షీట్' : 'sh'}`}</em>
+                    </span>
+                    <Qty value={count} onChange={(n) => setMixCount(s.id, n)} max={30} step={2} label={`${s.title} sheets`} />
+                  </div>
+                );
+              })}
+            </div>
+            <p className="est-mix-sync">
+              {lang === 'TE'
+                ? 'పేజీల స్లయిడర్ కదిలిస్తే మిక్స్ తానంతట తానే నిష్పత్తిగా అనుగుణంగా మారుతుంది.'
+                : 'Drag the pages slider — your mix scales automatically and stays balanced.'}
+            </p>
+          </div>
+        )}
+
+        {/* Included lay-flat binding explainer (industry standard, always shown) */}
+        <div className="est-binding-note">
+          <strong>📐 {lang === 'TE' ? '100% పానరామిక్ లే-ఫ్లాట్ బైండింగ్ — ఉచితం' : '100% Panoramic Lay-Flat Binding — included free'}</strong>
+          <span>
+            {lang === 'TE'
+              ? 'యూరపియన్ హింజ్ 180° ఫ్లాట్‌గా తెరుచుకుంటుంది — సెంటర్ గట్టర్ లాస్ శూన్యం. పెద్ద మండప గ్రూప్ ఫోటోలు రెండు పేజీలలో సీమ్ లేకుండా నడుస్తాయి.'
+              : 'Patented European hinge mechanism opens completely flat at 180°. Zero center-gutter loss — big mandap group shots run across both pages without seam cuts.'}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  /* Live editing price for the editing panel (mirrors engine tiers) */
+  const editingTierInfo = () => {
+    const ph = Number(photos) || 0;
+    if (!ph) return null;
+    const last = PRICE_RULES.EDITING_TIERS[PRICE_RULES.EDITING_TIERS.length - 1];
+    const tier = PRICE_RULES.EDITING_TIERS.find((t) => ph <= t.maxPhotos) || last;
+    const over = Math.max(0, ph - last.maxPhotos);
+    return tier.price + over * PRICE_RULES.EDITING_PER_PHOTO_ABOVE;
+  };
+
+  /* ✍️ SECTION: Album Editing — photo count + its live price (bundle-aware) */
+  const renderEditingPanel = () => {
+    const tier = editingTierInfo();
+    return (
+      <div className="est-panel">
+        <div className="est-panel-head">
+          <span className="est-panel-title">✍️ {lang === 'TE' ? 'ఆల్బమ్ ఎడిటింగ్' : 'Album Editing'}</span>
+          {intent === SERVICE_INTENTS.EDIT_PRINT && (
+            <span className="est-panel-chip">
+              {lang === 'TE' ? 'బండిల్‌లో అంతర్భాగం · విలువ' : 'Included in bundle · worth'} {fmt(PRICE_RULES.EDITING_IN_BUNDLE)}
+            </span>
+          )}
+          {intent === SERVICE_INTENTS.ONLY_EDITING && tier ? (
+            <span className="est-panel-chip gold">{lang === 'TE' ? 'ఎడిటింగ్ కొటేషన్' : 'Editing quote'}: {fmt(tier)}</span>
+          ) : null}
+        </div>
+
+        {intent === SERVICE_INTENTS.ONLY_PRINTING ? (
+          <div className="est-panel-note warn">
+            <span>{lang === 'TE' ? 'మీరు "ప్రింటింగ్ మాత్రమే" ఎన్నుకున్నారు — మా టీమే ఎడిటింగ్ కూడా చేయాలా?' : 'You chose Printing only — want the same team to edit as well?'}</span>
+            <button type="button" className="wz-chip gold" onClick={() => setIntent(SERVICE_INTENTS.EDIT_PRINT)}>
+              ✍️ {lang === 'TE' ? 'ఎడిటింగ్ చేర్చండి — ఆదా ₹1,500' : 'Add editing — bundle & save ₹1,500'}
+            </button>
+          </div>
+        ) : (
+          <>
+            <PageBudgetAdvisor photos={photos} onPhotos={setPhotos} onApply={(p) => changePages(p)} />
+            <p className="est-panel-foot">
+              {lang === 'TE'
+                ? 'కటింగ్ · రిటచ్ · కలర్ గ్రేడింగ్ · ఆల్బమ్ డిజైన్ — RAW & JPEG అందుకుంటాం.'
+                : 'Culling · retouch · colour grading · album design — we accept RAW & JPEG.'}
+            </p>
+          </>
+        )}
+      </div>
+    );
+  };
+
+  /* 🖨️ SECTION: Album Printing — size + PAGES + sheet types (all first-class) */
+  const renderPrintingPanel = () => (
+    <div className="est-panel">
+      <div className="est-panel-head">
+        <span className="est-panel-title">🖨️ {lang === 'TE' ? 'ఆల్బమ్ ప్రింటింగ్' : 'Album Printing'}</span>
+        <span className="est-panel-chip">
+          {quote.albumInScope ? `${fmt(quote.size.clientBasePrice)} ${lang === 'TE' ? 'బేస్' : 'base'}` : ''}
+        </span>
+      </div>
+      <p className="est-panel-sub">
+        {lang === 'TE'
+          ? 'ధరలు షీట్లకు మాత్రమే — ప్రతి బేస్‌లో 30 షీట్లు ఇందులో; అదనపు షీట్ 2 పేజీలు = ఫినిష్ ₹/షీట్ ఫీజు.'
+          : 'Prices are for the sheets only — every base includes 30 sheets (60 pages); extra sheets are billed at the finish\'s ₹/sheet rate.'}
+      </p>
+      {renderSizes()}
+      {renderPagesBlock()}
+      {renderFinish()}
+    </div>
+  );
+
+  const renderAlbumStep = () => {
+    if (intent === SERVICE_INTENTS.ONLY_EDITING) {
+      return <>{renderEditingPanel()}{renderPagesBlock()}</>;
+    }
+    return <>{renderEditingPanel()}{renderPrintingPanel()}</>;
+  };
+
+  /* 🎬 PANEL: Video services — grouped by deliverable type, each pickable separately */
+  const renderVideoList = () => (
+    <div className="est-panel">
+      <div className="est-panel-head">
+        <span className="est-panel-title">🎬 {lang === 'TE' ? 'వీడియో సేవలు — ఏదైనా కాంబినేషన్' : 'Video services — any combination'}</span>
+        <span className="est-panel-chip">{lang === 'TE' ? 'వేరుగా ఎన్నుకోండి' : 'Pick separately'}</span>
+      </div>
+      {VIDEO_GROUPS.map((g) => {
+        const rows = cat.videos.filter((v) => (v.group || 'film') === g.id);
+        if (!rows.length) return null;
+        return (
+          <div key={g.id} className="est-vg">
+            <div className="est-vg-head">{g.icon} {lang === 'TE' ? g.te : g.en}</div>
+            <div className="est-extras">
+              {rows.map((v) => {
+                const qty = videos[v.id] || 0;
+                const maxQ = Number(v.qtyMax) > 1 ? Number(v.qtyMax) : (v.id === 'video-reels' ? PRICE_RULES.VIDEO_REELS_QTY_MAX : 1);
+                return (
+                  <div key={v.id} className={`est-extra-row ${qty > 0 ? 'active' : ''}`}>
+                    <button
+                      type="button"
+                      role={maxQ > 1 ? 'switch' : 'radio'}
+                      aria-checked={qty > 0}
+                      className="est-extra-main"
+                      onClick={() => {
+                        if (maxQ > 1) setVideos((p) => (qty ? { ...p, [v.id]: 0 } : { ...p, [v.id]: 1 }));
+                        else toggleVideo(v.id);
+                      }}
+                    >
+                      <span className="est-extra-check" aria-hidden="true">{qty > 0 ? '✓' : ''}</span>
+                      <span className="est-extra-title">
+                        {lang === 'TE' && v.telugu ? v.telugu : v.title}
+                        {(lang === 'TE' ? (v.descTe || v.desc) : v.desc) && (
+                          <i className="est-extra-desc">{lang === 'TE' ? (v.descTe || v.desc) : v.desc}</i>
+                        )}
+                        {v.turnaround && <em>{lang === 'TE' ? 'రెడీ' : 'Ready'}: {v.turnaround}</em>}
+                      </span>
+                      <span className="est-extra-price">+{fmt(v.price)}</span>
+                    </button>
+                    {qty > 0 && maxQ > 1 && (
+                      <Qty value={qty} onChange={(n) => setVideos((p) => ({ ...p, [v.id]: n }))} max={maxQ} label={`${v.title} qty`} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+      <p className="est-panel-foot">
+        {lang === 'TE'
+          ? 'వీడియోలు ఆల్బమ్‌తో లేదా వేరుగా — రెండూ ఒకే ఆర్డర్‌లో దారితీస్తాయి.'
+          : 'Videos ride the same order as your album, or stand alone — both lead to one checkout.'}
+      </p>
+    </div>
+  );
+
+  /* 📦 PANEL: Bundled packages — owner-configured in CMS Studio (uiadmin) or SysAdmin,
+     engine-priced per sheet (no marketing numbers). */
+  const renderPackagesPanel = () => {
+    const pkgs = (livePackages.length ? livePackages : DEFAULT_B2C_PACKAGES);
+    return (
+      <div className="est-panel est-packages">
+        <div className="est-panel-head">
+          <span className="est-panel-title">📦 {lang === 'TE' ? 'బండిల్ ప్యాకేజీలు' : 'Bundled packages'}</span>
+          <span className="est-panel-chip">
+            {livePackages.length ? (lang === 'TE' ? 'అడ్మిన్‌లో సెట్ చేయబడింది' : 'Set in Admin') : (lang === 'TE' ? 'క్యూరేటెడ్ ప్రిసెట్స్' : 'Curated presets')}
+          </span>
+        </div>
+        <p className="est-panel-note">
+          {lang === 'TE'
+            ? 'మీ టీమ్ ధరలు — CMS స్టూడియో · సిస్‌అడ్మిన్‌లో సెట్ చేయబడతాయి. ప్రతి కాంబో షీట్ లెక్కన లెక్కించబడుతుంది — అప్లై చేశాక ప్రతి ప్యానెల్ (ఎడిటింగ్ · ప్రింటింగ్ · షీట్లు · వీడియో) మీరే విడివిడిగా సరిచూసుకోవచ్చు.'
+            : 'Priced by you in CMS Studio · SysAdmin. Every combo is engine-priced per sheet — after applying, each panel (editing · printing · sheets · video) stays separately yours to tweak.'}
+        </p>
+        <div className="est-pkg-grid">
+          {pkgs.map((pkg) => {
+            const cfg = pkg.apply;
+            const quote = cfg ? pkgQuote(pkg, catalog) : null;
+            const alloc = cfg?.mix ? Object.entries(cfg.mix)
+              .map(([id, n]) => { const s = cat.sheetStyles.find((x) => x.id === id); return s ? `${n} ${s.title.replace(/\(.*/, '')}` : null; })
+              .filter(Boolean).join(' + ') : null;
+            const tierName = lang === 'TE' && pkg.tierTe ? pkg.tierTe : (pkg.tier || pkg.category || 'Package');
+            return (
+              <div key={pkg.id || pkg._id || tierName} className={`est-pkg ${appliedPackage === (pkg.id || pkg.tier) ? 'on' : ''}`} style={{ '--pkg-c': pkg.color || 'var(--brand)' }}>
+                <div className="est-pkg-top">
+                  <span className="est-pkg-tier">{tierName}</span>
+                  {pkg.popular && <span className="est-pkg-pop">⭐ {lang === 'TE' ? 'జనప్రియం' : 'Most popular'}</span>}
+                </div>
+                {quote ? (
+                  <div className="est-pkg-price">
+                    {fmt(quote.total)}
+                    <i> {lang === 'TE' ? '· ఇంజన్ షీట్‌-మేథ్స్' : '· priced by sheet math'}</i>
+                  </div>
+                ) : (
+                  <div className="est-pkg-price">{pkg.price || ''}<i> {pkg.suffix || ''}</i></div>
+                )}
+                {pkg.sysadmin && !quote && <span className="est-pkg-src">{lang === 'TE' ? 'సిస్‌అడ్మిన్ సూట్' : 'SysAdmin suite'}</span>}
+                {(lang === 'TE' ? (pkg.descTe || pkg.desc) : pkg.desc) && (
+                  <p className="est-pkg-desc">{lang === 'TE' ? (pkg.descTe || pkg.desc) : pkg.desc}</p>
+                )}
+                {alloc && (
+                  <div className="est-pkg-sheets">
+                    🧻 {alloc} · {Math.round((cfg.pages || 60) / 2)} {lang === 'TE' ? 'షీట్లు' : 'sheets'}
+                  </div>
+                )}
+                <ul className="est-pkg-feat">
+                  {(lang === 'TE' ? (pkg.featuresTe || pkg.features) : pkg.features || []).slice(0, 6).map((f) => (
+                    <li key={f}><CheckCircle2 size={13} /> {f}</li>
+                  ))}
+                </ul>
+                <div className="est-pkg-actions">
+                  {cfg ? (
+                    <button type="button" className="est-pkg-apply" onClick={() => applyPackage(pkg)}>
+                      ✨ {appliedPackage === (pkg.id || pkg.tier)
+                        ? (lang === 'TE' ? 'ప్యాకేజీ అప్లయి అయింది — సవరించండి' : 'Package applied — edit anything')
+                        : (lang === 'TE' ? 'అప్లై చేసి కస్టమైజ్' : 'Apply & customize')}
+                    </button>
+                  ) : (
+                    <a className="est-pkg-apply" href="/booking">
+                      {lang === 'TE' ? 'బుకింగ్ పేజీలో ఎంచుకోండి' : 'Select on the booking page'} →
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  /* One-tap package application — pre-wires every field, everything stays editable */
+  const applyPackage = (pkg) => {
+    const cfg = pkg.apply;
+    if (!cfg) return;
+    setIntent(cfg.intent || SERVICE_INTENTS.EDIT_PRINT);
+    if (cfg.sizeId) setSizeId(cfg.sizeId);
+    if (cfg.pages) setPages(cfg.pages);
+    if (cfg.mix) { setMix({ ...cfg.mix }); setFinishMode('mix'); }
+    if (cfg.videos) setVideos(resolveVideoMap(cfg.videos, cat.videos));
+    if (cfg.coverId) setCoverId(cfg.coverId);
+    setEngrave(!!cfg.engrave);
+    setParentBooks(Number(cfg.parentBooks) || 0);
+    setAppliedPackage(pkg.id || pkg.tier);
+    setStep(2);
+  };
+
+  const renderFlexList = () => (
+    <div className="est-block">
+      <div className="est-block-label"><span>{lang === 'TE' ? 'ఇన్విటేషన్స్ & ఫ్లెక్స్' : 'Invitations & flex'}</span></div>
+      <div className="est-extras">
+        {cat.flex.map((f) => {
+          const qty = flex[f.id] || 0;
+          const maxQ = Number(f.qtyMax) > 1 ? Number(f.qtyMax) : 1;
+          return (
+            <div key={f.id} className={`est-extra-row ${qty > 0 ? 'active' : ''}`}>
+              <button
+                type="button"
+                role={maxQ > 1 ? 'switch' : 'radio'}
+                aria-checked={qty > 0}
+                className="est-extra-main"
+                onClick={() => setFlex((p) => ({ ...p, [f.id]: qty ? 0 : 1 }))}
+              >
+                <span className="est-extra-check" aria-hidden="true">{qty > 0 ? '✓' : ''}</span>
+                <span className="est-extra-title">
+                  {f.title}
+                  {f.qtyLabel && <em>{f.qtyLabel}</em>}
+                </span>
+                <span className="est-extra-price">
+                  +{fmt(f.price)}{f.qtyUnit > 1 ? <small> / {f.qtyLabel || `${f.qtyUnit} cards`}</small> : null}
+                </span>
+              </button>
+              {qty > 0 && maxQ > 1 && (
+                <Qty value={qty} onChange={(n) => setFlex((p) => ({ ...p, [f.id]: n }))} max={maxQ} label={`${f.title} qty`} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderContactBlock = () => (
+    <div className="est-block">
+      <div className="est-block-label"><span>{lang === 'TE' ? 'మీ వివరాలు (ఐచ్ఛికం)' : 'Your details (optional)'}</span></div>
+      <div className="est-contact-grid">
+        <input className="est-input" value={name} onChange={(e) => setName(e.target.value)} placeholder={lang === 'TE' ? 'మీ పేరు' : 'Your name'} />
+        <input className="est-input" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^\d+ ]/g, ''))} inputMode="tel" type="tel" placeholder={lang === 'TE' ? 'వాట్సాప్ నంబర్' : 'WhatsApp number'} />
+        <input className="est-input" value={city} onChange={(e) => setCity(e.target.value)} placeholder={lang === 'TE' ? 'మీ నగరం (విజయవాడ…)' : 'Your city (Vijayawada…)'} />
+      </div>
+      <p className="est-trust-line">
+        <CheckCircle2 size={14} />
+        {lang === 'TE'
+          ? 'AP & TS అంతా ఇన్స్యూర్డ్ కొరియర్ ఫ్రీ · ప్రింటింగ్ ముందు WhatsApp-లో సాఫ్ట్-ప్రూఫ్ ఫ్రీ'
+          : 'Free insured courier across AP & TS · Free WhatsApp soft-proof before anything prints'}
+      </p>
+    </div>
+  );
+
+  const renderCoverStep = () => (
+    <>
+      {printingIntent && (
+        <div className="est-block">
+          <div className="est-block-label"><span>{lang === 'TE' ? 'కవర్ ఎంచుకోండి' : 'Pick your cover'}</span></div>
+          <div className="est-cover-grid" role="radiogroup" aria-label="Cover finish">
+            {cat.covers.map((c) => (
+              <OptionCard
+                key={c.id}
+                selected={quote.cover.id === c.id}
+                onClick={() => setCoverId(c.id)}
+                mockup={c.mockup}
+                title={c.label}
+                price={c.extra > 0 ? `+${fmt(c.extra)}` : tIncluded(lang)}
+              />
+            ))}
+          </div>
+          <ToggleRow
+            checked={engrave}
+            onChange={setEngrave}
+            title={lang === 'TE' ? '24K గోల్డ్ పేరు ఎన్‌గ్రేవింగ్' : '24K gold name engraving'}
+            sub={lang === 'TE' ? 'కవర్ పై జంట పేర్లు గోల్డ్ ఫాయిల్‌లో' : 'Couple names in gold foil on the cover'}
+            badge={`+${fmt(PRICE_RULES.ENGRAVE_FEE)}`}
+            icon="🖊"
+          />
+        </div>
+      )}
+
+      <div className="est-block">
+        <div className="est-block-label"><span>{lang === 'TE' ? 'కుటుంబ కాపీలు & డెలివరీ' : 'Family copies & delivery'}</span></div>
+
+        {printingIntent && (
+          <div className="est-parent-box">
+            <span className="est-parent-label">
+              {lang === 'TE' ? 'తల్లిదండ్రుల కోసం మినీ కాపీలు?' : 'Mini copies for parents & in-laws?'}
+              <em>{fmt(PRICE_RULES.PARENT_BOOK_PRICE)} · {lang === 'TE' ? 'బుక్' : 'book'} · {lang === 'TE' ? '2 లేదా ఎక్కువపై 10% ఆఫ్' : '10% off on 2+'}</em>
+            </span>
+            <Qty value={parentBooks} onChange={(n) => setParentBooks(n)} max={4} label="Parent books" />
+          </div>
+        )}
+
+        <ToggleRow
+          checked={express}
+          onChange={setExpress}
+          icon={<Truck size={16} />}
+          title={lang === 'TE' ? 'ఎక్స్‌ప్రెస్ ప్రొడక్షన్ (48 గంటలు)' : 'Express production (48h)'}
+          sub={`${lang === 'TE' ? 'సిద్ధం' : 'Ready by'}: ${quote.deliveryEtaText}`}
+          badge={`+${fmt(PRICE_RULES.EXPRESS_FEE)}`}
+        />
+      </div>
+
+      {albumIntent && renderVideoList()}
+      {renderFlexList()}
+      {renderContactBlock()}
+    </>
+  );
+
+  /* ─────────────────────────────── view ─────────────────────────────── */
+
+  const stepBody = step === 1
+    ? null
+    : step === 2
+      ? (albumIntent ? renderAlbumStep() : renderVideoList())
+      : renderCoverStep();
 
   return (
-    <section className="est-section" id="estimator">
+    <section className="est-section" id="estimator" ref={cardRef}>
       <div className="container">
-        {/* Section Header */}
         <div className="text-center est-header">
           <ScrollReveal>
             <div className="est-eyebrow">{eyebrow}</div>
@@ -300,494 +799,189 @@ export default function InstantEstimator({
           </ScrollReveal>
         </div>
 
-        {/* 2-Column Calculator Card */}
         <ScrollReveal delay={100}>
           <div className="est-card">
-            {/* Left Column: Interactive Tabbed Controls */}
+            {/* ── Controls ── */}
             <div className="est-controls">
-              {/* Pillar Selector Tabs */}
-              <div className="est-nav-tabs">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('album')}
-                  className={`est-tab-btn ${activeTab === 'album' ? 'active' : ''}`}
-                >
-                  <BookOpen size={16} />
-                  <span>1. Royal Wedding Album & Sheets</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('video')}
-                  className={`est-tab-btn ${activeTab === 'video' ? 'active' : ''}`}
-                >
-                  <Video size={16} />
-                  <span>2. Cinematic Video ({selectedVideoIds.length})</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('flex')}
-                  className={`est-tab-btn ${activeTab === 'flex' ? 'active' : ''}`}
-                >
-                  <Layers size={16} />
-                  <span>3. Flex & Invites ({selectedFlexIds.length})</span>
+              <div className="est-lang-row">
+                <div className="est-steps" aria-label={`Step ${step} of 3`}>
+                  {steps.map((label, i) => (
+                    <button
+                      key={label}
+                      type="button"
+                      className={`est-stepdot ${step === i + 1 ? 'now' : step > i + 1 ? 'done' : ''}`}
+                      onClick={() => setStep(i + 1)}
+                      aria-current={step === i + 1 ? 'step' : undefined}
+                    >
+                      <span className="est-stepdot-n">{step > i + 1 ? '✓' : i + 1}</span>
+                      <span className="est-stepdot-l">{label}</span>
+                    </button>
+                  ))}
+                </div>
+                <button type="button" className="est-lang-btn" onClick={toggleLang} aria-label="Toggle language">
+                  {lang === 'EN' ? 'తెలుగు' : 'English'}
                 </button>
               </div>
 
-              {/* TAB 1: ALBUM CONFIGURATOR */}
-              {activeTab === 'album' && (
-                <div className="est-tab-pane">
-                  {/* Orientation Filter */}
-                  <div className="est-control-group">
-                    <div className="est-control-label">
-                      <span>Choose Album Format & Spread Orientation</span>
-                      <span className="est-label-highlight">{selectedSize.tag || 'Indian Market Standard'}</span>
-                    </div>
-                    <div className="est-orientation-filters">
-                      {[
-                        { id: 'all', label: 'All Dimensions (10)' },
-                        { id: 'landscape', label: '🌅 Landscape / Panoramic (4)' },
-                        { id: 'vertical', label: '📱 Vertical / Portrait (3)' },
-                        { id: 'square', label: '📐 Square Formats (2)' },
-                        { id: 'pocket', label: '🎁 Parent Pocket (1)' }
-                      ].map(f => (
-                        <button
-                          key={f.id}
-                          type="button"
-                          onClick={() => setSizeFilter(f.id)}
-                          className={`est-filter-pill ${sizeFilter === f.id ? 'active' : ''}`}
-                        >
-                          {f.label}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Album Size Grid */}
-                    <div className="est-size-grid">
-                      {filteredSizes.map(s => (
-                        <button
-                          key={s.id}
-                          type="button"
-                          className={`est-size-card ${selectedSizeId === s.id ? 'active' : ''}`}
-                          onClick={() => setSelectedSizeId(s.id)}
-                        >
-                          <div className="est-size-badge-strip">
-                            <span className="est-size-ratio">{s.openSpread}</span>
-                            {s.popular && <span className="est-popular-tag">Telugu Favorite</span>}
-                          </div>
-                          <div className="est-size-title">{s.title}</div>
-                          <div className="est-size-price">Base: ₹{s.clientBasePrice?.toLocaleString('en-IN')}</div>
-                        </button>
-                      ))}
-                    </div>
+              {/* STEP 1 — service intent */}
+              {step === 1 && (
+                <div className="est-block" role="radiogroup" aria-label="Service type">
+                  <div className="est-block-label">
+                    <span>{lang === 'TE' ? 'మీకు ఏమి కావాలి?' : 'What do you need?'}</span>
+                    <span className="est-block-hint">{lang === 'TE' ? 'చెల్లింపు ముందు ఎప్పుడైనా మార్చుకోవచ్చు' : 'Change it any time before payment'}</span>
                   </div>
-
-                  {/* Multi-Sheet Selection Mode Switcher */}
-                  <div className="est-control-group">
-                    <div className="est-control-label">
-                      <span>Luxury Sheet Style & Material Selection</span>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setSheetMode('multi')}
-                          className={`text-xs px-3 py-1 rounded-full font-bold transition-all ${
-                            sheetMode === 'multi' 
-                              ? 'bg-[#D4AF37] text-black shadow' 
-                              : 'bg-white/5 text-gray-400 hover:text-white'
-                          }`}
-                        >
-                          ✨ Multi-Sheet Hybrid Mix (Indian Standard)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSheetMode('single')}
-                          className={`text-xs px-3 py-1 rounded-full font-bold transition-all ${
-                            sheetMode === 'single' 
-                              ? 'bg-[#D4AF37] text-black shadow' 
-                              : 'bg-white/5 text-gray-400 hover:text-white'
-                          }`}
-                        >
-                          Single Sheet
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* MULTI-SHEET HYBRID SELECTION (Indian Wedding Market Tradition) */}
-                    {sheetMode === 'multi' ? (
-                      <div className="multi-sheet-container">
-                        <div className="multi-sheet-explanation">
-                          💡 <strong>How it works in Indian Weddings:</strong> A luxury 30-page album divides rituals across specialized sheets: 
-                          <em>24K Gold for Muhurtham</em>, <em>Velvet for Reception</em>, and <em>Silk Pattu for Sacred Saree rituals</em>.
-                        </div>
-
-                        {/* Quick Presets */}
-                        <div className="multi-sheet-presets-strip">
-                          <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Popular AP Combos:</span>
-                          <button
-                            type="button"
-                            onClick={() => applyPresetCombo('royal-ap')}
-                            className="preset-btn"
-                          >
-                            👑 AP Royal Trio (Gold + Velvet + Pattu)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => applyPresetCombo('archival-longevity')}
-                            className="preset-btn"
-                          >
-                            🛡️ Velvet + Poly-Luster (Anti-Tear)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => applyPresetCombo('fashion-fineart')}
-                            className="preset-btn"
-                          >
-                            🎨 Crystal + Linen (Fashion)
-                          </button>
-                        </div>
-
-                        {/* Sheet Selection Cards with Checkboxes & Sheet Count Controls */}
-                        <div className="est-sheet-grid">
-                          {sheetStyles.map(sheet => {
-                            const isSelected = Boolean(multiSheetAllocations[sheet.id]);
-                            const count = multiSheetAllocations[sheet.id] || 0;
-
-                            return (
-                              <div
-                                key={sheet.id}
-                                className={`est-sheet-pill multi-mode ${isSelected ? 'active' : ''}`}
-                                onClick={() => toggleMultiSheet(sheet.id)}
-                              >
-                                <div className="flex items-center gap-2.5 w-full">
-                                  <div className="sheet-checkbox-wrap text-[#D4AF37]">
-                                    {isSelected ? <CheckSquare size={16} /> : <Square size={16} className="text-gray-500" />}
-                                  </div>
-                                  <div className="sheet-swatch-indicator" style={{ backgroundColor: sheet.color }} />
-                                  <div className="flex-1">
-                                    <div className="sheet-swatch-name">{sheet.title}</div>
-                                    <div className="sheet-swatch-meta">
-                                      <span>{sheet.gsm.split(' ')[0]} GSM</span>
-                                      <span>•</span>
-                                      <span className="text-[#D4AF37]">₹{sheet.clientPricePerSheet}/sheet</span>
-                                    </div>
-                                    <div className="text-[11px] text-gray-400 mt-0.5">
-                                      {sheet.ritualSection || sheet.bestFor}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Sheet Counter when selected */}
-                                {isSelected && (
-                                  <div className="sheet-count-adjuster" onClick={e => e.stopPropagation()}>
-                                    <label className="text-[11px] text-gray-300 font-semibold">Sheets for this ritual:</label>
-                                    <div className="flex items-center gap-2 mt-1">
-                                      <input
-                                        type="number"
-                                        min="2"
-                                        max="50"
-                                        step="2"
-                                        value={count}
-                                        onChange={e => updateSheetAllocation(sheet.id, e.target.value)}
-                                        className="sheet-count-input"
-                                      />
-                                      <span className="text-xs text-gray-400 font-mono">
-                                        sheets ({count * 2} pgs) = ₹{(count * sheet.clientPricePerSheet).toLocaleString('en-IN')}
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ) : (
-                      /* SINGLE SHEET SELECTION */
-                      <div className="est-sheet-grid">
-                        {sheetStyles.map(sheet => (
-                          <button
-                            key={sheet.id}
-                            type="button"
-                            className={`est-sheet-pill ${singleSheetId === sheet.id ? 'active' : ''}`}
-                            onClick={() => setSingleSheetId(sheet.id)}
-                            style={{ '--sheet-color': sheet.color }}
-                          >
-                            <div className="sheet-swatch-indicator" style={{ backgroundColor: sheet.color }} />
-                            <div className="sheet-swatch-info">
-                              <div className="sheet-swatch-name">{sheet.title}</div>
-                              <div className="sheet-swatch-meta">
-                                <span>{sheet.gsm.split(' ')[0]} GSM</span>
-                                <span>•</span>
-                                <span className="text-[#D4AF37]">₹{sheet.clientPricePerSheet}/sheet</span>
-                              </div>
-                              <div className="text-[11px] text-gray-400 mt-0.5">{sheet.bestFor}</div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                  <div className="est-intent-grid">
+                    <OptionCard
+                      selected={intent === SERVICE_INTENTS.EDIT_PRINT}
+                      onClick={() => setIntent(SERVICE_INTENTS.EDIT_PRINT)}
+                      icon={<Crown size={20} />}
+                      title={tService(SERVICE_INTENTS.EDIT_PRINT, lang)}
+                      sub={lang === 'TE' ? 'ఒకే చోట — జట్టు లేదు. AP జంటల్లో 10 పేర్ 9 ఇదే.' : 'One roof, zero coordination. 9 in 10 AP couples choose this.'}
+                      badge={lang === 'TE' ? 'మంచి వ్యాల్యూ' : 'BEST VALUE'}
+                    />
+                    <OptionCard
+                      selected={intent === SERVICE_INTENTS.ONLY_EDITING}
+                      onClick={() => setIntent(SERVICE_INTENTS.ONLY_EDITING)}
+                      icon={<Scissors size={20} />}
+                      title={tService(SERVICE_INTENTS.ONLY_EDITING, lang)}
+                      sub={lang === 'TE' ? 'ప్రింట్ లోకల్‌లో చేస్తారు / డిజైన్ సిద్ధం' : 'You print locally, or design is ready.'}
+                    />
+                    <OptionCard
+                      selected={intent === SERVICE_INTENTS.ONLY_PRINTING}
+                      onClick={() => setIntent(SERVICE_INTENTS.ONLY_PRINTING)}
+                      icon={<Printer size={20} />}
+                      title={tService(SERVICE_INTENTS.ONLY_PRINTING, lang)}
+                      sub={lang === 'TE' ? 'మీ డిజైన్ — మా రాయల్ ప్రెస్' : 'Your design, our Royal press & luxury finishes.'}
+                    />
+                    <OptionCard
+                      selected={intent === SERVICE_INTENTS.STANDALONE}
+                      onClick={() => setIntent(SERVICE_INTENTS.STANDALONE)}
+                      icon={<Film size={20} />}
+                      title={tService(SERVICE_INTENTS.STANDALONE, lang)}
+                      sub={lang === 'TE' ? 'ఆల్బమ్ కాదు — వీడియో, ఇన్విట్స్, ఫ్లెక్స్' : 'No album — just video, invites or flex.'}
+                    />
                   </div>
-
-                  {/* Sheets Slider (for Single Mode or Global scaling) */}
-                  {sheetMode === 'single' && (
-                    <div className="est-control-group">
-                      <div className="est-control-label">
-                        <span>Album Sheets Count (Pages = Sheets × 2)</span>
-                        <span className="est-label-highlight">
-                          {totalSheetsCount} Sheets ({totalSheetsCount * 2} Pages · ~{calculation.photoCapacity} Photos)
-                        </span>
-                      </div>
-                      <input
-                        type="range"
-                        min="20"
-                        max="70"
-                        step="5"
-                        value={totalSheetsCount}
-                        onChange={e => setTotalSheetsCount(Number(e.target.value))}
-                        className="est-range-input"
-                      />
-                      <div className="est-range-ticks">
-                        <span>20 Sheets (40 Pgs)</span>
-                        <span>30 Sheets (Base 60 Pgs)</span>
-                        <span>50 Sheets (100 Pgs)</span>
-                        <span>70 Sheets (140 Pgs)</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Master Cover Finish */}
-                  <div className="est-control-group">
-                    <div className="est-control-label">
-                      <span>Master Cover Finish</span>
-                      <span className="est-label-highlight">{selectedCover.label}</span>
-                    </div>
-                    <div className="est-choices">
-                      {FALLBACK_COVERS.map(c => (
-                        <button
-                          key={c.id}
-                          type="button"
-                          className={`est-choice-btn ${selectedCoverId === c.id ? 'active' : ''}`}
-                          onClick={() => setSelectedCoverId(c.id)}
-                        >
-                          <span>{c.label}</span>
-                          <span className="est-choice-sub">{c.sub}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  <p className="est-intent-foot">
+                    {lang === 'TE'
+                      ? 'క్లబ్ లేదా వేరు? ప్యాకేజీలు కింద ఉన్నాయి — లేదా ప్రతి సేవను వేరుగా ఎన్నుకోండి.'
+                      : 'Club it or split it? Packages are ready below — or configure each service separately.'}
+                  </p>
                 </div>
               )}
 
-              {/* TAB 2: CINEMATIC VIDEO ESTIMATOR */}
-              {activeTab === 'video' && (
-                <div className="est-tab-pane">
-                  <div className="est-control-group">
-                    <div className="est-control-label">
-                      <span>Select 4K Cinema Video Post-Production Services</span>
-                      <span className="est-label-highlight">Selected ({selectedVideoIds.length})</span>
-                    </div>
-                    <div className="est-addons">
-                      {videoServices.map(v => {
-                        const isChecked = selectedVideoIds.includes(v.id);
-                        return (
-                          <div
-                            key={v.id}
-                            className={`est-addon-item ${isChecked ? 'selected' : ''}`}
-                            onClick={() => toggleVideo(v.id)}
-                          >
-                            <div className="est-addon-label">
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => {}}
-                                className="est-checkbox"
-                              />
-                              <div>
-                                <div className="font-semibold text-sm text-white">{v.title}</div>
-                                <div className="text-xs text-gray-400">Turnaround: {v.turnaround}</div>
-                              </div>
-                            </div>
-                            <span className="est-addon-price">+₹{v.price.toLocaleString('en-IN')}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* 📦 SysAdmin bundled packages (step 1) */}
+              {step === 1 && renderPackagesPanel()}
 
-              {/* TAB 3: INVITATIONS & FLEX */}
-              {activeTab === 'flex' && (
-                <div className="est-tab-pane">
-                  <div className="est-control-group">
-                    <div className="est-control-label">
-                      <span>Telugu Wedding Invitations & Event Flex Signage</span>
-                      <span className="est-label-highlight">Selected ({selectedFlexIds.length})</span>
-                    </div>
-                    <div className="est-addons">
-                      {flexItems.map(f => {
-                        const isChecked = selectedFlexIds.includes(f.id);
-                        return (
-                          <div
-                            key={f.id}
-                            className={`est-addon-item ${isChecked ? 'selected' : ''}`}
-                            onClick={() => toggleFlex(f.id)}
-                          >
-                            <div className="est-addon-label">
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => {}}
-                                className="est-checkbox"
-                              />
-                              <div>
-                                <div className="font-semibold text-sm text-white">{f.title}</div>
-                              </div>
-                            </div>
-                            <span className="est-addon-price">+₹{f.price.toLocaleString('en-IN')}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* STEP 2 & 3 */}
+              {step > 1 && <div className="est-stepbody">{stepBody}</div>}
 
-              {/* Express Rush Option */}
-              <div className="est-express-toggle-box">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isExpressDelivery}
-                    onChange={e => setIsExpressDelivery(e.target.checked)}
-                    className="est-checkbox"
-                  />
-                  <div>
-                    <div className="font-bold text-sm text-white flex items-center gap-2">
-                      <Truck size={15} className="text-[#D4AF37]" />
-                      <span>Priority Express Delivery (48 Hours SLA)</span>
-                      <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-mono">+₹1,999</span>
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      Express rush production pipeline for tight Muhurtham schedules.
-                    </div>
-                  </div>
-                </label>
+              {/* nav */}
+              <div className="est-stepnav">
+                <button
+                  type="button"
+                  className="btn btn-outline est-back"
+                  style={{ visibility: step === 1 ? 'hidden' : 'visible' }}
+                  onClick={() => setStep((s) => Math.max(1, s - 1))}
+                >
+                  <ArrowLeft size={15} /> {lang === 'TE' ? 'వెనుకకు' : 'Back'}
+                </button>
+                {step < 3 ? (
+                  <button type="button" className="btn btn-gold-3d est-next" onClick={() => setStep((s) => s + 1)}>
+                    {lang === 'TE' ? 'ముందుకు' : 'Continue'} <ArrowRight size={15} />
+                  </button>
+                ) : (
+                  <Link to={orderUrl} className="btn btn-gold-3d est-next">
+                    {lang === 'TE' ? 'ఆర్డర్ మొదలుపెట్టండి' : ctaText} <ArrowRight size={15} />
+                  </Link>
+                )}
               </div>
             </div>
 
-            {/* Right Column: Live Price, Itemized Breakdown & WhatsApp CTA */}
+            {/* ── Desktop receipt rail ── */}
             <div className="est-output">
-              <div>
-                <div className="est-output-badge">
-                  <Sparkles size={14} />
-                  <span>Real-time Studio Investment Quote</span>
-                </div>
-
-                {/* Price Display */}
-                <div className="est-price-box">
-                  <div className="est-price-caption">Total Estimated Investment</div>
-                  <div className="est-price-val">₹{calculation.total.toLocaleString('en-IN')}</div>
-                  <div className="text-xs text-gray-400">
-                    Includes {calculation.computedSheetsCount} Sheets ({calculation.computedSheetsCount * 2} Pages) · Free Soft-Proofing
+              <div className="est-output-badge">
+                <Sparkles size={14} />
+                <span>{lang === 'TE' ? 'లైవ్ కొటేషన్' : 'Live itemised quote'}</span>
+              </div>
+              <div className="est-price-box">
+                <div className="est-price-val" aria-live="polite">{fmt(quote.total)}</div>
+                {quote.savings > 0 && (
+                  <div className="est-save-chip">
+                    👑 {lang === 'TE' ? 'ఆదా' : 'You save'} {fmt(quote.savings)} ({lang === 'TE' ? 'బండిల్' : 'bundle'})
                   </div>
+                )}
+                {appliedPackage && (() => {
+                  const pkg = livePackages.find((p) => (p.id || p.tier) === appliedPackage)
+                    || DEFAULT_B2C_PACKAGES.find((p) => (p.id || p.tier) === appliedPackage);
+                  return (
+                    <button
+                      type="button"
+                      className="est-pkg-chip"
+                      title={lang === 'TE' ? 'ప్యాకేజీ అనుబంధం తీసివేయి' : 'Detach package'}
+                      onClick={() => setAppliedPackage(null)}
+                    >
+                      📦 {lang === 'TE' && pkg?.tierTe ? pkg.tierTe : (pkg?.tier || appliedPackage)} ✕
+                    </button>
+                  );
+                })()}
+                <div className="est-price-meta">
+                  {quote.albumInScope
+                    ? `${quote.pages} ${lang === 'TE' ? 'పేజీలు' : 'pages'} · ${quote.sheets} ${lang === 'TE' ? 'షీట్లు' : 'sheets'}`
+                    : (lang === 'TE' ? 'అదనపు సేవలు' : 'Add-ons quote')}
                 </div>
-
-                {/* Itemized Live Breakdown */}
-                <div className="est-receipt-card">
-                  <div className="receipt-row">
-                    <span className="text-gray-300">{selectedSize.title.split('(')[0]}</span>
-                    <span className="font-mono text-white">₹{calculation.baseAlbumPrice.toLocaleString('en-IN')}</span>
-                  </div>
-
-                  {/* Multi-Sheet Detailed Receipt Breakdown */}
-                  <div className="my-1.5 py-1.5 border-t border-b border-white/5 flex flex-col gap-1">
-                    <span className="text-[10.5px] font-bold text-[#D4AF37] uppercase tracking-wider">Selected Sheets Mix:</span>
-                    {calculation.sheetCostBreakdown.map((s, idx) => (
-                      <div key={idx} className="flex justify-between items-center text-[11.5px] text-gray-300">
-                        <span>• {s.count} sh {s.title.split(' ')[0]} ({s.ritualSection})</span>
-                        <span className="font-mono text-white">₹{s.total.toLocaleString('en-IN')}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {calculation.coverExtra > 0 && (
-                    <div className="receipt-row">
-                      <span className="text-gray-300">{selectedCover.label}</span>
-                      <span className="font-mono text-white">+₹{calculation.coverExtra.toLocaleString('en-IN')}</span>
-                    </div>
-                  )}
-                  {calculation.videoCost > 0 && (
-                    <div className="receipt-row">
-                      <span className="text-gray-300">Video Services ({selectedVideoIds.length})</span>
-                      <span className="font-mono text-white">+₹{calculation.videoCost.toLocaleString('en-IN')}</span>
-                    </div>
-                  )}
-                  {calculation.flexCost > 0 && (
-                    <div className="receipt-row">
-                      <span className="text-gray-300">Flex & Invites ({selectedFlexIds.length})</span>
-                      <span className="font-mono text-white">+₹{calculation.flexCost.toLocaleString('en-IN')}</span>
-                    </div>
-                  )}
-                  {calculation.expressCost > 0 && (
-                    <div className="receipt-row">
-                      <span className="text-[#D4AF37]">Express 48h SLA</span>
-                      <span className="font-mono text-[#D4AF37]">+₹{calculation.expressCost.toLocaleString('en-IN')}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Turnaround Box */}
-                <div className="est-turnaround-box">
-                  <Clock size={20} className="est-turnaround-icon text-[#D4AF37]" />
-                  <div>
-                    <div className="est-turnaround-title">Estimated Turnaround Schedule</div>
-                    <div className="est-turnaround-days">{calculation.turnaround}</div>
-                  </div>
-                </div>
-
-                {/* Perks Checklist */}
-                <ul className="est-perks-list">
-                  <li className="est-perk-item">
-                    <CheckCircle2 size={15} className="est-perk-check" />
-                    <span>Free 3D Digital Flipbook Preview before printing</span>
-                  </li>
-                  <li className="est-perk-item">
-                    <CheckCircle2 size={15} className="est-perk-check" />
-                    <span>Free Doorstep Insured Express Courier across AP & TS</span>
-                  </li>
-                  <li className="est-perk-item">
-                    <CheckCircle2 size={15} className="est-perk-check" />
-                    <span>Unlimited soft-proof revisions on spread layouts</span>
-                  </li>
-                </ul>
               </div>
 
-              {/* Action Buttons */}
-              <div className="est-action-buttons">
-                <Link 
-                  to={`${ctaLink}?size=${selectedSize.id}&sheets=${calculation.computedSheetsCount}&cover=${selectedCover.id}&price=${calculation.total}`} 
-                  className="btn btn-gold-3d est-cta-btn"
-                >
-                  {ctaText} <ArrowRight size={16} />
-                </Link>
+              <QuoteReceipt quote={quote} lang={lang} />
 
+              <div className="est-output-actions">
+                <Link to={orderUrl} className="btn btn-gold-3d est-cta-btn">
+                  {lang === 'TE' ? 'ఆర్డర్ మొదలుపెట్టండి' : ctaText} <ArrowRight size={16} />
+                </Link>
                 <a
-                  href={`https://wa.me/919876543210?text=${encodeURIComponent(whatsappQuoteText)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`https://wa.me/919876543210?text=${encodeURIComponent(waText)}`}
+                  target="_blank" rel="noopener noreferrer"
                   className="btn btn-outline est-whatsapp-quote-btn"
                 >
-                  <MessageCircle size={16} />
-                  <span>Send Estimate to WhatsApp</span>
+                  <MessageCircle size={16} /> {lang === 'TE' ? 'వాట్సాప్‌కి పంపండి' : 'Send to WhatsApp'}
                 </a>
-
-                <div className="text-center mt-2 text-xs text-gray-500">
-                  No payment required to submit files and request a soft proof
+                <div className="est-nopay-note">
+                  {lang === 'TE'
+                    ? 'ఇప్పుడు చెల్లింపు అవసరం లేదు — మొదట ఫోటోలు షేర్ చేసి ఫ్రీ ప్రివ్యూ తీసుకోండి.'
+                    : 'No payment needed now — share photos first, get a free preview.'}
                 </div>
               </div>
             </div>
           </div>
         </ScrollReveal>
+
+        {/* ── Mobile sticky bar + expandable sheet ── */}
+        <div className="est-mobilebar" data-open={mobileOpen}>
+          <button type="button" className="est-mobilebar-main" onClick={() => setMobileOpen((v) => !v)} aria-expanded={mobileOpen}>
+            <span className="est-mobilebar-cap">
+              {quote.albumInScope ? `${quote.pages} ${lang === 'TE' ? 'పేజీలు' : 'pages'}` : (lang === 'TE' ? 'కొటేషన్' : 'Quote')}
+              <em>{lang === 'TE' ? 'మీ కొటేషన్' : 'Your quote'} · {quote.deliveryEtaText}</em>
+            </span>
+            <span className="est-mobilebar-total">{fmt(quote.total)}</span>
+            <span className="est-mobilebar-cta">
+              {mobileOpen ? (lang === 'TE' ? 'మూసివేయి ▲' : 'Close ▲') : (lang === 'TE' ? 'వివరాలు ▼' : 'Breakdown ▼')}
+            </span>
+          </button>
+          <div className="est-mobile-sheet">
+            <QuoteReceipt quote={quote} lang={lang} />
+            <div className="est-mobile-sheet-actions">
+              <a
+                href={`https://wa.me/919876543210?text=${encodeURIComponent(waText)}`}
+                target="_blank" rel="noopener noreferrer"
+                className="btn btn-outline est-whatsapp-quote-btn"
+              >
+                <MessageCircle size={15} /> {lang === 'TE' ? 'వాట్సాప్' : 'WhatsApp'}
+              </a>
+              <Link to={orderUrl} className="btn btn-gold-3d est-cta-btn">
+                {lang === 'TE' ? 'ఆర్డర్ మొదలుపెట్టండి' : ctaText} <ArrowRight size={15} />
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -56,7 +56,7 @@ const SURFACE_FINISHES = [
     gsm: "360 GSM Rigid",
     texture: "Micro-pearlescent satin texture with silky glide",
     shineType: "silk-weave",
-    color: "#D4AF37",
+    color: "var(--brand)",
     waterResistance: "100% Moisture Protected",
     bestFor: "Natural Indian skin tones, bridal makeup, elegant portraits",
     description: "Subtle satin micro-texture bridging glossy vibrancy and matte restraint. Renders warm Telugu bridal skin tones with natural radiance and zero harsh glare.",
@@ -94,7 +94,7 @@ const SURFACE_FINISHES = [
     gsm: "380 GSM Rigid",
     texture: "High-gloss metallic pearlized specular shimmer",
     shineType: "metallic",
-    color: "#E6C667",
+    color: "var(--brand-soft)",
     waterResistance: "100% Waterproof",
     bestFor: "Muhurtham, Talambralu, 22K Gold jewelry, Zari sarees",
     description: "Archival pearlized metallic film with micro-mica particles. Catches ambient room lighting to create an authentic 3D shimmer across gold jewelry, crowns, and Kanjeevaram zari.",
@@ -151,12 +151,12 @@ const SURFACE_FINISHES = [
     gsm: "400 GSM Heavy Core",
     texture: "Deep woven cross-hatch canvas & leather grain embossing",
     shineType: "organic-matte",
-    color: "#F59E0B",
+    color: "var(--warn)",
     waterResistance: "Tough Protective Film",
     bestFor: "Fine art weddings, royal palace themes, timeless family keepsakes",
     description: "Mechanically embossed with tactile canvas weave and soft leatherette relief. Transforms modern digital photographic prints into timeless oil-painting style royal masterpieces.",
     sampleCaption: "Deep Tactile Woven Canvas Embossed (+₹40/sheet)",
-    mockImage: "/images/client-album-preview.png"
+    mockImage: "/images/client-album-preview.svg"
   }
 ];
 
@@ -201,7 +201,7 @@ const BASE_SUBSTRATES = [
     lifespan: "100-Year Lab Optical Standard",
     pricingNote: "+₹40 / sheet upgrade over NTR base",
     description: "Genuine continuous-tone optical photographic paper exposed via RGB laser diode and wet chemical processing (RA-4). Completely free of digital ink-jet screening dots for unmatched micro-detail.",
-    color: "#10B981"
+    color: "var(--ok)"
   },
   {
     id: "cotton-rag",
@@ -214,7 +214,7 @@ const BASE_SUBSTRATES = [
     lifespan: "200+ Year Museum Conservation",
     pricingNote: "+₹60 / sheet upgrade over NTR base",
     description: "Museum-grade natural cotton rag paper crafted without optical brightening agents (OBAs). Velvety watercolor texture with archival acid-free rating for ultra-luxury bespoke fine art weddings.",
-    color: "#F59E0B"
+    color: "var(--warn)"
   }
 ];
 
@@ -280,7 +280,7 @@ export default function SheetStylesViewer() {
     <div className="sheet-mock-viewer-container" id="sheets-catalog">
       {/* Section Header */}
       <div className="sheet-viewer-header text-center">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-bold mb-3 tracking-widest uppercase">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--brand)]/15 border border-[var(--brand)]/30 text-[var(--brand)] text-xs font-bold mb-3 tracking-widest uppercase">
           <Sparkles size={14} />
           <span>Indian Professional Lab Sheet Taxonomy</span>
         </div>
@@ -298,7 +298,7 @@ export default function SheetStylesViewer() {
             onClick={() => setActiveDimension('finishes')}
             className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
               activeDimension === 'finishes'
-                ? 'bg-[#D4AF37] text-black shadow-lg shadow-[#D4AF37]/20 scale-105'
+                ? 'bg-[var(--brand)] text-black shadow-lg shadow-[var(--brand)]/20 scale-105'
                 : 'bg-white/10 text-gray-300 hover:bg-white/15 border border-white/10'
             }`}
           >
@@ -309,7 +309,7 @@ export default function SheetStylesViewer() {
             onClick={() => setActiveDimension('substrates')}
             className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
               activeDimension === 'substrates'
-                ? 'bg-[#D4AF37] text-black shadow-lg shadow-[#D4AF37]/20 scale-105'
+                ? 'bg-[var(--brand)] text-black shadow-lg shadow-[var(--brand)]/20 scale-105'
                 : 'bg-white/10 text-gray-300 hover:bg-white/15 border border-white/10'
             }`}
           >
@@ -343,14 +343,14 @@ export default function SheetStylesViewer() {
                   <div className="sheet-tab-badge-strip">
                     <span className="sheet-number">{sheet.n}</span>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                      isStandard ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30'
+                      isStandard ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-[var(--brand)]/20 text-[var(--brand)] border border-[var(--brand)]/30'
                     }`}>
                       {sheet.badge}
                     </span>
                   </div>
                   <div className="sheet-tab-name">{sheet.title}</div>
                   <div className="sheet-tab-telugu">{sheet.telugu}</div>
-                  <div className={`sheet-tab-price ${isStandard ? 'text-emerald-400' : 'text-[#D4AF37]'}`}>
+                  <div className={`sheet-tab-price ${isStandard ? 'text-emerald-400' : 'text-[var(--brand)]'}`}>
                     {sheet.priceLabel}
                   </div>
                 </button>
@@ -475,10 +475,10 @@ export default function SheetStylesViewer() {
             <div className="sheet-specs-detail-panel">
               <div className="specs-card-glass">
                 <div className="specs-card-header">
-                  <span className={`specs-tag ${selectedFinish.tier === 'standard' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-[#D4AF37]'}`}>
+                  <span className={`specs-tag ${selectedFinish.tier === 'standard' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-[var(--brand)]'}`}>
                     {selectedFinish.badge}
                   </span>
-                  <div className={`specs-pricing-badge ${selectedFinish.tier === 'standard' ? 'text-emerald-400' : 'text-[#D4AF37]'}`}>
+                  <div className={`specs-pricing-badge ${selectedFinish.tier === 'standard' ? 'text-emerald-400' : 'text-[var(--brand)]'}`}>
                     {selectedFinish.priceLabel}
                   </div>
                 </div>
@@ -491,7 +491,7 @@ export default function SheetStylesViewer() {
                 <div className="specs-metrics-grid">
                   <div className="metric-box">
                     <span className="metric-label">Paper Weight & Core</span>
-                    <span className="metric-value font-mono text-[#D4AF37]">{selectedFinish.gsm}</span>
+                    <span className="metric-value font-mono text-[var(--brand)]">{selectedFinish.gsm}</span>
                   </div>
                   <div className="metric-box">
                     <span className="metric-label">Water & Moisture</span>
@@ -511,10 +511,10 @@ export default function SheetStylesViewer() {
                 <div className="mt-6 p-4 rounded-xl bg-black/40 border border-white/10">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
-                      <Sliders size={13} className="text-[#D4AF37]" />
+                      <Sliders size={13} className="text-[var(--brand)]" />
                       Sheet Count Calculator (1 Sheet = 2 Pages)
                     </span>
-                    <span className="text-xs font-mono font-bold text-[#D4AF37]">
+                    <span className="text-xs font-mono font-bold text-[var(--brand)]">
                       {sheetCount} Sheets ({sheetCount * 2} Pages)
                     </span>
                   </div>
@@ -527,7 +527,7 @@ export default function SheetStylesViewer() {
                         onClick={() => setSheetCount(count)}
                         className={`py-1.5 text-xs font-bold rounded-lg border transition-all ${
                           sheetCount === count
-                            ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
+                            ? 'bg-[var(--brand)] text-black border-[var(--brand)]'
                             : 'bg-white/5 text-gray-300 border-white/10 hover:bg-white/10'
                         }`}
                       >
@@ -553,13 +553,13 @@ export default function SheetStylesViewer() {
                     )}
                     <div className="flex justify-between text-gray-400">
                       <span>{selectedFinish.title} Surcharge ({sheetCount} sheets × ₹{selectedFinish.surchargePerSheet}):</span>
-                      <span className={selectedFinish.surchargePerSheet > 0 ? 'text-[#D4AF37]' : 'text-emerald-400'}>
+                      <span className={selectedFinish.surchargePerSheet > 0 ? 'text-[var(--brand)]' : 'text-emerald-400'}>
                         {selectedFinish.surchargePerSheet > 0 ? `+₹${finishSurchargeTotal.toLocaleString('en-IN')}` : '₹0 (Included)'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/15">
                       <span>Total Estimated Album Cost:</span>
-                      <span className="text-[#D4AF37]">₹{calculatedTotal.toLocaleString('en-IN')}</span>
+                      <span className="text-[var(--brand)]">₹{calculatedTotal.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
                 </div>
@@ -638,7 +638,7 @@ export default function SheetStylesViewer() {
                     </div>
                     <div>
                       <span className="text-gray-400 block text-[11px]">Archival Longevity:</span>
-                      <span className="text-[#D4AF37] font-bold">{substrate.lifespan}</span>
+                      <span className="text-[var(--brand)] font-bold">{substrate.lifespan}</span>
                     </div>
                   </div>
 
@@ -649,7 +649,7 @@ export default function SheetStylesViewer() {
                     <a
                       href={`/order?substrate=${substrate.id}`}
                       className={`text-xs font-bold py-1.5 px-3.5 rounded-lg border transition-all ${
-                        isNtr ? 'bg-[#D4AF37] text-black border-[#D4AF37]' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+                        isNtr ? 'bg-[var(--brand)] text-black border-[var(--brand)]' : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
                       }`}
                     >
                       Select Base Substrate →

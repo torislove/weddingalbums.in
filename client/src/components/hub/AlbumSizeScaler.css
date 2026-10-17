@@ -38,13 +38,13 @@
 
 .scaler-filter-tab:hover {
   background: rgba(255, 255, 255, 0.09);
-  color: #fff;
+  color: var(--paper);
   transform: translateY(-1px);
 }
 
 .scaler-filter-tab.active {
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0.1) 100%);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   color: #fef08a;
   box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
 }
@@ -115,12 +115,12 @@
 
 .ref-btn:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--paper);
 }
 
 .ref-btn.active {
   background: rgba(212, 175, 55, 0.2);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   color: #fef08a;
 }
 
@@ -203,7 +203,7 @@
   font-family: monospace;
   font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
   display: flex;
   gap: 6px;
   align-items: center;
@@ -212,7 +212,7 @@
 }
 
 .dimension-sub {
-  color: #D4AF37;
+  color: var(--brand);
   font-size: 10px;
 }
 
@@ -233,7 +233,7 @@
   width: 100%;
   max-width: 440px;
   height: 2px;
-  background: repeating-linear-gradient(90deg, #D4AF37 0px, #D4AF37 4px, transparent 4px, transparent 8px);
+  background: repeating-linear-gradient(90deg, var(--brand) 0px, var(--brand) 4px, transparent 4px, transparent 8px);
   margin: 0 auto 6px;
   opacity: 0.6;
 }
@@ -308,7 +308,7 @@
 
 .scaler-size-item-card.active {
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(22, 22, 26, 0.95) 100%);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   box-shadow: 0 4px 18px rgba(212, 175, 55, 0.15);
 }
 
@@ -322,7 +322,7 @@
 .item-card-tag {
   font-size: 10px;
   font-weight: 700;
-  color: #D4AF37;
+  color: var(--brand);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -331,13 +331,13 @@
   font-family: monospace;
   font-size: 13px;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
 }
 
 .item-card-title {
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
   margin: 0 0 2px 0;
 }
 

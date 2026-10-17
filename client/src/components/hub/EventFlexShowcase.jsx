@@ -81,7 +81,7 @@ export default function EventFlexShowcase({ items = DEFAULT_FLEX_ITEMS }) {
     <div className="flex-showcase-container">
       {/* Header */}
       <div className="flex-showcase-header text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-semibold mb-3 tracking-widest uppercase">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--brand)]/10 border border-[var(--brand)]/30 text-[var(--brand)] text-xs font-semibold mb-3 tracking-widest uppercase">
           <Flag size={13} />
           <span>Separated Category: Invitations & Signage</span>
         </div>
@@ -116,7 +116,7 @@ export default function EventFlexShowcase({ items = DEFAULT_FLEX_ITEMS }) {
                 <div className="flex-features-list">
                   {item.features?.slice(0, 3).map((feat, fIdx) => (
                     <div key={fIdx} className="flex-feature-row">
-                      <CheckCircle size={13} className="text-[#D4AF37] shrink-0" />
+                      <CheckCircle size={13} className="text-[var(--brand)] shrink-0" />
                       <span>{feat}</span>
                     </div>
                   ))}
