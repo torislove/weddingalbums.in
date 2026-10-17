@@ -7,9 +7,11 @@ import {
   Phone, KeyRound, CheckCircle2, X, RefreshCw
 } from 'lucide-react';
 import Logo from '../components/Logo';
+import { useT } from '../context/LanguageContext';
 import './PortalLogin.css';
 
 const PortalLogin = () => {
+  const t = useT();
   const [searchParams] = useSearchParams();
   const [isRegistering, setIsRegistering] = useState(false);
   const [loginMethod, setLoginMethod] = useState('password'); // 'password' | 'phone_otp' | 'email_otp'
@@ -89,7 +91,7 @@ const PortalLogin = () => {
           border: '3px solid rgba(212,175,55,0.2)', borderTopColor: 'var(--primary, var(--brand))',
           animation: 'spin 0.8s linear infinite',
         }} />
-        <p>Opening the Creator Portal…</p>
+        <p>{t('pl.opening')}</p>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -118,7 +120,7 @@ const PortalLogin = () => {
     const type = loginMethod === 'phone_otp' ? 'phone' : 'email';
 
     if (!target) {
-      setError(`Please enter your ${type === 'phone' ? 'phone number' : 'email address'} first.`);
+      setError(t('pl.err_enter_first', { type: t(type === 'phone' ? 'pl.phone_number' : 'pl.email_address') }));
       return;
     }
 
@@ -127,9 +129,9 @@ const PortalLogin = () => {
       await sendOtp(target, type, 'login');
       setOtpSent(true);
       setOtpTimer(60);
-      setSuccessMsg(`Verification code sent to your ${type === 'phone' ? 'phone' : 'email'}!`);
+      setSuccessMsg(t(type === 'phone' ? 'pl.sent_phone' : 'pl.sent_email'));
     } catch (err) {
-      setError(err.message || 'Failed to send OTP code.');
+      setError(err.message || t('pl.err_otp_fail'));
     } finally {
       setLoading(false);
     }
@@ -144,14 +146,14 @@ const PortalLogin = () => {
     // Registration Flow
     if (isRegistering) {
       if (!formData.name || !formData.email || !formData.password) {
-        setError('Please fill out all required fields.');
+        setError(t('pl.err_fill'));
         return;
       }
       setLoading(true);
       try {
         await register({ ...formData, role: 'b2c' });
       } catch (err) {
-        setError(err.message || 'Registration failed.');
+        setError(err.message || t('pl.err_reg_fail'));
       } finally {
         setLoading(false);
       }
@@ -174,7 +176,7 @@ const PortalLogin = () => {
         await loginWithOtp(target, formData.otpCode);
       }
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please verify your details.');
+      setError(err.message || t('pl.err_auth_fail'));
     } finally {
       setLoading(false);
     }
@@ -188,7 +190,7 @@ const PortalLogin = () => {
       await loginWithGoogle();
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Google sign-in could not be completed.');
+      setError(err.message || t('pl.err_google'));
     } finally {
       setLoading(false);
     }
@@ -199,7 +201,7 @@ const PortalLogin = () => {
     e.preventDefault();
     setForgotError('');
     if (!forgotEmail) {
-      setForgotError('Please enter your registered email address.');
+      setForgotError(t('pl.err_reg_email'));
       return;
     }
 
@@ -207,9 +209,9 @@ const PortalLogin = () => {
     try {
       await forgotPassword(forgotEmail);
       setForgotStep(2);
-      setForgotSuccess('A password reset code has been sent to your email.');
+      setForgotSuccess(t('pl.forgot_sent'));
     } catch (err) {
-      setForgotError(err.message || 'Failed to send password reset code.');
+      setForgotError(err.message || t('pl.err_reset_code'));
     } finally {
       setForgotLoading(false);
     }
@@ -220,27 +222,27 @@ const PortalLogin = () => {
     e.preventDefault();
     setForgotError('');
     if (!forgotOtp || !forgotNewPassword) {
-      setForgotError('Please enter the reset code and your new password.');
+      setForgotError(t('pl.err_reset_fields'));
       return;
     }
 
     if (forgotNewPassword.length < 6) {
-      setForgotError('New password must be at least 6 characters.');
+      setForgotError(t('pl.err_min6'));
       return;
     }
 
     setForgotLoading(true);
     try {
       await resetPassword(forgotEmail, forgotOtp, forgotNewPassword);
-      setForgotSuccess('Password reset successfully! You can now log in.');
+      setForgotSuccess(t('pl.forgot_ok'));
       setTimeout(() => {
         setShowForgotModal(false);
         setForgotStep(1);
         setFormData(prev => ({ ...prev, email: forgotEmail }));
-        setSuccessMsg('Password updated! Please log in with your new password.');
+        setSuccessMsg(t('pl.pwd_updated'));
       }, 1500);
     } catch (err) {
-      setForgotError(err.message || 'Failed to reset password.');
+      setForgotError(err.message || t('pl.err_reset_fail'));
     } finally {
       setForgotLoading(false);
     }
@@ -260,17 +262,16 @@ const PortalLogin = () => {
 
         <div className="cpl-visual-content">
           <div className="cpl-brand">
-            <Logo size={42} portalTag="Couples Sanctuary" />
+            <Logo size={42} portalTag={t('pl.portal_tag')} />
           </div>
 
           <div className="cpl-tagline-block">
             <h2>
-              Your wedding,<br />
-              <em>preserved forever.</em>
+              {t('pl.tagline1')}<br />
+              <em>{t('pl.tagline2')}</em>
             </h2>
             <p>
-              Access your private vault to view proofs, approve layouts
-              and track your album from design to delivery.
+              {t('pl.tagline_sub')}
             </p>
             <div className="cpl-divider-lines">
               <span /><span /><span />
@@ -288,7 +289,7 @@ const PortalLogin = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '20px' }}>
               <Link to="/" style={{ textDecoration: 'none' }}>
                 <button className="cpl-back-btn" type="button" style={{ margin: 0 }}>
-                  <ArrowLeft size={14} /> Back to website
+                  <ArrowLeft size={14} /> {t('pl.back_website')}
                 </button>
               </Link>
               <button 
@@ -297,22 +298,22 @@ const PortalLogin = () => {
                 style={{ margin: 0, color: 'var(--brand)' }} 
                 onClick={() => { loginAsGuest(); navigate('/client'); }}
               >
-                Skip for now <ChevronRight size={14} />
+                {t('pl.skip')} <ChevronRight size={14} />
               </button>
             </div>
 
             <div className="cpl-auth-header">
               <div className="cpl-mobile-logo">
-                <Logo size={36} portalTag="Couples Sanctuary" />
+                <Logo size={36} portalTag={t('pl.portal_tag')} />
               </div>
               <div className="cpl-portal-badge">
-                <Heart size={12} /> Couples Wedding Portal
+                <Heart size={12} /> {t('pl.badge')}
               </div>
-              <h2>{isRegistering ? 'Create Your Vault' : 'Welcome Back'}</h2>
+              <h2>{isRegistering ? t('pl.create_vault') : t('pl.welcome_back')}</h2>
               <p>
                 {isRegistering
-                  ? 'Set up your account to access your wedding album journey.'
-                  : 'Sign in to view your album proofs and order status.'}
+                  ? t('pl.reg_sub')
+                  : t('pl.login_sub')}
               </p>
             </div>
 
@@ -323,14 +324,14 @@ const PortalLogin = () => {
                 className={`cpl-tab${!isRegistering ? ' active' : ''}`}
                 onClick={() => { setIsRegistering(false); setError(''); setSuccessMsg(''); }}
               >
-                Sign In
+                {t('pl.tab_signin')}
               </button>
               <button
                 type="button"
                 className={`cpl-tab${isRegistering ? ' active' : ''}`}
                 onClick={() => { setIsRegistering(true); setError(''); setSuccessMsg(''); }}
               >
-                Create Account
+                {t('pl.tab_create')}
               </button>
             </div>
 
@@ -342,21 +343,21 @@ const PortalLogin = () => {
                   className={`cpl-method-tab${loginMethod === 'password' ? ' active' : ''}`}
                   onClick={() => { setLoginMethod('password'); setError(''); }}
                 >
-                  <Lock size={13} /> Password
+                  <Lock size={13} /> {t('pl.method_password')}
                 </button>
                 <button
                   type="button"
                   className={`cpl-method-tab${loginMethod === 'phone_otp' ? ' active' : ''}`}
                   onClick={() => { setLoginMethod('phone_otp'); setError(''); }}
                 >
-                  <Phone size={13} /> Phone OTP
+                  <Phone size={13} /> {t('pl.method_phone')}
                 </button>
                 <button
                   type="button"
                   className={`cpl-method-tab${loginMethod === 'email_otp' ? ' active' : ''}`}
                   onClick={() => { setLoginMethod('email_otp'); setError(''); }}
                 >
-                  <Mail size={13} /> Email OTP
+                  <Mail size={13} /> {t('pl.method_email')}
                 </button>
               </div>
             )}
@@ -391,10 +392,10 @@ const PortalLogin = () => {
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                   </svg>
-                  Continue with Google
+                  {t('pl.google')}
                 </button>
 
-                <div className="cpl-divider-or">or with credentials</div>
+                <div className="cpl-divider-or">{t('pl.or_credentials')}</div>
               </>
             )}
 
@@ -404,7 +405,7 @@ const PortalLogin = () => {
               {/* Registration: Full Name */}
               {isRegistering && (
                 <div className="cpl-field">
-                  <label className="cpl-label">Full Name <span className="req">*</span></label>
+                  <label className="cpl-label">{t('prof.full_name')} <span className="req">*</span></label>
                   <div className="cpl-input-wrap">
                     <Users size={16} />
                     <input
@@ -412,7 +413,7 @@ const PortalLogin = () => {
                       type="text"
                       name="name"
                       required
-                      placeholder="e.g. Priya Sharma"
+                      placeholder={t('pl.name_ph')}
                       value={formData.name}
                       onChange={handleChange}
                       autoComplete="name"
@@ -424,7 +425,7 @@ const PortalLogin = () => {
               {/* Password Login or Email Registration or Email OTP */}
               {(isRegistering || loginMethod === 'password' || loginMethod === 'email_otp') && (
                 <div className="cpl-field">
-                  <label className="cpl-label">Email Address <span className="req">*</span></label>
+                  <label className="cpl-label">{t('prof.email')} <span className="req">*</span></label>
                   <div className={!isRegistering && loginMethod === 'email_otp' ? "cpl-otp-row" : "cpl-input-wrap"}>
                     <div className="cpl-input-wrap">
                       <Mail size={16} />
@@ -446,7 +447,7 @@ const PortalLogin = () => {
                         onClick={handleSendOtp}
                         disabled={loading || otpTimer > 0}
                       >
-                        {otpTimer > 0 ? `${otpTimer}s` : (otpSent ? 'Resend' : 'Send Code')}
+                        {otpTimer > 0 ? `${otpTimer}s` : (otpSent ? t('pl.resend') : t('pl.send_code_email'))}
                       </button>
                     )}
                   </div>
@@ -456,7 +457,7 @@ const PortalLogin = () => {
               {/* Phone OTP Login */}
               {!isRegistering && loginMethod === 'phone_otp' && (
                 <div className="cpl-field">
-                  <label className="cpl-label">Phone Number <span className="req">*</span></label>
+                  <label className="cpl-label">{t('prof.phone')} <span className="req">*</span></label>
                   <div className="cpl-otp-row">
                     <div className="cpl-input-wrap">
                       <Phone size={16} />
@@ -477,7 +478,7 @@ const PortalLogin = () => {
                       onClick={handleSendOtp}
                       disabled={loading || otpTimer > 0}
                     >
-                      {otpTimer > 0 ? `${otpTimer}s` : (otpSent ? 'Resend' : 'Send OTP')}
+                      {otpTimer > 0 ? `${otpTimer}s` : (otpSent ? t('pl.resend') : t('pl.send_code_otp'))}
                     </button>
                   </div>
                 </div>
@@ -486,7 +487,7 @@ const PortalLogin = () => {
               {/* OTP Code Input (when logging in with Phone or Email OTP) */}
               {!isRegistering && (loginMethod === 'phone_otp' || loginMethod === 'email_otp') && (
                 <div className="cpl-field">
-                  <label className="cpl-label">6-Digit Verification Code <span className="req">*</span></label>
+                  <label className="cpl-label">{t('pl.otp_label')} <span className="req">*</span></label>
                   <div className="cpl-input-wrap">
                     <KeyRound size={16} />
                     <input
@@ -497,7 +498,7 @@ const PortalLogin = () => {
                       pattern="[0-9]*"
                       maxLength={6}
                       required
-                      placeholder="Enter 6-digit OTP"
+                      placeholder={t('pl.otp_ph')}
                       value={formData.otpCode}
                       onChange={handleChange}
                       style={{ letterSpacing: '4px', fontWeight: 600 }}
@@ -510,14 +511,14 @@ const PortalLogin = () => {
               {(isRegistering || loginMethod === 'password') && (
                 <div className="cpl-field">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <label className="cpl-label">Password <span className="req">*</span></label>
+                    <label className="cpl-label">{t('pl.method_password')} <span className="req">*</span></label>
                     {!isRegistering && (
                       <button 
                         type="button" 
                         onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotError(''); }}
                         style={{ background: 'none', border: 'none', fontSize: '0.78rem', color: 'var(--brand)', cursor: 'pointer', padding: 0 }}
                       >
-                        Forgot password?
+                        {t('pl.forgot')}
                       </button>
                     )}
                   </div>
@@ -552,7 +553,7 @@ const PortalLogin = () => {
                   <div className="cpl-extra-divider" />
                   <div className="cpl-field-grid">
                     <div className="cpl-field">
-                      <label className="cpl-label">Couple Names <span className="req">*</span></label>
+                      <label className="cpl-label">{t('prof.couple_names')} <span className="req">*</span></label>
                       <div className="cpl-input-wrap">
                         <Heart size={16} />
                         <input
@@ -560,14 +561,14 @@ const PortalLogin = () => {
                           type="text"
                           name="coupleNames"
                           required
-                          placeholder="Priya & Rahul"
+                          placeholder={t('pl.couple_ph')}
                           value={formData.coupleNames}
                           onChange={handleChange}
                         />
                       </div>
                     </div>
                     <div className="cpl-field">
-                      <label className="cpl-label">Wedding Date <span className="req">*</span></label>
+                      <label className="cpl-label">{t('prof.wedding_date')} <span className="req">*</span></label>
                       <div className="cpl-input-wrap">
                         <input
                           className="cpl-input"
@@ -581,7 +582,7 @@ const PortalLogin = () => {
                       </div>
                     </div>
                     <div className="cpl-field">
-                      <label className="cpl-label">Phone Number</label>
+                      <label className="cpl-label">{t('prof.phone')}</label>
                       <div className="cpl-input-wrap">
                         <input
                           className="cpl-input"
@@ -595,7 +596,7 @@ const PortalLogin = () => {
                       </div>
                     </div>
                     <div className="cpl-field">
-                      <label className="cpl-label">City</label>
+                      <label className="cpl-label">{t('prof.city')}</label>
                       <div className="cpl-input-wrap">
                         <input
                           className="cpl-input"
@@ -620,41 +621,41 @@ const PortalLogin = () => {
                 style={{ marginTop: '8px' }}
               >
                 {loading
-                  ? 'Verifying…'
+                  ? t('pl.submit_verifying')
                   : (isRegistering
-                      ? 'Enter Your Vault'
-                      : (loginMethod === 'password' ? 'Sign In' : 'Verify & Enter Vault'))}
+                      ? t('pl.submit_register')
+                      : (loginMethod === 'password' ? t('pl.submit_signin') : t('pl.submit_verify')))}
               </button>
             </form>
 
             {/* Switch between Sign In / Register */}
             <div className="cpl-switch">
-              {isRegistering ? 'Already have an account?' : "Don't have an account?"}
+              {isRegistering ? t('pl.have_account') : t('pl.no_account')}
               <button
                 type="button"
                 onClick={() => { setIsRegistering(v => !v); setError(''); setSuccessMsg(''); }}
               >
-                {isRegistering ? 'Sign in' : 'Register here'}
+                {isRegistering ? t('pl.signin_link') : t('pl.register_link')}
               </button>
             </div>
 
             {/* Other Portals Links */}
             <div style={{ marginTop: '40px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '600' }}>Other Portals</p>
+              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '600' }}>{t('pl.other_portals')}</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
                 <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-studio.web.app' : 'http://localhost:5174'} 
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => e.currentTarget.style.color = '#d4af37'}
                   onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
                 >
-                  <Camera size={14} /> Studio Portal
+                  <Camera size={14} /> {t('pl.studio_portal')}
                 </a>
                 <a href={typeof window !== 'undefined' && window.location.hostname.includes('web.app') ? 'https://weddingalbums-editor.web.app' : 'http://localhost:5175'} 
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => e.currentTarget.style.color = '#818cf8'}
                   onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
                 >
-                  <Palette size={14} /> Editor Portal
+                  <Palette size={14} /> {t('pl.editor_portal')}
                 </a>
               </div>
             </div>
@@ -676,12 +677,10 @@ const PortalLogin = () => {
                 <KeyRound size={22} />
               </div>
               <h3 style={{ margin: '0 0 6px', color: 'var(--paper)', fontSize: '1.25rem', fontFamily: "'Cormorant Garamond', serif" }}>
-                Reset Your Password
+                {t('pl.reset_title')}
               </h3>
               <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem' }}>
-                {forgotStep === 1 
-                  ? 'Enter your registered email to receive a 6-digit verification code.' 
-                  : 'Enter the verification code and choose your new password.'}
+                {forgotStep === 1 ? t('pl.reset_sub1') : t('pl.reset_sub2')}
               </p>
             </div>
 
@@ -702,7 +701,7 @@ const PortalLogin = () => {
             {forgotStep === 1 ? (
               <form onSubmit={handleSendForgotOtp} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div className="cpl-field">
-                  <label className="cpl-label">Registered Email</label>
+                  <label className="cpl-label">{t('pl.reg_email')}</label>
                   <div className="cpl-input-wrap">
                     <Mail size={16} />
                     <input
@@ -722,13 +721,13 @@ const PortalLogin = () => {
                   disabled={forgotLoading}
                   style={{ marginTop: '10px' }}
                 >
-                  {forgotLoading ? 'Sending Code…' : 'Send Reset Code'}
+                  {forgotLoading ? t('pl.sending_code') : t('pl.send_reset')}
                 </button>
               </form>
             ) : (
               <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div className="cpl-field">
-                  <label className="cpl-label">6-Digit Verification Code</label>
+                  <label className="cpl-label">{t('pl.otp_label')}</label>
                   <div className="cpl-input-wrap">
                     <KeyRound size={16} />
                     <input
@@ -738,7 +737,7 @@ const PortalLogin = () => {
                       pattern="[0-9]*"
                       maxLength={6}
                       required
-                      placeholder="Enter 6-digit code"
+                      placeholder={t('pl.otp_ph2')}
                       value={forgotOtp}
                       onChange={e => setForgotOtp(e.target.value)}
                       style={{ letterSpacing: '4px', fontWeight: 600 }}
@@ -748,14 +747,14 @@ const PortalLogin = () => {
                 </div>
 
                 <div className="cpl-field">
-                  <label className="cpl-label">New Password</label>
+                  <label className="cpl-label">{t('pl.new_password')}</label>
                   <div className="cpl-input-wrap">
                     <Lock size={16} />
                     <input
                       className="cpl-input"
                       type="password"
                       required
-                      placeholder="Minimum 6 characters"
+                      placeholder={t('pl.min6_ph')}
                       value={forgotNewPassword}
                       onChange={e => setForgotNewPassword(e.target.value)}
                     />
@@ -768,7 +767,7 @@ const PortalLogin = () => {
                   disabled={forgotLoading}
                   style={{ marginTop: '10px' }}
                 >
-                  {forgotLoading ? 'Updating Password…' : 'Reset Password & Proceed'}
+                  {forgotLoading ? t('pl.updating') : t('pl.reset_proceed')}
                 </button>
 
                 <button
@@ -776,7 +775,7 @@ const PortalLogin = () => {
                   onClick={() => setForgotStep(1)}
                   style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', cursor: 'pointer', textAlign: 'center', marginTop: '6px' }}
                 >
-                  ← Back to email
+                  {t('pl.back_email')}
                 </button>
               </form>
             )}
