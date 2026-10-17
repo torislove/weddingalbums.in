@@ -3,17 +3,19 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { Trash2 } from 'lucide-react';
 import './Cart.css';
+import { useT } from '../context/LanguageContext';
 
 const Cart = () => {
+  const t = useT();
   const { cartItems, cartTotal, removeFromCart, updateQuantity } = useCart();
   const navigate = useNavigate();
 
   if (cartItems.length === 0) {
     return (
       <div className="cart-page empty">
-        <h2>Your Cart is Empty</h2>
-        <p>Looks like you haven't added anything to your cart yet.</p>
-        <button className="btn btn-primary" onClick={() => navigate('/services')}>Browse Services</button>
+        <h2>{t('cart.empty_title')}</h2>
+        <p>{t('cart.empty_desc')}</p>
+        <button className="btn btn-primary" onClick={() => navigate('/services')}>{t('cart.browse')}</button>
       </div>
     );
   }
@@ -22,12 +24,12 @@ const Cart = () => {
     <div className="cart-page">
       <div className="cart-container">
         <div className="cart-items-section">
-          <h2>Shopping Cart ({cartItems.length} items)</h2>
+          <h2>{t('cart.title')} ({cartItems.length} {t('cart.items')})</h2>
           <div className="cart-items-list">
             {cartItems.map(item => (
               <div key={item.id} className="cart-page-item">
                 <div className="item-image-wrapper">
-                  {item.image ? <img src={item.image} alt={item.name} /> : <div className="placeholder-image">No Image</div>}
+                  {item.image ? <img src={item.image} alt={item.name} /> : <div className="placeholder-image">{t('cart.no_image')}</div>}
                 </div>
                 <div className="item-info">
                   <h3>{item.name}</h3>
@@ -50,22 +52,22 @@ const Cart = () => {
         </div>
 
         <div className="cart-summary-section">
-          <h3>Order Summary</h3>
+          <h3>{t('cart.summary')}</h3>
           <div className="summary-row">
-            <span>Subtotal</span>
+            <span>{t('cart.subtotal')}</span>
             <span>₹{cartTotal.toLocaleString()}</span>
           </div>
           <div className="summary-row">
-            <span>Taxes (Estimated 18% GST)</span>
+            <span>{t('cart.taxes')}</span>
             <span>₹{(cartTotal * 0.18).toLocaleString()}</span>
           </div>
           <div className="summary-row total">
-            <span>Total</span>
+            <span>{t('cart.total')}</span>
             <span className="liquid-gold-text">₹{(cartTotal * 1.18).toLocaleString()}</span>
           </div>
-          <button className="btn btn-gold-3d w-100" onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
+          <button className="btn btn-gold-3d w-100" onClick={() => navigate('/checkout')}>{t('cart.checkout')}</button>
           <div className="secure-checkout">
-            <span className="secure-badge">🔒 Secure Razorpay Checkout</span>
+            <span className="secure-badge">{t('cart.secure')}</span>
           </div>
         </div>
       </div>

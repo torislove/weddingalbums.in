@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import { Search, Package, Truck, CheckCircle2, Clock, Printer } from 'lucide-react';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 
 const OrderTracking = () => {
+  const t = useT();
   const [orderId, setOrderId] = useState('');
   const [status, setStatus] = useState(null); // null | 'loading' | 'found' | 'error'
   const [orderData, setOrderData] = useState(null);
@@ -47,11 +49,11 @@ const OrderTracking = () => {
     else if (rawStatus.includes('placed') || rawStatus.includes('confirm') || rawStatus.includes('pending')) currentIdx = 0;
 
     return [
-      { title: 'Order Placed', desc: 'We received your specifications and media.', icon: Package, completed: currentIdx >= 0, active: currentIdx === 0 },
-      { title: 'Design & Proofing', desc: 'Our editors are working on the 3D layout.', icon: Clock, completed: currentIdx > 1, active: currentIdx === 1 },
-      { title: 'Printing & Binding', desc: 'Your album is currently in the printing press.', icon: Printer, completed: currentIdx > 2, active: currentIdx === 2 },
-      { title: 'Quality Check', desc: 'Final inspection of colors and binding.', icon: CheckCircle2, completed: currentIdx > 3, active: currentIdx === 3 },
-      { title: 'Shipped & Delivered', desc: 'Handed over to courier partner for delivery.', icon: Truck, completed: currentIdx === 4, active: currentIdx === 4 },
+      { title: t('track.step1_t'), desc: t('track.step1_d'), icon: Package, completed: currentIdx >= 0, active: currentIdx === 0 },
+      { title: t('track.step2_t'), desc: t('track.step2_d'), icon: Clock, completed: currentIdx > 1, active: currentIdx === 1 },
+      { title: t('track.step3_t'), desc: t('track.step3_d'), icon: Printer, completed: currentIdx > 2, active: currentIdx === 2 },
+      { title: t('track.step4_t'), desc: t('track.step4_d'), icon: CheckCircle2, completed: currentIdx > 3, active: currentIdx === 3 },
+      { title: t('track.step5_t'), desc: t('track.step5_d'), icon: Truck, completed: currentIdx === 4, active: currentIdx === 4 },
     ];
   };
 
@@ -62,9 +64,9 @@ const OrderTracking = () => {
       <div style={{ maxWidth: '720px', margin: '0 auto' }}>
         <div className="text-center mb-10">
           <ScrollReveal>
-            <h1 className="font-serif text-[var(--brand)] mb-3" style={{ fontSize: 'clamp(2rem, 5.5vw, 3.25rem)' }}>Track Your Order</h1>
+            <h1 className="font-serif text-[var(--brand)] mb-3" style={{ fontSize: 'clamp(2rem, 5.5vw, 3.25rem)' }}>{t('track.title')}</h1>
             <p className="text-gray-400" style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', lineHeight: 1.6 }}>
-              Enter your Order ID below to check the real-time status of your album.
+              {t('track.sub')}
             </p>
           </ScrollReveal>
         </div>
@@ -83,13 +85,13 @@ const OrderTracking = () => {
             />
           </div>
           <button type="submit" className="btn btn-primary" style={{ height: '52px', padding: '0 2rem', flex: '1 1 120px' }} disabled={status === 'loading'}>
-            {status === 'loading' ? 'Searching...' : 'Track'}
+            {status === 'loading' ? t('track.searching') : t('track.btn')}
           </button>
         </form>
 
         {status === 'error' && (
           <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl text-center text-red-400 animate-slide-up">
-            We couldn't find an order with that ID. Please check and try again.
+            {t('track.error')}
           </div>
         )}
 
@@ -97,14 +99,14 @@ const OrderTracking = () => {
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-8 animate-slide-up">
             <div className="flex flex-wrap justify-between items-start gap-4 border-b border-white/10 pb-6 mb-8">
               <div>
-                <p className="text-gray-400 mb-1">Order Details for</p>
+                <p className="text-gray-400 mb-1">{t('track.details_for')}</p>
                 <h2 className="text-2xl text-white font-bold">{orderId.toUpperCase()}</h2>
               </div>
               <div className="text-left sm:text-right">
                 <span className="px-4 py-1 bg-[var(--brand)]/20 text-[var(--brand)] rounded-full text-sm font-medium border border-[var(--brand)]/30">
-                  In Progress
+                  {t('track.in_progress')}
                 </span>
-                <p className="text-sm text-gray-500 mt-2">Est. Delivery: Oct 15, 2026</p>
+                <p className="text-sm text-gray-500 mt-2">{t('track.est')}: Oct 15, 2026</p>
               </div>
             </div>
 

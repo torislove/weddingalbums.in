@@ -400,6 +400,201 @@ export const STRINGS = {
   'contact.send': { EN: 'Send on WhatsApp', TE: 'వాట్సాప్‌లో పంపండి' },
   'contact.toast_ok': { EN: 'Details submitted successfully! Redirecting to WhatsApp...', TE: 'వివరాలు విజయవంతంగా సమర్పించారు! వాట్సాప్‌కు వెళ్తోంది...' },
   'contact.toast_err': { EN: 'Failed to submit details. Opening WhatsApp...', TE: 'వివరాలు సమర్పించడం విఫలమైంది. వాట్సాప్ తెరుస్తోంది...' },
+
+  // ── B2B / Studio Trade ─────────────────────────────────────────────────
+  'b2b.badge': {
+    EN: 'EXCLUSIVELY FOR WEDDING STUDIOS & PROFESSIONAL PHOTOGRAPHERS',
+    TE: 'వెడ్డింగ్ స్టూడియోలు & ప్రొఫెషనల్ ఫోటోగ్రాఫర్ల కోసం ప్రత్యేకంగా',
+  },
+  'b2b.title_1': { EN: 'Scale Your Studio.', TE: 'మీ స్టూడియోను విస్తరించండి.' },
+  'b2b.title_2': { EN: 'Maximize Your Margins.', TE: 'మీ లాభాలను పెంచుకోండి.' },
+  'b2b.subtitle': {
+    EN: "Andhra Pradesh's dedicated B2B post-production lab. We handle photo retouching, 4K video editing, color-calibrated album printing, and white-label drop-shipping so you can focus on shooting weddings.",
+    TE: 'ఆంధ్రప్రదేశ్‌కు ప్రత్యేకమైన B2B పోస్ట్-ప్రొడక్షన్ ల్యాబ్. ఫోటో రీటచింగ్, 4K వీడియో ఎడిటింగ్, కలర్-కాలిబ్రేటెడ్ ఆల్బమ్ ప్రింటింగ్, వైట్-లేబుల్ డ్రాప్-షిప్పింగ్ మేము చూసుకుంటాం — మీరు పెళ్లిళ్ల షూటింగ్‌పై దృష్టి పెట్టండి.',
+  },
+  'b2b.cta_portal': { EN: 'Access Studio Wholesale Portal', TE: 'స్టూడియో హోల్‌సేల్ పోర్టల్‌ను తెరవండి' },
+  'b2b.cta_trade': { EN: 'Apply for Trade Account', TE: 'ట్రేడ్ ఖాతా కోసం దరఖాస్తు చేయండి' },
+
+  'b2b.workflow_title': { EN: 'The Studio Trade Workflow', TE: 'స్టూడియో ట్రేడ్ వర్క్‌ఫ్లో' },
+  'b2b.workflow_sub': {
+    EN: 'Seamless, confidential integration designed for wedding production teams.',
+    TE: 'వెడ్డింగ్ ప్రొడక్షన్ టీమ్‌ల కోసం రూపొందించిన సులభమైన, గోప్యమైన ఇంటిగ్రేషన్.',
+  },
+  'b2b.step1_title': { EN: '1. Ingest Camera RAWs', TE: '1. కెమెరా RAW ఫైల్స్ స్వీకరణ' },
+  'b2b.step1_desc': {
+    EN: 'Upload high-resolution camera RAWs and 4K footage at gigabit speeds via the dedicated Studio Portal.',
+    TE: 'ప్రత్యేక స్టూడియో పోర్టల్ ద్వారా హై-రిజల్యూషన్ కెమెరా RAW, 4K ఫుటేజ్‌ను వేగంగా అప్‌లోడ్ చేయండి.',
+  },
+  'b2b.step2_title': { EN: '2. Dedicated Style Matching', TE: '2. ప్రత్యేక స్టైల్ మ్యాచింగ్' },
+  'b2b.step2_desc': {
+    EN: 'Our team applies your studio LUTs, color profiles, and layout aesthetic for 100% brand consistency.',
+    TE: '100% బ్రాండ్ స్థిరత్వం కోసం మా టీమ్ మీ స్టూడియో LUTలు, కలర్ ప్రొఫైల్స్, లేఅవుట్ స్టైల్‌ను వర్తిస్తుంది.',
+  },
+  'b2b.step3_title': { EN: '3. White-Label Proofing', TE: '3. వైట్-లేబుల్ ప్రూఫింగ్' },
+  'b2b.step3_desc': {
+    EN: 'Send interactive 3D digital flipbooks to your couples branded completely with your studio name and logo.',
+    TE: 'మీ స్టూడియో పేరు, లోగోతో పూర్తిగా బ్రాండ్ చేసిన ఇంటరాక్టివ్ 3D డిజిటల్ ఫ్లిప్‌బుక్‌లను మీ జంటలకు పంపండి.',
+  },
+  'b2b.step4_title': { EN: '4. Precision Print & Blind Ship', TE: '4. కచ్చితమైన ప్రింట్ & బ్లైండ్ షిప్' },
+  'b2b.step4_desc': {
+    EN: "We print on museum-grade sheets and ship directly to your client's doorstep in your studio packaging.",
+    TE: 'మ్యూజియం-గ్రేడ్ షీట్లపై ప్రింట్ చేసి, మీ స్టూడియో ప్యాకేజింగ్‌లో నేరుగా మీ క్లయింట్ ఇంటికి పంపుతాం.',
+  },
+
+  'b2b.arsenal_title': { EN: 'Our Printing Arsenal', TE: 'మా ప్రింటింగ్ ఆర్సెనల్' },
+  'b2b.arsenal_sub': {
+    EN: 'Crafted on authentic Noritsu and HP Indigo presses with genuine Fuji and Kodak papers.',
+    TE: 'అసలైన Noritsu, HP Indigo ప్రెస్‌లపై, నిజమైన Fuji, Kodak పేపర్లతో తయారు చేయబడింది.',
+  },
+  'b2b.trade_rate': { EN: 'Trade Rate Protected', TE: 'ట్రేడ్ రేట్ రక్షితం' },
+  'b2b.sheet_luster_desc': {
+    EN: 'Fine grain, anti-glare finish designed for cinematic Telugu wedding ceremonies and rich golden jewelry.',
+    TE: 'సినిమాటిక్ తెలుగు వివాహ వేడుకలు, నిండైన బంగారు ఆభరణాల కోసం రూపొందించిన సన్నని గ్రెయిన్, యాంటీ-గ్లేర్ ఫినిష్.',
+  },
+  'b2b.sheet_luster_dur': { EN: 'Archival 75+ Years', TE: '75+ సంవత్సరాల ఆర్కైవల్' },
+  'b2b.sheet_gloss_desc': {
+    EN: 'High-contrast, mirror-sheen surface that makes vivid reception lighting and colorful Mandap florals pop.',
+    TE: 'అద్దం లాంటి మెరుపుతో అధిక కాంట్రాస్ట్ ఉపరితలం — రిసెప్షన్ లైటింగ్, రంగురంగుల మండప పూలు ప్రత్యేకంగా కనిపిస్తాయి.',
+  },
+  'b2b.sheet_gloss_dur': { EN: 'UV-Protected Coating', TE: 'UV-రక్షిత కోటింగ్' },
+  'b2b.sheet_velvet_desc': {
+    EN: 'Ultra-luxurious tactile soft-touch surface. Zero fingerprints, zero glare, and museum-grade tactile elegance.',
+    TE: 'అత్యంత విలాసవంతమైన మృదువైన స్పర్శ ఉపరితలం. వేలిముద్రలు లేవు, గ్లేర్ లేదు, మ్యూజియం-గ్రేడ్ ఎలిగెన్స్.',
+  },
+  'b2b.sheet_velvet_dur': { EN: 'Scratch & Smudge Resistant', TE: 'గీతలు & మరకలు నిరోధకం' },
+  'b2b.sheet_metallic_desc': {
+    EN: 'Iridescent pearl luster creating an ethereal 3D shimmer on bridal Kanjeevaram silks and diamond ornaments.',
+    TE: 'వధువు కంజీవరం పట్టు, వజ్రాల ఆభరణాలపై అద్భుతమైన 3D మెరుపును ఇచ్చే ముత్యపు లస్టర్.',
+  },
+  'b2b.sheet_metallic_dur': { EN: 'High-Luminescence Pigment', TE: 'అధిక-ప్రకాశ పిగ్మెంట్' },
+  'b2b.sheet_nt_desc': {
+    EN: '100% waterproof, spill-proof, and indestructible synthetic BOPP sheets. The gold standard for lifetime wedding album longevity.',
+    TE: '100% వాటర్‌ప్రూఫ్, స్పిల్-ప్రూఫ్, నాశనం కాని సింథటిక్ BOPP షీట్లు. జీవితకాల ఆల్బమ్ మన్నిక కోసం ప్రామాణికం.',
+  },
+  'b2b.sheet_nt_dur': { EN: '100% Waterproof & Tear-Proof', TE: '100% వాటర్‌ప్రూఫ్ & చిరగని' },
+
+  'b2b.whitelabel_title': { EN: '100% White-Label & Client Non-Poach Guarantee', TE: '100% వైట్-లేబుల్ & క్లయింట్ నాన్-పోచ్ హామీ' },
+  'b2b.wl_pre': {
+    EN: 'Your Brand. Our Execution. We drop-ship luxury albums and video drives directly to your clients with ',
+    TE: 'మీ బ్రాండ్. మా పనితనం. లగ్జరీ ఆల్బమ్‌లు, వీడియో డ్రైవ్‌లను మా ల్యాబ్ నుండి ',
+  },
+  'b2b.wl_zero': { EN: 'ZERO', TE: 'సున్నా' },
+  'b2b.wl_post': {
+    EN: ' branding from our lab. The shipping label, luxury box embossing, and invoice reflect your studio identity. We strictly never solicit or market to your couples.',
+    TE: ' బ్రాండింగ్‌తో నేరుగా మీ క్లయింట్లకు డ్రాప్-షిప్ చేస్తాం. షిప్పింగ్ లేబుల్, లగ్జరీ బాక్స్ ఎంబాసింగ్, ఇన్‌వాయిస్ మీ స్టూడియో గుర్తింపును ప్రతిబింబిస్తాయి. మీ జంటలను మేము ఎప్పుడూ సంప్రదించము, మార్కెట్ చేయము.',
+  },
+
+  'b2b.gate_badge': { EN: 'Protected Studio Trade Pricing', TE: 'రక్షిత స్టూడియో ట్రేడ్ ప్రైసింగ్' },
+  'b2b.gate_title': { EN: 'Access Wholesale Sheet Rates & Trade Terms', TE: 'హోల్‌సేల్ షీట్ రేట్లు & ట్రేడ్ నిబంధనలు' },
+  'b2b.gate_body': {
+    EN: 'To protect photography studio margins and client relationships, raw per-sheet wholesale pricing, batch volume discounts, and 30-day billing terms are strictly guarded. Trade pricing is accessible exclusively inside the Studio Portal for authenticated studio partners.',
+    TE: 'ఫోటోగ్రఫీ స్టూడియో లాభాలు, క్లయింట్ సంబంధాలను రక్షించడానికి, షీట్‌వారీ హోల్‌సేల్ ధరలు, బ్యాచ్ వాల్యూమ్ డిస్కౌంట్లు, 30-రోజుల బిల్లింగ్ నిబంధనలు కట్టుదిట్టంగా కాపాడబడతాయి. ట్రేడ్ ప్రైసింగ్, ధృవీకరించిన స్టూడియో భాగస్వాములకు స్టూడియో పోర్టల్‌లో మాత్రమే అందుబాటులో ఉంటుంది.',
+  },
+  'b2b.benefit1_t': { EN: 'Wholesale Sheet Rates', TE: 'హోల్‌సేల్ షీట్ రేట్లు' },
+  'b2b.benefit1_d': { EN: 'Tiered pricing on Karizma, Velvet & NT sheets.', TE: 'కరిజ్మా, వెల్వెట్ & NT షీట్లపై టైర్డ్ ధరలు.' },
+  'b2b.benefit2_t': { EN: 'Rapid 48-Hour SLA', TE: 'వేగవంతమైన 48-గంటల SLA' },
+  'b2b.benefit2_d': { EN: 'Guaranteed express dispatch during wedding season.', TE: 'పెళ్లిళ్ల సీజన్‌లో హామీతో ఎక్స్‌ప్రెస్ డిస్పాచ్.' },
+  'b2b.benefit3_t': { EN: 'Multi-Editor Pods', TE: 'మల్టీ-ఎడిటర్ పాడ్స్' },
+  'b2b.benefit3_d': { EN: 'Assigned colorist matching your studio presets.', TE: 'మీ స్టూడియో ప్రీసెట్‌లకు సరిపోయే కలరిస్ట్ కేటాయించబడతారు.' },
+  'b2b.launch_portal': { EN: 'Launch Studio Portal', TE: 'స్టూడియో పోర్టల్ ప్రారంభించండి' },
+  'b2b.apply_whatsapp': { EN: 'Apply via WhatsApp', TE: 'వాట్సాప్ ద్వారా దరఖాస్తు చేయండి' },
+
+  'b2b.testimonials_title': { EN: 'Trusted by Over 180+ Studios Across AP & Telangana', TE: 'AP & తెలంగాణ అంతటా 180+ స్టూడియోల విశ్వాసం' },
+  'b2b.final_title': { EN: 'Ready to Elevate Your Studio?', TE: 'మీ స్టూడియోను మరింత ఎత్తుకు తీసుకెళ్లడానికి సిద్ధమా?' },
+  'b2b.final_sub': {
+    EN: "Join Andhra's elite network of professional studios and cinematographers.",
+    TE: 'ప్రొఫెషనల్ స్టూడియోలు, సినిమాటోగ్రాఫర్ల ఎలైట్ నెట్‌వర్క్‌లో చేరండి.',
+  },
+  'b2b.launch_arrow': { EN: 'Launch Studio Portal →', TE: 'స్టూడియో పోర్టల్ ప్రారంభించండి →' },
+
+  // ── Cart ───────────────────────────────────────────────────────────────
+  'cart.empty_title': { EN: 'Your Cart is Empty', TE: 'మీ కార్ట్ ఖాళీగా ఉంది' },
+  'cart.empty_desc': { EN: "Looks like you haven't added anything to your cart yet.", TE: 'మీరు ఇంకా కార్ట్‌లో ఏదీ జోడించలేదు.' },
+  'cart.browse': { EN: 'Browse Services', TE: 'సేవలను చూడండి' },
+  'cart.title': { EN: 'Shopping Cart', TE: 'షాపింగ్ కార్ట్' },
+  'cart.items': { EN: 'items', TE: 'వస్తువులు' },
+  'cart.no_image': { EN: 'No Image', TE: 'చిత్రం లేదు' },
+  'cart.summary': { EN: 'Order Summary', TE: 'ఆర్డర్ సారాంశం' },
+  'cart.subtotal': { EN: 'Subtotal', TE: 'ఉప మొత్తం' },
+  'cart.taxes': { EN: 'Taxes (Estimated 18% GST)', TE: 'పన్నులు (అంచనా 18% GST)' },
+  'cart.total': { EN: 'Total', TE: 'మొత్తం' },
+  'cart.checkout': { EN: 'Proceed to Checkout', TE: 'చెకౌట్‌కు వెళ్లండి' },
+  'cart.secure': { EN: '🔒 Secure Razorpay Checkout', TE: '🔒 సురక్షిత Razorpay చెకౌట్' },
+
+  // ── Order tracking ─────────────────────────────────────────────────────
+  'track.title': { EN: 'Track Your Order', TE: 'మీ ఆర్డర్‌ను ట్రాక్ చేయండి' },
+  'track.sub': {
+    EN: 'Enter your Order ID below to check the real-time status of your album.',
+    TE: 'మీ ఆల్బమ్ ప్రత్యక్ష స్థితిని తెలుసుకోవడానికి కింద మీ ఆర్డర్ ID నమోదు చేయండి.',
+  },
+  'track.searching': { EN: 'Searching...', TE: 'వెతుకుతోంది...' },
+  'track.btn': { EN: 'Track', TE: 'ట్రాక్ చేయండి' },
+  'track.error': {
+    EN: "We couldn't find an order with that ID. Please check and try again.",
+    TE: 'ఆ ID తో ఆర్డర్ కనుగొనబడలేదు. దయచేసి తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
+  },
+  'track.details_for': { EN: 'Order Details for', TE: 'ఆర్డర్ వివరాలు' },
+  'track.in_progress': { EN: 'In Progress', TE: 'పురోగతిలో' },
+  'track.est': { EN: 'Est. Delivery', TE: 'అంచనా డెలివరీ' },
+  'track.step1_t': { EN: 'Order Placed', TE: 'ఆర్డర్ నమోదైంది' },
+  'track.step1_d': { EN: 'We received your specifications and media.', TE: 'మీ వివరాలు, మీడియా మాకు అందాయి.' },
+  'track.step2_t': { EN: 'Design & Proofing', TE: 'డిజైన్ & ప్రూఫింగ్' },
+  'track.step2_d': { EN: 'Our editors are working on the 3D layout.', TE: 'మా ఎడిటర్లు 3D లేఅవుట్‌పై పని చేస్తున్నారు.' },
+  'track.step3_t': { EN: 'Printing & Binding', TE: 'ప్రింటింగ్ & బైండింగ్' },
+  'track.step3_d': { EN: 'Your album is currently in the printing press.', TE: 'మీ ఆల్బమ్ ప్రస్తుతం ప్రింటింగ్ ప్రెస్‌లో ఉంది.' },
+  'track.step4_t': { EN: 'Quality Check', TE: 'నాణ్యత తనిఖీ' },
+  'track.step4_d': { EN: 'Final inspection of colors and binding.', TE: 'రంగులు, బైండింగ్ చివరి తనిఖీ.' },
+  'track.step5_t': { EN: 'Shipped & Delivered', TE: 'షిప్ చేయబడింది & డెలివరీ' },
+  'track.step5_d': { EN: 'Handed over to courier partner for delivery.', TE: 'డెలివరీ కోసం కొరియర్ భాగస్వామికి అప్పగించబడింది.' },
+
+  // ── Checkout ───────────────────────────────────────────────────────────
+  'checkout.title': { EN: 'Checkout', TE: 'చెకౌట్' },
+  'checkout.billing': { EN: 'Billing Information', TE: 'బిల్లింగ్ సమాచారం' },
+  'checkout.name': { EN: 'Name', TE: 'పేరు' },
+  'checkout.email': { EN: 'Email', TE: 'ఇమెయిల్' },
+  'checkout.phone': { EN: 'Phone', TE: 'ఫోన్' },
+  'checkout.not_provided': { EN: 'Not provided', TE: 'ఇవ్వబడలేదు' },
+  'checkout.subtotal': { EN: 'Subtotal', TE: 'ఉప మొత్తం' },
+  'checkout.gst': { EN: 'GST (18%)', TE: 'GST (18%)' },
+  'checkout.total_payable': { EN: 'Total Payable', TE: 'మొత్తం చెల్లించాల్సినది' },
+  'checkout.processing': { EN: 'Processing...', TE: 'ప్రాసెస్ అవుతోంది...' },
+  'checkout.pay': { EN: 'Pay Now with Razorpay', TE: 'Razorpay తో ఇప్పుడే చెల్లించండి' },
+  'checkout.rzp_desc': { EN: 'Complete Your Order', TE: 'మీ ఆర్డర్ పూర్తి చేయండి' },
+  'checkout.ok': { EN: 'Payment successful! Order placed.', TE: 'చెల్లింపు విజయవంతం! ఆర్డర్ నమోదైంది.' },
+  'checkout.verify_fail': { EN: 'Payment verification failed.', TE: 'చెల్లింపు ధృవీకరణ విఫలమైంది.' },
+  'checkout.generic_err': { EN: 'Something went wrong. Please contact support.', TE: 'ఏదో తప్పు జరిగింది. దయచేసి సపోర్ట్‌ను సంప్రదించండి.' },
+  'checkout.pay_fail': { EN: 'Payment Failed', TE: 'చెల్లింపు విఫలమైంది' },
+  'checkout.declined': { EN: 'Transaction declined', TE: 'లావాదేవీ తిరస్కరించబడింది' },
+  'checkout.fail': { EN: 'Checkout failed. Please try again later.', TE: 'చెకౌట్ విఫలమైంది. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.' },
+
+  // ── Order history ──────────────────────────────────────────────────────
+  'oh.title': { EN: 'Order History & Itemized Invoices', TE: 'ఆర్డర్ చరిత్ర & ఐటమైజ్డ్ ఇన్‌వాయిస్‌లు' },
+  'oh.sub': {
+    EN: 'Track production progress, itemized service breakdowns, and download GST tax invoices.',
+    TE: 'ప్రొడక్షన్ పురోగతి, సేవల విభజనను చూసి, GST పన్ను ఇన్‌వాయిస్‌లను డౌన్‌లోడ్ చేసుకోండి.',
+  },
+  'oh.loading': { EN: 'Loading your orders...', TE: 'మీ ఆర్డర్లు లోడ్ అవుతున్నాయి...' },
+  'oh.empty_title': { EN: 'No Orders Found', TE: 'ఆర్డర్లు కనుగొనబడలేదు' },
+  'oh.empty_desc': {
+    EN: "You haven't placed any photobook or post-production orders yet.",
+    TE: 'మీరు ఇంకా ఫోటోబుక్ లేదా పోస్ట్-ప్రొడక్షన్ ఆర్డర్లు చేయలేదు.',
+  },
+  'oh.book': { EN: 'Book Services & Albums', TE: 'సేవలు & ఆల్బమ్‌లు బుక్ చేయండి' },
+  'oh.bundle': { EN: '⚡ Curated Bundle', TE: '⚡ క్యూరేటెడ్ బండిల్' },
+  'oh.custom': { EN: '🛠️ Custom Multi-Service', TE: '🛠️ కస్టమ్ మల్టీ-సర్వీస్' },
+  'oh.placed_on': { EN: 'Placed on:', TE: 'నమోదైంది:' },
+  'oh.express': { EN: '🚀 Express 24-48h Rush Courier', TE: '🚀 ఎక్స్‌ప్రెస్ 24-48గం రష్ కొరియర్' },
+  'oh.standard': { EN: '⚡ Standard 3-5 Days Free Delivery', TE: '⚡ ప్రామాణిక 3-5 రోజుల ఉచిత డెలివరీ' },
+  'oh.destination': { EN: 'Destination:', TE: 'గమ్యస్థానం:' },
+  'oh.open_drive': { EN: 'Open Drive Media ↗', TE: 'డ్రైవ్ మీడియా తెరవండి ↗' },
+  'oh.booked': { EN: 'Booked Services & Specifications:', TE: 'బుక్ చేసిన సేవలు & వివరాలు:' },
+  'oh.service_item': { EN: 'Service Item', TE: 'సేవ అంశం' },
+  'oh.default_album': { EN: 'Couture Wedding Photobook', TE: 'కౌచర్ వెడ్డింగ్ ఫోటోబుక్' },
+  'oh.cover': { EN: 'Cover', TE: 'కవర్' },
+  'oh.track_wa': { EN: 'Track on WhatsApp', TE: 'వాట్సాప్‌లో ట్రాక్ చేయండి' },
+  'oh.view_proofs': { EN: 'View Digital Proofs', TE: 'డిజిటల్ ప్రూఫ్‌లు చూడండి' },
+  'oh.download_invoice': { EN: 'Download Tax Invoice', TE: 'పన్ను ఇన్‌వాయిస్ డౌన్‌లోడ్ చేయండి' },
+  'oh.order_hash': { EN: 'Order #', TE: 'ఆర్డర్ #' },
 };
 
 const TE_FALLBACK_CACHE = new Map();

@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
 import { API } from '../apiConfig';
 import './Cart.css'; // Reuse cart layout
+import { useT } from '../context/LanguageContext';
 
 const Checkout = () => {
+  const t = useT();
   const { cartItems, cartTotal, removeFromCart, setIsCartOpen } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const Checkout = () => {
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'WeddingAlbums.in',
-        description: 'Complete Your Order',
+        description: t('checkout.rzp_desc'),
         order_id: orderData.id,
         handler: async function (response) {
           try {
@@ -85,15 +87,15 @@ const Checkout = () => {
               if (orderRes.ok) {
                 // Clear cart locally (in real app, call clearCart context method)
                 cartItems.forEach(item => removeFromCart(item.id));
-                setToastMessage('Payment successful! Order placed.');
+                setToastMessage(t('checkout.ok'));
                 setTimeout(() => navigate('/client'), 2000);
               }
             } else {
-              setToastMessage('Payment verification failed.');
+              setToastMessage(t('checkout.verify_fail'));
             }
           } catch (err) {
             console.error('Payment Error:', err);
-            setToastMessage('Something went wrong. Please contact support.');
+            setToastMessage(t('checkout.generic_err'));
           }
         },
         prefill: {
@@ -109,7 +111,7 @@ const Checkout = () => {
       if (typeof window.Razorpay === 'function') {
         const rzp = new window.Razorpay(options);
         rzp.on('payment.failed', function (response) {
-          setToastMessage('Payment Failed: ' + (response.error?.description || 'Transaction declined'));
+          setToastMessage(t('checkout.pay_fail') + ': ' + (response.error?.description || t('checkout.declined')));
         });
         rzp.open();
       } else {
@@ -122,7 +124,7 @@ const Checkout = () => {
       }
       
     } catch (err) {
-      setToastMessage('Checkout failed. Please try again later.');
+      setToastMessage(t('checkout.fail'));
     } finally {
       setLoading(false);
     }
@@ -132,25 +134,25 @@ const Checkout = () => {
     <div className="cart-page">
       <div className="cart-container" style={{ gridTemplateColumns: '1fr', maxWidth: '600px' }}>
         <div className="cart-summary-section" style={{ position: 'static' }}>
-          <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>Checkout</h2>
+          <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>{t('checkout.title')}</h2>
           
           <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
-            <h4 style={{ margin: '0 0 10px 0' }}>Billing Information</h4>
-            <p style={{ margin: '5px 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Name:</strong> {user?.name}</p>
-            <p style={{ margin: '5px 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Email:</strong> {user?.email}</p>
-            <p style={{ margin: '5px 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Phone:</strong> {user?.phone || 'Not provided'}</p>
+            <h4 style={{ margin: '0 0 10px 0' }}>{t('checkout.billing')}</h4>
+            <p style={{ margin: '5px 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>{t('checkout.name')}:</strong> {user?.name}</p>
+            <p style={{ margin: '5px 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>{t('checkout.email')}:</strong> {user?.email}</p>
+            <p style={{ margin: '5px 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>{t('checkout.phone')}:</strong> {user?.phone || t('checkout.not_provided')}</p>
           </div>
 
           <div className="summary-row">
-            <span>Subtotal ({cartItems.length} items)</span>
+            <span>{t('checkout.subtotal')} ({cartItems.length} {t('cart.items')})</span>
             <span>₹{cartTotal.toLocaleString()}</span>
           </div>
           <div className="summary-row">
-            <span>GST (18%)</span>
+            <span>{t('checkout.gst')}</span>
             <span>₹{(cartTotal * 0.18).toLocaleString()}</span>
           </div>
           <div className="summary-row total">
-            <span>Total Payable</span>
+            <span>{t('checkout.total_payable')}</span>
             <span className="liquid-gold-text">₹{finalTotal.toLocaleString()}</span>
           </div>
           <button 
@@ -158,7 +160,7 @@ const Checkout = () => {
             onClick={handlePayment}
             disabled={loading || cartItems.length === 0}
           >
-            {loading ? 'Processing...' : 'Pay Now with Razorpay'}
+            {loading ? t('checkout.processing') : t('checkout.pay')}
           </button>
         </div>
       </div>

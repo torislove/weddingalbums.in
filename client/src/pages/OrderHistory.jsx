@@ -3,8 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { Download, ShoppingBag, Clock, Truck, MessageCircle, Eye, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 
 const OrderHistory = () => {
+  const t = useT();
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +47,7 @@ const OrderHistory = () => {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
         <Clock size={32} style={{ animation: 'spin 1s linear infinite', marginBottom: '12px' }} />
-        <p>Loading your orders...</p>
+        <p>{t('oh.loading')}</p>
       </div>
     );
   }
@@ -54,20 +56,20 @@ const OrderHistory = () => {
     <div className="dashboard-page" style={{ maxWidth: '960px', margin: '0 auto', padding: 'clamp(12px, 3vw, 24px)' }}>
       <div style={{ marginBottom: '24px' }}>
         <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0', color: 'var(--paper)', fontFamily: 'serif' }}>
-          Order History & Itemized Invoices
+          {t('oh.title')}
         </h2>
         <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>
-          Track production progress, itemized service breakdowns, and download GST tax invoices.
+          {t('oh.sub')}
         </p>
       </div>
       
       {orders.length === 0 ? (
         <div className="empty-state" style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)' }}>
           <ShoppingBag size={48} color="var(--gold-primary)" style={{ marginBottom: '16px', opacity: 0.8 }} />
-          <h3 style={{ margin: '0 0 8px 0', color: 'var(--paper)' }}>No Orders Found</h3>
-          <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0', fontSize: '0.9rem' }}>You haven't placed any photobook or post-production orders yet.</p>
+          <h3 style={{ margin: '0 0 8px 0', color: 'var(--paper)' }}>{t('oh.empty_title')}</h3>
+          <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0', fontSize: '0.9rem' }}>{t('oh.empty_desc')}</p>
           <Link to="/order" className="btn btn-primary" style={{ padding: '10px 24px', textDecoration: 'none', display: 'inline-block' }}>
-            Book Services & Albums
+            {t('oh.book')}
           </Link>
         </div>
       ) : (
@@ -104,7 +106,7 @@ const OrderHistory = () => {
                   <div style={{ flex: '1 1 200px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                       <h4 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--paper)', fontWeight: 'bold' }}>
-                        Order #{orderIdStr}
+                        {t('oh.order_hash')}{orderIdStr}
                       </h4>
                       <span style={{
                         fontSize: '0.68rem',
@@ -116,11 +118,11 @@ const OrderHistory = () => {
                         border: `1px solid ${pkgType === 'bundles' ? 'rgba(212, 175, 55, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
                         textTransform: 'uppercase'
                       }}>
-                        {pkgType === 'bundles' ? '⚡ Curated Bundle' : '🛠️ Custom Multi-Service'}
+                        {pkgType === 'bundles' ? t('oh.bundle') : t('oh.custom')}
                       </span>
                     </div>
                     <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      Placed on: {new Date(order.createdAt || order.created_at || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      {t('oh.placed_on')} {new Date(order.createdAt || order.created_at || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
@@ -148,12 +150,12 @@ const OrderHistory = () => {
                 }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Truck size={14} color="#D4AF37" />
-                    {speed === 'express' ? '🚀 Express 24-48h Rush Courier' : '⚡ Standard 3-5 Days Free Delivery'}
+                    {speed === 'express' ? t('oh.express') : t('oh.standard')}
                   </span>
                   {city && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <CheckCircle2 size={14} color="#10b981" />
-                      Destination: {city}
+                      {t('oh.destination')} {city}
                     </span>
                   )}
                   {cloudLink && (
@@ -163,7 +165,7 @@ const OrderHistory = () => {
                       rel="noopener noreferrer"
                       style={{ color: 'var(--brand)', textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}
                     >
-                      <Download size={14} /> Open Drive Media ↗
+                      <Download size={14} /> {t('oh.open_drive')}
                     </a>
                   )}
                 </div>
@@ -171,7 +173,7 @@ const OrderHistory = () => {
                 {/* Booked Services Itemized Grid */}
                 <div style={{ marginBottom: '20px' }}>
                   <h5 style={{ margin: '0 0 10px 0', color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Booked Services & Specifications:
+                    {t('oh.booked')}
                   </h5>
 
                   {itemsList.length > 0 ? (
@@ -187,7 +189,7 @@ const OrderHistory = () => {
                           }}
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
-                            <strong style={{ color: 'var(--paper)', fontSize: '0.88rem' }}>{item.name || 'Service Item'}</strong>
+                            <strong style={{ color: 'var(--paper)', fontSize: '0.88rem' }}>{item.name || t('oh.service_item')}</strong>
                             {item.price && (
                               <span style={{ color: 'var(--brand)', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.82rem' }}>
                                 ₹{Number(item.price).toLocaleString('en-IN')}
@@ -204,7 +206,7 @@ const OrderHistory = () => {
                     </div>
                   ) : (
                     <div style={{ padding: '12px 16px', borderRadius: '12px', background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.06)', color: '#ccc', fontSize: '0.88rem' }}>
-                      <strong>{order.size?.label || order.size || 'Couture Wedding Photobook'}</strong> {order.coverType?.label ? `— ${order.coverType.label} Cover` : ''}
+                      <strong>{order.size?.label || order.size || t('oh.default_album')}</strong> {order.coverType?.label ? `— ${order.coverType.label} ${t('oh.cover')}` : ''}
                     </div>
                   )}
                 </div>
@@ -230,7 +232,7 @@ const OrderHistory = () => {
                       flex: '1 1 140px'
                     }}
                   >
-                    <MessageCircle size={15} /> Track on WhatsApp
+                    <MessageCircle size={15} /> {t('oh.track_wa')}
                   </button>
                   <Link
                     to="/client/proofs"
@@ -250,7 +252,7 @@ const OrderHistory = () => {
                       flex: '1 1 140px'
                     }}
                   >
-                    <Eye size={15} /> View Digital Proofs
+                    <Eye size={15} /> {t('oh.view_proofs')}
                   </Link>
                   <a 
                     href={`${API}/api/orders/${order._id || order.id}/invoice`} 
@@ -272,7 +274,7 @@ const OrderHistory = () => {
                       flex: '1 1 140px'
                     }}
                   >
-                    <Download size={14} /> Download Tax Invoice
+                    <Download size={14} /> {t('oh.download_invoice')}
                   </a>
                 </div>
               </div>
