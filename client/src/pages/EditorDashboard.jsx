@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 import './PhotographerDashboard.css'; // Reusing layout CSS
 
 const EditorDashboard = () => {
+  const t = useT();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [tasks, setTasks] = useState([]);
@@ -65,7 +67,7 @@ const EditorDashboard = () => {
         setToastMessage(data.error);
       }
     } catch (err) {
-      setToastMessage('Payout request failed');
+      setToastMessage(t('edash.payout_failed'));
     }
   };
 
@@ -85,18 +87,18 @@ const EditorDashboard = () => {
     }
   };
 
-  if (loading) return <div className="text-center p-10 text-gray-500">Loading...</div>;
-  if (!user) return <div className="text-center p-10 text-gray-500">Redirecting to login...</div>;
+  if (loading) return <div className="text-center p-10 text-gray-500">{t('edash.loading')}</div>;
+  if (!user) return <div className="text-center p-10 text-gray-500">{t('edash.redirecting')}</div>;
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1>Editor Workspace</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Welcome back, {user.name} | Freelance Editor</p>
+          <h1>{t('edash.workspace')}</h1>
+          <p style={{ color: 'var(--text-muted)' }}>{t('edash.welcome', { name: user.name })}</p>
         </div>
         <div style={{ backgroundColor: '#1a1a1a', padding: '15px 25px', borderRadius: '12px', border: '1px solid #333', textAlign: 'right' }}>
-          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Wallet Balance</p>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t('cdash.wallet_balance')}</p>
           <h2 style={{ color: 'var(--primary)', margin: '5px 0' }}>₹{walletBalance.toLocaleString()}</h2>
           <button 
             className="btn btn-primary" 
@@ -104,38 +106,38 @@ const EditorDashboard = () => {
             onClick={requestPayout}
             disabled={walletBalance === 0}
           >
-            Request Payout
+            {t('edash.request_payout')}
           </button>
         </div>
       </div>
 
       <div className="tab-menu" style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        <button className={`btn ${activeTab === 'active' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveTab('active')}>Active Jobs</button>
-        <button className={`btn ${activeTab === 'earnings' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveTab('earnings')}>Earnings History</button>
+        <button className={`btn ${activeTab === 'active' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveTab('active')}>{t('edash.tab_active')}</button>
+        <button className={`btn ${activeTab === 'earnings' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveTab('earnings')}>{t('edash.tab_earnings')}</button>
       </div>
 
       {activeTab === 'active' ? (
         <>
           <div style={{ marginBottom: '30px' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>Available Jobs</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Claim tasks from the queue below to start working.</p>
+            <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>{t('edash.available')}</h2>
+            <p style={{ color: 'var(--text-secondary)' }}>{t('edash.available_sub')}</p>
           </div>
 
       <div className="projects-grid">
-        {tasks.filter(t => t.status === 'Pending').length === 0 && (
-          <p className="empty-state">No jobs available right now. Check back later.</p>
+        {tasks.filter(task => task.status === 'Pending').length === 0 && (
+          <p className="empty-state">{t('edash.no_jobs')}</p>
         )}
         
-        {tasks.filter(t => t.status === 'Pending').reverse().map(task => (
+        {tasks.filter(task => task.status === 'Pending').reverse().map(task => (
           <div className="project-card" key={task.id}>
             <h3>{task.type}</h3>
-            <p className="meta">{task.clientName} Wedding (Studio: {task.studioName})</p>
+            <p className="meta">{task.clientName} {t('edash.wedding')} (Studio: {task.studioName})</p>
             <div style={{ marginTop: '10px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              <p><strong>Instructions:</strong> {task.details}</p>
+              <p><strong>{t('edash.instructions')}</strong> {task.details}</p>
             </div>
             <div className="project-actions" style={{ marginTop: '20px' }}>
               <button className="btn btn-primary" style={{ width: '100%', padding: '10px' }} onClick={() => claimTask(task.id)}>
-                Claim Job
+                {t('edash.claim')}
               </button>
             </div>
           </div>
@@ -143,27 +145,27 @@ const EditorDashboard = () => {
       </div>
       
       <div style={{ margin: '40px 0 20px 0' }}>
-        <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>Your Active Jobs</h2>
+        <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>{t('edash.your_active')}</h2>
       </div>
 
       <div className="projects-grid">
-        {tasks.filter(t => t.editorAssigned === user.name && t.status !== 'Completed').length === 0 && (
-          <p className="empty-state">You have no active jobs.</p>
+        {tasks.filter(task => task.editorAssigned === user.name && task.status !== 'Completed').length === 0 && (
+          <p className="empty-state">{t('edash.no_active')}</p>
         )}
         
-        {tasks.filter(t => t.editorAssigned === user.name && t.status !== 'Completed').map(task => (
+        {tasks.filter(task => task.editorAssigned === user.name && task.status !== 'Completed').map(task => (
           <div className="project-card" key={task.id} style={{ border: '1px solid var(--primary)' }}>
             <h3>{task.type}</h3>
-            <p className="meta">{task.clientName} Wedding</p>
+            <p className="meta">{task.clientName} {t('edash.wedding')}</p>
             <div style={{ marginTop: '10px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              <p><strong>Status:</strong> <span style={{ color: 'var(--primary)' }}>{task.status}</span></p>
+              <p><strong>{t('edash.status')}</strong> <span style={{ color: 'var(--primary)' }}>{task.status}</span></p>
             </div>
             <div className="project-actions" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <button className="btn-secondary link-btn" onClick={() => setToastMessage('Opening file repository...')}>
-                Download Raw Files
+              <button className="btn-secondary link-btn" onClick={() => setToastMessage(t('edash.opening_repo'))}>
+                {t('edash.download_raw')}
               </button>
-              <button className="btn btn-primary" onClick={() => setToastMessage('Uploading final edits and notifying photographer... (Mock)')}>
-                Submit Edits & Get Paid
+              <button className="btn btn-primary" onClick={() => setToastMessage(t('edash.uploading_edits'))}>
+                {t('edash.submit_edits')}
               </button>
             </div>
           </div>
@@ -172,17 +174,17 @@ const EditorDashboard = () => {
       </>
       ) : (
         <div className="earnings-history-tab">
-          <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>Your Earnings History</h2>
+          <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>{t('edash.earnings_title')}</h2>
           <div className="glass-panel" style={{ padding: '20px', borderRadius: '12px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <p style={{ margin: 0 }}>Total Earned: <strong style={{ color: 'var(--ok)', fontSize: '1.2rem' }}>₹{walletBalance.toLocaleString()}</strong></p>
+            <p style={{ margin: 0 }}>{t('edash.total_earned')} <strong style={{ color: 'var(--ok)', fontSize: '1.2rem' }}>₹{walletBalance.toLocaleString()}</strong></p>
           </div>
           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>Date</th>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>Project</th>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>Amount</th>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>Status</th>
+                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_date')}</th>
+                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_project')}</th>
+                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_amount')}</th>
+                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_status')}</th>
               </tr>
             </thead>
             <tbody>

@@ -11,16 +11,17 @@ import {
 import Logo from '../components/Logo';
 import './ClientDashboard.css';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 
 /* ── Timeline step definitions ─────────────────────────────────────── */
 const TIMELINE_STEPS = [
-  { label: 'Order Confirmed',       icon: CheckCircle2, key: 'confirmed' },
-  { label: 'Photos Received',       icon: Camera,       key: 'received'  },
-  { label: 'Editing in Progress',   icon: ImageIcon,    key: 'editing'   },
-  { label: 'Proof Ready for Review',icon: Heart,        key: 'proofing'  },
-  { label: 'Approved & Printing',   icon: Package,      key: 'printing'  },
-  { label: 'Shipped to You',        icon: Truck,        key: 'shipped'   },
-  { label: 'Delivered',             icon: CheckCircle2, key: 'delivered' },
+  { labelKey: 'cdash.tl_confirmed', icon: CheckCircle2, key: 'confirmed' },
+  { labelKey: 'cdash.tl_received',  icon: Camera,       key: 'received'  },
+  { labelKey: 'cdash.tl_editing',   icon: ImageIcon,    key: 'editing'   },
+  { labelKey: 'cdash.tl_proofing',  icon: Heart,        key: 'proofing'  },
+  { labelKey: 'cdash.tl_printing',  icon: Package,      key: 'printing'  },
+  { labelKey: 'cdash.tl_shipped',   icon: Truck,        key: 'shipped'   },
+  { labelKey: 'cdash.tl_delivered', icon: CheckCircle2, key: 'delivered' },
 ];
 
 const MOCK_ORDERS = [
@@ -52,6 +53,7 @@ const MOCK_ORDERS = [
 
 /* ── Order card with expandable timeline & full booked specifications ─── */
 const OrderCard = ({ order }) => {
+  const t = useT();
   const [expanded, setExpanded] = useState(order.status !== 'delivered');
   const items = order.items && order.items.length > 0 ? order.items : [];
 
@@ -70,11 +72,11 @@ const OrderCard = ({ order }) => {
             <span>{order.name}</span>
             {order.packageType === 'bundles' ? (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 font-bold uppercase">
-                ⚡ Curated Bundle
+                {t('cdash.bundle')}
               </span>
             ) : (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-bold uppercase">
-                🛠️ Custom Services
+                {t('cdash.custom')}
               </span>
             )}
           </div>
@@ -83,7 +85,7 @@ const OrderCard = ({ order }) => {
             <span>•</span>
             <span className="text-[#D4AF37] font-mono font-bold">{order.amount}</span>
             <span>•</span>
-            <span>{order.city ? `${order.eventType || 'Event'} in ${order.city}` : 'Andhra Pradesh'}</span>
+            <span>{order.city ? t('cdash.event_in', { type: order.eventType || t('cdash.event'), city: order.city }) : t('cdash.andhra')}</span>
           </div>
         </div>
         <div className="cdash-order-right-meta">
@@ -116,9 +118,9 @@ const OrderCard = ({ order }) => {
                     }
                   </div>
                   <div className="cdash-tl-body">
-                    <div className="cdash-tl-label">{step.label}</div>
+                    <div className="cdash-tl-label">{t(step.labelKey)}</div>
                     <div className="cdash-tl-time">
-                      {isDone ? '✓ Completed' : isActive ? 'In progress — Lab manager assigned' : 'Upcoming Step'}
+                      {isDone ? t('cdash.tl_done') : isActive ? t('cdash.tl_active') : t('cdash.tl_upcoming')}
                     </div>
                   </div>
                 </div>
@@ -130,10 +132,10 @@ const OrderCard = ({ order }) => {
           <div className="cdash-order-details">
             <div className="cdash-details-header">
               <span className="text-xs font-bold uppercase tracking-wider text-gray-300">
-                Booked Services & Specifications ({items.length || 1} items)
+                {t('cdash.booked_items')} ({items.length || 1} {t('cart.items')})
               </span>
               <span className="text-xs font-mono font-bold text-[#D4AF37]">
-                Total: {order.amount}
+                {t('cart.total')}: {order.amount}
               </span>
             </div>
 
@@ -141,12 +143,12 @@ const OrderCard = ({ order }) => {
             <div className="cdash-meta-strip">
               <span>
                 <Truck size={14} className="text-[#D4AF37]" />
-                {order.deliverySpeed === 'express' ? '🚀 Express 24-48h Rush Dispatch' : '⚡ Standard 3-5 Days Free Courier'}
+                {order.deliverySpeed === 'express' ? t('cdash.express') : t('cdash.standard')}
               </span>
               {order.city && (
                 <span>
                   <CheckCircle2 size={14} className="text-emerald-400" />
-                  Destination: {order.city}
+                  {t('oh.destination')} {order.city}
                 </span>
               )}
               {order.cloudLink && (
@@ -156,7 +158,7 @@ const OrderCard = ({ order }) => {
                   rel="noopener noreferrer"
                   className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold"
                 >
-                  <Download size={14} /> Open Drive Photos ↗
+                  <Download size={14} /> {t('cdash.open_drive_photos')}
                 </a>
               )}
             </div>
@@ -176,7 +178,7 @@ const OrderCard = ({ order }) => {
               </div>
             ) : (
               <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-xs text-gray-300 mb-4">
-                <strong>Standard Package:</strong> Lay-Flat Couture Wedding Album with pro skin retouching & presentation case.
+                <strong>{t('cdash.std_package_label')}</strong> {t('cdash.std_package_desc')}
               </div>
             )}
 
@@ -187,13 +189,13 @@ const OrderCard = ({ order }) => {
                 onClick={openWhatsAppTrack}
                 className="cdash-btn-action cdash-btn-whatsapp"
               >
-                <Phone size={14} /> Track on WhatsApp
+                <Phone size={14} /> {t('oh.track_wa')}
               </button>
               <Link
                 to="/client/proofs"
                 className="cdash-btn-action cdash-btn-proofs"
               >
-                <ImageIcon size={14} /> View Digital Proofs
+                <ImageIcon size={14} /> {t('oh.view_proofs')}
               </Link>
               <a
                 href={`${API}/api/orders/${order.id}/invoice`}
@@ -201,7 +203,7 @@ const OrderCard = ({ order }) => {
                 rel="noopener noreferrer"
                 className="cdash-btn-action cdash-btn-invoice"
               >
-                <Download size={14} /> Download Tax Invoice
+                <Download size={14} /> {t('oh.download_invoice')}
               </a>
             </div>
           </div>
@@ -213,6 +215,7 @@ const OrderCard = ({ order }) => {
 
 /* ── Main dashboard component ─────────────────────────────────────── */
 const ClientDashboard = () => {
+  const t = useT();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -302,11 +305,11 @@ const ClientDashboard = () => {
   };
 
   const navItems = [
-    { name: 'Dashboard',    path: '/client',          icon: LayoutDashboard },
-    { name: 'My Orders',    path: '/client/orders',   icon: ShoppingBag,  badge: '2' },
-    { name: 'Album Proofs', path: '/client/proofs',   icon: ImageIcon,    badge: '1' },
-    { name: 'Wallet',       path: '/client/wallet',   icon: Wallet },
-    { name: 'Settings',     path: '/client/settings', icon: Settings },
+    { name: t('cdash.nav_dashboard'), path: '/client',          icon: LayoutDashboard },
+    { name: t('cdash.nav_orders'),    path: '/client/orders',   icon: ShoppingBag,  badge: '2' },
+    { name: t('cdash.nav_proofs'),    path: '/client/proofs',   icon: ImageIcon,    badge: '1' },
+    { name: t('cdash.nav_wallet'),    path: '/client/wallet',   icon: Wallet },
+    { name: t('cdash.nav_settings'),  path: '/client/settings', icon: Settings },
   ];
 
   const isHome = location.pathname === '/client';
@@ -320,10 +323,10 @@ const ClientDashboard = () => {
       {/* ── Mobile Top Header Bar ───────────────────────────────── */}
       <header className="cdash-mobile-header">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <Logo size={32} portalTag="Couples Portal" />
+          <Logo size={32} portalTag={t('cdash.couples_portal')} />
         </Link>
         <div className="cdash-mobile-actions">
-          <Link to="/" className="cdash-mobile-btn cdash-mobile-home-btn" title="Back to Main Site">
+          <Link to="/" className="cdash-mobile-btn cdash-mobile-home-btn" title={t('cdash.back_main')}>
             <Home size={16} />
           </Link>
           <a
@@ -331,22 +334,22 @@ const ClientDashboard = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="cdash-mobile-btn cdash-mobile-wa-btn"
-            title="WhatsApp Support"
+            title={t('cdash.wa_support')}
           >
             <Phone size={15} />
           </a>
           <button 
             type="button"
             onClick={handleLogout} 
-            aria-label="Log out"
+            aria-label={t('cdash.sign_out')}
             className="cdash-mobile-btn cdash-mobile-logout-btn" 
-            title="Sign Out"
+            title={t('cdash.sign_out')}
             style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', padding: '7px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             <LogOut size={15} />
           </button>
           <Link to="/order" className="cdash-mobile-book-btn">
-            + Book
+            {t('cdash.book_btn')}
           </Link>
         </div>
       </header>
@@ -355,21 +358,21 @@ const ClientDashboard = () => {
       <aside className="cdash-sidebar">
         {/* Brand */}
         <Link to="/" className="cdash-sb-brand" style={{ textDecoration: 'none' }}>
-          <Logo size={36} portalTag="Couples Portal" />
+          <Logo size={36} portalTag={t('cdash.couples_portal')} />
         </Link>
 
         {/* User */}
         <div className="cdash-sb-user">
           <div className="cdash-sb-avatar">{initials}</div>
           <div>
-            <div className="cdash-sb-name">{user?.coupleNames || user?.name || 'Couple'}</div>
-            <div className="cdash-sb-role">💑 Couple</div>
+            <div className="cdash-sb-name">{user?.coupleNames || user?.name || t('cdash.couple')}</div>
+            <div className="cdash-sb-role">{t('cdash.couple')}</div>
           </div>
         </div>
 
         {/* Nav */}
         <nav className="cdash-sb-nav">
-          <div className="cdash-nav-label">Navigation</div>
+          <div className="cdash-nav-label">{t('cdash.navigation')}</div>
           {navItems.map(item => (
             <Link
               key={item.name}
@@ -382,27 +385,27 @@ const ClientDashboard = () => {
             </Link>
           ))}
 
-          <div className="cdash-nav-label" style={{ marginTop: '16px' }}>Quick Links</div>
+          <div className="cdash-nav-label" style={{ marginTop: '16px' }}>{t('cdash.quick_links')}</div>
           <Link to="/" className="cdash-nav-item">
-            <Home size={17} /> Back to Main Site
+            <Home size={17} /> {t('cdash.back_main')}
           </Link>
           <a href="/services" className="cdash-nav-item">
-            <Camera size={17} /> Browse Services
+            <Camera size={17} /> {t('cart.browse')}
           </a>
           <a href="/track" className="cdash-nav-item">
-            <Truck size={17} /> Track Delivery
+            <Truck size={17} /> {t('cdash.track_delivery')}
           </a>
         </nav>
 
         {/* Wallet balance */}
         <div className="cdash-sb-wallet">
-          <div className="cdash-sb-wallet-label">Wallet Balance</div>
+          <div className="cdash-sb-wallet-label">{t('cdash.wallet_balance')}</div>
           <div className="cdash-sb-wallet-amount">₹{wallet.toLocaleString('en-IN')}</div>
         </div>
 
         {/* Logout */}
         <button className="cdash-sb-logout" onClick={handleLogout}>
-          <LogOut size={16} /> Sign Out
+          <LogOut size={16} /> {t('cdash.sign_out')}
         </button>
       </aside>
 
@@ -413,26 +416,26 @@ const ClientDashboard = () => {
             {user?.isGuest && (
               <div style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', padding: '12px 16px', borderRadius: '12px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.85rem', color: '#d4af37' }}>
-                  <strong>Guest Mode Active:</strong> You are viewing a demo of the couples sanctuary.
+                  <strong>{t('cdash.guest_title')}</strong> {t('cdash.guest_desc')}
                 </span>
-                <Link to="/login" style={{ fontSize: '0.8rem', color: '#fff', background: '#d4af37', padding: '6px 12px', borderRadius: '6px', textDecoration: 'none', fontWeight: 600 }}>Sign In</Link>
+                <Link to="/login" style={{ fontSize: '0.8rem', color: '#fff', background: '#d4af37', padding: '6px 12px', borderRadius: '6px', textDecoration: 'none', fontWeight: 600 }}>{t('cdash.sign_in')}</Link>
               </div>
             )}
             
             {/* Page Header */}
             <div className="cdash-page-header">
-              <div className="overline">Couples Wedding Sanctuary</div>
-              <h1>Welcome back, {user?.name?.split(' ')[0] || 'there'} 👋</h1>
-              <p>Here's the latest on your album journey. Your memories are in safe hands.</p>
+              <div className="overline">{t('cdash.overline')}</div>
+              <h1>{t('cdash.welcome_back')} {user?.name?.split(' ')[0] || t('cdash.welcome_there')} 👋</h1>
+              <p>{t('cdash.hero_sub')}</p>
             </div>
 
             {/* Stats */}
             <div className="cdash-stats">
               {[
-                { color: 'gold',   icon: ShoppingBag, label: 'Total Orders',    value: '2',          sub: 'Lifetime' },
-                { color: 'blue',   icon: ImageIcon,   label: 'Pending Proofs',  value: '1',          sub: 'Awaiting approval' },
-                { color: 'green',  icon: CheckCircle2,label: 'Delivered Albums', value: '1',          sub: 'Successfully shipped' },
-                { color: 'purple', icon: Wallet,      label: 'Wallet Balance',  value: `₹${wallet.toLocaleString('en-IN')}`, sub: 'Credits & refunds' },
+                { color: 'gold',   icon: ShoppingBag, label: t('cdash.stat_total_orders'),   value: '2',          sub: t('cdash.stat_lifetime') },
+                { color: 'blue',   icon: ImageIcon,   label: t('cdash.stat_pending_proofs'), value: '1',          sub: t('cdash.stat_awaiting') },
+                { color: 'green',  icon: CheckCircle2,label: t('cdash.stat_delivered'),      value: '1',          sub: t('cdash.stat_shipped') },
+                { color: 'purple', icon: Wallet,      label: t('cdash.wallet_balance'),       value: `₹${wallet.toLocaleString('en-IN')}`, sub: t('cdash.stat_credits') },
               ].map((s, i) => (
                 <div key={i} className={`cdash-stat ${s.color}`}>
                   <div className="cdash-stat-icon">
@@ -448,9 +451,9 @@ const ClientDashboard = () => {
             {/* Active Orders with Timeline */}
             <div className="cdash-section">
               <div className="cdash-section-title flex justify-between items-center">
-                <span>Your Orders ({orders.length > 0 ? orders.length : 2})</span>
+                <span>{t('cdash.your_orders')} ({orders.length > 0 ? orders.length : 2})</span>
                 <Link to="/order" className="text-xs text-[#D4AF37] font-semibold hover:underline">
-                  + New Custom Order
+                  {t('cdash.new_custom_order')}
                 </Link>
               </div>
               {(orders.length > 0 ? orders : MOCK_ORDERS).map(order => <OrderCard key={order.id} order={order} />)}
@@ -458,15 +461,15 @@ const ClientDashboard = () => {
 
             {/* Quick Actions */}
             <div className="cdash-section">
-              <div className="cdash-section-title">Quick Actions</div>
+              <div className="cdash-section-title">{t('cdash.quick_actions')}</div>
               <div className="cdash-actions">
                 {[
-                  { label: 'New Order',        icon: ShoppingBag, to: '/order' },
-                  { label: 'View Proofs',      icon: ImageIcon,   to: '/client/proofs' },
-                  { label: 'Download Invoice', icon: Download,    to: '/client/orders' },
-                  { label: 'WhatsApp Support', icon: Phone,       href: `https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను Client Portal (${user?.name || 'Customer'}) నుండి మాట్లాడుతున్నాను. నా ఆర్డర్ గురించి సహాయం కావాలి.`)}` },
-                  { label: 'Wallet & Credits', icon: CreditCard,  to: '/client/wallet' },
-                  { label: 'Refer & Earn',     icon: Heart,       to: '/client/referral' },
+                  { label: t('cdash.new_order'),        icon: ShoppingBag, to: '/order' },
+                  { label: t('cdash.view_proofs'),      icon: ImageIcon,   to: '/client/proofs' },
+                  { label: t('cdash.download_invoice'), icon: Download,    to: '/client/orders' },
+                  { label: t('cdash.wa_support'),       icon: Phone,       href: `https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను Client Portal (${user?.name || 'Customer'}) నుండి మాట్లాడుతున్నాను. నా ఆర్డర్ గురించి సహాయం కావాలి.`)}` },
+                  { label: t('cdash.wallet_credits'),   icon: CreditCard,  to: '/client/wallet' },
+                  { label: t('cdash.refer_earn'),       icon: Heart,       to: '/client/referral' },
                 ].map((a, i) => (
                   a.href
                     ? <a key={i} href={a.href} target="_blank" rel="noopener noreferrer" className="cdash-action-btn">
@@ -489,11 +492,11 @@ const ClientDashboard = () => {
       {/* ── Mobile Persistent Bottom Navigation ─────────────────── */}
       <nav className="cdash-mobile-nav">
         {[
-          { label: 'Overview', path: '/client', icon: LayoutDashboard },
-          { label: 'Orders', path: '/client/orders', icon: ShoppingBag, badge: orders.length > 0 ? String(orders.length) : undefined },
-          { label: 'Proofs', path: '/client/proofs', icon: ImageIcon, badge: '1' },
-          { label: 'Wallet', path: '/client/wallet', icon: Wallet },
-          { label: 'Settings', path: '/client/settings', icon: Settings },
+          { label: t('cdash.mnav_overview'), path: '/client', icon: LayoutDashboard },
+          { label: t('cdash.mnav_orders'), path: '/client/orders', icon: ShoppingBag, badge: orders.length > 0 ? String(orders.length) : undefined },
+          { label: t('cdash.mnav_proofs'), path: '/client/proofs', icon: ImageIcon, badge: '1' },
+          { label: t('cdash.nav_wallet'), path: '/client/wallet', icon: Wallet },
+          { label: t('cdash.nav_settings'), path: '/client/settings', icon: Settings },
         ].map(item => {
           const isActive = item.path === '/client'
             ? location.pathname === '/client'
