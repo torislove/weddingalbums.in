@@ -20,6 +20,9 @@ const __dirname = path.dirname(__filename);
 const router = express.Router();
 const contentAdminOnly = requireRole(['admin', 'content_admin', 'sysadmin'], ['admin-portal', 'uiadmin-portal', 'sysadmin-portal']);
 
+// In-memory publish-history ledger (fallback when PostgreSQL is unavailable)
+const memoryContentHistory = [];
+
 const isCloudEnv = Boolean(
   process.env.FUNCTION_TARGET ||
   process.env.FIREBASE_CONFIG ||
@@ -52,13 +55,13 @@ const CURATED_DEFAULT_IMAGES = [
   '/images/bridal.jpg',
   '/images/cinematic.jpg',
   '/images/prewedding.jpg',
-  'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=2000',
-  'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800'
+  // Album mockup & brand SVG assets (generated)
+  '/images/mockup-layflat-spread.svg',
+  '/images/mockup-acrylic-cover.svg',
+  '/images/mockup-leatherette-embossed.svg',
+  '/images/mockup-pocket-mini-book.svg',
+  '/images/client-album-preview.svg',
+  '/images/media-notification-icon.svg'
 ];
 
 import jwt from 'jsonwebtoken';
@@ -190,11 +193,19 @@ router.post('/content', contentAdminOnly, async (req, res) => {
     const existing = await Content.findOne({ key: 'main_site' });
     if (existing && existing.data) {
       const versionId = crypto.randomUUID();
+      memoryContentHistory.unshift({
+        id: versionId,
+        version: versionId.slice(0, 8),
+        key: 'main_site',
+        data: existing.data,
+        savedAt: new Date().toISOString()
+      });
+      if (memoryContentHistory.length > 50) memoryContentHistory.length = 50;
       try {
         const { query } = await import('../db_postgres.js');
         if (query) {
           await query(
-            `INSERT INTO content_history (id, key, data, created_at) VALUES ($1, $2, $3, NOW())`,
+            `INSERT INTO content_history (id, key, data, "createdAt") VALUES ($1, $2, $3, NOW())`,
             [versionId, 'main_site', JSON.stringify(existing.data)]
           );
         }
@@ -215,7 +226,10 @@ router.post('/content', contentAdminOnly, async (req, res) => {
     // Persist to local fallback file if filesystem is writable
     try {
       const fallbackFile = path.join(__dirname, '../content_fallback.json');
-      await fs.writeFile(fallbackFile, JSON.stringify(newContent, null, 2));
+      // Never overwrite the bundled seed with an empty/stub document (must contain pages)
+      if (newContent?.pages && Object.keys(newContent.pages).length > 0) {
+        await fs.writeFile(fallbackFile, JSON.stringify(newContent, null, 2));
+      }
     } catch {
       /* ignore read-only filesystems in production cloud */
     }
@@ -224,6 +238,40 @@ router.post('/content', contentAdminOnly, async (req, res) => {
   } catch (err) {
     console.error('Failed to save content:', err);
     res.status(500).json({ error: 'Failed to save content: ' + err.message });
+  }
+});
+
+/* ── Publish History (latest versions of main_site content) ─────────── */
+router.get('/content/history', contentAdminOnly, async (req, res) => {
+  try {
+    const { query } = await import('../db_postgres.js');
+    let versions = [];
+    try {
+      const hist = await query('SELECT id, key, data, "createdAt" FROM content_history ORDER BY "createdAt" DESC LIMIT 20');
+      if (hist?.rows) {
+        versions = hist.rows.map(r => {
+          let data;
+          try { data = typeof r.data === 'string' ? JSON.parse(r.data) : r.data; } catch { data = null; }
+          return {
+            id: r.id,
+            version: (r.id || '').slice(0, 8),
+            key: r.key,
+            data,
+            savedAt: r.createdAt || r.created_at,
+            editor: r.editor
+          };
+        });
+      }
+    } catch (e) {
+      console.warn('content history query notice:', e.message);
+    }
+    if (versions.length === 0 && memoryContentHistory.length > 0) {
+      versions = memoryContentHistory.slice(0, 20);
+    }
+    return res.json({ versions });
+  } catch (err) {
+    console.error('History fetch error:', err);
+    res.status(500).json({ error: 'Failed to load publish history' });
   }
 });
 

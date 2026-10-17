@@ -920,7 +920,8 @@
             "Full HD Web Streamable Link",
             "Full Audio Stem Mix",
             "Cinematic Title Sequence"
-          ]
+          ],
+          "group": "film"
         },
         {
           "id": "traditional-muhurtham-doc",
@@ -939,7 +940,8 @@
             "Audio noise reduction on mantras",
             "Telugu ritual lower thirds titles",
             "Pen drive ready format"
-          ]
+          ],
+          "group": "film"
         },
         {
           "id": "4k-teaser-trailer",
@@ -957,7 +959,8 @@
             "4K Cinematic Cut",
             "Instagram 16:9 & 9:16 cuts",
             "Sound design with whooshes and bass drops"
-          ]
+          ],
+          "group": "social"
         },
         {
           "id": "same-day-edit",
@@ -975,7 +978,8 @@
             "LED stage screen master export",
             "WhatsApp mobile shareable version",
             "Live reception wow factor"
-          ]
+          ],
+          "group": "live"
         },
         {
           "id": "reels-shorts-pack",
@@ -993,7 +997,8 @@
             "5 Distinct 9:16 vertical edits",
             "Trending audio sync",
             "Engaging hook & cover thumbnails"
-          ]
+          ],
+          "group": "social"
         },
         {
           "id": "audio-devotional-score",
@@ -1011,7 +1016,8 @@
             "Clean vocal tracks",
             "Stereo / 5.1 Surround track",
             "Licensed devotional Telugu library"
-          ]
+          ],
+          "group": "audio"
         },
         {
           "id": "pre-wedding-teaser",
@@ -1029,7 +1035,8 @@
             "4K Music Video",
             "Teaser cut for WhatsApp invites",
             "Motion graphics date reveal"
-          ]
+          ],
+          "group": "social"
         }
       ],
       "albumPrinting": {
@@ -1055,7 +1062,16 @@
               "shimmerGradient": "linear-gradient(135deg, rgba(255,215,0,0.4) 0%, rgba(255,255,255,0.8) 50%, rgba(218,165,32,0.4) 100%)",
               "surfaceGlow": "0 0 25px rgba(245, 197, 24, 0.5)",
               "tactileFeeling": "Glossy pearlescent sheen with smooth lacquer touch"
-            }
+            },
+            "alias": "Metallic / Silver Pearl · Pearlised",
+            "tier": "luxury",
+            "shortDesc": "Mica-infused pearlised gloss that lifts jewelry and zardozi work into shimmering 3D pop.",
+            "teluguDesc": "నగలు · జర్దోజీ డిజైన్లు మెరిసేలా పెర్ల్ షైన్.",
+            "points": [
+              "High-gloss reflective sheen",
+              "Deep black D-max density",
+              "100+ year fade resistance"
+            ]
           },
           {
             "id": "royal-velvet",
@@ -1078,7 +1094,16 @@
               "shimmerGradient": "linear-gradient(135deg, rgba(114,47,55,0.2) 0%, rgba(255,255,255,0.15) 50%, rgba(50,15,20,0.3) 100%)",
               "surfaceGlow": "0 0 20px rgba(114, 47, 55, 0.4)",
               "tactileFeeling": "Ultra-soft peach-fuzz suede velvet with zero fingerprint smudges"
-            }
+            },
+            "alias": "Velvet / Feather Touch / Soft Touch",
+            "tier": "luxury",
+            "shortDesc": "Peach-skin velvet coat with zero glare — scuff-free even when pages rub together.",
+            "teluguDesc": "జీరో గ్లేర్ వెల్వెట్ టచ్ — గీతలు పడవు · వేళ్ల మార్కులు అంటవు.",
+            "points": [
+              "Zero-glare viewing angle",
+              "Anti-scratch & anti-smudge (scuff-free)",
+              "Deep contrast for candid portraits"
+            ]
           },
           {
             "id": "pure-silk",
@@ -1101,34 +1126,20 @@
               "shimmerGradient": "repeating-linear-gradient(45deg, rgba(212,175,55,0.2) 0px, rgba(212,175,55,0.2) 2px, rgba(255,255,255,0.3) 2px, rgba(255,255,255,0.3) 4px)",
               "surfaceGlow": "0 0 22px rgba(212, 175, 55, 0.45)",
               "tactileFeeling": "Micro-woven diagonal textile grain with silk iridescent luster"
-            }
-          },
-          {
-            "id": "non-tearable",
-            "n": "04",
-            "title": "Non-Tearable Poly-Luster Archival",
-            "telugu": "నాన్-టియరబుల్ పాలీ-లస్టర్",
-            "gsm": "300 GSM Archival Poly",
-            "texture": "100% waterproof, untearable synthetic sheet",
-            "clientPricePerSheet": 85,
-            "studioPricePerSheet": 52,
-            "clientPriceBadge": "₹85 / sheet",
-            "studioPriceBadge": "₹52 / sheet (Trade)",
-            "description": "Engineered from high-density synthetic polymer sheets that cannot be torn, folded, or damaged by moisture, coastal humidity, or curious toddlers. Lifetime archival guarantee.",
-            "color": "#4A90E2",
-            "shineType": "poly-luster",
-            "rigidity": "Flexible & Indestructible",
-            "waterResistance": "100% Immersion Proof",
-            "bestFor": "Lifetime Family Heirlooms, Frequent Viewing, Coastal Climate",
-            "mockAnimation": {
-              "shimmerGradient": "linear-gradient(135deg, rgba(74,144,226,0.2) 0%, rgba(255,255,255,0.6) 50%, rgba(74,144,226,0.2) 100%)",
-              "surfaceGlow": "0 0 20px rgba(74, 144, 226, 0.4)",
-              "tactileFeeling": "Smooth indestructible synthetic film with beaded water droplets"
-            }
+            },
+            "alias": "Silky / Silk Matte",
+            "tier": "luxury",
+            "shortDesc": "Fine weave texture like raw pattu silk — scatters glare during family viewing.",
+            "teluguDesc": "పట్టు వస్త్రం లాంటి సిల్క్ టెక్స్చర్.",
+            "points": [
+              "Silky fingerprint-proof coat",
+              "Textured tactile weave",
+              "Soft pastel skin rendition"
+            ]
           },
           {
             "id": "crystal-gloss",
-            "n": "05",
+            "n": "04",
             "title": "HD Silver Halide Crystal Gloss",
             "telugu": "HD సిల్వర్ హాలైడ్ క్రిస్టల్ గ్లోస్",
             "gsm": "320 GSM Photographic",
@@ -1147,11 +1158,79 @@
               "shimmerGradient": "linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.9) 50%, transparent 80%)",
               "surfaceGlow": "0 0 30px rgba(255, 255, 255, 0.6)",
               "tactileFeeling": "Glass-smooth continuous tone with diamond-like specular reflection"
-            }
+            },
+            "alias": "Silver Halide Crystal Archive (Fuji / Kodak labs)",
+            "tier": "luxury",
+            "shortDesc": "True optical lab paper — continuous tone like a traditional darkroom print; luster between matte and gloss.",
+            "teluguDesc": "అసలైన డార్క్‌రూమ్ ప్రింట్ క్వాలిటీ — మధ్యస్త లస్టర్ ఫినిష్.",
+            "points": [
+              "True optical continuous tone",
+              "Luster / satin micro-pebble texture",
+              "Colour pop without harsh reflections"
+            ]
+          },
+          {
+            "id": "glitter-sheet",
+            "n": "05",
+            "title": "Sparkle / Glitter Sheet",
+            "telugu": "స్పార్కల్ గ్లిటర్",
+            "gsm": "320 GSM Sparkle Coat",
+            "clientPricePerSheet": 105,
+            "studioPricePerSheet": 65,
+            "clientPriceBadge": "₹105 / sheet",
+            "studioPriceBadge": "₹65 / sheet (Trade)",
+            "alias": "Diamond Dust · Sparkle",
+            "tier": "special",
+            "texture": "Micro diamond-dust glitter coat",
+            "waterResistance": "Splash-protected",
+            "color": "#D9C98A",
+            "shineType": "glitter",
+            "bestFor": "Reception · Sangeet · Bridal Portraits",
+            "description": "Micro diamond-dust glitter coat that shimmers under stage and sangeet lighting. Reserved for reception and sangeet spreads.",
+            "teluguDesc": "డైమండ్ డస్ట్ మెరుపు — సేజీట్ · రిసెప్షన్ షూట్‌లకు.",
+            "points": [
+              "Micro diamond-dust shimmer",
+              "Reserved for reception & sangeet spreads",
+              "Pops under warm stage lighting"
+            ],
+            "ritualSection": "Reception & Sangeet Glitter Spreads",
+            "group": "reception"
+          },
+          {
+            "id": "non-tearable",
+            "n": "06",
+            "title": "Non-Tearable Poly-Luster Archival",
+            "telugu": "నాన్-టియరబుల్ పాలీ-లస్టర్",
+            "gsm": "300 GSM Archival Poly",
+            "texture": "100% waterproof, untearable synthetic sheet",
+            "clientPricePerSheet": 85,
+            "studioPricePerSheet": 52,
+            "clientPriceBadge": "₹85 / sheet",
+            "studioPriceBadge": "₹52 / sheet (Trade)",
+            "description": "Engineered from high-density synthetic polymer sheets that cannot be torn, folded, or damaged by moisture, coastal humidity, or curious toddlers. Lifetime archival guarantee.",
+            "color": "#4A90E2",
+            "shineType": "poly-luster",
+            "rigidity": "Flexible & Indestructible",
+            "waterResistance": "100% Immersion Proof",
+            "bestFor": "Lifetime Family Heirlooms, Frequent Viewing, Coastal Climate",
+            "mockAnimation": {
+              "shimmerGradient": "linear-gradient(135deg, rgba(74,144,226,0.2) 0%, rgba(255,255,255,0.6) 50%, rgba(74,144,226,0.2) 100%)",
+              "surfaceGlow": "0 0 20px rgba(74, 144, 226, 0.4)",
+              "tactileFeeling": "Smooth indestructible synthetic film with beaded water droplets"
+            },
+            "alias": "NT Waterproof Core",
+            "tier": "standard",
+            "shortDesc": "Synthetic polymer core impervious to beverage spills, humidity and enthusiastic kids.",
+            "teluguDesc": "నీళ్లు · తడి · పిల్లల ఆటాపాటీ — ఏదీ ఆల్బమ్‌కి అంటవు.",
+            "points": [
+              "100% waterproof composite",
+              "Resists warping & creasing",
+              "Rigid 450 GSM core"
+            ]
           },
           {
             "id": "matte-linen",
-            "n": "06",
+            "n": "07",
             "title": "Natural Matte Fine Art Linen",
             "telugu": "నేచురల్ మ్యాట్ ఫైన్ ఆర్ట్ లినెన్",
             "gsm": "350 GSM Organic Cotton",
@@ -1170,7 +1249,70 @@
               "shimmerGradient": "repeating-linear-gradient(0deg, rgba(200,190,180,0.15) 0px, rgba(200,190,180,0.15) 1px, transparent 1px, transparent 3px)",
               "surfaceGlow": "0 0 15px rgba(232, 223, 216, 0.3)",
               "tactileFeeling": "Authentic fine art paper grain with diffuse warm reflection"
-            }
+            },
+            "alias": "Leatherette / Canvas Embossed",
+            "tier": "standard",
+            "shortDesc": "Cold-roller embossed grain (linen, leather or canvas) that adds structural texture to the print.",
+            "teluguDesc": "లినెన్ · లెదర్ గ్రెయిన్ ఎంబాసింగ్ టెక్స్చర్ — స్ట్రక్చరల్ అనుభవం.",
+            "points": [
+              "Embossed linen / canvas grain",
+              "Natural matte, zero sheen",
+              "Understated fine-art elegance"
+            ]
+          },
+          {
+            "id": "ntr-matte",
+            "n": "08",
+            "title": "NTR Matte (Standard Trade)",
+            "telugu": "NTR మ్యాట్ (స్టాండ‌ర్డ్)",
+            "gsm": "350 GSM Lay-Flat",
+            "clientPricePerSheet": 85,
+            "studioPricePerSheet": 55,
+            "clientPriceBadge": "₹85 / sheet",
+            "studioPriceBadge": "₹55 / sheet (Trade)",
+            "alias": "NTR Matte · Normal Matte",
+            "tier": "standard",
+            "texture": "Flat non-reflective smooth coating",
+            "waterResistance": "100% Moisture Protected",
+            "color": "#7B8794",
+            "shineType": "matte-soft",
+            "bestFor": "Stage Groups · Ambient Room Light",
+            "description": "Flat anti-glare smooth finish — the standard tier most AP photographers give (typically ~26 of every 30 sheets).",
+            "teluguDesc": "ఫ్లాట్ యాంటీ-గ్లేర్ మ్యాట్ — ఫోటోగ్రాఫర్లు ఇచ్చే మామూలు స్టాండ‌ర్డ్ షీట్.",
+            "points": [
+              "Flat, non-reflective under warm lights",
+              "Fingerprint-resistant standard tier",
+              "Most common in commercial packages"
+            ],
+            "ritualSection": "Extended Family & Stage Groups",
+            "group": "family"
+          },
+          {
+            "id": "ntr-glossy",
+            "n": "09",
+            "title": "NTR Glossy",
+            "telugu": "NTR గ్లాసీ",
+            "gsm": "350 GSM Lay-Flat",
+            "clientPricePerSheet": 95,
+            "studioPricePerSheet": 60,
+            "clientPriceBadge": "₹95 / sheet",
+            "studioPriceBadge": "₹60 / sheet (Trade)",
+            "alias": "Mirror Gloss",
+            "tier": "standard",
+            "texture": "High-gloss mirror finish",
+            "waterResistance": "Surface wipe-clean",
+            "color": "#2F86D6",
+            "shineType": "glossy",
+            "bestFor": "Outdoor Daylight · Bright Stage",
+            "description": "Mirror shine with high contrast and punchy saturation — pops red/gold attire in daylight, but shows smudges.",
+            "teluguDesc": "మిర్రర్ షైన్ — రంగులు కాంతిమంతంగా, కానీ వేళ్ల మార్కులు అంటతాయి.",
+            "points": [
+              "Mirror-like gloss & contrast",
+              "Punchy colour for outdoor shots",
+              "Wipe with microfiber before viewing"
+            ],
+            "ritualSection": "Stage & Daylight Spreads",
+            "group": "family"
           }
         ],
         "albumSizes": [
@@ -1192,7 +1334,9 @@
             "tag": "Grand Landscape",
             "orientation": "landscape",
             "scaleCategory": "big",
-            "humanScale": "Massive Panoramic (40-inch open spread wider than adult armspan)"
+            "humanScale": "Massive Panoramic (40-inch open spread wider than adult armspan)",
+            "tradeName": "Super Jumbo / Maharaja",
+            "teluguNote": "భారత్‌లో అతిపెద్ద కమర్షియల్ సైజు — పెద్ద స్టేజ్ గ్రూప్ ఫోటోలకు."
           },
           {
             "id": "size-12x36",
@@ -1212,11 +1356,34 @@
             "tag": "Most Popular in AP",
             "orientation": "landscape",
             "scaleCategory": "big",
-            "humanScale": "Definitive Luxury Standard (Full 3-foot wide open spread)"
+            "humanScale": "Definitive Luxury Standard (Full 3-foot wide open spread)",
+            "tradeName": "Commercial King (Karizma / Canvera)",
+            "teluguNote": "భారతానికి నం.1 ఆల్బమ్ సైజు — పెళ్లి ఆల్బమ్స్‌లో 80% ఇదే."
+          },
+          {
+            "id": "size-15x30",
+            "n": "03",
+            "title": "15×30 Royal Square Jumbo",
+            "openSpread": "30\" × 15\"",
+            "closedSize": "15\" × 15\"",
+            "telugu": "15×30 రాయల్ స్క్వేర్ జంబో",
+            "clientBasePrice": 13200,
+            "studioBasePrice": 8600,
+            "clientPriceBadge": "₹13,200 (30 Sheets / 60 Pages)",
+            "studioPriceBadge": "₹8,600 (Trade Wholesale)",
+            "description": "Premium grand weddings. Immersive square spread with maximum height and width for panoramic ceremony displays.",
+            "widthRatio": 30,
+            "heightRatio": 15,
+            "popular": false,
+            "tag": "Royal Square Jumbo",
+            "orientation": "landscape",
+            "scaleCategory": "big",
+            "tradeName": "Royal Square Jumbo",
+            "teluguNote": "ప్రీమియం గ్రాండ్ పెళ్లిళ్లకు — రాయల్ స్క్వేర్ జంబో."
           },
           {
             "id": "size-12x30",
-            "n": "03",
+            "n": "04",
             "title": "12×30 Royal Wide Panoramic",
             "openSpread": "12\" Height × 30\" Width Panoramic Spread",
             "closedSize": "12\" × 15\"",
@@ -1232,11 +1399,13 @@
             "tag": "Cinema Landscape",
             "orientation": "landscape",
             "scaleCategory": "big",
-            "humanScale": "Coffee Table Widescreen (2.5 feet wide open spread)"
+            "humanScale": "Coffee Table Widescreen (2.5 feet wide open spread)",
+            "tradeName": "Medium Standard",
+            "teluguNote": "హల్దీ · మెహందీ · ఎంగేజ్‌మెంట్ ఆల్బమ్స్‌కి జనప్రియం."
           },
           {
             "id": "size-10x30",
-            "n": "04",
+            "n": "05",
             "title": "10×30 Slim Cinema Landscape",
             "openSpread": "10\" Height × 30\" Width Slim Spread",
             "closedSize": "10\" × 15\"",
@@ -1252,11 +1421,13 @@
             "tag": "Slim Landscape",
             "orientation": "landscape",
             "scaleCategory": "medium",
-            "humanScale": "Ultra-Sleek Cinematic Vista"
+            "humanScale": "Ultra-Sleek Cinematic Vista",
+            "tradeName": "Slim Cinema",
+            "teluguNote": "స్లిమ్ పానోరమిక్ — ప్రీ-వెడింగ్ షూట్‌లకు."
           },
           {
             "id": "size-12x24",
-            "n": "05",
+            "n": "06",
             "title": "12×24 Classic Celebration Square",
             "openSpread": "12\" Height × 24\" Width Spread",
             "closedSize": "12\" × 12\" (Square)",
@@ -1272,11 +1443,13 @@
             "tag": "Square Classic",
             "orientation": "square",
             "scaleCategory": "medium",
-            "humanScale": "Lap-Friendly Square Edition (2 feet wide spread)"
+            "humanScale": "Lap-Friendly Square Edition (2 feet wide spread)",
+            "tradeName": "Square Contemporary",
+            "teluguNote": "మాడర్న్ సినిమాటిక్ స్క్వేర్ బుక్."
           },
           {
             "id": "size-10x20",
-            "n": "06",
+            "n": "07",
             "title": "10×20 Compact Celebration Square",
             "openSpread": "10\" Height × 20\" Width Spread",
             "closedSize": "10\" × 10\" (Square)",
@@ -1292,11 +1465,13 @@
             "tag": "Square Compact",
             "orientation": "square",
             "scaleCategory": "small",
-            "humanScale": "Handy Square Tabletop Spread"
+            "humanScale": "Handy Square Tabletop Spread",
+            "tradeName": "Square Coffee Table Book",
+            "teluguNote": "కాఫీ టేబుల్ బుక్ — చిన్న ఫంక్షన్లు · బర్త్‌డేలకు."
           },
           {
             "id": "size-12x18-vert",
-            "n": "07",
+            "n": "08",
             "title": "12×18 Royal Vertical Portrait Spread",
             "openSpread": "18\" Height × 24\" Width Vertical Spread",
             "closedSize": "18\" Height × 12\" Width",
@@ -1312,11 +1487,13 @@
             "tag": "Vertical Portrait",
             "orientation": "vertical",
             "scaleCategory": "big",
-            "humanScale": "Tall 18-Inch Vertical Bridal Masterpiece"
+            "humanScale": "Tall 18-Inch Vertical Bridal Masterpiece",
+            "tradeName": "Royal / Jumbo Portrait",
+            "teluguNote": "వర్టికల్ లక్సరీ బుక్ — 1.5 అడుగుల పొడవైన బ్రైడల్ పోర్ట్రెయిట్‌లు."
           },
           {
             "id": "size-10x15-vert",
-            "n": "08",
+            "n": "09",
             "title": "10×15 Editorial Vertical Portrait",
             "openSpread": "15\" Height × 20\" Width Vertical Spread",
             "closedSize": "15\" Height × 10\" Width",
@@ -1332,11 +1509,13 @@
             "tag": "Vertical Editorial",
             "orientation": "vertical",
             "scaleCategory": "medium",
-            "humanScale": "15-Inch Vertical Magazine Spread"
+            "humanScale": "15-Inch Vertical Magazine Spread",
+            "tradeName": "Mid-Portrait",
+            "teluguNote": "ప్రీ-వెడింగ్ కపుల్ షూట్‌లకు కాంపాక్ట్."
           },
           {
             "id": "size-8x12-vert",
-            "n": "09",
+            "n": "10",
             "title": "8×12 Traditional Vertical Portrait",
             "openSpread": "12\" Height × 16\" Width Vertical Spread",
             "closedSize": "12\" Height × 8\" Width",
@@ -1352,11 +1531,13 @@
             "tag": "Vertical Compact",
             "orientation": "vertical",
             "scaleCategory": "small",
-            "humanScale": "Handy Bookshelf Vertical Edition"
+            "humanScale": "Handy Bookshelf Vertical Edition",
+            "tradeName": "Magazine Photo Storybook",
+            "teluguNote": "మ్యాగజైన్ స్టోరీబుక్ — గెస్ట్ సైనింగ్ · కుటుంబ బహుమతులు."
           },
           {
             "id": "size-6x9-pocket",
-            "n": "10",
+            "n": "11",
             "title": "6×9 Companion Pocket Parent Mini Book",
             "openSpread": "6\" Height × 18\" Width Miniature Spread",
             "closedSize": "6\" × 9\" Miniature Handheld",
@@ -1372,7 +1553,9 @@
             "tag": "Parent Mini Book",
             "orientation": "pocket",
             "scaleCategory": "small",
-            "humanScale": "Handheld Mini Book (Fits easily into handbags and travel cases)"
+            "humanScale": "Handheld Mini Book (Fits easily into handbags and travel cases)",
+            "tradeName": "Parent Mini Master (50% of 12×36)",
+            "teluguNote": "మాస్టర్ ఆల్బమ్‌కి సగం పరిమాణం — పేరెంట్స్‌కు గిఫ్ట్ కాపీ."
           }
         ],
         "coverFinishes": [

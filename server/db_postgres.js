@@ -10,7 +10,11 @@ const nowIso = () => new Date().toISOString();
 // ==========================================
 // SEED & FALLBACK IN-MEMORY STORE
 // ==========================================
-const adminPasswordHash = '$2a$10$aRvBEr02kbV.9jbkGLmkH.gCsgQMUdQ3iGghafWf2nLQZj4rKPlcW'; // verified bcrypt for admin123
+// Seed/demo password. Precomputed hash below matches the default demo credentials (admin123).
+// For real deployments set ADMIN_SEED_PASSWORD (hashed at boot with bcryptjs).
+const adminPasswordHash = (process.env.ADMIN_SEED_PASSWORD && process.env.ADMIN_SEED_PASSWORD !== 'admin123')
+  ? bcrypt.hashSync(process.env.ADMIN_SEED_PASSWORD, 10)
+  : '$2a$10$aRvBEr02kbV.9jbkGLmkH.gCsgQMUdQ3iGghafWf2nLQZj4rKPlcW';
 
 const memStore = {
   users: [
@@ -274,6 +278,7 @@ export async function initDatabase() {
         "createdAt" TIMESTAMPTZ DEFAULT NOW(),
         "updatedAt" TIMESTAMPTZ DEFAULT NOW()
       );
+      ALTER TABLE packages ADD COLUMN IF NOT EXISTS "apply" JSONB DEFAULT NULL;
       CREATE TABLE IF NOT EXISTS services (
         id VARCHAR(64) PRIMARY KEY,
         category VARCHAR(128) NOT NULL,
@@ -385,6 +390,38 @@ export async function initDatabase() {
         data JSONB,
         "createdAt" TIMESTAMPTZ DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS payout_requests (
+        id VARCHAR(64) PRIMARY KEY,
+        "user_id" VARCHAR(64) DEFAULT '',
+        "user_role" VARCHAR(64) DEFAULT '',
+        amount NUMERIC DEFAULT 0,
+        "upi_id" VARCHAR(255) DEFAULT '',
+        status VARCHAR(64) DEFAULT 'pending',
+        "txn_ref" VARCHAR(128) DEFAULT '',
+        note TEXT DEFAULT '',
+        data JSONB DEFAULT '{}',
+        "createdAt" TIMESTAMPTZ DEFAULT NOW(),
+        "updatedAt" TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS contact_leads (
+        id VARCHAR(64) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(64) DEFAULT '',
+        "event_type" VARCHAR(128) DEFAULT '',
+        "event_date" VARCHAR(64) DEFAULT '',
+        message TEXT DEFAULT '',
+        source VARCHAR(64) DEFAULT 'contact_form',
+        status VARCHAR(64) DEFAULT 'new',
+        data JSONB DEFAULT '{}',
+        "createdAt" TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_orders_status ON orders (status);
+      CREATE INDEX IF NOT EXISTS idx_orders_client ON orders ("client_id");
+      CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks (status);
+      CREATE INDEX IF NOT EXISTS idx_payouts_user ON payout_requests ("user_id");
+      CREATE INDEX IF NOT EXISTS idx_refresh_hash ON refresh_tokens ("token_hash");
+      CREATE INDEX IF NOT EXISTS idx_audit_ts ON audit_logs ("timestamp" DESC);
     `);
     console.log('✅ Remote PostgreSQL Tables Ready!');
   } catch (err) {
@@ -585,9 +622,9 @@ export const Package = {
     const pkg = { id, _id: id, ...data, createdAt: nowIso() };
     if (isPostgresLive) {
       await query(`
-        INSERT INTO packages (id, tier, category, price, suffix, features, popular, "isActive", "sortOrder", "b2bOrB2c", color, "coverImage", "priceType", "priceMax")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-      `, [id, pkg.tier, pkg.category, pkg.price, pkg.suffix || null, JSON.stringify(pkg.features || []), Boolean(pkg.popular), pkg.isActive !== false, Number(pkg.sortOrder || 0), pkg.b2bOrB2c, pkg.color || '#9E9E9E', pkg.coverImage || '', pkg.priceType || 'fixed', pkg.priceMax || null]);
+        INSERT INTO packages (id, tier, category, price, suffix, features, popular, "isActive", "sortOrder", "b2bOrB2c", color, "coverImage", "priceType", "priceMax", "apply")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      `, [id, pkg.tier, pkg.category, pkg.price, pkg.suffix || null, JSON.stringify(pkg.features || []), Boolean(pkg.popular), pkg.isActive !== false, Number(pkg.sortOrder || 0), pkg.b2bOrB2c, pkg.color || '#9E9E9E', pkg.coverImage || '', pkg.priceType || 'fixed', pkg.priceMax || null, pkg.apply ? JSON.stringify(pkg.apply) : null]);
     }
     memStore.packages.push(pkg);
     return pkg;
@@ -599,9 +636,9 @@ export const Package = {
     if (isPostgresLive) {
       try {
         await query(`
-          UPDATE packages SET tier=$1, category=$2, price=$3, suffix=$4, features=$5, popular=$6, "isActive"=$7, "sortOrder"=$8, "b2bOrB2c"=$9, color=$10, "coverImage"=$11, "priceType"=$12, "priceMax"=$13, "updatedAt"=NOW()
-          WHERE id=$14
-        `, [merged.tier, merged.category, merged.price, merged.suffix || null, JSON.stringify(merged.features || []), Boolean(merged.popular), merged.isActive !== false, Number(merged.sortOrder || 0), merged.b2bOrB2c, merged.color || '#9E9E9E', merged.coverImage || '', merged.priceType || 'fixed', merged.priceMax || null, id]);
+          UPDATE packages SET tier=$1, category=$2, price=$3, suffix=$4, features=$5, popular=$6, "isActive"=$7, "sortOrder"=$8, "b2bOrB2c"=$9, color=$10, "coverImage"=$11, "priceType"=$12, "priceMax"=$13, "apply"=$14, "updatedAt"=NOW()
+          WHERE id=$15
+        `, [merged.tier, merged.category, merged.price, merged.suffix || null, JSON.stringify(merged.features || []), Boolean(merged.popular), merged.isActive !== false, Number(merged.sortOrder || 0), merged.b2bOrB2c, merged.color || '#9E9E9E', merged.coverImage || '', merged.priceType || 'fixed', merged.priceMax || null, merged.apply ? JSON.stringify(merged.apply) : null, id]);
       } catch (e) {
         console.warn('Package update warning:', e.message);
       }
@@ -821,28 +858,131 @@ export const AlbumSize = {
   }
 };
 
+/* ── JSONB-backed models: dual-engine (Postgres write-through + memory fallback) ── */
+const parseJsonb = (val) => {
+  if (val == null) return {};
+  if (typeof val === 'string') {
+    try { return JSON.parse(val); } catch { return {}; }
+  }
+  return val;
+};
+
+const safeQuery = async (sql, params = []) => {
+  try {
+    const res = await query(sql, params);
+    return res?.rows || null;
+  } catch (e) {
+    console.warn('PG query notice:', e.message);
+    return null;
+  }
+};
+
+const ownerParam = (filter) => filter.client_id || filter.userId || filter.user_id || null;
+const studioParam = (filter) => filter.studio_id || filter.studioId || null;
+
+const orderWhere = (filter, params) => {
+  let sql = '';
+  const owner = ownerParam(filter);
+  if (owner) {
+    params.push(String(owner));
+    sql += ` AND ("client_id" = $${params.length} OR data->>'userId' = $${params.length} OR data->>'user_id' = $${params.length} OR data->>'client_id' = $${params.length})`;
+  }
+  const studio = studioParam(filter);
+  if (studio) {
+    params.push(String(studio));
+    sql += ` AND ("studio_id" = $${params.length} OR data->>'studioId' = $${params.length} OR data->>'studio_id' = $${params.length})`;
+  }
+  if (filter.status) {
+    params.push(String(filter.status));
+    sql += ` AND (status = $${params.length} OR data->>'status' = $${params.length})`;
+  }
+  if (filter.id) {
+    params.push(String(filter.id));
+    sql += ` AND (id = $${params.length} OR data->>'orderId' = $${params.length} OR data->>'id' = $${params.length})`;
+  }
+  if (filter.email) {
+    params.push(String(filter.email).toLowerCase());
+    sql += ` AND LOWER(data->>'email') = $${params.length}`;
+  }
+  return sql;
+};
+
+const orderRowToDoc = (row) => {
+  const data = parseJsonb(row.data);
+  return {
+    ...data,
+    id: data.id || row.id,
+    _id: row.id,
+    status: data.status || row.status || 'Pending',
+    createdAt: data.createdAt || row.createdAt || nowIso(),
+    updatedAt: data.updatedAt || row.updatedAt || nowIso()
+  };
+};
+
 export const Order = {
   async create(data) {
-    const id = generateId();
-    const order = { id, _id: id, status: data.status || 'Pending', ...data, createdAt: nowIso() };
-    memStore.orders.push(order);
-    return order;
+    const id = data.id || generateId();
+    const doc = { ...data, id, _id: id, status: data.status || 'Pending', createdAt: data.createdAt || nowIso(), updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO orders (id, status, "client_id", "studio_id", data)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (id) DO UPDATE SET status = $2, data = $5, "updatedAt" = NOW()
+      `, [
+        String(id),
+        String(doc.status),
+        data.client_id || data.userId || data.user_id || null,
+        data.studio_id || data.studioId || null,
+        JSON.stringify(doc)
+      ]);
+    }
+    const idx = memStore.orders.findIndex(o => o.id === id);
+    if (idx !== -1) memStore.orders[idx] = doc; else memStore.orders.push(doc);
+    return doc;
   },
   async find(filter = {}) {
+    if (isPostgresLive) {
+      const params = [];
+      const sql = 'SELECT * FROM orders WHERE 1=1' + orderWhere(filter, params) + ' ORDER BY "createdAt" DESC';
+      const rows = await safeQuery(sql, params);
+      if (rows) return rows.map(orderRowToDoc);
+    }
     let list = [...memStore.orders];
-    if (filter.client_id) list = list.filter(o => o.client_id === filter.client_id || o.userId === filter.client_id);
-    if (filter.studio_id) list = list.filter(o => o.studio_id === filter.studio_id);
+    const owner = ownerParam(filter);
+    if (owner) list = list.filter(o => o.client_id === owner || o.userId === owner || o.user_id === owner);
+    const studio = studioParam(filter);
+    if (studio) list = list.filter(o => o.studio_id === studio || o.studioId === studio);
+    if (filter.status) list = list.filter(o => o.status === filter.status);
+    if (filter.id) list = list.filter(o => o.id === filter.id || o.orderId === filter.id);
+    if (filter.email) list = list.filter(o => (o.email || '').toLowerCase() === String(filter.email).toLowerCase());
     return list.map(o => ({ ...o, _id: o.id }));
   },
   async findById(id) {
-    const o = memStore.orders.find(o => o.id === id || o._id === id);
+    if (!id) return null;
+    if (isPostgresLive) {
+      const rows = await safeQuery(`SELECT * FROM orders WHERE id = $1 OR data->>'orderId' = $1 OR data->>'id' = $1 LIMIT 1`, [String(id)]);
+      if (rows?.length) return orderRowToDoc(rows[0]);
+    }
+    const o = memStore.orders.find(o => o.id === id || o._id === id || o.orderId === id);
     return o ? { ...o, _id: o.id } : null;
   },
   async findByIdAndUpdate(id, updateData) {
-    const o = await this.findById(id);
-    if (!o) return null;
-    const merged = { ...o, ...updateData, updatedAt: nowIso() };
-    const idx = memStore.orders.findIndex(ord => ord.id === id);
+    const existing = await this.findById(id);
+    if (!existing) return null;
+    const merged = { ...existing, ...updateData, id: existing.id, updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(
+        'UPDATE orders SET status=$2, "client_id"=COALESCE($3,"client_id"), "studio_id"=COALESCE($4,"studio_id"), data=$5, "updatedAt"=NOW() WHERE id=$1',
+        [
+          existing._id,
+          String(merged.status || 'Pending'),
+          merged.client_id || merged.userId || merged.user_id || null,
+          merged.studio_id || merged.studioId || null,
+          JSON.stringify(merged)
+        ]
+      );
+    }
+    const idx = memStore.orders.findIndex(ord => ord.id === existing.id);
     if (idx !== -1) memStore.orders[idx] = merged;
     return merged;
   },
@@ -850,53 +990,141 @@ export const Order = {
     return this.count(filter);
   },
   async count(filter = {}) {
+    if (isPostgresLive) {
+      const params = [];
+      const sql = 'SELECT COUNT(*)::int AS count FROM orders WHERE 1=1' + orderWhere(filter, params);
+      const rows = await safeQuery(sql, params);
+      if (rows?.length) return rows[0].count;
+    }
     let list = [...memStore.orders];
     if (filter.status) list = list.filter(o => o.status === filter.status);
     return list.length;
   },
-  async findAll({ status, page = 1, limit = 20 } = {}) {
+  async findAll({ page = 1, limit = 20, ...filter } = {}) {
+    const numericLimit = Number(limit) || 20;
+    const offset = ((Number(page) || 1) - 1) * numericLimit;
+    if (isPostgresLive) {
+      const params = [];
+      let sql = 'SELECT * FROM orders WHERE 1=1' + orderWhere(filter, params) + ' ORDER BY "createdAt" DESC';
+      params.push(numericLimit, offset);
+      sql += ` LIMIT $${params.length - 1} OFFSET $${params.length}`;
+      const rows = await safeQuery(sql, params);
+      if (rows) return rows.map(orderRowToDoc);
+    }
     let list = [...memStore.orders];
-    if (status) list = list.filter(o => o.status === status);
-    const offset = (page - 1) * limit;
-    return list.slice(offset, offset + limit).map(o => ({ ...o, _id: o.id }));
+    const owner = ownerParam(filter);
+    if (owner) list = list.filter(o => o.client_id === owner || o.userId === owner || o.user_id === owner);
+    if (filter.status) list = list.filter(o => o.status === filter.status);
+    if (filter.email) list = list.filter(o => (o.email || '').toLowerCase() === String(filter.email).toLowerCase());
+    return list.slice(offset, offset + numericLimit).map(o => ({ ...o, _id: o.id }));
   },
   async update(id, data) {
     return this.findByIdAndUpdate(id, data);
   }
 };
 
+const taskWhere = (filter, params) => {
+  let sql = '';
+  const editor = filter.editor_id || filter.assigned_editor_id;
+  if (editor) {
+    params.push(String(editor));
+    sql += ` AND (editor_id = $${params.length} OR data->>'assigned_editor_id' = $${params.length} OR data->>'editor_id' = $${params.length})`;
+  }
+  const studio = studioParam(filter);
+  if (studio) {
+    params.push(String(studio));
+    sql += ` AND (data->>'studio_id' = $${params.length} OR data->>'studioId' = $${params.length})`;
+  }
+  if (filter.status) {
+    params.push(String(filter.status));
+    sql += ` AND (status = $${params.length} OR data->>'status' = $${params.length})`;
+  }
+  if (filter.type || filter.job_type) {
+    params.push(String(filter.type || filter.job_type));
+    sql += ` AND (data->>'type' = $${params.length} OR data->>'job_type' = $${params.length})`;
+  }
+  return sql;
+};
+
+const taskRowToDoc = (row) => {
+  const data = parseJsonb(row.data);
+  return {
+    ...data,
+    id: data.id || row.id,
+    _id: row.id,
+    status: data.status || row.status || 'Pending',
+    createdAt: data.createdAt || row.createdAt || nowIso(),
+    updatedAt: data.updatedAt || row.updatedAt || nowIso()
+  };
+};
+
 export const Task = {
   async create(data) {
-    const id = generateId();
-    const task = { id, _id: id, ...data, status: data.status || 'Pending', createdAt: nowIso() };
-    memStore.tasks.push(task);
-    return task;
+    const id = data.id || generateId();
+    const doc = { ...data, id, _id: id, status: data.status || 'Pending', createdAt: data.createdAt || nowIso(), updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO tasks (id, editor_id, status, data)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (id) DO UPDATE SET status = $3, data = $4, "updatedAt" = NOW()
+      `, [String(id), data.assigned_editor_id || data.editor_id || null, String(doc.status), JSON.stringify(doc)]);
+    }
+    const idx = memStore.tasks.findIndex(t => t.id === id);
+    if (idx !== -1) memStore.tasks[idx] = doc; else memStore.tasks.push(doc);
+    return doc;
   },
   async find(filter = {}) {
+    if (isPostgresLive) {
+      const params = [];
+      const sql = 'SELECT * FROM tasks WHERE 1=1' + taskWhere(filter, params) + ' ORDER BY "createdAt" DESC';
+      const rows = await safeQuery(sql, params);
+      if (rows) return rows.map(taskRowToDoc);
+    }
     let list = [...memStore.tasks];
-    if (filter.editor_id) list = list.filter(t => t.editor_id === filter.editor_id);
+    const editor = filter.editor_id || filter.assigned_editor_id;
+    if (editor) list = list.filter(t => t.editor_id === editor || t.assigned_editor_id === editor);
+    const studio = studioParam(filter);
+    if (studio) list = list.filter(t => t.studio_id === studio || t.studioId === studio);
+    if (filter.status) list = list.filter(t => t.status === filter.status);
+    if (filter.type || filter.job_type) list = list.filter(t => t.type === (filter.type || filter.job_type) || t.job_type === (filter.type || filter.job_type));
     return list.map(t => ({ ...t, _id: t.id }));
   },
   async findById(id) {
-    return memStore.tasks.find(t => t.id === id || t._id === id) || null;
+    if (!id) return null;
+    if (isPostgresLive) {
+      const rows = await safeQuery(`SELECT * FROM tasks WHERE id = $1 OR data->>'id' = $1 LIMIT 1`, [String(id)]);
+      if (rows?.length) return taskRowToDoc(rows[0]);
+    }
+    const t = memStore.tasks.find(t => t.id === id || t._id === id);
+    return t ? { ...t, _id: t.id } : null;
   },
-  async findByIdAndUpdate(id, data) {
-    const t = await this.findById(id);
-    if (!t) return null;
-    const merged = { ...t, ...data };
-    const idx = memStore.tasks.findIndex(tsk => tsk.id === id);
+  async findByIdAndUpdate(id, updateData) {
+    const existing = await this.findById(id);
+    if (!existing) return null;
+    const merged = { ...existing, ...updateData, id: existing.id, updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(
+        'UPDATE tasks SET status=$2, editor_id=COALESCE($3,editor_id), data=$4, "updatedAt"=NOW() WHERE id=$1',
+        [existing._id, String(merged.status || 'Pending'), merged.assigned_editor_id || merged.editor_id || existing.editor_id || null, JSON.stringify(merged)]
+      );
+    }
+    const idx = memStore.tasks.findIndex(tsk => tsk.id === existing.id);
     if (idx !== -1) memStore.tasks[idx] = merged;
     return merged;
   },
   async count(filter = {}) {
+    if (isPostgresLive) {
+      const params = [];
+      const sql = 'SELECT COUNT(*)::int AS count FROM tasks WHERE 1=1' + taskWhere(filter, params);
+      const rows = await safeQuery(sql, params);
+      if (rows?.length) return rows[0].count;
+    }
     let list = [...memStore.tasks];
     if (filter.status) list = list.filter(t => t.status === filter.status);
     return list.length;
   },
-  async findAll({ status } = {}) {
-    let list = [...memStore.tasks];
-    if (status) list = list.filter(t => t.status === status);
-    return list.map(t => ({ ...t, _id: t.id }));
+  async findAll(filter = {}) {
+    return this.find(filter);
   },
   async update(id, data) {
     return this.findByIdAndUpdate(id, data);
@@ -905,57 +1133,186 @@ export const Task = {
 
 export const Project = {
   async create(data) {
-    const id = generateId();
-    const p = { id, _id: id, ...data, status: data.status || 'Active', createdAt: nowIso() };
-    memStore.projects.push(p);
-    return p;
+    const id = data.id || generateId();
+    const doc = { ...data, id, _id: id, status: data.status || 'Active', createdAt: data.createdAt || nowIso(), updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO projects (id, status, data)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (id) DO UPDATE SET status = $2, data = $3, "updatedAt" = NOW()
+      `, [String(id), String(doc.status), JSON.stringify(doc)]);
+    }
+    const idx = memStore.projects.findIndex(p => p.id === id);
+    if (idx !== -1) memStore.projects[idx] = doc; else memStore.projects.push(doc);
+    return doc;
   },
-  async find() {
-    return memStore.projects.map(p => ({ ...p, _id: p.id }));
+  async find(filter = {}) {
+    if (isPostgresLive) {
+      const params = [];
+      let sql = 'SELECT * FROM projects WHERE 1=1';
+      const owner = ownerParam(filter);
+      if (owner) {
+        params.push(String(owner));
+        sql += ` AND (data->>'userId' = $${params.length} OR data->>'user_id' = $${params.length})`;
+      }
+      if (filter.status) {
+        params.push(String(filter.status));
+        sql += ` AND (status = $${params.length} OR data->>'status' = $${params.length})`;
+      }
+      sql += ' ORDER BY "createdAt" DESC';
+      const rows = await safeQuery(sql, params);
+      if (rows) {
+        return rows.map(r => {
+          const data = parseJsonb(r.data);
+          return { ...data, id: r.id, _id: r.id, status: data.status || r.status || 'Active' };
+        });
+      }
+    }
+    let list = [...memStore.projects];
+    const owner = ownerParam(filter);
+    if (owner) list = list.filter(p => p.userId === owner || p.user_id === owner);
+    if (filter.status) list = list.filter(p => p.status === filter.status);
+    return list.map(p => ({ ...p, _id: p.id }));
   },
   async findById(id) {
-    return memStore.projects.find(p => p.id === id || p._id === id) || null;
+    if (!id) return null;
+    if (isPostgresLive) {
+      const rows = await safeQuery('SELECT * FROM projects WHERE id = $1 LIMIT 1', [String(id)]);
+      if (rows?.length) {
+        const r = rows[0];
+        const data = parseJsonb(r.data);
+        return { ...data, id: r.id, _id: r.id, status: data.status || r.status || 'Active', createdAt: data.createdAt || r.createdAt };
+      }
+    }
+    const p = memStore.projects.find(p => p.id === id || p._id === id);
+    return p ? { ...p, _id: p.id } : null;
   },
-  async findByIdAndUpdate(id, data) {
-    const p = await this.findById(id);
-    if (!p) return null;
-    const merged = { ...p, ...data };
-    const idx = memStore.projects.findIndex(pr => pr.id === id);
+  async findByIdAndUpdate(id, updateData) {
+    const existing = await this.findById(id);
+    if (!existing) return null;
+    const merged = { ...existing, ...updateData, id: existing.id, updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(
+        'UPDATE projects SET status=$2, data=$3, "updatedAt"=NOW() WHERE id=$1',
+        [existing._id, String(merged.status || 'Active'), JSON.stringify(merged)]
+      );
+    }
+    const idx = memStore.projects.findIndex(pr => pr.id === existing.id);
     if (idx !== -1) memStore.projects[idx] = merged;
     return merged;
   }
 };
 
+const payoutRowToDoc = (row) => {
+  const data = parseJsonb(row.data);
+  return {
+    ...data,
+    id: row.id,
+    _id: row.id,
+    user_id: data.user_id || row.user_id || '',
+    user_role: data.user_role || row.user_role || '',
+    amount: data.amount != null ? data.amount : Number(row.amount || 0),
+    upi_id: data.upi_id || row.upi_id || '',
+    status: data.status || row.status || 'pending',
+    txn_ref: data.txn_ref || row.txn_ref || '',
+    note: data.note || row.note || '',
+    createdAt: data.createdAt || row.createdAt || nowIso(),
+    updatedAt: data.updatedAt || row.updatedAt || nowIso()
+  };
+};
+
 export const PayoutRequest = {
   async create(data) {
-    const id = generateId();
-    const req = { id, _id: id, ...data, status: data.status || 'Pending', createdAt: nowIso() };
-    memStore.payoutRequests.push(req);
-    return req;
+    const id = data.id || generateId();
+    const doc = { ...data, id, _id: id, status: data.status || 'pending', createdAt: data.createdAt || nowIso(), updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO payout_requests (id, "user_id", "user_role", amount, "upi_id", status, "txn_ref", note, data)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        ON CONFLICT (id) DO UPDATE SET status = $6, data = $9, "updatedAt" = NOW()
+      `, [
+        String(id),
+        data.user_id || data.userId || '',
+        data.user_role || data.role || '',
+        Number(data.amount || 0),
+        data.upi_id || data.upiId || '',
+        String(doc.status),
+        data.txn_ref || '',
+        typeof data.note === 'string' ? data.note : JSON.stringify(data.note || ''),
+        JSON.stringify(doc)
+      ]);
+    }
+    if (!Array.isArray(memStore.payoutRequests)) memStore.payoutRequests = [];
+    const idx = memStore.payoutRequests.findIndex(p => p.id === id);
+    if (idx !== -1) memStore.payoutRequests[idx] = doc; else memStore.payoutRequests.push(doc);
+    return doc;
   },
   async find(filter = {}) {
-    let list = [...memStore.payoutRequests];
-    if (filter.user_id) list = list.filter(p => p.user_id === filter.user_id);
-    return list.map(p => ({ ...p, _id: p.id }));
-  },
-  async findByIdAndUpdate(id, updateData) {
-    const p = memStore.payoutRequests.find(pr => pr.id === id);
-    if (!p) return null;
-    Object.assign(p, updateData);
-    return p;
-  },
-  async count(filter = {}) {
-    let list = [...memStore.payoutRequests];
+    if (isPostgresLive) {
+      const params = [];
+      let sql = 'SELECT * FROM payout_requests WHERE 1=1';
+      if (filter.user_id || filter.userId) {
+        params.push(String(filter.user_id || filter.userId));
+        sql += ` AND ("user_id" = $${params.length} OR data->>'user_id' = $${params.length} OR data->>'userId' = $${params.length})`;
+      }
+      if (filter.status) {
+        params.push(String(filter.status));
+        sql += ` AND (status = $${params.length} OR data->>'status' = $${params.length})`;
+      }
+      sql += ' ORDER BY "createdAt" DESC';
+      const rows = await safeQuery(sql, params);
+      if (rows) return rows.map(payoutRowToDoc);
+    }
+    let list = [...(memStore.payoutRequests || [])];
+    if (filter.user_id || filter.userId) {
+      const v = filter.user_id || filter.userId;
+      list = list.filter(p => p.user_id === v || p.userId === v);
+    }
     if (filter.status) list = list.filter(p => p.status === filter.status);
-    return list.length;
-  },
-  async findAll({ status } = {}) {
-    let list = [...memStore.payoutRequests];
-    if (status) list = list.filter(p => p.status === filter.status);
     return list.map(p => ({ ...p, _id: p.id }));
+  },
+  async findAll(filter = {}) {
+    return this.find(filter);
   },
   async findById(id) {
-    return memStore.payoutRequests.find(pr => pr.id === id || pr._id === id) || null;
+    if (!id) return null;
+    if (isPostgresLive) {
+      const rows = await safeQuery('SELECT * FROM payout_requests WHERE id = $1 LIMIT 1', [String(id)]);
+      if (rows?.length) return payoutRowToDoc(rows[0]);
+    }
+    const p = (memStore.payoutRequests || []).find(pr => pr.id === id || pr._id === id);
+    return p ? { ...p, _id: p.id } : null;
+  },
+  async findByIdAndUpdate(id, updateData) {
+    const existing = await this.findById(id);
+    if (!existing) return null;
+    const merged = { ...existing, ...updateData, id: existing.id, updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(
+        'UPDATE payout_requests SET status=$2, "txn_ref"=$3, amount=$4, note=$5, data=$6, "updatedAt"=NOW() WHERE id=$1',
+        [
+          existing._id,
+          String(merged.status || 'pending'),
+          merged.txn_ref || '',
+          Number(merged.amount || 0),
+          typeof merged.note === 'string' ? merged.note : JSON.stringify(merged.note || ''),
+          JSON.stringify(merged)
+        ]
+      );
+    }
+    if (!Array.isArray(memStore.payoutRequests)) memStore.payoutRequests = [];
+    const idx = memStore.payoutRequests.findIndex(pr => pr.id === existing.id);
+    if (idx !== -1) memStore.payoutRequests[idx] = merged;
+    return merged;
+  },
+  async count(filter = {}) {
+    if (isPostgresLive && filter.status) {
+      const rows = await safeQuery('SELECT COUNT(*)::int AS count FROM payout_requests WHERE status = $1', [String(filter.status)]);
+      if (rows?.length) return rows[0].count;
+    }
+    let list = [...(memStore.payoutRequests || [])];
+    if (filter.status) list = list.filter(p => p.status === filter.status);
+    return list.length;
   },
   async update(id, data) {
     return this.findByIdAndUpdate(id, data);
@@ -965,29 +1322,72 @@ export const PayoutRequest = {
 export const Config = {
   async findOne({ key }) {
     if (isPostgresLive) {
-      const res = await query('SELECT * FROM configs WHERE key = $1 LIMIT 1', [key]);
-      if (res?.rows[0]) return { _id: res.rows[0].key, key: res.rows[0].key, options: res.rows[0].options || [] };
+      const rows = await safeQuery('SELECT * FROM configs WHERE key = $1 LIMIT 1', [key]);
+      if (rows?.[0]) {
+        let opts = rows[0].options;
+        if (typeof opts === 'string') {
+          try { opts = JSON.parse(opts); } catch { opts = []; }
+        }
+        return { _id: rows[0].key, key: rows[0].key, options: Array.isArray(opts) ? opts : [] };
+      }
     }
     const val = memStore.configs.get(key);
-    return val ? { _id: key, key, options: val } : { _id: key, key, options: [] };
+    return { _id: key, key, options: val && Array.isArray(val) ? val : [] };
   },
   async create({ key, options }) {
-    memStore.configs.set(key, options || []);
-    return { _id: key, key, options: options || [] };
+    const value = Array.isArray(options) ? options : [];
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO configs (key, options)
+        VALUES ($1, $2)
+        ON CONFLICT (key) DO UPDATE SET options = $2, "updatedAt" = NOW()
+      `, [key, JSON.stringify(value)]);
+    }
+    memStore.configs.set(key, value);
+    return { _id: key, key, options: value };
   },
   async findOneAndUpdate({ key }, updateData, opts = {}) {
-    return this.create({ key, options: updateData.options || [] });
+    return this.create({ key, options: updateData?.options || [] });
   }
 };
 
 export const Cart = {
   async findOne({ userId }) {
+    if (isPostgresLive && userId) {
+      const rows = await safeQuery('SELECT * FROM carts WHERE "userId" = $1 LIMIT 1', [String(userId)]);
+      if (rows?.length) {
+        const r = rows[0];
+        let items = parseJsonb(r.items);
+        if (!Array.isArray(items)) items = [];
+        return {
+          id: r.id,
+          _id: r.id,
+          userId: r.userId,
+          items,
+          totalAmount: Number(r.totalAmount || 0),
+          estimatedDeliveryEta: r.estimatedDeliveryEta,
+          updatedAt: r.updatedAt || nowIso()
+        };
+      }
+    }
     const c = memStore.carts.get(userId);
     return c ? { ...c, _id: c.id } : null;
   },
   async findOneAndUpdate({ userId }, updateData, opts = {}) {
-    const id = generateId();
-    const cart = { id, _id: id, userId, ...updateData, updatedAt: nowIso() };
+    if (!userId) return null;
+    const existing = await this.findOne({ userId });
+    const id = existing?.id || generateId();
+    const items = Array.isArray(updateData?.items) ? updateData.items : (existing?.items || []);
+    const totalAmount = Number(updateData?.totalAmount ?? existing?.totalAmount ?? 0);
+    const eta = Number(updateData?.estimatedDeliveryEta ?? existing?.estimatedDeliveryEta ?? 3) || 3;
+    const cart = { id, _id: id, userId, items, totalAmount, estimatedDeliveryEta: eta, updatedAt: nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO carts (id, "userId", items, "totalAmount", "estimatedDeliveryEta")
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT ("userId") DO UPDATE SET items = $3, "totalAmount" = $4, "estimatedDeliveryEta" = $5, "updatedAt" = NOW()
+      `, [String(id), String(userId), JSON.stringify(items), totalAmount, eta]);
+    }
     memStore.carts.set(userId, cart);
     return cart;
   }
@@ -996,18 +1396,44 @@ export const Cart = {
 export const RefreshToken = {
   async create(data) {
     const id = generateId();
-    const t = { id, _id: id, ...data, revoked: false, createdAt: nowIso() };
-    memStore.refreshTokens.push(t);
-    return t;
+    const expiresAt = data.expires_at instanceof Date
+      ? data.expires_at.toISOString()
+      : (data.expires_at || new Date(Date.now() + 7 * 864e5).toISOString());
+    const token = {
+      id,
+      _id: id,
+      user_id: data.user_id || data.userId || '',
+      token_hash: data.token_hash,
+      expires_at: expiresAt,
+      revoked: false,
+      createdAt: nowIso()
+    };
+    if (isPostgresLive) {
+      await safeQuery('INSERT INTO refresh_tokens (id, user_id, token_hash, expires_at) VALUES ($1, $2, $3, $4)', [id, token.user_id, token.token_hash, expiresAt]);
+      await safeQuery("DELETE FROM refresh_tokens WHERE expires_at < NOW() - INTERVAL '30 days'");
+    }
+    if (!Array.isArray(memStore.refreshTokens)) memStore.refreshTokens = [];
+    memStore.refreshTokens.push(token);
+    return token;
   },
   async findOne(filter = {}) {
     if (filter.token_hash) {
-      return memStore.refreshTokens.find(t => t.token_hash === filter.token_hash && !t.revoked) || null;
+      if (isPostgresLive) {
+        const rows = await safeQuery('SELECT * FROM refresh_tokens WHERE token_hash = $1 AND revoked = false AND expires_at > NOW() LIMIT 1', [filter.token_hash]);
+        if (rows?.length) {
+          const r = rows[0];
+          return { id: r.id, _id: r.id, user_id: r.user_id, token_hash: r.token_hash, expires_at: r.expires_at, revoked: r.revoked, createdAt: r.created_at };
+        }
+      }
+      return (memStore.refreshTokens || []).find(t => t.token_hash === filter.token_hash && !t.revoked) || null;
     }
     return null;
   },
   async revoke(token_hash) {
-    const t = memStore.refreshTokens.find(t => t.token_hash === token_hash);
+    if (isPostgresLive) {
+      await safeQuery('UPDATE refresh_tokens SET revoked = true WHERE token_hash = $1', [token_hash]);
+    }
+    const t = (memStore.refreshTokens || []).find(x => x.token_hash === token_hash);
     if (t) t.revoked = true;
   }
 };
@@ -1015,21 +1441,63 @@ export const RefreshToken = {
 export const AuditLog = {
   async create(data) {
     const id = generateId();
-    const log = { id, _id: id, ...data, timestamp: nowIso() };
+    const details = typeof data.details === 'string' ? data.details : JSON.stringify(data.details ?? '');
+    const log = {
+      id,
+      _id: id,
+      user_id: data.user_id || data.userId || null,
+      action: data.action || 'EVENT',
+      details,
+      ip: data.ip || null,
+      timestamp: data.timestamp || nowIso()
+    };
+    if (isPostgresLive) {
+      await safeQuery('INSERT INTO audit_logs (id, user_id, action, details, ip) VALUES ($1, $2, $3, $4, $5)', [id, log.user_id, log.action, log.details, log.ip]);
+    }
+    if (!Array.isArray(memStore.auditLogs)) memStore.auditLogs = [];
     memStore.auditLogs.unshift(log);
     return log;
   },
   async find() {
-    return memStore.auditLogs.slice(0, 100);
+    if (isPostgresLive) {
+      const rows = await safeQuery('SELECT * FROM audit_logs ORDER BY timestamp DESC LIMIT 100');
+      if (rows) return rows.map(r => ({ ...r, _id: r.id }));
+    }
+    return (memStore.auditLogs || []).slice(0, 100);
   }
 };
 
 export const ContactLead = {
   async create(data) {
     const id = generateId();
-    const lead = { id, _id: id, ...data, createdAt: nowIso() };
+    const lead = { id, _id: id, ...data, createdAt: data.createdAt || nowIso() };
+    if (isPostgresLive) {
+      await safeQuery(`
+        INSERT INTO contact_leads (id, name, email, phone, "event_type", "event_date", message, source, status)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        ON CONFLICT (id) DO UPDATE SET status = $9
+      `, [
+        id,
+        lead.name || '',
+        lead.email || '',
+        lead.phone || '',
+        lead.event_type || lead.eventType || '',
+        lead.event_date || lead.eventDate || '',
+        lead.message || '',
+        lead.source || 'contact_form',
+        lead.status || 'new'
+      ]);
+    }
+    if (!Array.isArray(memStore.contactLeads)) memStore.contactLeads = [];
     memStore.contactLeads.unshift(lead);
     return lead;
+  },
+  async find(filter = {}) {
+    if (isPostgresLive) {
+      const rows = await safeQuery('SELECT * FROM contact_leads ORDER BY "createdAt" DESC LIMIT 200');
+      if (rows) return rows.map(r => ({ ...parseJsonb(r.data), ...r, id: r.id, _id: r.id }));
+    }
+    return (memStore.contactLeads || []).slice(0, 200);
   }
 };
 

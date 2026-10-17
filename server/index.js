@@ -67,7 +67,13 @@ app.use(cors({
   },
   credentials: true
 }));
-app.use(express.json({ limit: '50mb' }));
+// Stash the raw request body for Razorpay webhook HMAC verification (needs the exact bytes)
+app.use(express.json({
+  limit: '50mb',
+  verify: (req, res, buf) => {
+    if (req.get('x-razorpay-signature')) req.rawBody = buf;
+  }
+}));
 app.use(cookieParser());
 app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: false }));
 
@@ -177,10 +183,14 @@ app.use('/api/admin', adminRouter);
 app.use('/api/b2b', b2bRouter);
 app.use('/api/editor', editorRouter);
 app.use('/api/client', clientRouter);
-app.use('/api/content', contentRouter);
+/* NOTE: contentRouter is intentionally NOT mounted at /api/content — every one of
+ * its paths already begins with /content (or /upload, /images), so the /api mount
+ * below yields /api/content, /api/content/history, /api/upload, /api/images. The
+ * old extra mount only produced dead aliases like /api/content/content (G7). */
 app.use('/api/public', publicRouter);
 
-// Fallback mount for legacy paths & builder routes
+// Fallback mount for legacy paths & builder routes (publicRouter is also reachable
+// as /api/builder/* thanks to this mount; see public.js G7 note).
 app.use('/api/builder', publicRouter);
 app.use('/api', contentRouter);
 app.use('/api', publicRouter);

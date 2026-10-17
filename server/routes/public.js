@@ -5,6 +5,7 @@ import express from 'express';
 import { Package, Service, SheetType, AlbumSize, ContactLead, Order, Task, Cart, Project, Config } from '../db.js';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
@@ -22,8 +23,25 @@ function isStudioOrAdmin(req) {
   }
 }
 
+const decodeUser = (req) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return null;
+  try {
+    return jwt.verify(token, JWT_SECRET, { issuer: 'weddingalbums.in' });
+  } catch {
+    return null;
+  }
+};
+
+/* Staff gate for workforce routes (task queue / projects): studios, editors, operators */
+const requireStaff = requireRole(['b2b', 'editor', 'admin', 'sysadmin'], ['b2b-portal', 'editor-portal', 'client-portal']);
+
 /* ── Packages & Services & Sheets & Album Sizes ─────────────────────── */
-router.get(['/packages', '/builder/packages'], async (req, res) => {
+/* NOTE: no `/builder/*` aliases here — the router is mounted at both `/api/public`
+ * and `/api/builder`, so `/api/builder/packages` already resolves. The old
+ * in-router alias produced junk paths like /api/builder/builder/packages (G7). */
+router.get('/packages', async (req, res) => {
   try {
     const isB2B = isStudioOrAdmin(req);
     const packages = await Package.find(req.query || {});
@@ -43,7 +61,7 @@ router.get(['/packages', '/builder/packages'], async (req, res) => {
   }
 });
 
-router.get(['/services', '/builder/services'], async (req, res) => {
+router.get('/services', async (req, res) => {
   try {
     const isB2B = isStudioOrAdmin(req);
     const services = await Service.find(req.query || {});
@@ -62,7 +80,7 @@ router.get(['/services', '/builder/services'], async (req, res) => {
   }
 });
 
-router.get(['/sheets', '/builder/sheets'], async (req, res) => {
+router.get('/sheets', async (req, res) => {
   try {
     const isB2B = isStudioOrAdmin(req);
     const sheets = await SheetType.find(req.query || {});
@@ -80,7 +98,7 @@ router.get(['/sheets', '/builder/sheets'], async (req, res) => {
   }
 });
 
-router.get(['/album-sizes', '/builder/album-sizes'], async (req, res) => {
+router.get('/album-sizes', async (req, res) => {
   try {
     const isB2B = isStudioOrAdmin(req);
     const sizes = await AlbumSize.find(req.query || {});
@@ -118,8 +136,36 @@ router.get('/muhurtham', async (req, res) => {
 /* ── Public Orders & Tasks (Retail & Form Submissions Queue) ────────── */
 router.get('/orders', async (req, res) => {
   try {
-    const orders = await Order.findAll ? await Order.findAll(req.query || {}) : await Order.find(req.query || {});
-    res.json(orders || []);
+    const user = decodeUser(req);
+    let filter = { ...req.query };
+
+    if (user) {
+      if (user.role === 'admin' || user.role === 'sysadmin') {
+        /* operators see the full book */
+      } else if (user.role === 'b2b') {
+        filter.studio_id = user.id;
+      } else {
+        // b2c / editor / content_admin: only orders tied to their own account
+        const ownEmail = String(user.email || '').toLowerCase();
+        if (!ownEmail) return res.status(403).json({ error: 'Order history unavailable for this account' });
+        filter = { email: ownEmail, status: filter.status };
+      }
+    } else if (!req.query.email) {
+      return res.status(401).json({ error: 'Authentication required. Sign in, or pass the booking email (?email=) to look up guest orders.' });
+    }
+
+    const orders = await Order.findAll ? await Order.findAll(filter) : await Order.find(filter);
+    const sanitized = (orders || []).map(o => {
+      const item = o.toObject ? o.toObject() : { ...o };
+      if (!user || user.role === 'b2c' || user.role === 'editor') {
+        // hide commercial/internal data from non-staff viewers
+        delete item.studioCost;
+        delete item.wholesaleTotal;
+        delete item.internalNotes;
+      }
+      return item;
+    });
+    res.json(sanitized);
   } catch (err) {
     res.status(500).json({ error: err.message, orders: [] });
   }
@@ -127,17 +173,39 @@ router.get('/orders', async (req, res) => {
 
 router.post('/orders', async (req, res) => {
   try {
-    const raw = req.body;
+    const raw = req.body || {};
+    const rawName = String(raw.name || raw.data?.userName || raw.clientName || '').trim();
+    const email = String(raw.email || raw.data?.userEmail || '').trim();
+    const phone = String(raw.phone || raw.data?.phone || '').trim();
+
+    if (rawName.length < 2 || rawName.length > 120) {
+      return res.status(400).json({ error: 'A valid customer name is required' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'A valid email address is required' });
+    }
+    if (!/^[0-9+\-\s()]{7,15}$/.test(phone)) {
+      return res.status(400).json({ error: 'A valid phone number is required' });
+    }
+    if (raw.items != null && !Array.isArray(raw.items)) {
+      return res.status(400).json({ error: 'Items must be a list' });
+    }
+
+    const safeNumber = (v) => {
+      const n = Number(v);
+      return Number.isFinite(n) && n >= 0 && n <= 100000000 ? n : 0;
+    };
+
     const orderData = {
       id: raw.orderId || raw.id || `ORD-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
-      name: raw.name || raw.data?.userName || raw.clientName || 'Valued Couple',
-      email: raw.email || raw.data?.userEmail || '',
-      phone: raw.phone || raw.data?.phone || '',
-      total: raw.total || raw.data?.total || 0,
+      name: rawName,
+      email,
+      phone,
+      total: safeNumber(raw.total ?? raw.data?.total),
       status: raw.status || raw.data?.status || 'Confirmed',
-      items: raw.items || raw.data?.items || [],
-      address: raw.address || raw.data?.address || '',
-      instructions: raw.instructions || raw.data?.instructions || '',
+      items: Array.isArray(raw.items) ? raw.items.slice(0, 200) : (Array.isArray(raw.data?.items) ? raw.data.items.slice(0, 200) : []),
+      address: String(raw.address || raw.data?.address || '').slice(0, 500),
+      instructions: String(raw.instructions || raw.data?.instructions || '').slice(0, 2000),
       cloudLink: raw.cloudLink || raw.raw_files_link || '',
       uploadPreference: raw.uploadPreference || 'cloud',
       data: raw.data || raw,
@@ -156,7 +224,18 @@ router.get('/orders/:id', async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: 'Order not found' });
-    res.json(order);
+
+    const user = decodeUser(req);
+    const isStaff = user && ['admin', 'sysadmin', 'b2b', 'editor'].includes(user.role);
+    const isOwner = user && (
+      String(order.email || '').toLowerCase() === String(user.email || '').toLowerCase() ||
+      (user.id && order.userId && String(order.userId) === String(user.id))
+    );
+    if (isStaff || isOwner) return res.json(order);
+
+    // Unauthenticated order tracking (order id acts as a capability link): strip personal data
+    const { email, phone, address, instructions, userId, user_id, client_id, studio_id, data, ...publicOrder } = order;
+    return res.json(publicOrder);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -286,16 +365,17 @@ router.get('/orders/:id/invoice', async (req, res) => {
 });
 
 /* ── Tasks Endpoints (Queue & Dispatches) ────────────────────────────── */
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', requireStaff, async (req, res) => {
   try {
-    const tasks = await Task.findAll ? await Task.findAll(req.query || {}) : await Task.find(req.query || {});
+    const filter = { ...req.query };
+    const tasks = await Task.findAll ? await Task.findAll(filter) : await Task.find(filter);
     res.json(tasks || []);
   } catch (err) {
     res.status(500).json({ error: err.message, tasks: [] });
   }
 });
 
-router.patch('/tasks/:id', async (req, res) => {
+router.patch('/tasks/:id', requireStaff, async (req, res) => {
   try {
     const updated = await Task.findByIdAndUpdate ? await Task.findByIdAndUpdate(req.params.id, req.body) : await Task.update(req.params.id, req.body);
     res.json({ success: true, task: updated });
@@ -304,7 +384,7 @@ router.patch('/tasks/:id', async (req, res) => {
   }
 });
 
-router.put('/tasks/:id', async (req, res) => {
+router.put('/tasks/:id', requireStaff, async (req, res) => {
   try {
     const updated = await Task.findByIdAndUpdate ? await Task.findByIdAndUpdate(req.params.id, req.body) : await Task.update(req.params.id, req.body);
     res.json({ success: true, task: updated });
@@ -313,7 +393,7 @@ router.put('/tasks/:id', async (req, res) => {
   }
 });
 
-router.post('/tasks', async (req, res) => {
+router.post('/tasks', requireStaff, async (req, res) => {
   try {
     const task = await Task.create(req.body);
     res.status(201).json(task);
@@ -323,7 +403,7 @@ router.post('/tasks', async (req, res) => {
 });
 
 /* ── Projects Endpoints ─────────────────────────────────────────────── */
-router.get('/projects', async (req, res) => {
+router.get('/projects', requireStaff, async (req, res) => {
   try {
     const projects = await Project.findAll ? await Project.findAll(req.query || {}) : await Project.find(req.query || {});
     res.json(projects || []);
@@ -332,7 +412,7 @@ router.get('/projects', async (req, res) => {
   }
 });
 
-router.post('/projects', async (req, res) => {
+router.post('/projects', requireStaff, async (req, res) => {
   try {
     const project = await Project.create ? await Project.create(req.body) : req.body;
     res.status(201).json(project);
@@ -393,22 +473,55 @@ router.delete('/cart', async (req, res) => {
 });
 
 /* ── Payment API (Razorpay Order Generation & Verification) ─────────── */
+let razorpayClient = null;
+
+async function getRazorpayClient() {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_SECRET;
+  if (!keyId || !keySecret) return null;
+  if (!razorpayClient) {
+    const mod = await import('razorpay');
+    const Razorpay = mod.default || mod;
+    razorpayClient = new Razorpay({ key_id: keyId, key_secret: keySecret });
+  }
+  return razorpayClient;
+}
+
 router.post('/pay/create-order', async (req, res) => {
   try {
-    const { amount } = req.body;
-    if (!amount || Number(amount) <= 0) {
+    const amountPaise = Math.round(Number(req.body?.amount) * 100);
+    if (!req.body?.amount || !Number.isFinite(amountPaise) || amountPaise <= 0) {
       return res.status(400).json({ error: 'Valid amount is required' });
     }
-    
+
+    const client = await getRazorpayClient();
+    if (client) {
+      const rzpOrder = await client.orders.create({
+        amount: amountPaise,
+        currency: 'INR',
+        receipt: `receipt_${crypto.randomBytes(6).toString('hex')}`,
+        notes: req.body?.orderId ? { orderId: String(req.body.orderId) } : undefined
+      });
+      return res.json({
+        id: rzpOrder.id,
+        amount: rzpOrder.amount,
+        currency: rzpOrder.currency,
+        status: rzpOrder.status,
+        created_at: rzpOrder.created_at,
+        live: true
+      });
+    }
+
+    // Dev fallback when Razorpay keys are not configured — clearly flagged as mock
     const orderId = 'order_' + crypto.randomBytes(8).toString('hex');
-    const orderPayload = {
+    return res.json({
       id: orderId,
-      amount: Math.round(Number(amount) * 100),
+      amount: amountPaise,
       currency: 'INR',
       status: 'created',
-      created_at: Math.floor(Date.now() / 1000)
-    };
-    res.json(orderPayload);
+      created_at: Math.floor(Date.now() / 1000),
+      live: false
+    });
   } catch (err) {
     res.status(500).json({ error: 'Payment order creation failed: ' + err.message });
   }
@@ -421,12 +534,27 @@ router.post('/pay/verify', async (req, res) => {
       return res.status(400).json({ error: 'Missing payment confirmation parameters' });
     }
 
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_SECRET;
+    if (keySecret) {
+      // Real Razorpay: verify HMAC-SHA256 signature of "order_id|payment_id"
+      const expected = crypto.createHmac('sha256', keySecret)
+        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        .digest('hex');
+      const a = Buffer.from(expected);
+      const b = Buffer.from(String(razorpay_signature || ''));
+      if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+        return res.status(400).json({ success: false, error: 'Payment signature verification failed' });
+      }
+    } else {
+      console.warn('pay/verify: RAZORPAY_KEY_SECRET not configured — running in dev/mock mode (signature not verified)');
+    }
+
     if (orderId) {
       try {
         await Order.findByIdAndUpdate(orderId, {
           status: 'Confirmed',
           paymentStatus: 'paid',
-          paymentDetails: { razorpay_order_id, razorpay_payment_id }
+          paymentDetails: { razorpay_order_id, razorpay_payment_id, verifiedAt: new Date().toISOString() }
         });
       } catch (e) {
         console.warn('Order payment status update notice:', e.message);
@@ -440,6 +568,46 @@ router.post('/pay/verify', async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: 'Payment verification failed: ' + err.message });
+  }
+});
+
+/* ── Razorpay Webhook (server-to-server payment events) ─────────────── */
+router.post('/pay/webhook', async (req, res) => {
+  try {
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+    const signature = req.get('x-razorpay-signature');
+    const rawBody = req.rawBody;
+    if (!secret || !signature || !rawBody) {
+      return res.status(400).json({ error: 'Webhook verification not configured' });
+    }
+    const expected = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+    const a = Buffer.from(expected);
+    const b = Buffer.from(String(signature));
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+      return res.status(400).json({ error: 'Invalid webhook signature' });
+    }
+
+    const event = JSON.parse(rawBody.toString('utf8'));
+    const pay = event?.payload?.payment?.entity;
+    if (pay && String(event?.event || '').startsWith('payment.')) {
+      const linkedOrderId = pay.notes?.orderId || pay.notes?.order_id;
+      const captured = event.event === 'payment.captured' || event.event === 'payment.authorized';
+      const failed = event.event === 'payment.failed';
+      if ((captured || failed) && linkedOrderId) {
+        try {
+          await Order.findByIdAndUpdate(linkedOrderId, {
+            status: captured ? 'Confirmed' : 'Payment Failed',
+            paymentStatus: captured ? 'paid' : 'failed',
+            paymentDetails: { razorpay_order_id: pay.order_id, razorpay_payment_id: pay.id, webhook: true }
+          });
+        } catch (e) {
+          console.warn('Webhook order update notice:', e.message);
+        }
+      }
+    }
+    res.json({ received: true });
+  } catch (err) {
+    res.status(400).json({ error: 'Webhook processing failed: ' + err.message });
   }
 });
 
@@ -461,6 +629,11 @@ router.get(['/configs', '/admin/configs'], async (req, res) => {
       telugu: s.telugu || '',
       description: s.description || ''
     }));
+
+    // Wholesale price is commercial data — only expose to studios/operators
+    if (!isStudioOrAdmin(req)) {
+      options.forEach(o => { delete o.studioPrice; });
+    }
 
     res.json([
       { key: 'sheet_types', options }
@@ -498,7 +671,7 @@ router.post('/contact', async (req, res) => {
 });
 
 /* ── Turnaround / ETA Calculation ────────────────────────────────────── */
-router.post(['/calculate-eta', '/builder/calculate-eta'], async (req, res) => {
+router.post('/calculate-eta', async (req, res) => {
   try {
     const { serviceIds = [], speed = 'standard' } = req.body;
     let days = 3;

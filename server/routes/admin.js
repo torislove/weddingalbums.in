@@ -197,6 +197,25 @@ router.post('/jobs/:id/reject', adminOnly, async (req, res) => {
   }
 });
 
+/* TaskBoard: change status / assign an editor (PATCH or PUT /api/admin/jobs/:id).
+ * Previously missing — the board's updateTaskStatus() silently 404'd. */
+const updateJob = async (req, res) => {
+  try {
+    const allowed = ['status', 'assigned_editor_id', 'priority', 'deadline', 'notes'];
+    const updates = {};
+    for (const k of allowed) if (req.body[k] !== undefined) updates[k] = req.body[k];
+    if (!Object.keys(updates).length) return res.status(400).json({ error: 'No updatable fields provided' });
+    updates.updated_at = new Date().toISOString();
+    await Task.update(req.params.id, updates);
+    await writeAuditLog({ userId: req.user.id, action: 'JOB_UPDATED', resource: `Task#${req.params.id}`, details: JSON.stringify(updates), ip: req.ip });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+router.patch('/jobs/:id', adminOnly, updateJob);
+router.put('/jobs/:id', adminOnly, updateJob);
+
 /* ── Audit Log helper ────────────────────────────────────────────────── */
 async function writeAuditLog({ userId, action, resource = '', details = '', ip = '' }) {
   try {
@@ -432,6 +451,9 @@ router.post(['/packages', '/builder/packages'], adminOnly, upload.single('coverI
     if (typeof payload.features === 'string') {
       try { payload.features = JSON.parse(payload.features); } catch (e) {}
     }
+    if (typeof payload.apply === 'string') {
+      try { payload.apply = JSON.parse(payload.apply); } catch (e) {}
+    }
     if (typeof payload.includedServiceIds === 'string') {
       try { payload.includedServiceIds = JSON.parse(payload.includedServiceIds); } catch (e) {}
     }
@@ -453,6 +475,9 @@ router.put(['/packages/:id', '/builder/packages/:id'], adminOnly, upload.single(
     if (typeof payload.features === 'string') {
       try { payload.features = JSON.parse(payload.features); } catch (e) {}
     }
+    if (typeof payload.apply === 'string') {
+      try { payload.apply = JSON.parse(payload.apply); } catch (e) {}
+    }
     if (typeof payload.includedServiceIds === 'string') {
       try { payload.includedServiceIds = JSON.parse(payload.includedServiceIds); } catch (e) {}
     }
@@ -468,8 +493,8 @@ router.put(['/packages/:id', '/builder/packages/:id'], adminOnly, upload.single(
   }
 });
 
-/* ── Configs & Sheet Types Catalog (Public read, admin write) ───────── */
-router.get('/configs', async (req, res) => {
+/* ── Configs & Sheet Types Catalog (Public read mirrored here for operators, admin-gated) ───────── */
+router.get('/configs', adminOnly, async (req, res) => {
   try {
     const sheets = await SheetType.find ? await SheetType.find({}) : [];
     const options = (sheets.length > 0 ? sheets : [
