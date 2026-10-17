@@ -119,7 +119,7 @@ const B2BLanding = () => {
       </section>
 
       {/* How it Works Section */}
-      <section style={{ padding: '8rem 2rem', background: '#050505', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '8rem 2rem', background: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
           <motion.h2 
             initial={{ opacity: 0, y: 50 }}
@@ -152,11 +152,11 @@ const B2BLanding = () => {
             <motion.div variants={itemVariants} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <motion.div 
                 whileHover={{ rotate: 15, scale: 1.1 }}
-                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--gold-primary)', background: '#050505', boxShadow: '0 0 20px rgba(212,175,55,0.2)' }}
+                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--gold-primary)', background: 'var(--ink)', boxShadow: '0 0 20px rgba(212,175,55,0.2)' }}
               >
                 <UploadCloud size={40} color="var(--gold-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: '#fff' }}>1. Upload via AI</h3>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>1. Upload via AI</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Drop your RAW files into our portal. Our smart AI pre-culls the bad shots locally, saving you 80% bandwidth.</p>
             </motion.div>
 
@@ -164,22 +164,22 @@ const B2BLanding = () => {
               <motion.div 
                 animate={{ rotate: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--gold-primary)', background: '#050505', boxShadow: '0 0 20px rgba(212,175,55,0.2)' }}
+                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--gold-primary)', background: 'var(--ink)', boxShadow: '0 0 20px rgba(212,175,55,0.2)' }}
               >
                 <Settings size={40} color="var(--gold-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: '#fff' }}>2. We Process</h3>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>2. We Process</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Our 20-member dedicated team takes over. Cinematic color grading, skin retouching, and premium 12x18 album designs.</p>
             </motion.div>
 
             <motion.div variants={itemVariants} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <motion.div 
                 whileHover={{ y: -10, scale: 1.1 }}
-                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--gold-primary)', background: '#050505', boxShadow: '0 0 20px rgba(212,175,55,0.2)' }}
+                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--gold-primary)', background: 'var(--ink)', boxShadow: '0 0 20px rgba(212,175,55,0.2)' }}
               >
                 <ImageIcon size={40} color="var(--gold-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: '#fff' }}>3. You Deliver</h3>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>3. You Deliver</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Receive a white-labeled proofing link to share with clients, followed by the final exports ready for direct download.</p>
             </motion.div>
           </motion.div>
@@ -201,7 +201,7 @@ const B2BLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(212, 175, 55, 0.5)' }}>
                 <CheckCircle2 size={36} color="var(--gold-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.8rem', fontWeight: 700 }}>Free Client Leads</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Free Client Leads</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>We send high-quality wedding leads to our partner studios for FREE. Grow your booking calendar without spending a single rupee on ads.</p>
             </motion.div>
 
@@ -209,7 +209,7 @@ const B2BLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(212, 175, 55, 0.5)' }}>
                 <Shield size={36} color="var(--gold-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.8rem', fontWeight: 700 }}>Bespoke Editing & Delivery</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Bespoke Editing & Delivery</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>We edit photos, videos, and design albums exactly to your custom requirements. We can even print and <strong style={{color: 'var(--gold-primary)'}}>deliver albums directly to your clients</strong> completely anonymously under your brand name.</p>
             </motion.div>
 
@@ -217,7 +217,7 @@ const B2BLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(212, 175, 55, 0.5)' }}>
                 <Clock size={36} color="var(--gold-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.8rem', fontWeight: 700 }}>SLA Guaranteed Delivery</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>SLA Guaranteed Delivery</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>Photos culled in 48 hours. Cinematic videos in 7 days. Our workflow is flawlessly optimized. If we miss a deadline, you get a 20% refund.</p>
             </motion.div>
 
@@ -226,7 +226,7 @@ const B2BLanding = () => {
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: '10rem 2rem', background: '#050505', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '10rem 2rem', background: 'var(--ink)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <motion.div style={{ y: y1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.3, background: 'radial-gradient(circle at center, rgba(212,175,55,0.2) 0%, transparent 70%)' }} />
         
         <motion.div 

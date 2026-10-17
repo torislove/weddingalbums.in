@@ -40,7 +40,7 @@ const MockWhatsApp = () => {
             <div style={{ padding: '5px' }}>
               {/* Mock video player UI */}
               <div style={{ position: 'relative', width: '100%', height: '150px', backgroundColor: '#000', borderRadius: '4px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=400" alt="Video thumb" style={{position:'absolute', width:'100%', height:'100%', objectFit:'cover', opacity: 0.6}} />
+                 <img src="/images/bride-polished.jpg" alt="Video thumb" style={{position:'absolute', width:'100%', height:'100%', objectFit:'cover', opacity: 0.6}} />
                  {/* Play button overlay */}
                  <motion.div 
                    animate={{ scale: [1, 1.1, 1] }}
@@ -64,7 +64,7 @@ const MockWhatsApp = () => {
               initial={{ opacity: 0, scale: 0.8, x: -20 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-              style={{ backgroundColor: '#fff', padding: '10px 15px', borderRadius: '8px', maxWidth: '85%', marginRight: 'auto', marginBottom: '10px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
+              style={{ backgroundColor: 'var(--paper)', padding: '10px 15px', borderRadius: '8px', maxWidth: '85%', marginRight: 'auto', marginBottom: '10px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
             >
               <p style={{ margin: 0, fontSize: '0.9rem', color: '#303030', lineHeight: 1.4 }}>
                 Thanks! The test link has been sent to your WhatsApp number. Check your phone.

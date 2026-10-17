@@ -109,7 +109,7 @@ const VisualPillarsShowcase = ({
                       />
                       {pillar.tag && (
                         <div className="v-pillar-badge-float">
-                          <Zap size={14} className="text-[#D4AF37]" />
+                          <Zap size={14} className="text-[var(--brand)]" />
                           <span>{pillar.tag}</span>
                         </div>
                       )}

@@ -5,28 +5,31 @@ import Flipbook from '../components/Flipbook';
 import MockWhatsApp from '../components/MockWhatsApp';
 import { UploadCloud, Palette, Monitor, Truck, X, Check, Heart } from 'lucide-react';
 import PackageSection from '../components/PackageSection';
+import LazyImage from '../components/LazyImage';
 import { useContent } from '../context/ContentContext';
+import { useT } from '../context/LanguageContext';
 import './B2C.css';
 
 const B2C = () => {
+  const t = useT();
   const { content } = useContent();
   const [selectedImage, setSelectedImage] = useState(null);
 
   const b2cHeroImage = content?.global?.siteImages?.b2cHeroImage;
   const galleryImages = content?.global?.siteImages?.b2cGalleryImages || [
-    { src: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800', alt: 'Wedding Couple' },
-    { src: 'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800', alt: 'Rings' },
-    { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800', alt: 'Venue' },
-    { src: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800', alt: 'Album Spread' },
-    { src: 'https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=800', alt: 'Details' },
-    { src: 'https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80&w=800', alt: 'Decor' },
+    { src: '/images/prewedding.jpg', alt: 'Wedding Couple' },
+    { src: '/images/mangalya-dharana.png', alt: 'Rings' },
+    { src: '/images/cinematic.jpg', alt: 'Venue' },
+    { src: '/images/mockup-layflat-spread.svg', alt: 'Album Spread' },
+    { src: '/images/bride-polished.jpg', alt: 'Details' },
+    { src: '/images/saptapadi.png', alt: 'Decor' },
   ];
 
   const flipbookImages = content?.global?.siteImages?.b2cFlipbookImages || [
-    'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=600',
-    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600',
-    'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600',
-    'https://images.unsplash.com/photo-1583089892943-e02e5be26e10?auto=format&fit=crop&q=80&w=600'
+    '/images/weddingalbums-talambralu.png',
+    '/images/saptapadi.png',
+    '/images/bride-polished.jpg',
+    '/images/bridal.jpg'
   ];
 
   return (
@@ -39,19 +42,17 @@ const B2C = () => {
       {/* Hero Section */}
       <section className="b2c-hero" style={b2cHeroImage ? { backgroundImage: `url('${b2cHeroImage}')`, backgroundBlendMode: 'overlay' } : {}}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-          <div className="b2c-badge animate-pulse" style={{ backgroundColor: '#D4AF37', color: 'black', fontWeight: 'bold' }}>
-            ALBUMS + EDITING + PRINTING STARTING AT ₹2,000
+          <div className="b2c-badge animate-pulse" style={{ backgroundColor: 'var(--brand)', color: 'black', fontWeight: 'bold' }}>
+            {t('b2c.badge')}
           </div>
           <h1 className="b2c-title">
-            Your Wedding Story, <br /> Cinematically Bound.
+            {t('b2c.title1')} <br /> {t('b2c.title2')}
           </h1>
           <p className="b2c-subtitle" style={{ fontSize: '1.4rem' }}>
-            <span className="telugu-text">మీ జ్ఞాపకాలు మా బాధ్యత</span> (Your memories are our responsibility).
-            <br />
-            Upload your digital gallery and let our expert designers craft a luxury physical royal album.
+            <span className="telugu-text">{t('b2c.memline')}</span> — {t('b2c.sub')}
           </p>
           <Link to="/order" className="btn btn-gold-3d">
-            Start Your Album Order
+            {t('b2c.cta')}
           </Link>
         </motion.div>
       </section>
@@ -73,17 +74,17 @@ const B2C = () => {
           >
              <Flipbook pages={flipbookImages} />
              <div className="b2c-viewer-hint">
-               <Monitor size={16} /> Interactive 3D Viewer — Drag to turn pages
+               <Monitor size={16} /> {t('b2c.viewer_hint')}
              </div>
           </motion.div>
 
           <div className="b2c-interactive-content">
-            <h2>Experience Your Layout in 3D.</h2>
+            <h2>{t('b2c.3d_title')}</h2>
             <p>
-              No more guessing what your physical album will look like. Review your custom layout in our fully interactive 3D digital viewer before approving it for print.
+              {t('b2c.3d_desc')}
             </p>
             <ul className="b2c-feature-list">
-              {['Lifelike page turns and physics', 'Leave revision comments directly on spreads', 'One-click print approval'].map((item, i) => (
+              {[t('b2c.3d_f1'), t('b2c.3d_f2'), t('b2c.3d_f3')].map((item, i) => (
                 <li key={i}>
                   <div className="b2c-check"><Check size={16}/></div>
                   {item}
@@ -98,16 +99,16 @@ const B2C = () => {
       {/* The Process */}
       <section className="b2c-process-section">
         <div className="b2c-process-header">
-          <h2>How It Works</h2>
-          <p className="b2c-subtitle">From digital gallery to physical royal masterpiece.</p>
+          <h2>{t('b2c.how_title')}</h2>
+          <p className="b2c-subtitle">{t('b2c.how_sub')}</p>
         </div>
 
         <div className="b2c-process-grid">
           {[
-            { icon: <UploadCloud size={32}/>, title: 'Upload', desc: 'Securely upload your favorites via our portal.' },
-            { icon: <Palette size={32}/>, title: 'Design', desc: 'Our experts craft a cinematic layout.' },
-            { icon: <Monitor size={32}/>, title: 'Review', desc: 'Approve your album in 3D.' },
-            { icon: <Truck size={32}/>, title: 'Deliver', desc: 'Receive your luxury layflat album.' }
+            { icon: <UploadCloud size={32}/>, title: t('b2c.step1_t'), desc: t('b2c.step1_d') },
+            { icon: <Palette size={32}/>, title: t('b2c.step2_t'), desc: t('b2c.step2_d') },
+            { icon: <Monitor size={32}/>, title: t('b2c.step3_t'), desc: t('b2c.step3_d') },
+            { icon: <Truck size={32}/>, title: t('b2c.step4_t'), desc: t('b2c.step4_d') }
           ].map((step, i) => (
             <motion.div 
               key={i} 
@@ -130,31 +131,31 @@ const B2C = () => {
       {/* Album Quality & Sheets Explanation */}
       <section className="b2c-quality-explanation">
         <div className="b2c-quality-header">
-          <h2>Feel Your Memories <br/><span className="telugu-text" style={{ fontSize: '1.2rem', marginTop: '10px' }}>మీ ఆల్బమ్ క్వాలిటీ (Sheet Types)</span></h2>
-          <p className="b2c-subtitle">What makes our wedding albums the best choice for your Pelli?</p>
+          <h2>{t('b2c.quality_title')} <br/><span className="telugu-text" style={{ fontSize: '1.2rem', marginTop: '10px' }}>{t('b2c.quality_sheets')}</span></h2>
+          <p className="b2c-subtitle">{t('b2c.quality_sub')}</p>
         </div>
 
         <div className="b2c-quality-grid">
           <div className="b2c-quality-text">
-            <h3>The Art of Album Designing</h3>
-            <p>Your wedding photos are more than just pictures; they are the story of your biggest day. Our expert designers take your raw photos, apply <strong>cinematic color grading</strong> to make the gold jewelry shine and the silk sarees pop, and arrange them into a beautiful narrative layout.</p>
+            <h3>{t('b2c.design_title')}</h3>
+            <p>{t('b2c.design_pre')}<strong>{t('b2c.design_strong')}</strong>{t('b2c.design_post')}</p>
           </div>
           
           <div className="b2c-sheet-types">
             <motion.div className="b2c-sheet-card" whileHover={{ scale: 1.02 }}>
               <Heart className="b2c-sheet-icon" />
-              <h4>NT (Non-Tearable) Paper</h4>
-              <p>Lifetime guarantee! Waterpadina, pillalu lagina chigadu (Waterproof and tear-proof). The absolute best choice for Indian homes.</p>
+              <h4>{t('b2c.sheet1_t')}</h4>
+              <p>{t('b2c.sheet1_d')}</p>
             </motion.div>
             <motion.div className="b2c-sheet-card" whileHover={{ scale: 1.02 }}>
               <Heart className="b2c-sheet-icon" />
-              <h4>Metallic Finish</h4>
-              <p>Perfect for your grand reception and Mehendi shots. It gives the photos a rich, glowing, 3D-like metallic shine.</p>
+              <h4>{t('b2c.sheet2_t')}</h4>
+              <p>{t('b2c.sheet2_d')}</p>
             </motion.div>
             <motion.div className="b2c-sheet-card" whileHover={{ scale: 1.02 }}>
               <Heart className="b2c-sheet-icon" />
-              <h4>Velvet / Feather Touch</h4>
-              <p>A royal, soft feel in your hands. When you touch the pages, it feels like smooth velvet. Perfect for luxury portraits.</p>
+              <h4>{t('b2c.sheet3_t')}</h4>
+              <p>{t('b2c.sheet3_d')}</p>
             </motion.div>
           </div>
         </div>
@@ -163,8 +164,8 @@ const B2C = () => {
       {/* Masonry Gallery */}
       <section className="b2c-gallery-section">
         <div className="b2c-gallery-header">
-          <h2>Quality You Can Feel</h2>
-          <p className="b2c-subtitle">Printed on 300GSM archival paper, designed to last a lifetime.</p>
+          <h2>{t('b2c.gallery_title')}</h2>
+          <p className="b2c-subtitle">{t('b2c.gallery_sub')}</p>
         </div>
         
         <div className="b2c-masonry">
@@ -177,7 +178,7 @@ const B2C = () => {
               className="b2c-masonry-item"
               onClick={() => setSelectedImage(img.src || img.image)}
             >
-               <img src={img.src || img.image} alt={img.alt} />
+                <LazyImage noWrap src={img.src || img.image} alt={img.alt || img.title || img.caption || 'Portfolio image'} />
             </motion.div>
           ))}
         </div>
@@ -187,12 +188,12 @@ const B2C = () => {
       <section className="b2c-interactive-section" style={{ paddingBottom: '160px' }}>
         <div className="b2c-interactive-grid">
           <div className="b2c-interactive-content">
-            <h2>Go Digital.</h2>
+            <h2>{t('b2c.digital_title')}</h2>
             <p>
-              We design stunning cinematic video invitations customized with your photos and event details, perfectly formatted for WhatsApp.
+              {t('b2c.digital_desc')}
             </p>
             <Link to="/contact" className="btn btn-gold-3d" style={{ marginTop: '20px' }}>
-              Order Digital Invite
+              {t('b2c.digital_cta')}
             </Link>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -204,7 +205,7 @@ const B2C = () => {
       {/* Lightbox */}
       {selectedImage && (
         <div className="b2c-lightbox" onClick={() => setSelectedImage(null)}>
-          <button className="b2c-lightbox-close" onClick={() => setSelectedImage(null)}>
+          <button className="b2c-lightbox-close" onClick={() => setSelectedImage(null)} aria-label="Close">
              <X size={24} />
           </button>
           <motion.img 

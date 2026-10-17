@@ -28,7 +28,7 @@
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  color: var(--paper);
   overflow: hidden;
   animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transition: all 0.3s ease;
@@ -62,7 +62,7 @@
 }
 .toast-success .toast-icon-wrapper {
   background: rgba(16, 185, 129, 0.15);
-  color: #10B981;
+  color: var(--ok);
 }
 
 .toast-error {
@@ -70,7 +70,7 @@
 }
 .toast-error .toast-icon-wrapper {
   background: rgba(239, 68, 68, 0.15);
-  color: #EF4444;
+  color: var(--danger);
 }
 
 .toast-gold {
@@ -79,7 +79,7 @@
 }
 .toast-gold .toast-icon-wrapper {
   background: rgba(212, 175, 55, 0.2);
-  color: #D4AF37;
+  color: var(--brand);
 }
 
 .toast-info {
@@ -98,7 +98,7 @@
 .toast-title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--paper);
   margin-bottom: 2px;
   letter-spacing: 0.2px;
 }
@@ -125,7 +125,7 @@
 }
 
 .toast-close-btn:hover {
-  color: #fff;
+  color: var(--paper);
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -135,16 +135,16 @@
   left: 0;
   height: 2.5px;
   width: 100%;
-  background: linear-gradient(90deg, #D4AF37, #FFC300);
+  background: linear-gradient(90deg, var(--brand), #FFC300);
   animation: toastProgress linear forwards;
 }
 
 .toast-success .toast-progress-bar {
-  background: linear-gradient(90deg, #10B981, #34D399);
+  background: linear-gradient(90deg, var(--ok), #34D399);
 }
 
 .toast-error .toast-progress-bar {
-  background: linear-gradient(90deg, #EF4444, #F87171);
+  background: linear-gradient(90deg, var(--danger), #F87171);
 }
 
 @keyframes toastProgress {

@@ -4,9 +4,11 @@ import { Camera, MapPin, Upload, Briefcase, ChevronRight, ChevronLeft, CheckCirc
 import Logo from '../components/Logo';
 import GoldenParticles from '../components/GoldenParticles';
 import { API } from '../apiConfig';
+import { useToast } from '../context/ToastContext';
 
 const EditorRegister = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [step, setStep] = useState(1);
   const [loadingLocation, setLoadingLocation] = useState(false);
   
@@ -32,7 +34,7 @@ const EditorRegister = () => {
 
   const handleAutoLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
+      toast.error('Geolocation is not supported by your browser');
       return;
     }
     setLoadingLocation(true);
@@ -56,7 +58,7 @@ const EditorRegister = () => {
       }
     }, () => {
       setLoadingLocation(false);
-      alert("Unable to retrieve your location");
+      toast.error('Unable to retrieve your location');
     });
   };
 
@@ -66,7 +68,7 @@ const EditorRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreedToTrial) {
-      alert("Please agree to the trial terms.");
+      toast.error('Please agree to the trial terms');
       return;
     }
     try {
@@ -91,10 +93,10 @@ const EditorRegister = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
-        alert(data.error || 'Registration failed');
+        toast.error(data.error || 'Registration failed');
       }
     } catch (err) {
-      alert('Network error');
+      toast.error('Network error');
     }
   };
 
@@ -139,7 +141,7 @@ const EditorRegister = () => {
         <div className="glass-panel fade-in" style={{ maxWidth: '800px', width: '100%', padding: 'clamp(1.25rem, 4vw, 3rem)', borderRadius: '24px', background: 'rgba(20, 20, 35, 0.7)', backdropFilter: 'blur(20px)', border: '1px solid rgba(99, 102, 241, 0.2)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)', boxSizing: 'border-box' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', marginBottom: '0.5rem', background: 'linear-gradient(to right, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>Join the Creator Network</h2>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', marginBottom: '0.5rem', background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>Join the Creator Network</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Step {step} of 4: {
               step === 1 ? "Personal Details" : 
               step === 2 ? "Location & Availability" :
@@ -269,7 +271,7 @@ const EditorRegister = () => {
               <div className="fade-in" style={{ display: 'grid', gap: '1.8rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <label style={{ color: 'var(--text-secondary)', margin: 0 }}>Location Details</label>
-                  <button type="button" onClick={handleAutoLocation} disabled={loadingLocation} style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', transition: 'all 0.3s', boxShadow: loadingLocation ? '0 0 15px rgba(99,102,241,0.5)' : 'none' }}>
+                  <button type="button" onClick={handleAutoLocation} disabled={loadingLocation} style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', transition: 'all 0.3s', boxShadow: loadingLocation ? '0 0 15px rgba(212, 175, 55,0.5)' : 'none' }}>
                     <MapPin size={16} />
                     {loadingLocation ? 'Detecting...' : 'Auto-detect Location'}
                   </button>
@@ -294,10 +296,10 @@ const EditorRegister = () => {
                           borderRadius: '12px',
                           cursor: 'pointer',
                           background: formData.availability === avail ? 'rgba(99, 102, 241, 0.15)' : 'rgba(0,0,0,0.2)',
-                          color: formData.availability === avail ? '#fff' : 'var(--text-muted)',
+                          color: formData.availability === avail ? 'var(--paper)' : 'var(--text-muted)',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                           transform: formData.availability === avail ? 'translateY(-2px)' : 'none',
-                          boxShadow: formData.availability === avail ? '0 8px 20px rgba(99,102,241,0.2)' : 'none'
+                          boxShadow: formData.availability === avail ? '0 8px 20px rgba(212, 175, 55,0.2)' : 'none'
                         }}
                       >
                         {avail}
@@ -325,10 +327,10 @@ const EditorRegister = () => {
                           borderRadius: '12px',
                           cursor: 'pointer',
                           background: formData.specialty === spec ? 'rgba(99, 102, 241, 0.15)' : 'rgba(0,0,0,0.2)',
-                          color: formData.specialty === spec ? '#fff' : 'var(--text-muted)',
+                          color: formData.specialty === spec ? 'var(--paper)' : 'var(--text-muted)',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                           transform: formData.specialty === spec ? 'translateY(-2px)' : 'none',
-                          boxShadow: formData.specialty === spec ? '0 8px 20px rgba(99,102,241,0.2)' : 'none',
+                          boxShadow: formData.specialty === spec ? '0 8px 20px rgba(212, 175, 55,0.2)' : 'none',
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
@@ -393,7 +395,7 @@ const EditorRegister = () => {
                           borderRadius: '8px',
                           cursor: 'pointer',
                           background: formData.experience === exp ? 'rgba(99, 102, 241, 0.2)' : 'rgba(0,0,0,0.2)',
-                          color: formData.experience === exp ? '#fff' : 'var(--text-muted)',
+                          color: formData.experience === exp ? 'var(--paper)' : 'var(--text-muted)',
                           fontSize: '0.9rem',
                           transition: 'all 0.2s',
                         }}
@@ -410,9 +412,9 @@ const EditorRegister = () => {
             {/* STEP 4 */}
             {step === 4 && (
               <div className="fade-in">
-                <div style={{ background: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '16px', padding: 'clamp(1.5rem, 4vw, 2.5rem)', marginBottom: '2rem', textAlign: 'center', boxShadow: 'inset 0 0 20px rgba(99,102,241,0.1)' }}>
-                  <MonitorPlay size={56} color="var(--accent-primary)" style={{ margin: '0 auto 1.5rem', filter: 'drop-shadow(0 0 10px rgba(99,102,241,0.5))' }} />
-                  <h3 style={{ color: '#fff', marginBottom: '1rem', fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 'bold' }}>Welcome to the Big Leagues</h3>
+                <div style={{ background: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '16px', padding: 'clamp(1.5rem, 4vw, 2.5rem)', marginBottom: '2rem', textAlign: 'center', boxShadow: 'inset 0 0 20px rgba(212, 175, 55,0.1)' }}>
+                  <MonitorPlay size={56} color="var(--accent-primary)" style={{ margin: '0 auto 1.5rem', filter: 'drop-shadow(0 0 10px rgba(212, 175, 55,0.5))' }} />
+                  <h3 style={{ color: 'var(--paper)', marginBottom: '1rem', fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 'bold' }}>Welcome to the Big Leagues</h3>
                   <p style={{ color: 'var(--text-secondary)', lineHeight: '1.7', maxWidth: '550px', margin: '0 auto', fontSize: '1rem' }}>
                     You are applying to be part of the elite WeddingAlbums.in creator network. We only work with the best, and we guarantee the best pay.
                   </p>
@@ -430,7 +432,7 @@ const EditorRegister = () => {
                     {formData.agreedToTrial && <CheckCircle size={16} color="#000" strokeWidth={3} />}
                   </div>
                   <label style={{ color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.9rem', cursor: 'pointer', flex: 1 }}>
-                    By submitting this application, I agree to a <strong style={{ color: '#fff' }}>1-week trial period</strong> where I will be assigned 1-2 test jobs. I understand that I will be paid for these jobs <em style={{ color: 'var(--accent-primary)' }}>only after Quality Control (QC) approval</em>, and any failure to meet deadlines will result in immediate network removal.
+                    By submitting this application, I agree to a <strong style={{ color: 'var(--paper)' }}>1-week trial period</strong> where I will be assigned 1-2 test jobs. I understand that I will be paid for these jobs <em style={{ color: 'var(--accent-primary)' }}>only after Quality Control (QC) approval</em>, and any failure to meet deadlines will result in immediate network removal.
                   </label>
                 </div>
               </div>
@@ -449,11 +451,11 @@ const EditorRegister = () => {
               )}
               
               {step < 4 ? (
-                <button type="button" onClick={handleNext} disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', cursor: 'pointer', boxShadow: !nextDisabled() ? '0 4px 15px rgba(99,102,241,0.4)' : 'none' }}>
+                <button type="button" onClick={handleNext} disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', cursor: 'pointer', boxShadow: !nextDisabled() ? '0 4px 15px rgba(212, 175, 55,0.4)' : 'none' }}>
                   Next <ChevronRight size={18} />
                 </button>
               ) : (
-                <button type="submit" disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', fontSize: '1.1rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', cursor: 'pointer', boxShadow: !nextDisabled() ? '0 4px 20px rgba(99,102,241,0.6)' : 'none' }}>
+                <button type="submit" disabled={nextDisabled()} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2rem', fontSize: '1.1rem', opacity: nextDisabled() ? 0.5 : 1, transition: 'all 0.3s', cursor: 'pointer', boxShadow: !nextDisabled() ? '0 4px 20px rgba(212, 175, 55,0.6)' : 'none' }}>
                   Submit Application <CheckCircle size={20} />
                 </button>
               )}

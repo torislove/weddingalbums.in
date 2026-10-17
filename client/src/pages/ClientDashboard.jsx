@@ -223,7 +223,7 @@ const ClientDashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      fetch(`${API}/api/wallet`, { headers: { Authorization: `Bearer ${token}` } })
+      fetch(`${API}/api/client/profile`, { headers: { Authorization: `Bearer ${token}` } })
         .then(r => r.ok ? r.json() : null)
         .then(d => { if (d?.wallet_balance !== undefined) setWallet(d.wallet_balance); })
         .catch(() => {});
@@ -338,6 +338,7 @@ const ClientDashboard = () => {
           <button 
             type="button"
             onClick={handleLogout} 
+            aria-label="Log out"
             className="cdash-mobile-btn cdash-mobile-logout-btn" 
             title="Sign Out"
             style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', padding: '7px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}

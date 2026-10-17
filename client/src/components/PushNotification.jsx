@@ -6,10 +6,10 @@ import './PushNotification.css';
 
 const getIcon = (name) => {
   switch (name) {
-    case 'Sparkles': return <Sparkles size={20} className="text-[#D4AF37]" />;
-    case 'Bell': return <Bell size={20} className="text-[#D4AF37]" />;
-    case 'Calendar': return <Calendar size={20} className="text-[#D4AF37]" />;
-    default: return <Bell size={20} className="text-[#D4AF37]" />;
+    case 'Sparkles': return <Sparkles size={20} className="text-[var(--brand)]" />;
+    case 'Bell': return <Bell size={20} className="text-[var(--brand)]" />;
+    case 'Calendar': return <Calendar size={20} className="text-[var(--brand)]" />;
+    default: return <Bell size={20} className="text-[var(--brand)]" />;
   }
 };
 

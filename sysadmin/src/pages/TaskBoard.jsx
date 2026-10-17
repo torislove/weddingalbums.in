@@ -79,15 +79,15 @@ const TaskQueue = () => {
         
         {/* Editor Tasks Column */}
         <div className="bg-black/20 p-6 rounded-2xl border border-white/5">
-          <h2 className="text-2xl text-[#D4AF37] font-medium mb-6 border-b border-white/10 pb-4">B2B Job Requests (Photographers)</h2>
+          <h2 className="text-2xl text-[var(--brand)] font-medium mb-6 border-b border-white/10 pb-4">B2B Job Requests (Photographers)</h2>
           <div className="space-y-6">
             {tasks.length === 0 && <p className="text-gray-500 italic">No pending B2B jobs.</p>}
             {tasks.slice().reverse().map(task => (
-              <div key={task.id} className="bg-white/5 border border-white/10 p-6 rounded-xl relative hover:border-[#D4AF37]/50 transition-colors">
+              <div key={task.id} className="bg-white/5 border border-white/10 p-6 rounded-xl relative hover:border-[var(--brand)]/50 transition-colors">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-xl text-white font-medium">{task.clientName} Wedding</h3>
-                    <p className="text-sm text-[#D4AF37]">Submitted by: {task.studioName}</p>
+                    <p className="text-sm text-[var(--brand)]">Submitted by: {task.studioName}</p>
                   </div>
                   <span className={`px-3 py-1 text-xs font-bold uppercase rounded-full ${task.status === 'Completed' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                     {task.status}
@@ -98,7 +98,7 @@ const TaskQueue = () => {
                   <p className="font-semibold text-white mb-2 border-b border-white/10 pb-2">Job Specifications:</p>
                   <p>{task.details}</p>
                   {task.raw_files_link && (
-                    <div className="mt-2 text-[#D4AF37] break-all">Media Link: <a href={task.raw_files_link} target="_blank" rel="noreferrer" className="underline">{task.raw_files_link}</a></div>
+                    <div className="mt-2 text-[var(--brand)] break-all">Media Link: <a href={task.raw_files_link} target="_blank" rel="noreferrer" className="underline">{task.raw_files_link}</a></div>
                   )}
                 </div>
 
@@ -106,7 +106,7 @@ const TaskQueue = () => {
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
                   <div className="flex gap-2">
                     <select 
-                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]"
+                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[var(--brand)]"
                       value={selectedEditors[task.id] || task.assigned_editor_id || ''}
                       onChange={(e) => setSelectedEditors(prev => ({ ...prev, [task.id]: e.target.value }))}
                     >
@@ -126,7 +126,7 @@ const TaskQueue = () => {
                       )}
                     </select>
                     <button 
-                      className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50" 
+                      className="bg-[var(--brand)]/20 hover:bg-[var(--brand)]/40 text-[var(--brand)] px-4 py-2 rounded-lg text-sm font-medium transition border border-[var(--brand)]/50" 
                       onClick={() => updateTaskStatus(task.id, 'Assigned', selectedEditors[task.id])}
                     >
                       Dispatch
@@ -149,11 +149,11 @@ const TaskQueue = () => {
 
         {/* B2C Orders Column */}
         <div className="bg-black/20 p-6 rounded-2xl border border-white/5">
-          <h2 className="text-2xl text-[#D4AF37] font-medium mb-6 border-b border-white/10 pb-4">B2C Retail Orders (Couples)</h2>
+          <h2 className="text-2xl text-[var(--brand)] font-medium mb-6 border-b border-white/10 pb-4">B2C Retail Orders (Couples)</h2>
           <div className="space-y-6">
             {orders.length === 0 && <p className="text-gray-500 italic">No retail orders yet.</p>}
             {orders.slice().reverse().map(order => (
-              <div key={order.id} className="bg-white/5 border border-white/10 p-6 rounded-xl relative hover:border-[#D4AF37]/50 transition-colors">
+              <div key={order.id} className="bg-white/5 border border-white/10 p-6 rounded-xl relative hover:border-[var(--brand)]/50 transition-colors">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-xl text-white font-medium">{order.name}</h3>
@@ -183,19 +183,19 @@ const TaskQueue = () => {
                   {order.instructions && (
                     <div className="col-span-2 border-t border-white/10 pt-2 mt-2">
                       <p className="text-gray-500 mb-1">Special Instructions</p>
-                      <p className="italic text-[#D4AF37]">"{order.instructions}"</p>
+                      <p className="italic text-[var(--brand)]">"{order.instructions}"</p>
                     </div>
                   )}
                   {order.cloudLink && (
                     <div className="col-span-2 border-t border-white/10 pt-2 mt-2">
                       <p className="text-gray-500 mb-1">Cloud Link Provided</p>
-                      <a href={order.cloudLink} target="_blank" rel="noreferrer" className="text-[#D4AF37] underline break-all">{order.cloudLink}</a>
+                      <a href={order.cloudLink} target="_blank" rel="noreferrer" className="text-[var(--brand)] underline break-all">{order.cloudLink}</a>
                     </div>
                   )}
                   {order.uploadPreference === 'physical' && (
                     <div className="col-span-2 border-t border-white/10 pt-2 mt-2">
                       <p className="text-gray-500 mb-1">Media Preference</p>
-                      <p className="text-[#D4AF37] font-bold">Waiting for Physical Hard Drive</p>
+                      <p className="text-[var(--brand)] font-bold">Waiting for Physical Hard Drive</p>
                     </div>
                   )}
                 </div>
@@ -204,7 +204,7 @@ const TaskQueue = () => {
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
                   <div className="flex gap-2">
                     <select 
-                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4AF37]"
+                      className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[var(--brand)]"
                       value={selectedEditors[order.id || order._id] || order.assigned_editor_id || ''}
                       onChange={(e) => setSelectedEditors(prev => ({ ...prev, [order.id || order._id]: e.target.value }))}
                     >
@@ -223,7 +223,7 @@ const TaskQueue = () => {
                       )}
                     </select>
                     <button 
-                      className="bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 text-[#D4AF37] px-4 py-2 rounded-lg text-sm font-medium transition border border-[#D4AF37]/50"
+                      className="bg-[var(--brand)]/20 hover:bg-[var(--brand)]/40 text-[var(--brand)] px-4 py-2 rounded-lg text-sm font-medium transition border border-[var(--brand)]/50"
                       onClick={() => updateTaskStatus(order.id || order._id, 'Assigned', selectedEditors[order.id || order._id])}
                     >
                       Dispatch

@@ -64,14 +64,14 @@ const EditorLanding = () => {
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
             style={{ marginBottom: '2rem' }}
           >
-            <Sparkles size={72} color="var(--accent-primary)" style={{ filter: 'drop-shadow(0 0 30px rgba(99,102,241,1))' }} />
+            <Sparkles size={72} color="var(--accent-primary)" style={{ filter: 'drop-shadow(0 0 30px rgba(212, 175, 55,1))' }} />
           </motion.div>
           
           <motion.h1 
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '1.5rem', lineHeight: '1.1', fontWeight: 900, background: 'linear-gradient(to right, #818cf8, #c084fc, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 20px rgba(99,102,241,0.3))' }}
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '1.5rem', lineHeight: '1.1', fontWeight: 900, background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep), #F5E6A8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 20px rgba(212, 175, 55,0.3))' }}
           >
             Edit. Deliver.<br />Get Paid.
           </motion.h1>
@@ -92,7 +92,7 @@ const EditorLanding = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '1.2rem 3rem', fontSize: '1.3rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: '0.75rem', boxShadow: '0 0 30px rgba(99,102,241,0.4)' }}>
+            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '1.2rem 3rem', fontSize: '1.3rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: '0.75rem', boxShadow: '0 0 30px rgba(212, 175, 55,0.4)' }}>
               Take the Assessment <ArrowRight size={24} />
             </button>
           </motion.div>
@@ -111,14 +111,14 @@ const EditorLanding = () => {
       </section>
 
       {/* How it Works Section */}
-      <section style={{ padding: '8rem 2rem', background: '#050505', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '8rem 2rem', background: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
           <motion.h2 
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            style={{ textAlign: 'center', fontSize: '4rem', marginBottom: '6rem', background: 'linear-gradient(to right, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            style={{ textAlign: 'center', fontSize: '4rem', marginBottom: '6rem', background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
           >
             The Creator Journey
           </motion.h2>
@@ -142,22 +142,22 @@ const EditorLanding = () => {
             <motion.div variants={itemVariants} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <motion.div 
                 whileHover={{ y: -10 }}
-                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--accent-primary)', background: '#050505', boxShadow: '0 0 20px rgba(99,102,241,0.2)' }}
+                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--accent-primary)', background: 'var(--ink)', boxShadow: '0 0 20px rgba(212, 175, 55,0.2)' }}
               >
                 <MapPin size={40} color="var(--accent-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: '#fff' }}>1. Claim Local Jobs</h3>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>1. Claim Local Jobs</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Browse the queue for jobs in your region. Understand local traditions to grade and edit with cultural context.</p>
             </motion.div>
 
             <motion.div variants={itemVariants} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
               <motion.div 
                 whileHover={{ scale: 1.1, rotate: 15 }}
-                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--accent-primary)', background: '#050505', boxShadow: '0 0 20px rgba(99,102,241,0.2)' }}
+                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--accent-primary)', background: 'var(--ink)', boxShadow: '0 0 20px rgba(212, 175, 55,0.2)' }}
               >
                 <Layers size={40} color="var(--accent-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: '#fff' }}>2. Smart Workspaces</h3>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>2. Smart Workspaces</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Use our tailored Kanban boards designed specifically for DaVinci Resolve, Premiere Pro, and Lightroom workflows.</p>
             </motion.div>
 
@@ -165,11 +165,11 @@ const EditorLanding = () => {
               <motion.div 
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--accent-primary)', background: '#050505', boxShadow: '0 0 20px rgba(99,102,241,0.2)' }}
+                style={{ width: '100px', height: '100px', margin: '0 auto 2rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--accent-primary)', background: 'var(--ink)', boxShadow: '0 0 20px rgba(212, 175, 55,0.2)' }}
               >
                 <IndianRupee size={40} color="var(--accent-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: '#fff' }}>3. 1-Click Payouts</h3>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>3. 1-Click Payouts</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>No chasing studios for invoices. Complete a job, get it approved by QC, and withdraw instantly to your bank via UPI.</p>
             </motion.div>
           </motion.div>
@@ -191,7 +191,7 @@ const EditorLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(99, 102, 241, 0.5)' }}>
                 <Target size={36} color="var(--accent-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.8rem', fontWeight: 700 }}>Jobs for Free</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Jobs for Free</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>No subscription fees. No bidding wars. We assign high-quality jobs directly to you for <strong style={{color: 'var(--accent-primary)'}}>FREE</strong> based on your skills and regional expertise.</p>
             </motion.div>
 
@@ -199,7 +199,7 @@ const EditorLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(99, 102, 241, 0.5)' }}>
                 <ShieldCheck size={36} color="var(--accent-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.8rem', fontWeight: 700 }}>Guaranteed Payment</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Guaranteed Payment</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>The money is held in escrow by WeddingAlbums.in. Once the job is completed and approved by QC, payment is released to you instantly. No chasing clients!</p>
             </motion.div>
 
@@ -207,7 +207,7 @@ const EditorLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(99, 102, 241, 0.5)' }}>
                 <BookOpen size={36} color="var(--accent-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1.8rem', fontWeight: 700 }}>Gamified Growth</h3>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Gamified Growth</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>Maintain a &gt;4.8 star rating to unlock 'Premium Pay' assignments. Plus, get free access to our massive library of premium LUTS and presets.</p>
             </motion.div>
 
@@ -216,8 +216,8 @@ const EditorLanding = () => {
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: '10rem 2rem', background: '#050505', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <motion.div style={{ y: y1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.3, background: 'radial-gradient(circle at center, rgba(99,102,241,0.2) 0%, transparent 70%)' }} />
+      <section style={{ padding: '10rem 2rem', background: 'var(--ink)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <motion.div style={{ y: y1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.3, background: 'radial-gradient(circle at center, rgba(212, 175, 55,0.2) 0%, transparent 70%)' }} />
         
         <motion.div 
           initial={{ scale: 0.8, opacity: 0 }}
@@ -226,14 +226,14 @@ const EditorLanding = () => {
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
           style={{ position: 'relative', zIndex: 1 }}
         >
-          <h2 style={{ fontSize: '4rem', marginBottom: '2rem', fontWeight: 800, background: 'linear-gradient(to right, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ready to Monetize Your Skills?</h2>
+          <h2 style={{ fontSize: '4rem', marginBottom: '2rem', fontWeight: 800, background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ready to Monetize Your Skills?</h2>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3rem' }}>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/signup')} 
               className="liquid-btn" 
-              style={{ padding: '1.5rem 4rem', fontSize: '1.3rem', borderRadius: '50px', boxShadow: '0 0 30px rgba(99,102,241,0.3)' }}
+              style={{ padding: '1.5rem 4rem', fontSize: '1.3rem', borderRadius: '50px', boxShadow: '0 0 30px rgba(212, 175, 55,0.3)' }}
             >
               Start Application
             </motion.button>

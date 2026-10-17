@@ -26,7 +26,7 @@ const ProtectedRoute = ({ allowedRoles = [], roles = [], children }) => {
         <div style={{
           width: '36px', height: '36px', borderRadius: '50%',
           border: '3px solid rgba(212,175,55,0.15)',
-          borderTopColor: '#d4af37',
+          borderTopColor: 'var(--brand)',
           animation: 'prSpin 0.8s linear infinite',
         }} />
         <span style={{ color: '#888', fontSize: '0.85rem' }}>Loading…</span>

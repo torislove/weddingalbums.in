@@ -17,7 +17,7 @@
 .reviews-header h3 {
   font-size: 1.5rem;
   margin: 0;
-  color: #fff;
+  color: var(--paper);
 }
 
 .reviews-header p {
@@ -59,7 +59,7 @@
 
 .review-author h4 {
   margin: 0;
-  color: #fff;
+  color: var(--paper);
   font-size: 1rem;
 }
 
@@ -84,6 +84,6 @@
 .reviews-loader {
   text-align: center;
   padding: 2rem;
-  color: #d4af37;
+  color: var(--brand);
   font-weight: 500;
 }

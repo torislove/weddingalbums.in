@@ -29,7 +29,7 @@ const Editors = () => {
   }, []);
 
   return (
-    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: 'var(--paper)', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Creator & Editor Network</h1>
@@ -75,7 +75,7 @@ const Editors = () => {
             ) : editors.map(editor => (
               <tr key={editor.id || editor._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                 <td style={{ padding: '14px 16px' }}>
-                  <div style={{ fontWeight: 600, color: '#fff' }}>{editor.name}</div>
+                  <div style={{ fontWeight: 600, color: 'var(--paper)' }}>{editor.name}</div>
                   <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{editor.city || 'India'}</div>
                 </td>
                 <td style={{ padding: '14px 16px' }}>
@@ -86,10 +86,10 @@ const Editors = () => {
                     {editor.specialization || 'Photo & Video'}
                   </span>
                 </td>
-                <td style={{ padding: '14px 16px', color: '#D4AF37', fontWeight: 700 }}>
+                <td style={{ padding: '14px 16px', color: 'var(--brand)', fontWeight: 700 }}>
                   ★ {editor.editor_rating || 5.0} / 5.0
                 </td>
-                <td style={{ padding: '14px 16px', fontWeight: 600, color: '#10b981' }}>
+                <td style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--ok)' }}>
                   ₹{Number(editor.wallet_balance || 0).toLocaleString('en-IN')}
                 </td>
                 <td style={{ padding: '14px 16px' }}>

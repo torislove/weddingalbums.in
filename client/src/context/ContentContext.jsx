@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { resilientFetch } from '../utils/apiClient';
+import { applyBuilderOverrides } from '../lib/pricing.js';
 
 const ContentContext = createContext(null);
 
@@ -78,6 +79,33 @@ export const ContentProvider = ({ children }) => {
       } catch { /* ignore */ }
     }
 
+    /* 4. SysAdmin "Pricing Engine" overrides → couple-facing estimator prices */
+    if (resolvedContent?.global?.servicesCatalog && !isPreviewMode.current) {
+      try {
+        const [szRes, shRes, svcRes] = await Promise.all([
+          resilientFetch('/api/builder/album-sizes', { cache: 'no-store' }, 1, 400).catch(() => null),
+          resilientFetch('/api/builder/sheets', { cache: 'no-store' }, 1, 400).catch(() => null),
+          resilientFetch('/api/builder/services', { cache: 'no-store' }, 1, 400).catch(() => null),
+        ]);
+        const sizeRows = (szRes && szRes.ok && await szRes.json().catch(() => [])) || [];
+        const sheetRows = (shRes && shRes.ok && await shRes.json().catch(() => [])) || [];
+        const serviceRows = (svcRes && svcRes.ok && await svcRes.json().catch(() => [])) || [];
+        const activeSizes = (Array.isArray(sizeRows) ? sizeRows : []).filter((r) => r.isActive !== false);
+        const activeSheets = (Array.isArray(sheetRows) ? sheetRows : []).filter((r) => r.isActive !== false);
+        const activeServices = (Array.isArray(serviceRows) ? serviceRows : []).filter((r) => r.isActive !== false);
+        if (activeSizes.length || activeSheets.length || activeServices.length) {
+          resolvedContent.global.servicesCatalog = applyBuilderOverrides(
+            resolvedContent.global.servicesCatalog,
+            activeSizes,
+            activeSheets,
+            activeServices,
+          );
+        }
+      } catch (mergeErr) {
+        console.warn('Pricing-engine override merge skipped:', mergeErr?.message);
+      }
+    }
+
     if (resolvedContent && !isPreviewMode.current) {
       setContent(resolvedContent);
       try {
@@ -129,6 +157,18 @@ export const ContentProvider = ({ children }) => {
     };
   }, [loadContent]);
 
+  /* ── ALL hooks must run on every render, before ANY conditional return ──
+   * (the loading-screen early return below used to sit above this useMemo,
+   *  which changed the hook count on the second render and crashed the whole
+   *  app on a cold cache / new origin / incognito — the "System Recovery" screen.) */
+  const contextValue = React.useMemo(() => ({
+    content,
+    global: content?.global || {},
+    pages: content?.pages || {},
+    reload: loadContent,
+    setContent
+  }), [content, loadContent]);
+
   if (loading && !content) {
     return (
       <div
@@ -139,26 +179,18 @@ export const ContentProvider = ({ children }) => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#050505',
-          color: '#D4AF37',
+          background: 'var(--ink)',
+          color: 'var(--brand)',
           fontFamily: "'Playfair Display', Georgia, serif",
           gap: 16
         }}
       >
-        <div style={{ width: 44, height: 44, borderRadius: '50%', border: '3px solid rgba(212,175,55,0.2)', borderTopColor: '#D4AF37', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 44, height: 44, borderRadius: '50%', border: '3px solid rgba(212,175,55,0.2)', borderTopColor: 'var(--brand)', animation: 'spin 0.8s linear infinite' }} />
         <div style={{ fontSize: 18, letterSpacing: 2 }}>Loading Cinematic Weddings...</div>
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </div>
     );
   }
-
-  const contextValue = React.useMemo(() => ({
-    content,
-    global: content?.global || {},
-    pages: content?.pages || {},
-    reload: loadContent,
-    setContent
-  }), [content, loadContent]);
 
   return (
     <ContentContext.Provider value={contextValue}>

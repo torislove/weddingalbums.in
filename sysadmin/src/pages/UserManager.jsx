@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Mail, Phone, Search, RefreshCw, Trash2, Shield, Briefcase, Camera, Heart } from 'lucide-react';
 import { API } from '../apiConfig';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
+import Toast from '../components/ui/Toast';
 
 const UserManager = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeRole, setActiveRole] = useState('all');
+  const [dialog, setDialog] = useState(null); // { id, name }
+  const [toast, setToast] = useState(null);   // { msg, tone }
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -31,8 +35,9 @@ const UserManager = () => {
     fetchUsers();
   }, [activeRole]);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
+  const runDelete = async () => {
+    if (!dialog) return;
+    const { id } = dialog;
     try {
       const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/admin/users/${id}`, {
@@ -41,11 +46,14 @@ const UserManager = () => {
       });
       if (res.ok) {
         setUsers(users.filter(u => u.id !== id && u._id !== id));
+        setToast({ msg: 'User deleted', tone: 'success' });
       } else {
-        alert('Failed to delete user');
+        setToast({ msg: 'Failed to delete user', tone: 'danger' });
       }
     } catch {
-      alert('Network error');
+      setToast({ msg: 'Network error', tone: 'danger' });
+    } finally {
+      setDialog(null);
     }
   };
 
@@ -58,7 +66,7 @@ const UserManager = () => {
   const getRoleBadge = (role) => {
     switch (role) {
       case 'b2b':
-        return <span style={{ background: 'rgba(212, 175, 55, 0.15)', color: '#D4AF37', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>STUDIO (B2B)</span>;
+        return <span style={{ background: 'rgba(212, 175, 55, 0.15)', color: 'var(--brand)', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>STUDIO (B2B)</span>;
       case 'editor':
         return <span style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>CREATOR</span>;
       case 'sysadmin':
@@ -70,7 +78,7 @@ const UserManager = () => {
   };
 
   return (
-    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: 'var(--paper)', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Customer & User Management</h1>
@@ -91,7 +99,7 @@ const UserManager = () => {
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '8px',
                 padding: '8px 12px 8px 36px',
-                color: '#fff',
+                color: 'var(--paper)',
                 outline: 'none',
                 boxSizing: 'border-box',
                 fontSize: '13px'
@@ -131,7 +139,7 @@ const UserManager = () => {
               borderRadius: '6px',
               border: 'none',
               background: activeRole === tab.key ? '#0ea5e9' : 'rgba(255,255,255,0.04)',
-              color: activeRole === tab.key ? '#fff' : 'rgba(255,255,255,0.6)',
+              color: activeRole === tab.key ? 'var(--paper)' : 'rgba(255,255,255,0.6)',
               fontWeight: activeRole === tab.key ? 600 : 400,
               fontSize: '13px',
               cursor: 'pointer',
@@ -181,9 +189,9 @@ const UserManager = () => {
                       {(user.name || 'U').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 600, color: '#fff' }}>{user.name}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--paper)' }}>{user.name}</div>
                       {user.studioName && (
-                        <div style={{ fontSize: '11px', color: '#D4AF37' }}>{user.studioName}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--brand)' }}>{user.studioName}</div>
                       )}
                       {user.city && (
                         <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>{user.city}</div>
@@ -198,7 +206,7 @@ const UserManager = () => {
                 <td style={{ padding: '14px 16px' }}>
                   {getRoleBadge(user.role)}
                 </td>
-                <td style={{ padding: '14px 16px', fontWeight: 600, color: '#10b981' }}>
+                <td style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--ok)' }}>
                   ₹{Number(user.wallet_balance || 0).toLocaleString('en-IN')}
                 </td>
                 <td style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.4)' }}>
@@ -206,7 +214,7 @@ const UserManager = () => {
                 </td>
                 <td style={{ padding: '14px 16px', textAlign: 'right' }}>
                   <button 
-                    onClick={() => handleDelete(user.id || user._id)}
+                    onClick={() => setDialog({ id: user.id || user._id, name: user.name })}
                     style={{
                       background: 'none', border: 'none',
                       color: 'rgba(239,68,68,0.7)', cursor: 'pointer',
@@ -222,6 +230,18 @@ const UserManager = () => {
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        open={!!dialog}
+        tone="danger"
+        title="Delete this user?"
+        message={dialog?.name ? `“${dialog.name}” will be permanently removed from the directory. This cannot be undone.` : 'This user will be permanently removed. This cannot be undone.'}
+        confirmLabel="Delete user"
+        onConfirm={runDelete}
+        onCancel={() => setDialog(null)}
+      />
+
+      <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
     </div>
   );
 };

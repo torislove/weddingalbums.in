@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ContentProvider } from './context/ContentContext';
+import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingSocials from './components/FloatingSocials';
@@ -26,6 +27,7 @@ import OrderTracking from './pages/OrderTracking';
 import BookingPage from './pages/BookingPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import PhotoCulling from './pages/PhotoCulling';
 
 import { AuthProvider } from './context/AuthContext';
@@ -81,6 +83,7 @@ function AppContent() {
               <Route path="/b2c" element={<B2C />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/tools/ai-culling" element={<PhotoCulling />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/login" element={<PortalLogin />} />
@@ -127,7 +130,9 @@ function App() {
           <CartProvider>
             <ToastProvider>
               <Router>
-                <AppContent />
+                <LanguageProvider>
+                  <AppContent />
+                </LanguageProvider>
               </Router>
             </ToastProvider>
           </CartProvider>

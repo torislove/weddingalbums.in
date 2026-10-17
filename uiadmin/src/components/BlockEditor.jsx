@@ -82,7 +82,7 @@ const RecursiveField = ({ fieldKey, value, onChange, onUploadClick }) => {
           <div className="flex items-center gap-2">
             <input 
               type="color" 
-              value={value || '#ffffff'} 
+              value={value || 'var(--paper)'} 
               onChange={e => onChange(e.target.value)} 
               className="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent"
             />
@@ -162,7 +162,7 @@ const RecursiveField = ({ fieldKey, value, onChange, onUploadClick }) => {
           {getIconForKey(fieldKey, value)}
           <label className="text-xs font-semibold text-gray-300 capitalize tracking-wide cursor-pointer">{fieldKey}</label>
         </div>
-        <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 ${value ? 'bg-[#D4AF37]' : 'bg-black/60 border border-white/10'}`}>
+        <div className={`w-11 h-6 rounded-full transition-colors flex items-center px-0.5 ${value ? 'bg-[var(--brand)]' : 'bg-black/60 border border-white/10'}`}>
           <div className={`w-5 h-5 rounded-full bg-white transition-transform ${value ? 'translate-x-5' : 'translate-x-0'}`}></div>
         </div>
       </div>
@@ -178,7 +178,7 @@ const RecursiveField = ({ fieldKey, value, onChange, onUploadClick }) => {
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <div className="flex items-center gap-2">
-            {isExpanded ? <ChevronDown size={14} className="text-[#D4AF37]" /> : <ChevronRight size={14} className="text-gray-400" />}
+            {isExpanded ? <ChevronDown size={14} className="text-[var(--brand)]" /> : <ChevronRight size={14} className="text-gray-400" />}
             <label className="text-xs font-semibold text-gray-200 capitalize tracking-wide cursor-pointer">{fieldKey}</label>
           </div>
           <span className="text-[10px] text-gray-500">{Object.keys(value).length} sub-fields</span>
@@ -208,7 +208,7 @@ const RecursiveField = ({ fieldKey, value, onChange, onUploadClick }) => {
         <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-white/10">
           <div className="flex items-center gap-2">
             {getIconForKey(fieldKey, value)}
-            <label className="text-xs font-bold text-[#D4AF37] capitalize tracking-wider">
+            <label className="text-xs font-bold text-[var(--brand)] capitalize tracking-wider">
               {fieldKey}
             </label>
           </div>
@@ -264,7 +264,7 @@ const RecursiveField = ({ fieldKey, value, onChange, onUploadClick }) => {
                       }`}
                       title={isItemHidden ? "Item is hidden from site. Click to show" : "Item is live on site. Click to hide"}
                     >
-                      {isItemHidden ? <EyeOff size={13} /> : <Eye size={13} className="text-[#D4AF37]" />}
+                      {isItemHidden ? <EyeOff size={13} /> : <Eye size={13} className="text-[var(--brand)]" />}
                       <span className="text-[10px]">{isItemHidden ? 'Hidden' : 'Live'}</span>
                     </button>
 
@@ -336,9 +336,9 @@ const RecursiveField = ({ fieldKey, value, onChange, onUploadClick }) => {
             }
             onChange([...value, newItem]);
           }}
-          className="w-full py-2.5 rounded-xl border border-dashed border-white/20 text-gray-300 hover:text-white hover:bg-white/5 hover:border-[#D4AF37]/50 transition-all text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm"
+          className="w-full py-2.5 rounded-xl border border-dashed border-white/20 text-gray-300 hover:text-white hover:bg-white/5 hover:border-[var(--brand)]/50 transition-all text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm"
         >
-          <Plus size={15} className="text-[#D4AF37]" /> Add Item to {fieldKey}
+          <Plus size={15} className="text-[var(--brand)]" /> Add Item to {fieldKey}
         </button>
       </div>
     );
@@ -365,11 +365,11 @@ const BlockEditor = ({ block, onChange }) => {
     <div className="p-4 pb-32">
       {/* Component Title & Options Counter */}
       <div className="flex items-start gap-3 mb-5 pb-4 border-b border-white/10">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#996515] flex items-center justify-center shadow-lg shadow-yellow-900/20 flex-shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--brand)] to-[#996515] flex items-center justify-center shadow-lg shadow-yellow-900/20 flex-shrink-0">
           <Layout size={20} className="text-black" />
         </div>
         <div className="overflow-hidden flex-1">
-          <div className="text-[10px] text-[#D4AF37] font-bold tracking-widest uppercase mb-0.5">Component Editor</div>
+          <div className="text-[10px] text-[var(--brand)] font-bold tracking-widest uppercase mb-0.5">Component Editor</div>
           <h2 className="text-lg font-serif text-white truncate">{block.type}</h2>
           <p className="text-[11px] text-gray-400 mt-0.5">{propsKeys.length} customizable settings</p>
         </div>
@@ -385,7 +385,7 @@ const BlockEditor = ({ block, onChange }) => {
               value={fieldSearch}
               onChange={e => setFieldSearch(e.target.value)}
               placeholder="Search properties (e.g. title, image)..."
-              className="w-full pl-8 pr-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37]"
+              className="w-full pl-8 pr-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[var(--brand)]"
             />
           </div>
         </div>

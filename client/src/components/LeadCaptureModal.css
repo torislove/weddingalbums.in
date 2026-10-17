@@ -24,13 +24,13 @@
   box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.15);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  color: #fff;
+  color: var(--paper);
 }
 
 .quote-sticky-trigger:hover {
   padding-left: 14px;
   background: rgba(25, 20, 14, 0.98);
-  border-color: #D4AF37;
+  border-color: var(--brand);
   box-shadow: -6px 8px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.35);
 }
 
@@ -40,7 +40,7 @@
   border-radius: 50%;
   background: rgba(212, 175, 55, 0.15);
   border: 1px solid rgba(212, 175, 55, 0.4);
-  color: #D4AF37;
+  color: var(--brand);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--paper);
   white-space: nowrap;
 }
 
@@ -64,7 +64,7 @@
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-size: 0.68rem;
-  color: #D4AF37;
+  color: var(--brand);
   margin-top: 4px;
 }
 
@@ -133,7 +133,7 @@
   border-radius: 999px;
   background: rgba(212, 175, 55, 0.12);
   border: 1px solid rgba(212, 175, 55, 0.3);
-  color: #D4AF37;
+  color: var(--brand);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -155,8 +155,8 @@
 
 .quote-drawer-close:hover {
   background: rgba(212, 175, 55, 0.15);
-  border-color: #D4AF37;
-  color: #fff;
+  border-color: var(--brand);
+  color: var(--paper);
   transform: rotate(90deg);
 }
 
@@ -167,7 +167,7 @@
 
 .quote-drawer-intro h2 {
   font-size: 1.8rem;
-  color: #fff;
+  color: var(--paper);
   margin: 0 0 8px 0;
   font-weight: 700;
 }
@@ -182,7 +182,7 @@
 .quote-telugu-hint {
   font-family: 'Noto Serif Telugu', serif;
   font-size: 0.78rem;
-  color: #D4AF37;
+  color: var(--brand);
   opacity: 0.9;
 }
 
@@ -212,7 +212,7 @@
 .field-icon {
   position: absolute;
   left: 14px;
-  color: #D4AF37;
+  color: var(--brand);
   pointer-events: none;
 }
 
@@ -223,7 +223,7 @@
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
-  color: #fff;
+  color: var(--paper);
   font-family: inherit;
   font-size: 0.9rem;
   outline: none;
@@ -233,7 +233,7 @@
 
 .quote-input-group input:focus,
 .quote-input-group select:focus {
-  border-color: #D4AF37;
+  border-color: var(--brand);
   background: rgba(212, 175, 55, 0.06);
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
 }
@@ -245,7 +245,7 @@
 
 .quote-input-group option {
   background: #120e0a;
-  color: #fff;
+  color: var(--paper);
 }
 
 .quote-submit-btn {

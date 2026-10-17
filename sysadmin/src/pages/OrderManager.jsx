@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Package, RefreshCw, CheckCircle2, Clock, ArrowRight, Eye, ExternalLink } from 'lucide-react';
 import { API } from '../apiConfig';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
+import Toast from '../components/ui/Toast';
 
 const ORDER_STATES = ['DRAFT', 'CONFIRMED', 'IN_PRODUCTION', 'QC_REVIEW', 'DELIVERED', 'CLOSED'];
 
@@ -8,6 +10,8 @@ const OrderManager = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
+  const [dialog, setDialog] = useState(null); // { orderId, nextStatus }
+  const [toast, setToast] = useState(null);   // { msg, tone }
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -31,7 +35,9 @@ const OrderManager = () => {
     fetchOrders();
   }, []);
 
-  const handleTransition = async (orderId, newStatus) => {
+  const runTransition = async () => {
+    if (!dialog) return;
+    const { orderId, nextStatus } = dialog;
     setUpdatingId(orderId);
     try {
       const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
@@ -41,17 +47,19 @@ const OrderManager = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ newStatus })
+        body: JSON.stringify({ newStatus: nextStatus })
       });
       if (res.ok) {
-        setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+        setOrders(orders.map(o => (o.id || o._id) === orderId ? { ...o, status: nextStatus } : o));
+        setToast({ msg: `Moved to ${nextStatus}`, tone: 'success' });
       } else {
-        alert('Failed to update status');
+        setToast({ msg: 'Failed to update status', tone: 'danger' });
       }
     } catch {
-      alert('Network error');
+      setToast({ msg: 'Network error', tone: 'danger' });
     } finally {
       setUpdatingId(null);
+      setDialog(null);
     }
   };
 
@@ -147,7 +155,7 @@ const OrderManager = () => {
                   <td style={{ padding: '14px 16px' }}>
                     {nextStatus ? (
                       <button
-                        onClick={() => handleTransition(order.id || order._id, nextStatus)}
+                        onClick={() => setDialog({ orderId: order.id || order._id, nextStatus })}
                         disabled={updatingId === (order.id || order._id)}
                         style={{
                           display: 'flex', alignItems: 'center', gap: '6px',
@@ -170,6 +178,19 @@ const OrderManager = () => {
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        open={!!dialog}
+        tone="success"
+        title={`Advance to ${dialog?.nextStatus || ''}?`}
+        message="This moves the order along the production pipeline and is visible to the client and studio."
+        confirmLabel={`Advance to ${dialog?.nextStatus || ''}`}
+        busy={updatingId === dialog?.orderId}
+        onConfirm={runTransition}
+        onCancel={() => setDialog(null)}
+      />
+
+      <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
     </div>
   );
 };

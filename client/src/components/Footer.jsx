@@ -4,15 +4,17 @@ import { Instagram, Facebook, Youtube, MapPin, Phone, Mail } from 'lucide-react'
 import GoldenMandala from './GoldenMandala';
 import Logo from './Logo';
 import { useContent } from '../context/ContentContext';
+import { useT } from '../context/LanguageContext';
 import './Footer.css';
 
 const Footer = () => {
+  const t = useT();
   const { content } = useContent();
   const footerData = content?.global?.footer || {};
   const settings = content?.global?.siteSettings || {};
 
   const brandName = footerData.companyName || settings.brandName || 'weddingalbums.in';
-  const description = footerData.description || 'Capturing the vibrant traditions and cinematic moments of Andhra Pradesh. Specializing in Pelli, Nischitartham, and premium album designs.';
+  const description = footerData.description || t('footer.desc');
   const address = footerData.address || settings.address || 'MG Road, Vijayawada, AP 520010';
   const phone = footerData.phone || settings.phone || '+91 98765 43210';
   const email = footerData.email || settings.email || 'hello@cinematicweddings.in';
@@ -25,12 +27,12 @@ const Footer = () => {
   const quickLinks = Array.isArray(footerData.quickLinks) && footerData.quickLinks.length > 0
     ? footerData.quickLinks
     : [
-        { name: 'Home', path: '/' },
-        { name: 'About Us', path: '/about' },
-        { name: 'Services', path: '/services' },
-        { name: 'Portfolio', path: '/portfolio' },
-        { name: 'Testimonials', path: '/testimonials' },
-        { name: 'Contact', path: '/contact' }
+        { name: t('nav.home'), path: '/' },
+        { name: t('nav.about'), path: '/about' },
+        { name: t('nav.services'), path: '/services' },
+        { name: t('nav.portfolio'), path: '/portfolio' },
+        { name: t('nav.testimonials'), path: '/testimonials' },
+        { name: t('nav.contact'), path: '/contact' }
       ];
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -82,7 +84,7 @@ const Footer = () => {
           
           {/* Quick Links */}
           <div className="footer-col">
-            <h4>Quick Links</h4>
+            <h4>{t('footer.quick_links')}</h4>
             <ul>
               {quickLinks.map((link, idx) => (
                 <li key={idx}>
@@ -94,7 +96,7 @@ const Footer = () => {
 
           {/* Contact Details */}
           <div className="footer-col">
-            <h4>Contact Us</h4>
+            <h4>{t('footer.contact_us')}</h4>
             <div className="contact-info">
               {address && (
                 <div className="contact-item">
@@ -131,7 +133,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} {brandName}. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {brandName}. {t('footer.rights')}</p>
         </div>
       </div>
     </footer>

@@ -5,21 +5,23 @@ import { API } from '../apiConfig';
 const JobHistory = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all'); // 'all' | 'in_progress' | 'completed'
 
   const fetchJobs = async () => {
     setLoading(true);
+    setError(null);
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       const res = await fetch(`${API}/api/b2b/jobs`, {
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
-      if (res.ok) {
-        const data = await res.json();
-        setJobs(Array.isArray(data) ? data : []);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setJobs(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch jobs', err);
+      setError('Could not load your jobs');
     } finally {
       setLoading(false);
     }
@@ -51,6 +53,15 @@ const JobHistory = () => {
           <RefreshCw size={16} className={loading ? "spin" : ""} /> Refresh
         </button>
       </div>
+
+      {error && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem', padding: '1rem 1.25rem', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontSize: '0.9rem' }}>
+          <span>⚠ {error}.</span>
+          <button onClick={fetchJobs} className="btn-outline" style={{ padding: '0.5rem 1rem', cursor: 'pointer', borderColor: 'rgba(239,68,68,0.4)', color: '#f87171' }}>
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className="glass-panel" style={{ padding: 'clamp(1rem, 2vw, 1.5rem)' }}>
         <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: '0.25rem' }}>
@@ -93,6 +104,10 @@ const JobHistory = () => {
           <tbody>
             {loading ? (
               <tr><td colSpan="7" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading projects from server...</td></tr>
+            ) : error && jobs.length === 0 ? (
+              <tr><td colSpan="7" style={{ padding: '3rem', textAlign: 'center', color: '#f87171' }}>
+                {error}. <button onClick={fetchJobs} style={{ background: 'none', border: 'none', color: 'var(--gold-primary)', cursor: 'pointer', textDecoration: 'underline' }}>Retry</button>
+              </td></tr>
             ) : filteredJobs.length === 0 ? (
               <tr><td colSpan="7" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>No jobs found in this category.</td></tr>
             ) : filteredJobs.map(job => (
@@ -101,7 +116,7 @@ const JobHistory = () => {
                   #{String(job.id).substring(0, 8)}
                 </td>
                 <td style={{ padding: '1rem' }}>
-                  <strong style={{ color: '#fff' }}>{job.title || job.client_name || 'Wedding Shoot'}</strong>
+                  <strong style={{ color: 'var(--paper)' }}>{job.title || job.client_name || 'Wedding Shoot'}</strong>
                   {job.notes && <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>{job.notes}</p>}
                 </td>
                 <td style={{ padding: '1rem', textTransform: 'capitalize' }}>

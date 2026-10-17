@@ -46,7 +46,7 @@
   width: 60px;
   height: 60px;
   background-color: #25D366;
-  color: #FFF;
+  color: var(--paper);
   border-radius: 50px;
   text-align: center;
   font-size: 30px;

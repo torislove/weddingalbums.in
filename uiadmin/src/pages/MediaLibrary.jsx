@@ -128,7 +128,7 @@ const MediaLibrary = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#996515] flex items-center justify-center shadow-lg shadow-yellow-900/20">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--brand)] to-[#996515] flex items-center justify-center shadow-lg shadow-yellow-900/20">
             <ImageIcon size={24} className="text-black" />
           </div>
           <div>
@@ -140,6 +140,7 @@ const MediaLibrary = () => {
         <div className="flex flex-wrap items-center gap-3">
           <button 
             onClick={fetchImages}
+            aria-label="Refresh media library"
             disabled={loading}
             className="p-3 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-50"
             title="Refresh Library"
@@ -164,7 +165,7 @@ const MediaLibrary = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search images by name or keyword..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[var(--brand)] transition-colors"
           />
         </div>
 
@@ -174,7 +175,7 @@ const MediaLibrary = () => {
             value={customUrl}
             onChange={e => setCustomUrl(e.target.value)}
             placeholder="Or paste external image URL..."
-            className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] transition-colors font-mono text-xs"
+            className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[var(--brand)] transition-colors font-mono text-xs"
           />
           <button 
             type="submit"
@@ -195,7 +196,7 @@ const MediaLibrary = () => {
 
       {loading ? (
         <div className="h-64 flex flex-col items-center justify-center text-gray-400">
-          <div className="w-10 h-10 border-4 border-white/10 border-t-[#D4AF37] rounded-full animate-spin mb-4"></div>
+          <div className="w-10 h-10 border-4 border-white/10 border-t-[var(--brand)] rounded-full animate-spin mb-4"></div>
           <p className="text-sm">Loading media library...</p>
         </div>
       ) : filteredImages.length === 0 ? (
@@ -211,7 +212,7 @@ const MediaLibrary = () => {
           {filteredImages.map((img, i) => (
             <div 
               key={i} 
-              className="group relative rounded-xl overflow-hidden border border-white/10 bg-black/40 aspect-[4/3] flex items-center justify-center hover:border-[#D4AF37]/50 transition-all shadow-md"
+              className="group relative rounded-xl overflow-hidden border border-white/10 bg-black/40 aspect-[4/3] flex items-center justify-center hover:border-[var(--brand)]/50 transition-all shadow-md"
             >
               <img 
                 src={img} 
@@ -232,7 +233,7 @@ const MediaLibrary = () => {
                 <div className="flex gap-2">
                   <button 
                     onClick={() => handleCopy(img)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-xs transition-all ${copiedUrl === img ? 'bg-emerald-500 text-black font-semibold' : 'bg-white/10 text-white hover:bg-[#D4AF37] hover:text-black border border-white/20'}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-xs transition-all ${copiedUrl === img ? 'bg-emerald-500 text-black font-semibold' : 'bg-white/10 text-white hover:bg-[var(--brand)] hover:text-black border border-white/20'}`}
                     title="Copy URL"
                   >
                     {copiedUrl === img ? <Check size={14} /> : <Copy size={14} />}
@@ -243,6 +244,7 @@ const MediaLibrary = () => {
                     href={img} 
                     target="_blank" 
                     rel="noreferrer"
+                    aria-label={`Open ${img.split('/').pop()?.split('?')[0] || 'image'} in a new tab`}
                     className="p-1.5 rounded-lg bg-white/10 text-gray-300 hover:text-white hover:bg-white/20 border border-white/20"
                     title="Open in new tab"
                   >

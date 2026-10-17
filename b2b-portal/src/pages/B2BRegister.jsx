@@ -3,11 +3,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Camera, MapPin, Upload, Briefcase, ChevronRight, ChevronLeft, CheckCircle, Store, Users, User, FileText, Smartphone } from 'lucide-react';
 import Logo from '../components/Logo';
 import { API } from '../apiConfig';
+import Toast from '../components/ui/Toast';
 
 const B2BRegister = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [toast, setToast] = useState(null); // { msg, tone }
   
   const [formData, setFormData] = useState({
     // Step 1
@@ -35,7 +37,7 @@ const B2BRegister = () => {
 
   const handleAutoLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
+      setToast({ msg: 'Geolocation is not supported by your browser', tone: 'danger' });
       return;
     }
     setLoadingLocation(true);
@@ -60,7 +62,7 @@ const B2BRegister = () => {
       }
     }, () => {
       setLoadingLocation(false);
-      alert("Unable to retrieve your location");
+      setToast({ msg: 'Unable to retrieve your location', tone: 'danger' });
     });
   };
 
@@ -70,7 +72,7 @@ const B2BRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreedToTerms) {
-      alert("Please agree to the white-label terms.");
+      setToast({ msg: 'Please agree to the white-label terms', tone: 'danger' });
       return;
     }
     
@@ -97,11 +99,11 @@ const B2BRegister = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
       } else {
-        alert(data.error || 'Registration failed');
+        setToast({ msg: data.error || 'Registration failed', tone: 'danger' });
       }
     } catch (err) {
       console.error(err);
-      alert('Network error');
+      setToast({ msg: 'Network error', tone: 'danger' });
     }
   };
 
@@ -193,7 +195,7 @@ const B2BRegister = () => {
                           borderRadius: '8px',
                           cursor: 'pointer',
                           background: formData.studioType === type ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
-                          color: formData.studioType === type ? '#fff' : 'var(--text-muted)'
+                          color: formData.studioType === type ? 'var(--paper)' : 'var(--text-muted)'
                         }}
                       >
                         {type}
@@ -255,7 +257,7 @@ const B2BRegister = () => {
                   <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Studio Registration / Address Proof</label>
                   <div style={{ border: '2px dashed var(--glass-border)', borderRadius: '12px', padding: '2rem 1rem', textAlign: 'center', background: 'var(--bg-tertiary)', cursor: 'pointer' }}>
                     <Upload size={32} color="var(--gold-primary)" style={{ margin: '0 auto 1rem' }} />
-                    <p style={{ color: '#fff', marginBottom: '0.5rem' }}>Click to upload Aadhar PDF or GST Certificate</p>
+                    <p style={{ color: 'var(--paper)', marginBottom: '0.5rem' }}>Click to upload Aadhar PDF or GST Certificate</p>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Max file size: 5MB</p>
                   </div>
                 </div>
@@ -288,7 +290,7 @@ const B2BRegister = () => {
                           borderRadius: '8px',
                           cursor: 'pointer',
                           background: formData.eventsPerMonth === num ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
-                          color: formData.eventsPerMonth === num ? '#fff' : 'var(--text-muted)'
+                          color: formData.eventsPerMonth === num ? 'var(--paper)' : 'var(--text-muted)'
                         }}
                       >
                         {num}
@@ -311,7 +313,7 @@ const B2BRegister = () => {
                           borderRadius: '8px',
                           cursor: 'pointer',
                           background: formData.hasPostTeam === ans ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
-                          color: formData.hasPostTeam === ans ? '#fff' : 'var(--text-muted)'
+                          color: formData.hasPostTeam === ans ? 'var(--paper)' : 'var(--text-muted)'
                         }}
                       >
                         {ans}
@@ -330,19 +332,19 @@ const B2BRegister = () => {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1rem', fontSize: '0.95rem' }}>
                     <div>
                       <p style={{ color: 'var(--text-muted)', margin: '0 0 0.2rem' }}>Studio Name</p>
-                      <p style={{ color: '#fff', margin: 0, fontWeight: 500 }}>{formData.studioName}</p>
+                      <p style={{ color: 'var(--paper)', margin: 0, fontWeight: 500 }}>{formData.studioName}</p>
                     </div>
                     <div>
                       <p style={{ color: 'var(--text-muted)', margin: '0 0 0.2rem' }}>Owner</p>
-                      <p style={{ color: '#fff', margin: 0, fontWeight: 500 }}>{formData.ownerName}</p>
+                      <p style={{ color: 'var(--paper)', margin: 0, fontWeight: 500 }}>{formData.ownerName}</p>
                     </div>
                     <div>
                       <p style={{ color: 'var(--text-muted)', margin: '0 0 0.2rem' }}>Location</p>
-                      <p style={{ color: '#fff', margin: 0, fontWeight: 500 }}>{formData.city}, {formData.state}</p>
+                      <p style={{ color: 'var(--paper)', margin: 0, fontWeight: 500 }}>{formData.city}, {formData.state}</p>
                     </div>
                     <div>
                       <p style={{ color: 'var(--text-muted)', margin: '0 0 0.2rem' }}>Region</p>
-                      <p style={{ color: '#fff', margin: 0, fontWeight: 500 }}>{formData.region}</p>
+                      <p style={{ color: 'var(--paper)', margin: 0, fontWeight: 500 }}>{formData.region}</p>
                     </div>
                   </div>
                 </div>
@@ -388,6 +390,8 @@ const B2BRegister = () => {
           </form>
         </div>
       </main>
+
+      <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
     </div>
   );
 };

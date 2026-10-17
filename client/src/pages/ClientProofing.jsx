@@ -41,15 +41,15 @@ const ClientProofing = () => {
   };
 
   const mockPages = [
-    'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800'
+    '/images/weddingalbums-talambralu.png',
+    '/images/weddingalbums-layflat-album.png',
+    '/images/bridal.jpg'
   ];
 
   return (
     <div className="order-container">
       <div className="order-header text-center mb-10">
-        <h1 className="text-4xl font-serif text-[#D4AF37] mb-4">Priya & Rahul's Wedding Album</h1>
+        <h1 className="text-4xl font-serif text-[var(--brand)] mb-4">Priya & Rahul's Wedding Album</h1>
         <p className="text-gray-400">Prepared by Dream Studios. Please review your 3D album design.</p>
       </div>
 

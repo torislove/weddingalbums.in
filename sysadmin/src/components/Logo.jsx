@@ -132,7 +132,7 @@ const Logo = ({ size = 38, showText = true, portalTag = '', className = '', href
                 fontSize: '8.5px',
                 fontWeight: 700,
                 letterSpacing: '1.8px',
-                color: '#D4AF37',
+                color: 'var(--brand)',
                 opacity: 0.75,
                 textTransform: 'uppercase',
                 fontFamily: 'system-ui, -apple-system, sans-serif',

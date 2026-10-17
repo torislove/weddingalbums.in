@@ -102,7 +102,7 @@ const Checkout = () => {
           contact: user?.phone || ''
         },
         theme: {
-          color: '#D4AF37'
+          color: 'var(--brand)'
         }
       };
 

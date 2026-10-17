@@ -135,11 +135,11 @@ const EditorDashboard = () => {
                     <span className="badge" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                       {job.type || 'Photo'}
                     </span>
-                    <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', fontSize: '0.75rem', textTransform: 'capitalize' }}>
+                    <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warn)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                       {job.status}
                     </span>
                   </div>
-                  <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.05rem', color: '#fff' }}>{job.title}</h4>
+                  <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.05rem', color: 'var(--paper)' }}>{job.title}</h4>
                   <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{job.description || 'Wedding post-production edit'}</p>
                 </div>
                 <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>

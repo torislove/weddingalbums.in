@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Settings, Monitor, Tablet, Smartphone, RefreshCw, ExternalLink, Sparkles, ArrowLeft, Sliders, Globe, Eye } from 'lucide-react';
 import BlockEditor from '../components/BlockEditor';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { CLIENT_URL } from '../config/urls';
 
 const GlobalEditor = ({ adminState }) => {
   const { content, updateGlobal } = adminState;
@@ -34,7 +35,7 @@ const GlobalEditor = ({ adminState }) => {
   ]));
 
   const isLocal = typeof window !== 'undefined' && (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1'));
-  const clientBase = isLocal ? 'http://localhost:5173' : 'https://weddingalbums-b4bcd.web.app';
+  const clientBase = CLIENT_URL;
   const previewUrl = `${clientBase}/`;
 
   return (
@@ -45,7 +46,7 @@ const GlobalEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('sections')}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'sections' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'sections' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <Globe size={13} />
@@ -54,7 +55,7 @@ const GlobalEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('properties')}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'properties' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'properties' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <Sliders size={13} />
@@ -63,7 +64,7 @@ const GlobalEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('preview')}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'preview' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'preview' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <Eye size={13} />
@@ -77,7 +78,7 @@ const GlobalEditor = ({ adminState }) => {
         <div className={`${isMobileOrTablet ? 'w-full flex-1' : 'w-[300px]'} flex flex-col border-r border-white/10 bg-[#0a0a0a] flex-shrink-0`}>
           <div className="p-4 border-b border-white/10 bg-black/40 backdrop-blur-md">
             <div className="flex items-center gap-1.5">
-              <Sparkles size={14} className="text-[#D4AF37]" />
+              <Sparkles size={14} className="text-[var(--brand)]" />
               <h2 className="text-base font-serif text-white">Global Elements</h2>
             </div>
             <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">Site-wide Settings & Branding</p>
@@ -89,13 +90,13 @@ const GlobalEditor = ({ adminState }) => {
                 <div 
                   key={section}
                   className={`group flex items-center gap-3 border p-3 rounded-xl cursor-pointer transition-all duration-200 
-                    ${activeSection === section ? 'border-[#D4AF37] bg-[#D4AF37]/10 shadow-[0_0_20px_rgba(212,175,55,0.15)] ring-1 ring-[#D4AF37]/30' : 'border-white/10 hover:border-white/20 bg-white/5'}`}
+                    ${activeSection === section ? 'border-[var(--brand)] bg-[var(--brand)]/10 shadow-[0_0_20px_rgba(212,175,55,0.15)] ring-1 ring-[var(--brand)]/30' : 'border-white/10 hover:border-white/20 bg-white/5'}`}
                   onClick={() => {
                     setActiveSection(section);
                     if (isMobileOrTablet) setMobileTab('properties');
                   }}
                 >
-                  <Settings size={16} className={activeSection === section ? 'text-[#D4AF37]' : 'text-gray-500'} />
+                  <Settings size={16} className={activeSection === section ? 'text-[var(--brand)]' : 'text-gray-500'} />
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white text-xs font-semibold capitalize tracking-wide truncate">{section}</h3>
                     <p className="text-[10px] text-gray-400 capitalize truncate">
@@ -120,17 +121,17 @@ const GlobalEditor = ({ adminState }) => {
               {isMobileOrTablet && (
                 <button
                   onClick={() => setMobileTab('sections')}
-                  className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium mr-1"
+                  className="text-xs text-[var(--brand)] hover:underline flex items-center gap-1 font-medium mr-1"
                 >
                   <ArrowLeft size={14} /> Elements
                 </button>
               )}
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37]"></span>
+                <span className="w-2 h-2 rounded-full bg-[var(--brand)]"></span>
                 <span className="text-xs font-bold text-white uppercase tracking-wider">{activeSection}</span>
               </div>
             </div>
-            <span className="text-[10px] bg-white/10 text-[#D4AF37] px-2 py-0.5 rounded-full font-mono uppercase">
+            <span className="text-[10px] bg-white/10 text-[var(--brand)] px-2 py-0.5 rounded-full font-mono uppercase">
               Active Editor
             </span>
           </div>
@@ -162,21 +163,21 @@ const GlobalEditor = ({ adminState }) => {
               <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10 shadow-inner">
                 <button 
                   onClick={() => setPreviewMode('desktop')}
-                  className={`p-1.5 rounded-md transition-all ${previewMode === 'desktop' ? 'bg-[#D4AF37] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-1.5 rounded-md transition-all ${previewMode === 'desktop' ? 'bg-[var(--brand)] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
                   title="Desktop View (100%)"
                 >
                   <Monitor size={15} />
                 </button>
                 <button 
                   onClick={() => setPreviewMode('tablet')}
-                  className={`p-1.5 rounded-md transition-all ${previewMode === 'tablet' ? 'bg-[#D4AF37] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-1.5 rounded-md transition-all ${previewMode === 'tablet' ? 'bg-[var(--brand)] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
                   title="Tablet View (768px)"
                 >
                   <Tablet size={15} />
                 </button>
                 <button 
                   onClick={() => setPreviewMode('mobile')}
-                  className={`p-1.5 rounded-md transition-all ${previewMode === 'mobile' ? 'bg-[#D4AF37] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-1.5 rounded-md transition-all ${previewMode === 'mobile' ? 'bg-[var(--brand)] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
                   title="Mobile View (375px)"
                 >
                   <Smartphone size={15} />
@@ -204,7 +205,7 @@ const GlobalEditor = ({ adminState }) => {
           </div>
           
           {/* Iframe Container with Device Frames */}
-          <div className="flex-1 overflow-hidden flex justify-center items-center p-2 sm:p-4 md:p-8 bg-[#050505]">
+          <div className="flex-1 overflow-hidden flex justify-center items-center p-2 sm:p-4 md:p-8 bg-[var(--ink)]">
             
             {previewMode === 'mobile' && (
               <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">

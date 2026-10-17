@@ -5,27 +5,28 @@ import { API } from '../apiConfig';
 const BusinessAnalytics = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
-
-  const fetchJobs = async () => {
+  const fetchJobs = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       const res = await fetch(`${API}/api/b2b/jobs`, {
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
-      if (res.ok) {
-        const data = await res.json();
-        setJobs(Array.isArray(data) ? data : []);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setJobs(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to load jobs for analytics', err);
+      setError('Could not load analytics data');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { fetchJobs(); }, [fetchJobs]);
 
   // Derive dynamic metrics from studio jobs
   const completedJobsList = jobs.filter(j => ['completed', 'approved', 'delivered'].includes((j.status || '').toLowerCase()));
@@ -61,6 +62,21 @@ const BusinessAnalytics = () => {
         </button>
       </div>
 
+      {error && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem', padding: '1rem 1.25rem', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontSize: '0.9rem' }}>
+          <span>⚠ {error}. Showing last known figures.</span>
+          <button onClick={fetchJobs} className="btn-outline" style={{ padding: '0.5rem 1rem', cursor: 'pointer', borderColor: 'rgba(239,68,68,0.4)', color: '#f87171' }}>
+            Retry
+          </button>
+        </div>
+      )}
+
+      {!loading && !error && jobs.length === 0 && (
+        <div style={{ marginBottom: '1.5rem', padding: '1rem 1.25rem', borderRadius: '12px', background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          📊 No jobs yet — your analytics will populate as you submit work and it completes QC.
+        </div>
+      )}
+
       <div className="stats-grid" style={{ marginBottom: '2rem' }}>
         <div className="glass-panel stat-card" style={{ padding: '1.5rem' }}>
           <div className="stat-icon" style={{ background: 'rgba(212, 175, 55, 0.1)' }}>
@@ -69,7 +85,7 @@ const BusinessAnalytics = () => {
           <div className="stat-info">
             <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)' }}>Total Spend</p>
             <h3 style={{ margin: 0, fontSize: '1.8rem' }}>₹{totalSpend.toLocaleString('en-IN')}</h3>
-            <p style={{ fontSize: '0.8rem', color: '#10b981', margin: '0.25rem 0 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--ok)', margin: '0.25rem 0 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <TrendingUp size={12} /> Live tracked spend
             </p>
           </div>
@@ -82,7 +98,7 @@ const BusinessAnalytics = () => {
           <div className="stat-info">
             <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)' }}>Avg Turnaround Time</p>
             <h3 style={{ margin: 0, fontSize: '1.8rem' }}>2.4 Days</h3>
-            <p style={{ fontSize: '0.8rem', color: '#10b981', margin: '0.25rem 0 0 0' }}>40% faster than standard lab turnaround</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--ok)', margin: '0.25rem 0 0 0' }}>40% faster than standard lab turnaround</p>
           </div>
         </div>
 
@@ -93,7 +109,7 @@ const BusinessAnalytics = () => {
           <div className="stat-info">
             <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)' }}>Jobs Completed</p>
             <h3 style={{ margin: 0, fontSize: '1.8rem' }}>{totalCompletedCount || jobs.length || 0}</h3>
-            <p style={{ fontSize: '0.8rem', color: '#10b981', margin: '0.25rem 0 0 0' }}>100% Quality Checked (QC Passed)</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--ok)', margin: '0.25rem 0 0 0' }}>100% Quality Checked (QC Passed)</p>
           </div>
         </div>
       </div>
@@ -123,7 +139,7 @@ const BusinessAnalytics = () => {
                 <div style={{ 
                   width: '100%', 
                   height: `${col.h}%`, 
-                  background: col.h > 80 ? 'linear-gradient(to top, #D4AF37, #fef08a)' : 'rgba(212, 175, 55, 0.35)', 
+                  background: col.h > 80 ? 'linear-gradient(to top, var(--brand), #fef08a)' : 'rgba(212, 175, 55, 0.35)', 
                   borderRadius: '4px 4px 0 0', 
                   transition: 'height 0.8s ease' 
                 }}></div>

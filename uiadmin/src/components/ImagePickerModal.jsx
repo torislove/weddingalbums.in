@@ -96,12 +96,13 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
         {/* Header */}
         <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/40">
           <div className="flex items-center gap-2">
-            <ImageIcon size={20} className="text-[#D4AF37]" />
+            <ImageIcon size={20} className="text-[var(--brand)]" />
             <h2 className="text-xl font-serif text-white">Select or Upload Image</h2>
           </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={fetchImages}
+              aria-label="Refresh images"
               disabled={loading}
               className="p-2 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
               title="Refresh Images"
@@ -123,7 +124,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
               accept="image/*" 
               onChange={handleUpload} 
             />
-            <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-white transition-colors ml-1">
+            <button onClick={onClose} aria-label="Close image picker" title="Close" className="p-1.5 text-gray-400 hover:text-white transition-colors ml-1">
               <X size={20} />
             </button>
           </div>
@@ -138,7 +139,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Filter images by name or keyword..."
-              className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37]"
+              className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[var(--brand)]"
             />
           </div>
 
@@ -148,7 +149,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
               value={customUrl}
               onChange={e => setCustomUrl(e.target.value)}
               placeholder="Paste direct image URL..."
-              className="w-60 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 font-mono focus:outline-none focus:border-[#D4AF37]"
+              className="w-60 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 font-mono focus:outline-none focus:border-[var(--brand)]"
             />
             <button 
               type="submit"
@@ -170,7 +171,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
           {loading ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-400">
-              <div className="w-8 h-8 border-2 border-white/10 border-t-[#D4AF37] rounded-full animate-spin mb-3"></div>
+              <div className="w-8 h-8 border-2 border-white/10 border-t-[var(--brand)] rounded-full animate-spin mb-3"></div>
               <p className="text-xs">Loading media library...</p>
             </div>
           ) : filteredImages.length === 0 ? (
@@ -188,7 +189,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
                     onSelect(img);
                     onClose();
                   }}
-                  className="group relative rounded-xl overflow-hidden border border-white/10 bg-black/40 aspect-square flex items-center justify-center cursor-pointer hover:border-[#D4AF37] hover:shadow-lg hover:shadow-yellow-900/10 transition-all"
+                  className="group relative rounded-xl overflow-hidden border border-white/10 bg-black/40 aspect-square flex items-center justify-center cursor-pointer hover:border-[var(--brand)] hover:shadow-lg hover:shadow-yellow-900/10 transition-all"
                   title="Click to select this image"
                 >
                   <img 
@@ -203,7 +204,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2 backdrop-blur-[2px]">
-                    <div className="w-9 h-9 rounded-full bg-[#D4AF37] text-black flex items-center justify-center mb-1 shadow-md">
+                    <div className="w-9 h-9 rounded-full bg-[var(--brand)] text-black flex items-center justify-center mb-1 shadow-md">
                       <Check size={18} strokeWidth={2.5} />
                     </div>
                     <span className="text-[11px] font-semibold text-white">Select</span>

@@ -158,7 +158,7 @@ const B2B = () => {
             >
               <div className="flex justify-between items-start mb-2">
                 <Layers className="b2b-sheet-icon" />
-                <span className="text-[10px] uppercase font-bold text-[#D4AF37] bg-[#D4AF37]/15 border border-[#D4AF37]/30 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] uppercase font-bold text-[var(--brand)] bg-[var(--brand)]/15 border border-[var(--brand)]/30 px-2 py-0.5 rounded-full">
                   {type.spec}
                 </span>
               </div>
@@ -166,7 +166,7 @@ const B2B = () => {
               <p className="text-xs text-gray-300 mt-1 mb-3">{type.desc}</p>
               <div className="flex justify-between items-center pt-2 border-t border-white/10 text-[11px] text-gray-400">
                 <span>{type.durability}</span>
-                <span className="text-[#D4AF37] font-semibold flex items-center gap-1">
+                <span className="text-[var(--brand)] font-semibold flex items-center gap-1">
                   <Lock size={11} /> Trade Rate Protected
                 </span>
               </div>
@@ -178,7 +178,7 @@ const B2B = () => {
       {/* White Label Guarantee */}
       <section className="b2b-whitelabel-section">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="b2b-whitelabel-card">
-          <ShieldCheck size={48} className="text-[#D4AF37] mb-4 mx-auto" />
+          <ShieldCheck size={48} className="text-[var(--brand)] mb-4 mx-auto" />
           <h2>100% White-Label & Client Non-Poach Guarantee</h2>
           <p>
             Your Brand. Our Execution. We drop-ship luxury albums and video drives directly to your clients with <strong>ZERO</strong> branding from our lab. The shipping label, luxury box embossing, and invoice reflect your studio identity. We strictly never solicit or market to your couples.
@@ -188,12 +188,12 @@ const B2B = () => {
 
       {/* Studio Trade Rate Access Gate */}
       <section className="b2b-calculator-section">
-        <div className="max-w-4xl mx-auto glass-3d p-8 sm:p-12 rounded-3xl border border-[#D4AF37]/40 bg-gradient-to-b from-black/90 to-zinc-950/90 text-center shadow-2xl relative overflow-hidden">
+        <div className="max-w-4xl mx-auto glass-3d p-8 sm:p-12 rounded-3xl border border-[var(--brand)]/40 bg-gradient-to-b from-black/90 to-zinc-950/90 text-center shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-            <Lock size={160} className="text-[#D4AF37]" />
+            <Lock size={160} className="text-[var(--brand)]" />
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-bold mb-4 tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--brand)]/15 border border-[var(--brand)]/30 text-[var(--brand)] text-xs font-bold mb-4 tracking-wider uppercase">
             <Lock size={14} />
             <span>Protected Studio Trade Pricing</span>
           </div>
@@ -269,7 +269,7 @@ const B2B = () => {
             }
           ].map((t, i) => (
             <div key={i} className="glass-3d p-8 rounded-xl text-left">
-              <div className="flex text-[#D4AF37] mb-4">
+              <div className="flex text-[var(--brand)] mb-4">
                 {[1,2,3,4,5].map(s => <Star key={s} size={16} fill="#D4AF37" />)}
               </div>
               <p className="italic text-gray-300 mb-6">"{t.text}"</p>

@@ -70,10 +70,13 @@ export const useAdminContent = (token) => {
         console.warn('CMS failed to fetch from /api/content:', err.message);
       }
 
-      // 2. Fallback to client CDN content.json
+      // 2. Fallback to client CDN content.json (override via VITE_CONTENT_CDN_URL
+      //    so a domain migration never requires a code change)
       if (!resolved) {
         try {
-          const cdnRes = await fetch('https://weddingalbums-b4bcd.web.app/content.json');
+          const cdnUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_CONTENT_CDN_URL)
+            || 'https://weddingalbums-b4bcd.web.app/content.json';
+          const cdnRes = await fetch(cdnUrl);
           if (cdnRes.ok) {
             const cdnData = await cdnRes.json();
             if (isContentComplete(cdnData)) {

@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { IndianRupee, CheckCircle, XCircle, RefreshCw, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { IndianRupee, CheckCircle, XCircle, RefreshCw, ArrowUpRight } from 'lucide-react';
 import { API } from '../apiConfig';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
+import Toast from '../components/ui/Toast';
+
+const token = () => localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
 
 const Payouts = () => {
   const [payouts, setPayouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null);
+  const [dialog, setDialog] = useState(null); // { kind: 'approve' | 'reject', id }
+  const [toast, setToast] = useState(null);   // { msg, tone }
 
   const fetchPayouts = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
       const res = await fetch(`${API}/api/admin/payouts`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${token()}` }
       });
       if (res.ok) {
         const data = await res.json();
         setPayouts(Array.isArray(data) ? data : []);
+      } else {
+        setToast({ msg: 'Could not load payouts', tone: 'danger' });
       }
     } catch (err) {
       console.error('Failed to load payouts', err);
+      setToast({ msg: 'Network error loading payouts', tone: 'danger' });
     } finally {
       setLoading(false);
     }
@@ -29,61 +37,39 @@ const Payouts = () => {
     fetchPayouts();
   }, []);
 
-  const handleApprove = async (id) => {
-    if (!window.confirm('Approve payout and mark escrow funds as settled?')) return;
+  /* Runs the approved/rejected action for the open dialog; the dialog closes itself. */
+  const runDialog = async (value) => {
+    if (!dialog) return;
+    const { kind, id } = dialog;
     setProcessingId(id);
     try {
-      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
-      const res = await fetch(`${API}/api/admin/payouts/${id}/approve`, {
+      const res = await fetch(`${API}/api/admin/payouts/${id}/${kind}`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token()}` },
+        body: kind === 'reject' ? JSON.stringify({ reason: value }) : undefined,
       });
       if (res.ok) {
+        setToast({ msg: kind === 'approve' ? 'Payout approved & settled' : 'Payout request rejected', tone: kind === 'approve' ? 'success' : 'default' });
+        setDialog(null);
         fetchPayouts();
       } else {
-        alert('Failed to approve payout');
+        setToast({ msg: `Failed to ${kind} payout`, tone: 'danger' });
       }
     } catch {
-      alert('Network error');
-    } finally {
-      setProcessingId(null);
-    }
-  };
-
-  const handleReject = async (id) => {
-    const reason = window.prompt('Enter rejection reason:');
-    if (!reason) return;
-    setProcessingId(id);
-    try {
-      const token = localStorage.getItem('sysadminToken') || localStorage.getItem('adminToken');
-      const res = await fetch(`${API}/api/admin/payouts/${id}/reject`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ reason })
-      });
-      if (res.ok) {
-        fetchPayouts();
-      } else {
-        alert('Failed to reject payout');
-      }
-    } catch {
-      alert('Network error');
+      setToast({ msg: 'Network error', tone: 'danger' });
     } finally {
       setProcessingId(null);
     }
   };
 
   return (
-    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: '#fff', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: 'var(--paper)', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Editor & Studio Payout Requests</h1>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Editor &amp; Studio Payout Requests</h1>
           <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '13px' }}>Review, approve, and disburse UPI transfers from the Escrow pool.</p>
         </div>
-        <button 
+        <button
           onClick={fetchPayouts}
           style={{
             display: 'flex', alignItems: 'center', gap: '6px',
@@ -126,13 +112,13 @@ const Payouts = () => {
                 <td style={{ padding: '14px 16px', fontFamily: 'monospace', color: '#22d3ee' }}>
                   #{String(item.id || item._id).substring(0, 8)}
                 </td>
-                <td style={{ padding: '14px 16px', fontWeight: 600, color: '#fff' }}>
+                <td style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--paper)' }}>
                   {item.user_name || item.user_id || 'Editor Partner'}
                 </td>
-                <td style={{ padding: '14px 16px', fontFamily: 'monospace', color: '#D4AF37' }}>
+                <td style={{ padding: '14px 16px', fontFamily: 'monospace', color: 'var(--brand)' }}>
                   {item.upi_id || 'editor@upi'}
                 </td>
-                <td style={{ padding: '14px 16px', fontWeight: 700, color: '#10b981', fontSize: '14px' }}>
+                <td style={{ padding: '14px 16px', fontWeight: 700, color: 'var(--ok)', fontSize: '14px' }}>
                   ₹{Number(item.amount || 0).toLocaleString('en-IN')}
                 </td>
                 <td style={{ padding: '14px 16px' }}>
@@ -152,7 +138,7 @@ const Payouts = () => {
                   {item.status === 'pending' ? (
                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                       <button
-                        onClick={() => handleApprove(item.id || item._id)}
+                        onClick={() => setDialog({ kind: 'approve', id: item.id || item._id })}
                         disabled={processingId === (item.id || item._id)}
                         style={{
                           display: 'flex', alignItems: 'center', gap: '4px',
@@ -164,7 +150,7 @@ const Payouts = () => {
                         <CheckCircle size={13} /> Approve
                       </button>
                       <button
-                        onClick={() => handleReject(item.id || item._id)}
+                        onClick={() => setDialog({ kind: 'reject', id: item.id || item._id })}
                         disabled={processingId === (item.id || item._id)}
                         style={{
                           display: 'flex', alignItems: 'center', gap: '4px',
@@ -185,6 +171,24 @@ const Payouts = () => {
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        open={!!dialog}
+        tone={dialog?.kind === 'reject' ? 'danger' : 'success'}
+        title={dialog?.kind === 'reject' ? 'Reject payout request?' : 'Approve payout?'}
+        message={dialog?.kind === 'reject'
+          ? 'The editor will see this reason. Funds stay in escrow until re-requested.'
+          : 'Approve this payout and mark the escrow funds as settled? This cannot be undone.'}
+        confirmLabel={dialog?.kind === 'reject' ? 'Reject payout' : 'Approve & settle'}
+        withInput={dialog?.kind === 'reject'}
+        inputLabel="Rejection reason"
+        inputPlaceholder="e.g. UPI ID does not match bank records"
+        busy={processingId === dialog?.id}
+        onConfirm={runDialog}
+        onCancel={() => setDialog(null)}
+      />
+
+      <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
     </div>
   );
 };

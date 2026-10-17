@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-  background-color: #050505;
+  background-color: var(--ink);
   color: #f3f4f6;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: dark;
@@ -10,12 +10,12 @@ body {
 
 select {
   background-color: #111 !important;
-  color: #fff !important;
+  color: var(--paper) !important;
 }
 
 select option {
   background-color: #111 !important;
-  color: #fff !important;
+  color: var(--paper) !important;
 }
 
 /* Custom Scrollbar */
@@ -94,3 +94,49 @@ select option {
   width: 100%;
 }
 
+/* ============================================================
+   UX-2 POLISH TOKENS + A11Y  (shared across all 5 apps)
+   Additive only: defines canonical names + a global focus ring.
+   New markup should use these instead of raw hex.
+   ============================================================ */
+:root {
+  --brand: #D4AF37;        /* canonical gold */
+  --brand-soft: #E6C667;   /* light gold  */
+  --brand-deep: #B8962E;   /* deep gold   */
+
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+
+  --ink: #050505;
+  --paper: #ffffff;
+
+  --ring: rgba(212, 175, 55, 0.6);
+
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+
+  --shadow-1: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
+
+/* Visible keyboard focus on every interactive element (mouse clicks stay clean). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+/* Honour the user's motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

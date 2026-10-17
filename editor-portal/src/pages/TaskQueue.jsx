@@ -6,6 +6,14 @@ import { useToast } from '../context/ToastContext';
 
 const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
   const toast = useToast();
+
+  // Workspace hero visual per specialisation (staged mockup library)
+  const HERO_IMAGES = {
+    photo: '/images/bride-polished.jpg',
+    video: '/images/cinematic-video-suite.jpg',
+    album: '/images/mockup-layflat-spread.svg',
+  };
+  const heroImage = HERO_IMAGES[String(type || '').toLowerCase()];
   const [availableJobs, setAvailableJobs] = useState([]);
   const [myJobs, setMyJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -119,6 +127,18 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
           </p>
         </div>
         
+        {heroImage && (
+          <img
+            src={heroImage}
+            alt={`${String(title || type || 'Job')} workspace preview`}
+            style={{
+              width: 'clamp(150px, 20vw, 240px)', aspectRatio: '16/10', objectFit: 'cover',
+              borderRadius: '14px', border: '1px solid rgba(212,175,55,0.35)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.45)', flexShrink: 0,
+            }}
+          />
+        )}
+
         <button 
           onClick={fetchJobs} 
           className="btn-outline" 
@@ -155,7 +175,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
                   ₹{job.payout_amount || 1500}
                 </span>
               </div>
-              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#fff' }}>{job.title}</h4>
+              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: 'var(--paper)' }}>{job.title}</h4>
               <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 {job.description || 'Wedding post-production edit'}
               </p>
@@ -183,7 +203,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
             <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>No claimed jobs in progress.</p>
           ) : inProgressJobs.map(job => (
             <div key={job.id} style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '12px', border: '1px solid var(--accent-primary)' }}>
-              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#fff' }}>{job.title}</h4>
+              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: 'var(--paper)' }}>{job.title}</h4>
               <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                 Payout: <strong style={{ color: 'var(--accent-success)' }}>₹{job.payout_amount || 1500}</strong>
               </p>
@@ -220,7 +240,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
             <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>No jobs under review.</p>
           ) : qcJobs.map(job => (
             <div key={job.id} style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '12px', border: '1px solid rgba(234, 179, 8, 0.3)' }}>
-              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#fff' }}>{job.title}</h4>
+              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: 'var(--paper)' }}>{job.title}</h4>
               <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Under review by Quality Lead</p>
               {job.work_link && (
                 <a href={job.work_link} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -234,18 +254,18 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
         {/* COLUMN 4: Completed / Paid */}
         <div className="glass-panel" style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: '550px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(16, 185, 129, 0.2)', paddingBottom: '1rem' }}>
-            <h3 style={{ margin: 0, fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981' }}>
+            <h3 style={{ margin: 0, fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--ok)' }}>
               <CheckCircle size={16} /> Approved & Paid
             </h3>
-            <span style={{ color: '#10b981', fontSize: '0.85rem', fontWeight: 600 }}>{completedJobs.length} Jobs</span>
+            <span style={{ color: 'var(--ok)', fontSize: '0.85rem', fontWeight: 600 }}>{completedJobs.length} Jobs</span>
           </div>
           
           {completedJobs.length === 0 ? (
             <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>No completed jobs yet.</p>
           ) : completedJobs.map(job => (
             <div key={job.id} style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#fff' }}>{job.title}</h4>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>
+              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: 'var(--paper)' }}>{job.title}</h4>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--ok)', fontWeight: 600 }}>
                 Earned: +₹{job.payout_amount || 1500}
               </p>
             </div>
@@ -272,7 +292,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
                   onChange={e => setWorkLink(e.target.value)} 
                   placeholder="https://drive.google.com/drive/folders/..."
                   required
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--paper)', boxSizing: 'border-box' }}
                 />
               </div>
 
@@ -283,7 +303,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
                   onChange={e => setNotes(e.target.value)} 
                   placeholder="e.g. Skin tones softened, wedding album layout 12x18 spreads included."
                   rows={3}
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--paper)', boxSizing: 'border-box' }}
                 />
               </div>
 

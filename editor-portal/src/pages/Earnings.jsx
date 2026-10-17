@@ -89,7 +89,7 @@ const Earnings = () => {
       </div>
 
       {msg && (
-        <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', borderRadius: '8px', color: '#10b981', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--ok)', borderRadius: '8px', color: 'var(--ok)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <CheckCircle size={18} /> {msg}
         </div>
       )}
@@ -105,7 +105,7 @@ const Earnings = () => {
               </div>
               <div className="stat-info">
                 <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>Lifetime Earnings</p>
-                <h3 style={{ margin: 0, fontSize: '2.2rem', color: '#fff' }}>
+                <h3 style={{ margin: 0, fontSize: '2.2rem', color: 'var(--paper)' }}>
                   ₹{Number(stats.totalEarnings || 0).toLocaleString('en-IN')}
                 </h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--accent-success)', margin: '0.5rem 0 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -120,7 +120,7 @@ const Earnings = () => {
               </div>
               <div className="stat-info">
                 <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>Active Pipeline Jobs</p>
-                <h3 style={{ margin: 0, fontSize: '2.2rem', color: '#fff' }}>{stats.activeJobs}</h3>
+                <h3 style={{ margin: 0, fontSize: '2.2rem', color: 'var(--paper)' }}>{stats.activeJobs}</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: '0.5rem 0 0 0' }}>Escrow released upon QC pass</p>
               </div>
             </div>

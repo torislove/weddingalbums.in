@@ -51,7 +51,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}
           >
             <Bell size={17} />
-            <span style={{ position: 'absolute', top: '6px', right: '6px', width: '7px', height: '7px', background: '#ef4444', borderRadius: '50%', border: '1.5px solid var(--bg-secondary, #0f0f0f)' }} />
+            <span style={{ position: 'absolute', top: '6px', right: '6px', width: '7px', height: '7px', background: 'var(--danger)', borderRadius: '50%', border: '1.5px solid var(--bg-secondary, #0f0f0f)' }} />
           </button>
 
           {notifOpen && (
@@ -60,7 +60,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
                 <span style={{ fontSize: '0.82rem', fontWeight: '600', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '1px' }}>Notifications</span>
               </div>
               {[
-                { text: 'New job available: Wedding Album Design', time: '2 min ago', dot: '#d4af37' },
+                { text: 'New job available: Wedding Album Design', time: '2 min ago', dot: 'var(--brand)' },
                 { text: 'Payout of ₹2,400 processed', time: '1 hr ago', dot: '#22c55e' },
               ].map((n, i) => (
                 <div key={i} style={{ padding: '12px 14px', borderRadius: '10px', cursor: 'pointer', display: 'flex', gap: '12px', alignItems: 'flex-start', transition: 'background 0.2s' }}
@@ -87,7 +87,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}
           >
             {/* Avatar */}
-            <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'linear-gradient(135deg, #d4af37, #8a6f00)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '700', color: '#1a0e00', letterSpacing: '0.5px' }}>
+            <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'linear-gradient(135deg, var(--brand), #8a6f00)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: '700', color: '#1a0e00', letterSpacing: '0.5px' }}>
               {initials}
             </div>
             <div style={{ textAlign: 'left' }}>
@@ -120,7 +120,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
                 </button>
               ))}
               <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', margin: '4px 0' }} />
-              <button onClick={handleLogout} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', background: 'none', border: 'none', borderRadius: '10px', cursor: 'pointer', color: '#ef4444', fontSize: '0.86rem', fontFamily: 'inherit', transition: 'all 0.2s', textAlign: 'left' }}
+              <button onClick={handleLogout} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', background: 'none', border: 'none', borderRadius: '10px', cursor: 'pointer', color: 'var(--danger)', fontSize: '0.86rem', fontFamily: 'inherit', transition: 'all 0.2s', textAlign: 'left' }}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'none'}
               >

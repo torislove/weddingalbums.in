@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children, roles = [] }) => {
         <div style={{
           width: '40px', height: '40px', borderRadius: '50%',
           border: '3px solid rgba(212,175,55,0.15)',
-          borderTopColor: '#d4af37',
+          borderTopColor: 'var(--brand)',
           animation: 'prSpin 0.8s linear infinite',
         }} />
         <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem', fontFamily: 'Inter, sans-serif' }}>

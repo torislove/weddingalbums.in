@@ -21,12 +21,12 @@ body {
 
 select {
   background-color: #111 !important;
-  color: #fff !important;
+  color: var(--paper) !important;
 }
 
 select option {
   background-color: #111 !important;
-  color: #fff !important;
+  color: var(--paper) !important;
 }
 
 body {
@@ -69,7 +69,7 @@ body {
 .btn-secondary {
   background-color: rgba(255, 255, 255, 0.05);
   border-color: var(--color-border);
-  color: #fff;
+  color: var(--paper);
 }
 .btn-secondary:hover:not(:disabled) {
   background-color: rgba(255, 255, 255, 0.1);
@@ -82,7 +82,7 @@ body {
 
 .btn-danger {
   background-color: rgba(220, 38, 38, 0.1);
-  color: #ef4444;
+  color: var(--danger);
   border-color: rgba(220, 38, 38, 0.2);
 }
 .btn-danger:hover {
@@ -107,7 +107,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  color: #fff;
+  color: var(--paper);
   font-size: 0.95rem;
   transition: all 0.2s ease;
 }
@@ -202,4 +202,51 @@ body {
 @media (max-width: 480px) {
   .text-4xl { font-size: 1.5rem !important; }
   .text-3xl { font-size: 1.25rem !important; }
+}
+
+/* ============================================================
+   UX-2 POLISH TOKENS + A11Y  (shared across all 5 apps)
+   Additive only: defines canonical names + a global focus ring.
+   New markup should use these instead of raw hex.
+   ============================================================ */
+:root {
+  --brand: #D4AF37;        /* canonical gold */
+  --brand-soft: #E6C667;   /* light gold  */
+  --brand-deep: #B8962E;   /* deep gold   */
+
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+
+  --ink: #050505;
+  --paper: #ffffff;
+
+  --ring: rgba(212, 175, 55, 0.6);
+
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+
+  --shadow-1: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
+
+/* Visible keyboard focus on every interactive element (mouse clicks stay clean). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+/* Honour the user's motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

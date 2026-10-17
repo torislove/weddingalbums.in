@@ -75,7 +75,7 @@
 }
 
 .icon-camera {
-  color: #fff;
+  color: var(--paper);
   filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
 }
 
@@ -155,8 +155,8 @@
   height: 16px;
   background: repeating-linear-gradient(
     45deg,
-    #d4af37,
-    #d4af37 4px,
+    var(--brand),
+    var(--brand) 4px,
     #fcebb6 4px,
     #fcebb6 8px
   );
@@ -171,7 +171,7 @@
   top: -10px;
   width: 25px;
   height: 36px;
-  background: radial-gradient(circle, #fcebb6 20%, #d4af37 80%);
+  background: radial-gradient(circle, #fcebb6 20%, var(--brand) 80%);
   border-radius: 12px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 0 0 10px #8a6a1c;
 }

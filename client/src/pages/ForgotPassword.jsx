@@ -56,7 +56,7 @@ const ForgotPassword = () => {
           </>
         ) : (
           <div className="text-center">
-            <CheckCircle2 size={56} style={{ color: '#10b981', margin: '0 auto 1.25rem' }} />
+            <CheckCircle2 size={56} style={{ color: 'var(--ok)', margin: '0 auto 1.25rem' }} />
             <h2 className="font-serif text-white mb-3" style={{ fontSize: '1.5rem' }}>Check your email</h2>
             <p className="text-gray-400 mb-6" style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
               We've sent a password reset link to <strong>{email}</strong>. Please check your inbox and spam folder.

@@ -20,7 +20,7 @@
 }
 
 .hero-bg-far {
-  background-image: url('https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=2000');
+  background-image: url('/images/weddingalbums-home-hero.png');
   filter: brightness(0.5);
 }
 .hero-bg-mid {

@@ -81,8 +81,8 @@
 
 .lang-toggle-btn {
   background: transparent;
-  border: 1px solid #D4AF37;
-  color: #D4AF37;
+  border: 1px solid var(--brand);
+  color: var(--brand);
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
@@ -98,7 +98,7 @@
 .cart-toggle-btn {
   background: transparent;
   border: none;
-  color: #D4AF37;
+  color: var(--brand);
   cursor: pointer;
   position: relative;
   display: flex;
@@ -111,7 +111,7 @@
   position: absolute;
   top: -4px;
   right: -6px;
-  background: #ef4444;
+  background: var(--danger);
   color: white;
   font-size: 0.68rem;
   font-weight: bold;
@@ -223,7 +223,7 @@
 .drawer-close-btn {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(212, 175, 55, 0.3);
-  color: #fff;
+  color: var(--paper);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -236,7 +236,7 @@
 
 .drawer-close-btn:hover {
   background: rgba(212, 175, 55, 0.2);
-  color: #D4AF37;
+  color: var(--brand);
   transform: rotate(90deg);
 }
 
@@ -257,7 +257,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 .drawer-link:hover {
-  color: #D4AF37;
+  color: var(--brand);
   transform: translateX(5px);
 }
 

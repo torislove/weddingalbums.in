@@ -33,7 +33,7 @@ const Rating = () => {
   };
 
   const getTier = (count) => {
-    if (count >= 15) return { name: 'Top Rated Artisan', color: '#D4AF37' };
+    if (count >= 15) return { name: 'Top Rated Artisan', color: 'var(--brand)' };
     if (count >= 5)  return { name: 'Senior Creator',   color: '#38bdf8' };
     return { name: 'Pro Rising Talent', color: '#a855f7' };
   };
@@ -56,7 +56,7 @@ const Rating = () => {
           </div>
           <div className="stat-info">
             <p style={{ margin: '0 0 4px', color: 'var(--text-secondary)' }}>Overall QC Rating</p>
-            <h3 style={{ margin: 0, color: '#fff', fontSize: '1.8rem' }}>
+            <h3 style={{ margin: 0, color: 'var(--paper)', fontSize: '1.8rem' }}>
               {(stats.rating || 4.9).toFixed(1)} <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>/ 5.0</span>
             </h3>
           </div>
@@ -68,7 +68,7 @@ const Rating = () => {
           </div>
           <div className="stat-info">
             <p style={{ margin: '0 0 4px', color: 'var(--text-secondary)' }}>Jobs Completed</p>
-            <h3 style={{ margin: 0, color: '#fff', fontSize: '1.8rem' }}>{stats.completedJobs}</h3>
+            <h3 style={{ margin: 0, color: 'var(--paper)', fontSize: '1.8rem' }}>{stats.completedJobs}</h3>
           </div>
         </div>
 
@@ -93,10 +93,10 @@ const Rating = () => {
           <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>On-Time Delivery</span>
-              <span style={{ color: '#10b981', fontWeight: 700 }}>98%</span>
+              <span style={{ color: 'var(--ok)', fontWeight: 700 }}>98%</span>
             </div>
             <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ width: '98%', height: '100%', background: '#10b981' }}></div>
+              <div style={{ width: '98%', height: '100%', background: 'var(--ok)' }}></div>
             </div>
           </div>
 
@@ -146,7 +146,7 @@ const Rating = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <div style={{ display: 'flex', gap: '4px' }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} color="#f59e0b" fill={i < 5 ? '#f59e0b' : 'transparent'} />
+                  <Star key={i} size={15} color="#f59e0b" fill={i < 5 ? 'var(--warn)' : 'transparent'} />
                 ))}
               </div>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Wedding Photobook Lab</span>

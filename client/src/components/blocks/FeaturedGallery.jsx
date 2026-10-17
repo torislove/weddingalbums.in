@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../ScrollReveal';
+import LazyImage from '../LazyImage';
 
 const FeaturedGallery = (props) => {
   const {
@@ -25,7 +26,7 @@ const FeaturedGallery = (props) => {
         <div className="featured-grid">
           {visibleImages.map((imgData, i) => (
             <ScrollReveal key={i} delay={(i + 1) * 100} className={`featured-item glass-3d ${i === 0 ? 'featured-large' : ''}`}>
-              <img src={imgData.img} alt={imgData.title} />
+              <LazyImage noWrap src={imgData.img || imgData.image} alt={imgData.title} />
               <div className="featured-overlay">
                 <span className={`tag-pill tag-${imgData.tag || 'wedding'}`}>{imgData.tag}</span>
                 <h4>{imgData.title}</h4>

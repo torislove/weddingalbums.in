@@ -125,7 +125,7 @@
 }
 
 .cart-page-item .remove-btn:hover {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .cart-summary-section {
@@ -169,7 +169,7 @@
 
 .secure-badge {
   font-size: 0.85rem;
-  color: #10b981;
+  color: var(--ok);
 }
 
 @media (max-width: 900px) {

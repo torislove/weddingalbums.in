@@ -53,7 +53,7 @@ const OrderHistory = () => {
   return (
     <div className="dashboard-page" style={{ maxWidth: '960px', margin: '0 auto', padding: 'clamp(12px, 3vw, 24px)' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0', color: '#fff', fontFamily: 'serif' }}>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', margin: '0 0 6px 0', color: 'var(--paper)', fontFamily: 'serif' }}>
           Order History & Itemized Invoices
         </h2>
         <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>
@@ -64,7 +64,7 @@ const OrderHistory = () => {
       {orders.length === 0 ? (
         <div className="empty-state" style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)' }}>
           <ShoppingBag size={48} color="var(--gold-primary)" style={{ marginBottom: '16px', opacity: 0.8 }} />
-          <h3 style={{ margin: '0 0 8px 0', color: '#fff' }}>No Orders Found</h3>
+          <h3 style={{ margin: '0 0 8px 0', color: 'var(--paper)' }}>No Orders Found</h3>
           <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0', fontSize: '0.9rem' }}>You haven't placed any photobook or post-production orders yet.</p>
           <Link to="/order" className="btn btn-primary" style={{ padding: '10px 24px', textDecoration: 'none', display: 'inline-block' }}>
             Book Services & Albums
@@ -103,7 +103,7 @@ const OrderHistory = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '14px', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
                   <div style={{ flex: '1 1 200px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                      <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#fff', fontWeight: 'bold' }}>
+                      <h4 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--paper)', fontWeight: 'bold' }}>
                         Order #{orderIdStr}
                       </h4>
                       <span style={{
@@ -112,7 +112,7 @@ const OrderHistory = () => {
                         padding: '2px 8px',
                         borderRadius: '999px',
                         background: pkgType === 'bundles' ? 'rgba(212, 175, 55, 0.15)' : 'rgba(59, 130, 246, 0.15)',
-                        color: pkgType === 'bundles' ? '#D4AF37' : '#93c5fd',
+                        color: pkgType === 'bundles' ? 'var(--brand)' : '#93c5fd',
                         border: `1px solid ${pkgType === 'bundles' ? 'rgba(212, 175, 55, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
                         textTransform: 'uppercase'
                       }}>
@@ -124,7 +124,7 @@ const OrderHistory = () => {
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                    <span style={{ display: 'inline-block', padding: '3px 10px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', borderRadius: '999px', fontSize: '0.76rem', fontWeight: 600, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                    <span style={{ display: 'inline-block', padding: '3px 10px', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--ok)', borderRadius: '999px', fontSize: '0.76rem', fontWeight: 600, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
                       {statusVal}
                     </span>
                     <div style={{ fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--gold-primary)', fontFamily: 'monospace' }}>
@@ -161,7 +161,7 @@ const OrderHistory = () => {
                       href={cloudLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: '#D4AF37', textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}
+                      style={{ color: 'var(--brand)', textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}
                     >
                       <Download size={14} /> Open Drive Media ↗
                     </a>
@@ -187,9 +187,9 @@ const OrderHistory = () => {
                           }}
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
-                            <strong style={{ color: '#fff', fontSize: '0.88rem' }}>{item.name || 'Service Item'}</strong>
+                            <strong style={{ color: 'var(--paper)', fontSize: '0.88rem' }}>{item.name || 'Service Item'}</strong>
                             {item.price && (
-                              <span style={{ color: '#D4AF37', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.82rem' }}>
+                              <span style={{ color: 'var(--brand)', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.82rem' }}>
                                 ₹{Number(item.price).toLocaleString('en-IN')}
                               </span>
                             )}
@@ -245,7 +245,7 @@ const OrderHistory = () => {
                       borderRadius: '10px',
                       background: 'rgba(212, 175, 55, 0.15)',
                       border: '1px solid rgba(212, 175, 55, 0.35)',
-                      color: '#D4AF37',
+                      color: 'var(--brand)',
                       textDecoration: 'none',
                       flex: '1 1 140px'
                     }}

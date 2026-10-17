@@ -51,7 +51,7 @@ export const ToastProvider = ({ children }) => {
           const isError = t.type === 'error';
           const Icon = isSuccess ? CheckCircle2 : isError ? AlertCircle : Info;
           const borderColor = isSuccess ? 'rgba(16, 185, 129, 0.4)' : isError ? 'rgba(239, 68, 68, 0.4)' : 'rgba(99, 102, 241, 0.4)';
-          const iconColor = isSuccess ? '#10b981' : isError ? '#ef4444' : '#818cf8';
+          const iconColor = isSuccess ? 'var(--ok)' : isError ? 'var(--danger)' : 'var(--brand-soft)';
 
           return (
             <div
@@ -67,7 +67,7 @@ export const ToastProvider = ({ children }) => {
                 backdropFilter: 'blur(16px)',
                 border: `1px solid ${borderColor}`,
                 boxShadow: '0 12px 30px rgba(0,0,0,0.6)',
-                color: '#fff',
+                color: 'var(--paper)',
                 animation: 'editorToastIn 0.3s ease-out'
               }}
             >

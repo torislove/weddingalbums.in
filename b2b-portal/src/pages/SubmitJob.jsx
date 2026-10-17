@@ -5,6 +5,74 @@ import {
   ArrowLeft, ArrowRight, Clock, Check
 } from 'lucide-react';
 import { API } from '../apiConfig';
+import Toast from '../components/ui/Toast';
+
+/* ── Visual configurator assets: RAW → Polished compare + cover mockups ── */
+const COVER_MOCKUPS = {
+  matte: '/images/mockup-layflat-spread.svg',
+  acrylic: '/images/mockup-acrylic-cover.svg',
+  leatherette: '/images/mockup-leatherette-embossed.svg',
+  'velvet-foil': '/images/mockup-velvet-gold-foil.svg',
+  default: '/images/mockup-leatherette-embossed.svg'
+};
+
+/** Interactive RAW→Polished wedge preview (zero-dependency compare slider). */
+const ComparePreview = ({ label = 'EDITED OUTPUT', value = 55, raw = '/images/bride-raw.jpg', polished = '/images/bride-polished.jpg' }) => {
+  const [pos, setPos] = useState(value);
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+        <span>RAW FILE</span>
+        <span>{label} — slide to preview</span>
+      </div>
+      <div style={{
+        position: 'relative', width: '100%', aspectRatio: '16/10', borderRadius: '12px',
+        overflow: 'hidden', border: '1px solid var(--glass-border, rgba(255,255,255,0.12))', background: '#0d0d12',
+        touchAction: 'none',
+      }}>
+        <img src={raw} alt="RAW file preview" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.72) contrast(0.96)' }} />
+        <div style={{
+          position: 'absolute', inset: 0, width: `${pos}%`, overflow: 'hidden',
+          borderRight: '2px solid var(--gold-primary, var(--brand))',
+          boxShadow: '0 0 24px rgba(212,175,55,0.35)',
+        }}>
+          <img src={polished} alt="Edited output preview" style={{ position: 'absolute', inset: 0, height: '100%', width: `${10000 / Math.max(pos, 1)}%`, maxWidth: 'none', objectFit: 'cover' }} />
+        </div>
+        <div style={{
+          position: 'absolute', left: `${pos}%`, top: '50%', transform: 'translate(-50%, -50%)',
+          width: 34, height: 34, borderRadius: '50%', background: 'rgba(13,13,18,0.85)',
+          border: '1.5px solid var(--gold-primary, var(--brand))', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--gold-primary, var(--brand))', fontSize: 14, userSelect: 'none', pointerEvents: 'none',
+        }}>⇔</div>
+        <input
+          type="range" min="8" max="92" value={pos}
+          onChange={e => setPos(Number(e.target.value))}
+          aria-label="Compare RAW and edited preview"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'ew-resize', margin: 0 }}
+        />
+      </div>
+    </div>
+  );
+};
+
+/** Cover-finish mockup preview card. */
+const CoverMockup = ({ id }) => (
+  <div style={{
+    position: 'relative', alignSelf: 'stretch', borderRadius: '12px', overflow: 'hidden',
+    border: '1px solid rgba(212,175,55,0.35)', minHeight: '150px', background: '#0d0d12',
+  }}>
+    <img
+      src={COVER_MOCKUPS[id] || COVER_MOCKUPS.default}
+      alt={`${id} cover finish mockup`}
+      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+    />
+    <span style={{
+      position: 'absolute', left: 10, bottom: 10, padding: '4px 10px', borderRadius: 999,
+      background: 'rgba(13,13,18,0.8)', border: '1px solid rgba(212,175,55,0.4)',
+      color: 'var(--gold-primary, var(--brand))', fontSize: '10.5px', letterSpacing: '1.5px', fontWeight: 600,
+    }}>COVER MOCK PREVIEW</span>
+  </div>
+);
 
 // 10 Indian Market Standard Album Sizes for B2B Studios
 const ALBUM_SIZES = [
@@ -66,6 +134,7 @@ const FLEX_SERVICES = [
 
 const SubmitJob = () => {
   const [step, setStep] = useState(1);
+  const [toast, setToast] = useState(null); // { msg, tone }
   
   // Parse query params for direct dashboard configurator pass-through
   useEffect(() => {
@@ -209,7 +278,7 @@ const SubmitJob = () => {
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
       if (!token) {
-        alert('Please login first to access studio trade submission.');
+        setToast({ msg: 'Please login first to access studio trade submission', tone: 'danger' });
         return;
       }
       
@@ -250,14 +319,14 @@ const SubmitJob = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert(`Job Submitted to Lab! ID: ${data.id}\nWholesale Lab Cost: ₹${wholesaleTotal.toLocaleString('en-IN')}\nYour Retained Margin: ₹${studioProfit.toLocaleString('en-IN')}`);
-        window.location.href = '/dashboard';
+        setToast({ msg: `Job submitted to Lab! ID ${data.id} · Lab cost ₹${wholesaleTotal.toLocaleString('en-IN')} · Your margin ₹${studioProfit.toLocaleString('en-IN')}`, tone: 'success' });
+        setTimeout(() => { window.location.href = '/dashboard'; }, 1600);
       } else {
-        alert(data.error || 'Failed to submit job');
+        setToast({ msg: data.error || 'Failed to submit job', tone: 'danger' });
       }
     } catch (err) {
       console.error(err);
-      alert('Network error while submitting job');
+      setToast({ msg: 'Network error while submitting job', tone: 'danger' });
     }
   };
 
@@ -339,7 +408,7 @@ const SubmitJob = () => {
                   }}
                 >
                   <type.icon size={30} color={formData.jobType === type.id ? 'var(--gold-primary)' : 'var(--text-muted)'} style={{ margin: '0 auto 0.75rem' }} />
-                  <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '0.95rem', color: formData.jobType === type.id ? '#fff' : 'var(--text-secondary)' }}>{type.title}</h4>
+                  <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '0.95rem', color: formData.jobType === type.id ? 'var(--paper)' : 'var(--text-secondary)' }}>{type.title}</h4>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.3 }}>{type.desc}</p>
                 </div>
               ))}
@@ -359,10 +428,10 @@ const SubmitJob = () => {
                       value={formData.albumSize} 
                       onChange={e => setFormData({...formData, albumSize: e.target.value})}
                       className="form-control"
-                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {ALBUM_SIZES.map(s => (
-                        <option key={s.id} value={s.id} style={{ background: '#111', color: '#fff' }}>
+                        <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
                           {s.name} (Wholesale: ₹{s.wholesaleBase.toLocaleString('en-IN')})
                         </option>
                       ))}
@@ -375,10 +444,10 @@ const SubmitJob = () => {
                       value={formData.substrateType} 
                       onChange={e => setFormData({...formData, substrateType: e.target.value})}
                       className="form-control"
-                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {BASE_SUBSTRATES.map(sub => (
-                        <option key={sub.id} value={sub.id} style={{ background: '#111', color: '#fff' }}>
+                        <option key={sub.id} value={sub.id} style={{ background: '#111', color: 'var(--paper)' }}>
                           {sub.name}
                         </option>
                       ))}
@@ -391,10 +460,10 @@ const SubmitJob = () => {
                       value={formData.sheetType} 
                       onChange={e => setFormData({...formData, sheetType: e.target.value})}
                       className="form-control"
-                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {SHEET_TYPES.map(s => (
-                        <option key={s.id} value={s.id} style={{ background: '#111', color: '#fff' }}>
+                        <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
                           {s.name} ({s.gsm} - ₹{s.rate}/sheet)
                         </option>
                       ))}
@@ -422,15 +491,17 @@ const SubmitJob = () => {
                       value={formData.coverFinish} 
                       onChange={e => setFormData({...formData, coverFinish: e.target.value})}
                       className="form-control"
-                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+                      style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {COVER_FINISHES.map(c => (
-                        <option key={c.id} value={c.id} style={{ background: '#111', color: '#fff' }}>
+                        <option key={c.id} value={c.id} style={{ background: '#111', color: 'var(--paper)' }}>
                           {c.name} {c.wholesaleExtra > 0 ? `(+₹${c.wholesaleExtra.toLocaleString('en-IN')})` : ''}
                         </option>
                       ))}
                     </select>
                   </div>
+
+                  <CoverMockup id={formData.coverFinish} />
                 </div>
               </div>
             )}
@@ -459,7 +530,7 @@ const SubmitJob = () => {
                           {isChecked && <Check size={14} color="#000" strokeWidth={3} />}
                         </div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{v.name}</div>
+                          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--paper)' }}>{v.name}</div>
                           <div style={{ fontSize: '11px', color: 'var(--gold-primary)', fontFamily: 'monospace' }}>+₹{v.wholesaleRate.toLocaleString('en-IN')}</div>
                         </div>
                       </div>
@@ -493,7 +564,7 @@ const SubmitJob = () => {
                           {isChecked && <Check size={14} color="#000" strokeWidth={3} />}
                         </div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{f.name}</div>
+                          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--paper)' }}>{f.name}</div>
                           <div style={{ fontSize: '11px', color: 'var(--gold-primary)', fontFamily: 'monospace' }}>+₹{f.wholesaleRate.toLocaleString('en-IN')}</div>
                         </div>
                       </div>
@@ -556,7 +627,7 @@ const SubmitJob = () => {
             <div style={{ padding: '1.25rem', background: 'rgba(16,185,129,0.08)', borderRadius: '12px', border: '1px solid rgba(16,185,129,0.25)', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
               <ShieldCheck size={24} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
-                <div style={{ fontWeight: 700, color: '#10b981', fontSize: '14px' }}>100% Blind White-Label Protection</div>
+                <div style={{ fontWeight: 700, color: 'var(--ok)', fontSize: '14px' }}>100% Blind White-Label Protection</div>
                 <div style={{ fontSize: '12px', color: '#e2e8f0', marginTop: '2px' }}>
                   The presentation box, shipping invoice, and courier box will carry only YOUR studio identity. We strictly never contact or market to your clients.
                 </div>
@@ -585,6 +656,7 @@ const SubmitJob = () => {
                   <option>Moody Film Emulation (Kodak Portra Style)</option>
                   <option>Custom Studio Presets (Upload LUTs in next step)</option>
                 </select>
+                <ComparePreview label={formData.editingStyle.replace(/\s*\(.*\)$/, '')} />
               </div>
             </div>
 
@@ -653,7 +725,7 @@ const SubmitJob = () => {
                     borderRadius: '12px',
                     cursor: 'pointer',
                     background: formData.uploadMethod === method.id ? 'rgba(212, 175, 55, 0.08)' : 'var(--bg-tertiary)',
-                    color: formData.uploadMethod === method.id ? '#fff' : 'var(--text-muted)',
+                    color: formData.uploadMethod === method.id ? 'var(--paper)' : 'var(--text-muted)',
                     transition: 'all 0.2s ease',
                     transform: formData.uploadMethod === method.id ? 'translateY(-2px)' : 'none'
                   }}
@@ -667,7 +739,7 @@ const SubmitJob = () => {
             {formData.uploadMethod === 'physical' ? (
               <div style={{ background: 'var(--bg-tertiary)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--glass-border)', textAlign: 'center' }}>
                 <HardDrive size={36} color="var(--gold-primary)" style={{ margin: '0 auto 0.75rem' }} />
-                <h4 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Ship Hard Drive to Vijayawada Lab</h4>
+                <h4 style={{ color: 'var(--paper)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Ship Hard Drive to Vijayawada Lab</h4>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '13px' }}>
                   Please pack your drive securely. Submit this job to generate your Job ID, and write the Job ID on the courier parcel.
                 </p>
@@ -680,7 +752,7 @@ const SubmitJob = () => {
               </div>
             ) : (
               <div style={{ background: 'var(--bg-tertiary)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--glass-border)' }}>
-                <label style={{ display: 'block', marginBottom: '0.75rem', color: '#fff', fontWeight: 600, fontSize: '13px' }}>
+                <label style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--paper)', fontWeight: 600, fontSize: '13px' }}>
                   Paste Cloud Link ({formData.uploadMethod === 'gdrive' ? 'Google Drive' : formData.uploadMethod === 'wetransfer' ? 'WeTransfer' : 'Dropbox'})
                 </label>
                 <input 
@@ -712,7 +784,7 @@ const SubmitJob = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>Wholesale Lab Cost (Payable)</div>
-                  <div style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--paper)', fontFamily: 'monospace' }}>
                     ₹{wholesaleTotal.toLocaleString('en-IN')}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--gold-primary)' }}>100% Tax & Courier Included</div>
@@ -733,8 +805,8 @@ const SubmitJob = () => {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#10b981', letterSpacing: '0.5px', fontWeight: 'bold' }}>Your Studio Profit Margin</div>
-                  <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981', fontFamily: 'monospace' }}>
+                  <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--ok)', letterSpacing: '0.5px', fontWeight: 'bold' }}>Your Studio Profit Margin</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--ok)', fontFamily: 'monospace' }}>
                     +₹{studioProfit.toLocaleString('en-IN')}
                   </div>
                   <div style={{ fontSize: '12px', color: '#34d399', fontWeight: 600 }}>
@@ -746,7 +818,7 @@ const SubmitJob = () => {
 
             {/* Itemized Specs Review */}
             <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '1.25rem', marginBottom: '1.5rem', fontSize: '13px' }}>
-              <div style={{ fontWeight: 700, color: '#fff', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Itemized Specifications</div>
+              <div style={{ fontWeight: 700, color: 'var(--paper)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Itemized Specifications</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1rem', color: 'var(--text-secondary)' }}>
                 <div><strong>Client:</strong> {formData.eventName} ({formData.eventType})</div>
                 <div><strong>Event Date:</strong> {formData.eventDate}</div>
@@ -754,7 +826,7 @@ const SubmitJob = () => {
                 <div><strong>Sheets:</strong> {formData.sheetsCount} sheets ({sheetObj.name})</div>
                 <div><strong>Cover:</strong> {coverObj.name}</div>
                 <div><strong>White-Label:</strong> {formData.isWhiteLabel ? `Yes (Deboss: ${formData.studioDebossName || 'Studio'})` : 'No'}</div>
-                <div><strong>SLA Guarantee:</strong> <span style={{ color: '#10b981', fontWeight: 'bold' }}>⚡ 48-Hour Rapid Dispatch</span></div>
+                <div><strong>SLA Guarantee:</strong> <span style={{ color: 'var(--ok)', fontWeight: 'bold' }}>⚡ 48-Hour Rapid Dispatch</span></div>
               </div>
             </div>
           </div>
@@ -801,6 +873,8 @@ const SubmitJob = () => {
       <style>{`
         @keyframes uiaFadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
       `}</style>
+
+      <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
     </div>
   );
 };

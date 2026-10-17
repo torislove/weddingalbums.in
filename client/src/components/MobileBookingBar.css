@@ -34,7 +34,7 @@
 
 .btn-wa {
   background: #25D366;
-  color: #ffffff;
+  color: var(--paper);
 }
 
 .btn-wa:hover {

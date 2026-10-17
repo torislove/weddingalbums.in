@@ -29,7 +29,7 @@ class ErrorBoundary extends Component {
           justifyContent: 'center',
           padding: '2rem',
           background: 'var(--bg-dark, #0a0908)',
-          color: '#fff',
+          color: 'var(--paper)',
           textAlign: 'center'
         }}>
           <div style={{
@@ -47,7 +47,7 @@ class ErrorBoundary extends Component {
               borderRadius: '50%',
               background: 'rgba(212, 175, 55, 0.1)',
               border: '1px solid rgba(212, 175, 55, 0.3)',
-              color: 'var(--color-secondary, #D4AF37)',
+              color: 'var(--color-secondary, var(--brand))',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -61,7 +61,7 @@ class ErrorBoundary extends Component {
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '2px',
-              color: 'var(--color-secondary, #D4AF37)',
+              color: 'var(--color-secondary, var(--brand))',
               marginBottom: '8px'
             }}>
               ✦ WEDDINGALBUMS.IN SYSTEM RECOVERY ✦

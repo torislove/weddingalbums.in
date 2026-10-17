@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { CLIENT_URL } from '../config/urls';
 import {
   DndContext,
   closestCenter,
@@ -21,6 +22,7 @@ import {
   Eye, EyeOff, Search, ExternalLink, RefreshCw, Sparkles, ArrowLeft, Sliders
 } from 'lucide-react';
 import BlockEditor from '../components/BlockEditor';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const SortableBlock = ({ block, isActive, onClick, onDelete, onToggleVisibility }) => {
@@ -38,7 +40,7 @@ const SortableBlock = ({ block, isActive, onClick, onDelete, onToggleVisibility 
       ref={setNodeRef} 
       style={style} 
       className={`group flex items-center gap-2.5 border p-3 rounded-xl mb-2.5 cursor-pointer transition-all duration-200 
-        ${isActive ? 'border-[#D4AF37] bg-[#D4AF37]/10 shadow-[0_0_20px_rgba(212,175,55,0.15)] ring-1 ring-[#D4AF37]/30' : 'border-white/10 hover:border-white/20 bg-white/5'} 
+        ${isActive ? 'border-[var(--brand)] bg-[var(--brand)]/10 shadow-[0_0_20px_rgba(212,175,55,0.15)] ring-1 ring-[var(--brand)]/30' : 'border-white/10 hover:border-white/20 bg-white/5'} 
         ${isDragging ? 'shadow-2xl opacity-90 scale-[1.02]' : ''}
         ${isHidden ? 'opacity-50 border-red-500/25 bg-red-950/10' : ''}`}
       onClick={onClick}
@@ -56,7 +58,7 @@ const SortableBlock = ({ block, isActive, onClick, onDelete, onToggleVisibility 
       {/* Block Information */}
       <div className="flex-1 overflow-hidden min-w-0">
         <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <LayoutTemplate size={13} className={isHidden ? "text-gray-500" : "text-[#D4AF37]"} />
+          <LayoutTemplate size={13} className={isHidden ? "text-gray-500" : "text-[var(--brand)]"} />
           <h3 className={`text-sm font-semibold tracking-wide truncate ${isHidden ? 'text-gray-400 line-through' : 'text-white'}`}>
             {block.type}
           </h3>
@@ -84,11 +86,11 @@ const SortableBlock = ({ block, isActive, onClick, onDelete, onToggleVisibility 
           className={`p-2 rounded-lg transition-all ${
             isHidden 
               ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30' 
-              : 'bg-white/5 text-gray-300 hover:text-white hover:bg-white/15 hover:border-[#D4AF37]/50 border border-white/10'
+              : 'bg-white/5 text-gray-300 hover:text-white hover:bg-white/15 hover:border-[var(--brand)]/50 border border-white/10'
           }`}
           title={isHidden ? "Section is HIDDEN from site. Click to Show" : "Section is LIVE on site. Click to Hide"}
         >
-          {isHidden ? <EyeOff size={15} /> : <Eye size={15} className="text-[#D4AF37]" />}
+          {isHidden ? <EyeOff size={15} /> : <Eye size={15} className="text-[var(--brand)]" />}
         </button>
 
         <button 
@@ -115,6 +117,7 @@ const PageEditor = ({ adminState }) => {
   const [previewMode, setPreviewMode] = useState('desktop'); // desktop, tablet, mobile
   const [searchFilter, setSearchFilter] = useState('');
   const [iframeKey, setIframeKey] = useState(0);
+  const [deleteBlockId, setDeleteBlockId] = useState(null);
   
   const blocks = content?.pages?.[pageId] || [];
 
@@ -211,11 +214,14 @@ const PageEditor = ({ adminState }) => {
     setIsAddMenuOpen(false);
   };
 
-  const handleDeleteBlock = (id) => {
-    if (window.confirm('Are you sure you want to delete this section?')) {
-      updatePage(pageId, blocks.filter(b => b.id !== id));
-      if (activeBlockId === id) setActiveBlockId(null);
-    }
+  const handleDeleteBlock = (id) => setDeleteBlockId(id);
+
+  const confirmDeleteBlock = () => {
+    const id = deleteBlockId;
+    if (!id) return;
+    updatePage(pageId, blocks.filter(b => b.id !== id));
+    if (activeBlockId === id) setActiveBlockId(null);
+    setDeleteBlockId(null);
   };
 
   const handleUpdateBlockProps = (id, newProps) => {
@@ -238,7 +244,7 @@ const PageEditor = ({ adminState }) => {
   ];
 
   const isLocal = typeof window !== 'undefined' && (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1'));
-  const clientBase = isLocal ? 'http://localhost:5173' : 'https://weddingalbums-b4bcd.web.app';
+  const clientBase = CLIENT_URL;
   const previewUrl = pageId === 'home' ? `${clientBase}/` : `${clientBase}/${pageId}`;
 
   const filteredBlocks = blocks.filter(b => {
@@ -257,7 +263,7 @@ const PageEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('sections')}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'sections' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'sections' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <LayoutTemplate size={13} />
@@ -268,7 +274,7 @@ const PageEditor = ({ adminState }) => {
             disabled={!activeBlock}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
               mobileTab === 'properties'
-                ? 'bg-[#D4AF37] text-black font-bold shadow'
+                ? 'bg-[var(--brand)] text-black font-bold shadow'
                 : activeBlock
                 ? 'text-gray-400 hover:text-white bg-white/5'
                 : 'text-gray-600 bg-white/[0.02] opacity-50 cursor-not-allowed'
@@ -280,7 +286,7 @@ const PageEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('preview')}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'preview' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'preview' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <Eye size={13} />
@@ -295,7 +301,7 @@ const PageEditor = ({ adminState }) => {
           <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/40 backdrop-blur-md">
             <div>
               <div className="flex items-center gap-1.5">
-                <Sparkles size={14} className="text-[#D4AF37]" />
+                <Sparkles size={14} className="text-[var(--brand)]" />
                 <h2 className="text-base font-serif text-white capitalize">{pageId} Page</h2>
               </div>
               <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">
@@ -315,7 +321,7 @@ const PageEditor = ({ adminState }) => {
               {/* Add Section Dropdown */}
               {isAddMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-64 glass-panel p-2 z-50 animate-slide-up shadow-2xl border border-white/20 rounded-xl bg-[#111]">
-                  <div className="text-[10px] font-semibold text-[#D4AF37] uppercase tracking-wider px-2 py-1.5 mb-1 border-b border-white/10">
+                  <div className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-wider px-2 py-1.5 mb-1 border-b border-white/10">
                     Select Section Type
                   </div>
                   <div className="max-h-[50vh] overflow-y-auto custom-scrollbar pr-1 space-y-1">
@@ -325,7 +331,7 @@ const PageEditor = ({ adminState }) => {
                         onClick={() => handleAddBlock(comp)} 
                         className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-white/10 text-xs text-gray-300 hover:text-white transition-colors flex items-center gap-2 group"
                       >
-                        <LayoutTemplate size={13} className="text-gray-500 group-hover:text-[#D4AF37]" />
+                        <LayoutTemplate size={13} className="text-gray-500 group-hover:text-[var(--brand)]" />
                         <span className="font-medium">{comp}</span>
                       </button>
                     ))}
@@ -345,7 +351,7 @@ const PageEditor = ({ adminState }) => {
                   value={searchFilter}
                   onChange={e => setSearchFilter(e.target.value)}
                   placeholder="Filter sections..."
-                  className="w-full pl-8 pr-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full pl-8 pr-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[var(--brand)]"
                 />
               </div>
             </div>
@@ -359,7 +365,7 @@ const PageEditor = ({ adminState }) => {
                 <p className="text-xs text-gray-500">No sections on this page.</p>
                 <button 
                   onClick={() => setIsAddMenuOpen(true)}
-                  className="mt-3 text-xs text-[#D4AF37] hover:underline font-semibold"
+                  className="mt-3 text-xs text-[var(--brand)] hover:underline font-semibold"
                 >
                   + Add your first section
                 </button>
@@ -395,14 +401,14 @@ const PageEditor = ({ adminState }) => {
               {isMobileOrTablet && (
                 <button 
                   onClick={() => setMobileTab('sections')}
-                  className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium mr-1"
+                  className="text-xs text-[var(--brand)] hover:underline flex items-center gap-1 font-medium mr-1"
                 >
                   <ArrowLeft size={14} /> Back
                 </button>
               )}
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#D4AF37]"></span>
+                  <span className="w-2 h-2 rounded-full bg-[var(--brand)]"></span>
                   <span className="text-xs font-bold text-white uppercase tracking-wider">{activeBlock.type}</span>
                 </div>
                 <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">Customize Properties</p>
@@ -462,21 +468,21 @@ const PageEditor = ({ adminState }) => {
               <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10 shadow-inner">
                 <button 
                   onClick={() => setPreviewMode('desktop')}
-                  className={`p-1.5 rounded-md transition-all ${previewMode === 'desktop' ? 'bg-[#D4AF37] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-1.5 rounded-md transition-all ${previewMode === 'desktop' ? 'bg-[var(--brand)] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
                   title="Desktop View (100%)"
                 >
                   <Monitor size={15} />
                 </button>
                 <button 
                   onClick={() => setPreviewMode('tablet')}
-                  className={`p-1.5 rounded-md transition-all ${previewMode === 'tablet' ? 'bg-[#D4AF37] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-1.5 rounded-md transition-all ${previewMode === 'tablet' ? 'bg-[var(--brand)] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
                   title="Tablet View (768px)"
                 >
                   <Tablet size={15} />
                 </button>
                 <button 
                   onClick={() => setPreviewMode('mobile')}
-                  className={`p-1.5 rounded-md transition-all ${previewMode === 'mobile' ? 'bg-[#D4AF37] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-1.5 rounded-md transition-all ${previewMode === 'mobile' ? 'bg-[var(--brand)] text-black shadow font-bold' : 'text-gray-400 hover:text-white'}`}
                   title="Mobile View (375px)"
                 >
                   <Smartphone size={15} />
@@ -504,7 +510,7 @@ const PageEditor = ({ adminState }) => {
           </div>
           
           {/* Iframe Container with Device Frames */}
-          <div className="flex-1 overflow-hidden flex justify-center items-center p-2 sm:p-4 md:p-8 bg-[#050505]">
+          <div className="flex-1 overflow-hidden flex justify-center items-center p-2 sm:p-4 md:p-8 bg-[var(--ink)]">
             
             {previewMode === 'mobile' && (
               <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
@@ -552,6 +558,15 @@ const PageEditor = ({ adminState }) => {
         </div>
       )}
 
+      <ConfirmDialog
+        open={!!deleteBlockId}
+        tone="danger"
+        title="Delete this section?"
+        message="The section is removed from this page draft. Publish to apply the change live."
+        confirmLabel="Delete section"
+        onConfirm={confirmDeleteBlock}
+        onCancel={() => setDeleteBlockId(null)}
+      />
     </div>
   );
 };

@@ -5,6 +5,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    // Pinned so the client can never silently drift onto another app's port
+    // (b2b=5174, editor=5175, sysadmin=5176, uiadmin=5177). strictPort makes a
+    // collision fail loudly instead of Vite auto-incrementing to a taken port.
+    port: 5173,
+    strictPort: true,
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:4000',

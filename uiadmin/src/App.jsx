@@ -1,17 +1,20 @@
 import React, { useState, useCallback, createContext, useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Settings, Image as ImageIcon, Save, ExternalLink, Bell, LogOut, PenTool, Eye, Menu, X } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, Image as ImageIcon, Save, ExternalLink, Bell, LogOut, PenTool, Eye, Menu, X, History as HistoryIcon } from 'lucide-react';
 import { useMediaQuery } from './hooks/useMediaQuery';
 import PageEditor from './pages/PageEditor';
 import GlobalEditor from './pages/GlobalEditor';
 import PushNotificationEditor from './pages/PushNotificationEditor';
 import CalendarEditor from './pages/CalendarEditor';
 import MediaLibrary from './pages/MediaLibrary';
+import History from './pages/History';
 import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 import HubCatalogEditor from './pages/HubCatalogEditor';
 import Toast from './components/Toast';
 import Logo from './components/Logo';
+import ErrorBoundary from './components/ErrorBoundary';
+import { CLIENT_URL, OPS_URL } from './config/urls';
 import { useAdminContent } from './hooks/useAdminContent';
 import { API } from './apiConfig';
 
@@ -90,7 +93,7 @@ const Guard = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return (
     <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#080808', flexDirection: 'column', gap: 16 }}>
-      <div style={{ width: 40, height: 40, borderRadius: '50%', border: '3px solid rgba(245,158,11,0.15)', borderTopColor: '#f59e0b', animation: 'spin 0.8s linear infinite' }} />
+      <div style={{ width: 40, height: 40, borderRadius: '50%', border: '3px solid rgba(245,158,11,0.15)', borderTopColor: 'var(--warn)', animation: 'spin 0.8s linear infinite' }} />
       <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, fontFamily: 'Inter, sans-serif' }}>Loading CMS…</span>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
@@ -108,6 +111,7 @@ const PAGES_MENU = [
   { name: 'Portfolio Page',     path: '/pages/portfolio',     icon: FileText },
   { name: 'Testimonials',       path: '/pages/testimonials',  icon: FileText },
   { name: 'Contact Page',       path: '/pages/contact',       icon: FileText },
+  { name: 'Publish History',    path: '/history',             icon: HistoryIcon },
 ];
 const TOOLS_MENU = [
   { name: 'Hub Catalog & Pricing', path: '/catalog',   icon: PenTool },
@@ -124,7 +128,7 @@ const SidebarLink = ({ item }) => {
     <Link to={item.path} style={{
       display: 'flex', alignItems: 'center', gap: 10,
       padding: '9px 12px', borderRadius: 10, marginBottom: 2,
-      color: active ? '#f59e0b' : 'rgba(255,255,255,0.4)',
+      color: active ? 'var(--warn)' : 'rgba(255,255,255,0.4)',
       background: active ? 'rgba(245,158,11,0.08)' : 'transparent',
       border: `1px solid ${active ? 'rgba(245,158,11,0.15)' : 'transparent'}`,
       textDecoration: 'none', fontSize: 13, fontWeight: active ? 600 : 400,
@@ -156,7 +160,7 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
         />
       )}
     <aside style={{
-        width: 250, background: '#050505', borderRight: '1px solid rgba(245,158,11,0.06)',
+        width: 250, background: 'var(--ink)', borderRight: '1px solid rgba(245,158,11,0.06)',
         height: '100vh', position: 'fixed', top: 0, left: 0,
         display: 'flex', flexDirection: 'column', zIndex: 50,
         overflowY: 'auto', scrollbarWidth: 'none',
@@ -171,11 +175,11 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
 
       {/* User */}
       <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, #f59e0b, #d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#1a0e00', flexShrink: 0 }}>
+        <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, var(--warn), #d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#1a0e00', flexShrink: 0 }}>
           {user?.name?.charAt(0)?.toUpperCase() || 'A'}
         </div>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{user?.name || 'Admin'}</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--paper)' }}>{user?.name || 'Admin'}</div>
           <div style={{ fontSize: 10, color: 'rgba(245,158,11,0.5)', letterSpacing: 1 }}>CONTENT ADMIN</div>
         </div>
       </div>
@@ -196,7 +200,7 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
           width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           padding: '10px 12px', borderRadius: 10, border: 'none', cursor: isDirty && !saving ? 'pointer' : 'not-allowed',
           background: isDirty && !saving ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 'rgba(255,255,255,0.04)',
-          color: isDirty && !saving ? '#fff' : 'rgba(255,255,255,0.2)',
+          color: isDirty && !saving ? 'var(--paper)' : 'rgba(255,255,255,0.2)',
           fontSize: 13, fontWeight: 600, fontFamily: 'inherit',
           transition: 'all 0.2s',
           boxShadow: isDirty && !saving ? '0 6px 16px rgba(34,197,94,0.25)' : 'none',
@@ -207,7 +211,7 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
         </button>
 
         {/* Preview */}
-        <a href="http://localhost:5173" target="_blank" rel="noreferrer" style={{
+        <a href={CLIENT_URL} target="_blank" rel="noreferrer" style={{
           width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           padding: '9px 12px', borderRadius: 10,
           background: 'transparent', border: '1px solid rgba(255,255,255,0.06)',
@@ -271,25 +275,25 @@ function AppInner() {
         <Route path="/*" element={
           <Guard>
             {!adminState.content ? (
-              <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#050505', gap: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', border: '3px solid rgba(245,158,11,0.15)', borderTopColor: '#f59e0b', animation: 'spin 0.8s linear infinite' }} />
+              <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--ink)', gap: 16 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '50%', border: '3px solid rgba(245,158,11,0.15)', borderTopColor: 'var(--warn)', animation: 'spin 0.8s linear infinite' }} />
                 <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, fontFamily: 'Inter, sans-serif' }}>Loading CMS content…</div>
                 <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
               </div>
             ) : (
-              <div style={{ display: 'flex', minHeight: '100vh', background: '#050505', color: '#e2e8f0', fontFamily: 'Inter, sans-serif' }}>
+              <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)', color: '#e2e8f0', fontFamily: 'Inter, sans-serif' }}>
                 {/* Mobile hamburger header */}
                 {isMobile && (
                   <div style={{
                     position: 'fixed', top: 0, left: 0, right: 0, height: 60,
-                    background: '#050505', borderBottom: '1px solid rgba(245,158,11,0.12)',
+                    background: 'var(--ink)', borderBottom: '1px solid rgba(245,158,11,0.12)',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '0 16px', zIndex: 60, fontFamily: 'Inter, sans-serif',
                     boxSizing: 'border-box'
                   }}>
                     <button
                       onClick={() => setSidebarOpen(v => !v)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f59e0b', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--warn)', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       aria-label="Toggle menu"
                     >
                       {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
@@ -320,6 +324,7 @@ function AppInner() {
                     <Route path="/push"            element={<PushNotificationEditor adminState={adminState} />} />
                     <Route path="/global"          element={<GlobalEditor adminState={adminState} />} />
                     <Route path="/images"          element={<MediaLibrary />} />
+                    <Route path="/history"         element={<History />} />
                     <Route path="*"               element={<div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', marginTop: 80 }}>Under construction</div>} />
                   </Routes>
                 </main>
@@ -335,9 +340,11 @@ function AppInner() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
+    <ErrorBoundary label="CMS Studio" accent="var(--warn)">
+      <AuthProvider>
+        <AppInner />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

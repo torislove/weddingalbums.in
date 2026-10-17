@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Monitor, Tablet, Smartphone, Bell, ExternalLink, Sliders, Eye } from 'lucide-react';
 import BlockEditor from '../components/BlockEditor';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { CLIENT_URL } from '../config/urls';
 
 const PushNotificationEditor = ({ adminState }) => {
   const { content, setContent, setIsDirty } = adminState;
@@ -13,7 +14,7 @@ const PushNotificationEditor = ({ adminState }) => {
 
   const previewUrl = typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')
     ? '/' 
-    : (import.meta.env.VITE_CLIENT_URL || 'http://localhost:5173/');
+    : `${CLIENT_URL}/`;
 
   const handleUpdate = (newProps) => {
     const updated = {
@@ -57,7 +58,7 @@ const PushNotificationEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('editor')}
             className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'editor' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'editor' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <Sliders size={13} /> Settings
@@ -65,7 +66,7 @@ const PushNotificationEditor = ({ adminState }) => {
           <button
             onClick={() => setMobileTab('preview')}
             className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'preview' ? 'bg-[#D4AF37] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
+              mobileTab === 'preview' ? 'bg-[var(--brand)] text-black font-bold shadow' : 'text-gray-400 hover:text-white bg-white/5'
             }`}
           >
             <Eye size={13} /> Live Preview
@@ -75,9 +76,9 @@ const PushNotificationEditor = ({ adminState }) => {
       
       {/* 2. Editor Panel */}
       {(!isMobile || mobileTab === 'editor') && (
-        <div className={`${isMobile ? 'w-full flex-1' : 'w-[420px]'} flex flex-col border-r border-white/10 bg-[#050505] flex-shrink-0 relative`}>
+        <div className={`${isMobile ? 'w-full flex-1' : 'w-[420px]'} flex flex-col border-r border-white/10 bg-[var(--ink)] flex-shrink-0 relative`}>
           <div className="p-4 sm:p-5 border-b border-white/10 bg-black/40 backdrop-blur-md flex items-center gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--brand)]/10 flex items-center justify-center text-[var(--brand)] shrink-0">
               <Bell size={18} />
             </div>
             <div>
@@ -108,21 +109,21 @@ const PushNotificationEditor = ({ adminState }) => {
           <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
             <button 
               onClick={() => setPreviewMode('desktop')}
-              className={`p-1.5 rounded-md transition-colors ${previewMode === 'desktop' ? 'bg-[#D4AF37] text-black shadow' : 'text-gray-500 hover:text-white'}`}
+              className={`p-1.5 rounded-md transition-colors ${previewMode === 'desktop' ? 'bg-[var(--brand)] text-black shadow' : 'text-gray-500 hover:text-white'}`}
               title="Desktop View"
             >
               <Monitor size={16} />
             </button>
             <button 
               onClick={() => setPreviewMode('tablet')}
-              className={`p-1.5 rounded-md transition-colors ${previewMode === 'tablet' ? 'bg-[#D4AF37] text-black shadow' : 'text-gray-500 hover:text-white'}`}
+              className={`p-1.5 rounded-md transition-colors ${previewMode === 'tablet' ? 'bg-[var(--brand)] text-black shadow' : 'text-gray-500 hover:text-white'}`}
               title="Tablet View"
             >
               <Tablet size={16} />
             </button>
             <button 
               onClick={() => setPreviewMode('mobile')}
-              className={`p-1.5 rounded-md transition-colors ${previewMode === 'mobile' ? 'bg-[#D4AF37] text-black shadow' : 'text-gray-500 hover:text-white'}`}
+              className={`p-1.5 rounded-md transition-colors ${previewMode === 'mobile' ? 'bg-[var(--brand)] text-black shadow' : 'text-gray-500 hover:text-white'}`}
               title="Mobile View"
             >
               <Smartphone size={16} />
@@ -146,7 +147,7 @@ const PushNotificationEditor = ({ adminState }) => {
         </div>
         
         {/* Iframe Container */}
-        <div className="flex-1 overflow-hidden flex justify-center items-center p-4 md:p-8 bg-[#050505]">
+        <div className="flex-1 overflow-hidden flex justify-center items-center p-4 md:p-8 bg-[var(--ink)]">
           {previewMode === 'mobile' && (
             <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
               <iframe 

@@ -12,17 +12,20 @@
   user-select: none;
 }
 
+/* Track is content-sized (NOT a fixed %) so the measured-set seam loop is exact */
 .marquee-track {
   display: flex;
-  width: 200%; /* Contains two full sets of items */
+  width: max-content;
   will-change: transform;
 }
 
+/* Each set is one full cycle worth of items; padding-right guarantees a
+   clean gap at the wrap point even for short item lists */
 .marquee-content {
   display: flex;
-  width: 50%; /* Each set is exactly half the track width */
-  justify-content: space-around;
   align-items: center;
+  flex: 0 0 auto;
+  padding-right: 2rem;
 }
 
 .marquee-item {
@@ -32,11 +35,21 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   white-space: nowrap;
+  color: var(--color-secondary);
 }
 
 .marquee-separator {
-  color: white;
+  color: var(--color-secondary);
   opacity: 0.3;
   margin: 0 2rem;
   font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .marquee-item { font-size: 1rem; }
+  .marquee-separator { margin: 0 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { transform: none !important; }
 }

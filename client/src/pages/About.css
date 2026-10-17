@@ -6,7 +6,7 @@
 .about-hero {
   position: relative;
   padding: 6rem 1rem;
-  background-image: url('https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+  background-image: url('/images/weddingalbums-home-hero.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

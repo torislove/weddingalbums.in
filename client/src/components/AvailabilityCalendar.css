@@ -39,7 +39,7 @@
 .calendar-day.blank { background: transparent; border: none; }
 .day-available { background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
 .day-available:hover { background: rgba(255,255,255,0.1); }
-.day-filling { background: rgba(212,175,55,0.15); color: #D4AF37; border: 1px solid rgba(212,175,55,0.3); }
+.day-filling { background: rgba(212,175,55,0.15); color: var(--brand); border: 1px solid rgba(212,175,55,0.3); }
 .day-booked { background: rgba(229,57,53,0.15); color: #E53935; border: 1px solid rgba(229,57,53,0.3); opacity: 0.6; cursor: not-allowed; }
 
 .calendar-day-clickable {

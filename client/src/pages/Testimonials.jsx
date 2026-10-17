@@ -4,6 +4,7 @@ import ScrollReveal from '../components/ScrollReveal';
 import { Link } from 'react-router-dom';
 import AnimatedCounter from '../components/AnimatedCounter';
 import GoogleReviewsWidget from '../components/GoogleReviewsWidget';
+import { useT } from '../context/LanguageContext';
 import './Testimonials.css';
 
 const REVIEWS = [
@@ -82,14 +83,15 @@ const REVIEWS = [
 ];
 
 const FILTERS = [
-  { id: 'all', label: 'All Reviews' },
-  { id: 'wedding', label: 'Weddings' },
-  { id: 'prewedding', label: 'Pre-Weddings' },
-  { id: 'halfsaree', label: 'Half Saree' },
-  { id: 'events', label: 'Events' }
+  { id: 'all', tKey: 'testimonials.filter.all' },
+  { id: 'wedding', tKey: 'testimonials.filter.wedding' },
+  { id: 'prewedding', tKey: 'testimonials.filter.prewedding' },
+  { id: 'halfsaree', tKey: 'testimonials.filter.halfsaree' },
+  { id: 'events', tKey: 'testimonials.filter.events' }
 ];
 
 const Testimonials = () => {
+  const t = useT();
   const [activeFilter, setActiveFilter] = useState('all');
 
   const filteredReviews = activeFilter === 'all' 
@@ -100,10 +102,10 @@ const Testimonials = () => {
     <div className="testimonials-page">
       <div className="page-hero" style={{ backgroundImage: "url('/kalamkari-bg.jpg')" }}>
         <ScrollReveal>
-          <div className="hero-eyebrow" style={{ textAlign: 'center' }}>✦ True Stories ✦</div>
-          <h1 className="text-gradient font-serif">Wall of Love</h1>
+          <div className="hero-eyebrow" style={{ textAlign: 'center' }}>{t('testimonials.eyebrow')}</div>
+          <h1 className="text-gradient font-serif">{t('testimonials.title')}</h1>
           <p className="text-muted" style={{ maxWidth: '600px', margin: '0 auto' }}>
-            Don't just take our word for it. Read the real experiences of couples whose timeless memories we've had the honor to capture.
+            {t('testimonials.sub')}
           </p>
         </ScrollReveal>
       </div>
@@ -116,19 +118,19 @@ const Testimonials = () => {
               <h3 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.2rem' }}>
                 <AnimatedCounter target={500} suffix="+" />
               </h3>
-              <p className="text-muted" style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Happy Couples</p>
+              <p className="text-muted" style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('testimonials.stat1')}</p>
             </ScrollReveal>
             <ScrollReveal delay={100}>
               <h3 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.2rem' }}>
                 <AnimatedCounter target={12} suffix="+" />
               </h3>
-              <p className="text-muted" style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Years Experience</p>
+              <p className="text-muted" style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('testimonials.stat2')}</p>
             </ScrollReveal>
             <ScrollReveal delay={200}>
               <h3 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.2rem' }}>
                 <AnimatedCounter target={28} suffix="" />
               </h3>
-              <p className="text-muted" style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Cities Across AP</p>
+              <p className="text-muted" style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('testimonials.stat3')}</p>
             </ScrollReveal>
           </div>
         </div>
@@ -151,7 +153,7 @@ const Testimonials = () => {
                 className={`filter-btn ${activeFilter === filter.id ? 'active' : ''}`}
                 onClick={() => setActiveFilter(filter.id)}
               >
-                {filter.label}
+                {t(filter.tKey)}
               </button>
             ))}
           </div>
@@ -187,9 +189,9 @@ const Testimonials = () => {
       
       <div className="container pb-6 text-center mt-4">
         <ScrollReveal>
-          <h2 className="text-gradient font-serif mb-4">Ready to Start Your Story?</h2>
-          <p className="text-muted mb-4">Let's create timeless memories together.</p>
-          <Link to="/contact" className="btn btn-primary">Check Availability <MessageCircle size={18} style={{ marginLeft: '8px' }} /></Link>
+          <h2 className="text-gradient font-serif mb-4">{t('testimonials.cta_title')}</h2>
+          <p className="text-muted mb-4">{t('testimonials.cta_sub')}</p>
+          <Link to="/contact" className="btn btn-primary">{t('testimonials.cta_btn')} <MessageCircle size={18} style={{ marginLeft: '8px' }} /></Link>
         </ScrollReveal>
       </div>
     </div>

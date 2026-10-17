@@ -36,7 +36,9 @@ const PhotographerDashboard = () => {
   const fetchProjects = async () => {
     if (!user) return; // Don't fetch projects if not logged in
     try {
-      const res = await fetch(`${API}/api/projects`);
+      const res = await fetch(`${API}/api/projects`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
       const data = await res.json();
       setProjects(data);
     } catch (err) {
@@ -85,7 +87,10 @@ const PhotographerDashboard = () => {
       // Create Project
       const projectRes = await fetch(`${API}/api/projects`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify({ 
           studioName: currentUser.name,
           userId: currentUser.id,
@@ -99,7 +104,10 @@ const PhotographerDashboard = () => {
       // Create Task for internal team
       await fetch(`${API}/api/tasks`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify({
           projectId: projectData.id,
           clientName: projectData.clientName,
@@ -252,9 +260,9 @@ const PhotographerDashboard = () => {
           <div onClick={e => e.stopPropagation()} style={{ backgroundColor: '#1a1a1a', padding: '40px', borderRadius: '16px', maxWidth: '800px', width: '100%' }}>
             <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>Album Proofing</h2>
             <Flipbook pages={[
-              'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800',
-              'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800',
-              'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800'
+              '/images/weddingalbums-talambralu.png',
+              '/images/weddingalbums-layflat-album.png',
+              '/images/bridal.jpg'
             ]} />
             <div style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
               <button className="btn btn-primary" onClick={() => setPreviewAlbum(false)}>Approve for Print</button>

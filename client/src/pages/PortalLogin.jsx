@@ -54,6 +54,17 @@ const PortalLogin = () => {
   
   const navigate = useNavigate();
 
+  // Portal-aware deep links: /login?role=editor sends creators straight to the Creator Portal
+  const portalRole = searchParams.get('role');
+  useEffect(() => {
+    if (portalRole === 'editor') {
+      const editorUrl = window.location.hostname.includes('web.app')
+        ? 'https://weddingalbums-editor.web.app'
+        : 'http://localhost:5175';
+      window.location.href = editorUrl;
+    }
+  }, [portalRole]);
+
   useEffect(() => {
     if (user && !authLoading) {
       if (user.role === 'b2c' || user.role === 'admin' || user.role === 'sysadmin') {
@@ -66,6 +77,23 @@ const PortalLogin = () => {
       }
     }
   }, [user, authLoading, navigate]);
+
+  if (portalRole === 'editor') {
+    return (
+      <div style={{
+        minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        gap: '16px', color: 'var(--text-secondary, #aaa)', fontFamily: 'inherit',
+      }}>
+        <div style={{
+          width: 42, height: 42, borderRadius: '50%',
+          border: '3px solid rgba(212,175,55,0.2)', borderTopColor: 'var(--primary, var(--brand))',
+          animation: 'spin 0.8s linear infinite',
+        }} />
+        <p>Opening the Creator Portal…</p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   // OTP Countdown timer
   useEffect(() => {
@@ -266,7 +294,7 @@ const PortalLogin = () => {
               <button 
                 className="cpl-back-btn" 
                 type="button" 
-                style={{ margin: 0, color: '#d4af37' }} 
+                style={{ margin: 0, color: 'var(--brand)' }} 
                 onClick={() => { loginAsGuest(); navigate('/client'); }}
               >
                 Skip for now <ChevronRight size={14} />
@@ -487,7 +515,7 @@ const PortalLogin = () => {
                       <button 
                         type="button" 
                         onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotError(''); }}
-                        style={{ background: 'none', border: 'none', fontSize: '0.78rem', color: '#d4af37', cursor: 'pointer', padding: 0 }}
+                        style={{ background: 'none', border: 'none', fontSize: '0.78rem', color: 'var(--brand)', cursor: 'pointer', padding: 0 }}
                       >
                         Forgot password?
                       </button>
@@ -644,10 +672,10 @@ const PortalLogin = () => {
             </button>
 
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ width: '48px', height: '48px', margin: '0 auto 12px', borderRadius: '12px', background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d4af37' }}>
+              <div style={{ width: '48px', height: '48px', margin: '0 auto 12px', borderRadius: '12px', background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--brand)' }}>
                 <KeyRound size={22} />
               </div>
-              <h3 style={{ margin: '0 0 6px', color: '#fff', fontSize: '1.25rem', fontFamily: "'Cormorant Garamond', serif" }}>
+              <h3 style={{ margin: '0 0 6px', color: 'var(--paper)', fontSize: '1.25rem', fontFamily: "'Cormorant Garamond', serif" }}>
                 Reset Your Password
               </h3>
               <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem' }}>

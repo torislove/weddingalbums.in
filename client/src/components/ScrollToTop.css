@@ -30,7 +30,7 @@
   background: var(--color-crimson);
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.7), 0 0 15px rgba(212, 175, 55, 0.8);
-  color: #fff;
+  color: var(--paper);
 }
 
 @media (max-width: 768px) {

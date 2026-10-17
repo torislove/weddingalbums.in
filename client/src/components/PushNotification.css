@@ -56,7 +56,7 @@
 
 .push-close-btn:hover {
   background: rgba(255,255,255,0.1);
-  color: #fff;
+  color: var(--paper);
 }
 
 .push-header {
@@ -83,7 +83,7 @@
   font-family: var(--font-serif);
   font-size: 1.1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--paper);
   line-height: 1.2;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .push-btn-primary:hover {
-  background: #FFF;
+  background: var(--paper);
   transform: translateY(-2px);
 }
 
@@ -132,7 +132,7 @@
 
 .push-btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--paper);
 }
 
 @media (max-width: 768px) {

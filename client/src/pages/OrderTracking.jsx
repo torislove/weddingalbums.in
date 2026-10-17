@@ -62,7 +62,7 @@ const OrderTracking = () => {
       <div style={{ maxWidth: '720px', margin: '0 auto' }}>
         <div className="text-center mb-10">
           <ScrollReveal>
-            <h1 className="font-serif text-[#D4AF37] mb-3" style={{ fontSize: 'clamp(2rem, 5.5vw, 3.25rem)' }}>Track Your Order</h1>
+            <h1 className="font-serif text-[var(--brand)] mb-3" style={{ fontSize: 'clamp(2rem, 5.5vw, 3.25rem)' }}>Track Your Order</h1>
             <p className="text-gray-400" style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', lineHeight: 1.6 }}>
               Enter your Order ID below to check the real-time status of your album.
             </p>
@@ -101,7 +101,7 @@ const OrderTracking = () => {
                 <h2 className="text-2xl text-white font-bold">{orderId.toUpperCase()}</h2>
               </div>
               <div className="text-left sm:text-right">
-                <span className="px-4 py-1 bg-[#D4AF37]/20 text-[#D4AF37] rounded-full text-sm font-medium border border-[#D4AF37]/30">
+                <span className="px-4 py-1 bg-[var(--brand)]/20 text-[var(--brand)] rounded-full text-sm font-medium border border-[var(--brand)]/30">
                   In Progress
                 </span>
                 <p className="text-sm text-gray-500 mt-2">Est. Delivery: Oct 15, 2026</p>
@@ -113,8 +113,8 @@ const OrderTracking = () => {
                 const Icon = step.icon;
                 return (
                   <div key={idx} className="relative pl-10">
-                    <div className={`absolute -left-[20px] top-0 w-10 h-10 rounded-full flex items-center justify-center border-4 border-[#050505] 
-                      ${step.completed ? 'bg-[#10b981] text-black' : step.active ? 'bg-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.5)] animate-pulse' : 'bg-white/10 text-gray-500'}`}
+                    <div className={`absolute -left-[20px] top-0 w-10 h-10 rounded-full flex items-center justify-center border-4 border-[var(--ink)] 
+                      ${step.completed ? 'bg-[var(--ok)] text-black' : step.active ? 'bg-[var(--brand)] text-black shadow-[0_0_15px_rgba(212,175,55,0.5)] animate-pulse' : 'bg-white/10 text-gray-500'}`}
                     >
                       <Icon size={18} />
                     </div>

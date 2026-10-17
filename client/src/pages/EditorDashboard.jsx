@@ -35,12 +35,12 @@ const EditorDashboard = () => {
 
   const fetchWallet = async () => {
     try {
-      const res = await fetch(`${API}/api/wallet`, {
+      const res = await fetch(`${API}/api/editor/stats`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
-        setWalletBalance(data.balance);
+        setWalletBalance(data.walletBalance ?? 0);
       }
     } catch (err) {
       console.error('Failed to fetch wallet', err);
@@ -49,7 +49,7 @@ const EditorDashboard = () => {
 
   const requestPayout = async () => {
     try {
-      const res = await fetch(`${API}/api/payout`, {
+      const res = await fetch(`${API}/api/editor/payout-request`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const EditorDashboard = () => {
       const data = await res.json();
       if (res.ok) {
         setToastMessage(data.message);
-        setWalletBalance(data.newBalance);
+        fetchWallet();
       } else {
         setToastMessage(data.error);
       }
@@ -73,7 +73,10 @@ const EditorDashboard = () => {
     try {
       await fetch(`${API}/api/tasks/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify({ status: 'Designing', editorAssigned: user.name })
       });
       fetchTasks();
@@ -171,7 +174,7 @@ const EditorDashboard = () => {
         <div className="earnings-history-tab">
           <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>Your Earnings History</h2>
           <div className="glass-panel" style={{ padding: '20px', borderRadius: '12px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <p style={{ margin: 0 }}>Total Earned: <strong style={{ color: '#10b981', fontSize: '1.2rem' }}>₹{walletBalance.toLocaleString()}</strong></p>
+            <p style={{ margin: 0 }}>Total Earned: <strong style={{ color: 'var(--ok)', fontSize: '1.2rem' }}>₹{walletBalance.toLocaleString()}</strong></p>
           </div>
           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
             <thead>
@@ -186,13 +189,13 @@ const EditorDashboard = () => {
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <td style={{ padding: '15px 10px', color: '#aaa' }}>Oct 1, 2026</td>
                 <td style={{ padding: '15px 10px', color: '#aaa' }}>PRJ-102 (Sneha & Arjun)</td>
-                <td style={{ padding: '15px 10px', color: '#10b981' }}>+ ₹1,500</td>
+                <td style={{ padding: '15px 10px', color: 'var(--ok)' }}>+ ₹1,500</td>
                 <td style={{ padding: '15px 10px', color: '#aaa' }}>Paid</td>
               </tr>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <td style={{ padding: '15px 10px', color: '#aaa' }}>Sep 28, 2026</td>
                 <td style={{ padding: '15px 10px', color: '#aaa' }}>PRJ-098 (Meera Weds Rahul)</td>
-                <td style={{ padding: '15px 10px', color: '#10b981' }}>+ ₹2,000</td>
+                <td style={{ padding: '15px 10px', color: 'var(--ok)' }}>+ ₹2,000</td>
                 <td style={{ padding: '15px 10px', color: '#aaa' }}>Paid</td>
               </tr>
             </tbody>

@@ -20,7 +20,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification?.title || payload.data?.title || 'WeddingAlbums.in';
   const notificationOptions = {
     body: payload.notification?.body || payload.data?.body || 'You have an update regarding your album!',
-    icon: payload.notification?.icon || '/images/hero-1.webp',
+    icon: payload.notification?.icon || '/images/media-notification-icon.svg',
     badge: '/favicon.ico',
     data: payload.data
   };

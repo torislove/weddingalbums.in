@@ -7,8 +7,10 @@ import FlowerPetal from '../FlowerPetal';
 import TextScramble from '../TextScramble';
 import useMouseParallax from '../../hooks/useMouseParallax';
 import useMagneticButton from '../../hooks/useMagneticButton';
+import { useT } from '../../context/LanguageContext';
 
 const Hero = (props) => {
+  const t = useT();
   const isMobile = typeof window !== 'undefined' && (window.innerWidth < 768 || window.matchMedia('(hover: none)').matches);
   const rawMouseOffset = useMouseParallax(25);
   const mouseOffset = isMobile ? { x: 0, y: 0 } : rawMouseOffset;
@@ -17,13 +19,13 @@ const Hero = (props) => {
 
   // Ensure default props tailored strictly for couples
   const {
-    eyebrow = "✦ weddingalbums.in ✦",
-    titlePart1 = "Cinematic Storytelling",
-    titleScramble = "& Wedding Albums",
-    subtitle = "Crafting timeless Telugu wedding albums, flush mount keepsakes, and cinematic wedding highlights for couples across Andhra Pradesh.",
-    btn1Text = "Explore Wedding Packages",
+    eyebrow = t('hero.eyebrow'),
+    titlePart1 = t('hero.title1'),
+    titleScramble = t('hero.title2'),
+    subtitle = t('hero.sub'),
+    btn1Text = t('hero.btn1'),
     btn1Link = "/pricing",
-    btn2Text = "Instant Cost Estimator",
+    btn2Text = t('hero.btn2'),
     btn2Link = "#estimator",
     bgImage = "/images/weddingalbums-home-hero.png"
   } = props;
@@ -94,7 +96,7 @@ const Hero = (props) => {
 
       <div className="scroll-indicator">
         <div className="scroll-line" />
-        <span>Scroll</span>
+        <span>{t('common.scroll')}</span>
       </div>
     </section>
   );

@@ -93,13 +93,13 @@ const InteractiveBeforeAfter = ({
                     <ReactCompareSliderHandle
                       buttonStyle={{
                         backdropFilter: 'blur(10px)',
-                        background: 'linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%)',
-                        border: '2px solid #FFFFFF',
+                        background: 'linear-gradient(135deg, var(--brand) 0%, #AA7C11 100%)',
+                        border: '2px solid var(--paper)',
                         color: '#000000',
                         boxShadow: '0 0 20px rgba(212, 175, 55, 0.7)'
                       }}
                       linesStyle={{
-                        color: '#D4AF37',
+                        color: 'var(--brand)',
                         width: 2
                       }}
                     />
@@ -108,7 +108,7 @@ const InteractiveBeforeAfter = ({
               </div>
 
               <div className="iba-slider-hint">
-                <SlidersHorizontal size={13} className="text-[#D4AF37]" />
+                <SlidersHorizontal size={13} className="text-[var(--brand)]" />
                 <span>Drag slider left / right to compare</span>
               </div>
             </div>
@@ -144,7 +144,7 @@ const InteractiveBeforeAfter = ({
                   {ctaText} <ArrowRight size={16} />
                 </Link>
                 <div className="iba-guarantee-note">
-                  <ShieldCheck size={16} className="text-[#D4AF37]" />
+                  <ShieldCheck size={16} className="text-[var(--brand)]" />
                   <span>100% Satisfaction Guarantee or Full Re-Edit</span>
                 </div>
               </div>

@@ -21,8 +21,8 @@ const Flipbook = ({ pages }) => {
   const book = useRef();
   
   // Add cover pages
-  const coverImg = content?.global?.siteImages?.flipbookCoverImage || 'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800'; // Leather-ish texture
-  const backCoverImg = content?.global?.siteImages?.flipbookBackCoverImage || 'https://images.unsplash.com/photo-1544641979-51478546b3f7?auto=format&fit=crop&q=80&w=800';
+  const coverImg = content?.global?.siteImages?.flipbookCoverImage || '/images/weddingalbums-home-hero.png'; // Leather-ish texture
+  const backCoverImg = content?.global?.siteImages?.flipbookBackCoverImage || '/images/weddingalbums-layflat-album.png';
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);

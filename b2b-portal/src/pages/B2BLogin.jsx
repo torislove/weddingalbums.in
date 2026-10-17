@@ -103,7 +103,7 @@ const B2BLogin = () => {
     background: 'rgba(255,255,255,0.04)',
     border: '1px solid rgba(212,175,55,0.15)',
     borderRadius: '12px',
-    color: '#fff',
+    color: 'var(--paper)',
     fontSize: '0.93rem',
     fontFamily: 'inherit',
     outline: 'none',
@@ -155,7 +155,7 @@ const B2BLogin = () => {
         {mode === 'login' ? (
           <>
             <div style={{ marginBottom: '32px' }}>
-              <h1 style={{ fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif", fontSize: '2rem', fontWeight: '700', color: '#fff', marginBottom: '8px', letterSpacing: '-0.5px' }}>
+              <h1 style={{ fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif", fontSize: '2rem', fontWeight: '700', color: 'var(--paper)', marginBottom: '8px', letterSpacing: '-0.5px' }}>
                 Studio Login
               </h1>
               <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.88rem', lineHeight: '1.6' }}>
@@ -190,7 +190,7 @@ const B2BLogin = () => {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px' }}>
                   <label style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.78rem', fontWeight: '500', letterSpacing: '0.5px' }}>Password</label>
-                  <button type="button" onClick={() => setMode('forgot')} style={{ background: 'none', border: 'none', color: '#d4af37', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>
+                  <button type="button" onClick={() => setMode('forgot')} style={{ background: 'none', border: 'none', color: 'var(--brand)', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>
                     Forgot password?
                   </button>
                 </div>
@@ -218,7 +218,7 @@ const B2BLogin = () => {
                 disabled={loading}
                 style={{
                   width: '100%', padding: '15px 24px', marginTop: '6px',
-                  background: loading ? 'rgba(212,175,55,0.3)' : 'linear-gradient(135deg, #e6c867 0%, #d4af37 50%, #b8860b 100%)',
+                  background: loading ? 'rgba(212,175,55,0.3)' : 'linear-gradient(135deg, #e6c867 0%, var(--brand) 50%, #b8860b 100%)',
                   border: 'none', borderRadius: '14px',
                   color: loading ? 'rgba(255,255,255,0.5)' : '#1a0e00',
                   fontSize: '0.93rem', fontWeight: '700', fontFamily: 'inherit',
@@ -239,7 +239,7 @@ const B2BLogin = () => {
             <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
               <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.84rem' }}>
                 New studio?{' '}
-                <Link to="/signup" style={{ color: '#d4af37', fontWeight: '600', textDecoration: 'none' }}>
+                <Link to="/signup" style={{ color: 'var(--brand)', fontWeight: '600', textDecoration: 'none' }}>
                   Partner With Us →
                 </Link>
               </p>
@@ -252,7 +252,7 @@ const B2BLogin = () => {
               <ChevronLeft size={14} /> Back to login
             </button>
 
-            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '1.8rem', color: '#fff', marginBottom: '10px' }}>Reset Access</h2>
+            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '1.8rem', color: 'var(--paper)', marginBottom: '10px' }}>Reset Access</h2>
             <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.88rem', marginBottom: '28px' }}>Enter your registered WhatsApp number and we'll send an OTP.</p>
 
             {forgotSent && (

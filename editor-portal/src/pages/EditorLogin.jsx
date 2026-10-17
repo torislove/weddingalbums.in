@@ -8,16 +8,16 @@ import { API } from '../apiConfig';
 const GridBackground = () => (
   <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
     {/* Base gradient */}
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 70% at 50% 0%, rgba(129,140,248,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 60% at 80% 80%, rgba(192,132,252,0.08) 0%, transparent 60%), #050510' }} />
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 70% at 50% 0%, rgba(230, 198, 103,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 60% at 80% 80%, rgba(192,132,252,0.08) 0%, transparent 60%), #050510' }} />
 
     {/* Animated blueprint grid */}
     <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.07 }} xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#818cf8" strokeWidth="0.5" />
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#E6C667" strokeWidth="0.5" />
         </pattern>
         <pattern id="grid-big" width="200" height="200" patternUnits="userSpaceOnUse">
-          <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#818cf8" strokeWidth="1" />
+          <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#E6C667" strokeWidth="1" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid)" />
@@ -25,7 +25,7 @@ const GridBackground = () => (
     </svg>
 
     {/* Glow orbs */}
-    <div style={{ position: 'absolute', top: '10%', left: '20%', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(129,140,248,0.08) 0%, transparent 70%)', filter: 'blur(40px)', animation: 'edOrb1 15s infinite ease-in-out alternate' }} />
+    <div style={{ position: 'absolute', top: '10%', left: '20%', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(230, 198, 103,0.08) 0%, transparent 70%)', filter: 'blur(40px)', animation: 'edOrb1 15s infinite ease-in-out alternate' }} />
     <div style={{ position: 'absolute', bottom: '10%', right: '10%', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(192,132,252,0.07) 0%, transparent 70%)', filter: 'blur(40px)', animation: 'edOrb2 18s infinite ease-in-out alternate' }} />
 
     {/* Floating skill tags */}
@@ -38,12 +38,12 @@ const GridBackground = () => (
       <div key={i} style={{
         position: 'absolute',
         left: tag.x, top: tag.y,
-        background: 'rgba(129,140,248,0.08)',
-        border: '1px solid rgba(129,140,248,0.15)',
+        background: 'rgba(230, 198, 103,0.08)',
+        border: '1px solid rgba(230, 198, 103,0.15)',
         borderRadius: '8px',
         padding: '6px 12px',
         fontSize: '0.72rem',
-        color: 'rgba(129,140,248,0.5)',
+        color: 'rgba(230, 198, 103,0.5)',
         fontFamily: 'Inter, sans-serif',
         fontWeight: '500',
         animation: `edFloat 6s ${tag.delay} infinite ease-in-out`,
@@ -143,11 +143,11 @@ const EditorLogin = () => {
     }
   };
 
-  const inputSt = (accentColor = '#818cf8') => ({
+  const inputSt = (accentColor = '#E6C667') => ({
     width: '100%',
     padding: '13px 14px 13px 44px',
     background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(129,140,248,0.15)',
+    border: '1px solid rgba(230, 198, 103,0.15)',
     borderRadius: '12px',
     color: '#e2e8f0',
     fontSize: '0.93rem',
@@ -157,9 +157,9 @@ const EditorLogin = () => {
     transition: 'all 0.25s ease',
   });
 
-  const focusBind = (accent = 'rgba(129,140,248,0.5)', glow = 'rgba(129,140,248,0.08)') => ({
+  const focusBind = (accent = 'rgba(230, 198, 103,0.5)', glow = 'rgba(230, 198, 103,0.08)') => ({
     onFocus: e => { e.target.style.borderColor = accent; e.target.style.boxShadow = `0 0 0 3px ${glow}`; },
-    onBlur:  e => { e.target.style.borderColor = 'rgba(129,140,248,0.15)'; e.target.style.boxShadow = 'none'; },
+    onBlur:  e => { e.target.style.borderColor = 'rgba(230, 198, 103,0.15)'; e.target.style.boxShadow = 'none'; },
   });
 
   return (
@@ -173,9 +173,9 @@ const EditorLogin = () => {
           <Link to="/" style={{ display: 'inline-block', marginBottom: '20px' }}>
             <Logo size={40} portalTag="Creator Suite" />
           </Link>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(129,140,248,0.1)', border: '1px solid rgba(129,140,248,0.2)', borderRadius: '20px', padding: '6px 16px' }}>
-            <Zap size={12} color="#818cf8" />
-            <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '2px', textTransform: 'uppercase', color: '#818cf8' }}>Creator Portal</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(230, 198, 103,0.1)', border: '1px solid rgba(230, 198, 103,0.2)', borderRadius: '20px', padding: '6px 16px' }}>
+            <Zap size={12} color="#E6C667" />
+            <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '2px', textTransform: 'uppercase', color: '#E6C667' }}>Creator Portal</span>
           </div>
         </div>
 
@@ -184,18 +184,18 @@ const EditorLogin = () => {
           background: 'rgba(10,10,30,0.7)',
           backdropFilter: 'blur(30px)',
           WebkitBackdropFilter: 'blur(30px)',
-          border: '1px solid rgba(129,140,248,0.15)',
+          border: '1px solid rgba(230, 198, 103,0.15)',
           borderRadius: '24px',
           padding: 'clamp(28px, 6vw, 40px) clamp(18px, 5vw, 36px)',
           boxSizing: 'border-box',
-          boxShadow: '0 40px 80px rgba(0,0,0,0.7), 0 0 40px rgba(129,140,248,0.05), inset 0 1px 0 rgba(129,140,248,0.1)',
+          boxShadow: '0 40px 80px rgba(0,0,0,0.7), 0 0 40px rgba(230, 198, 103,0.05), inset 0 1px 0 rgba(230, 198, 103,0.1)',
         }}>
           {/* Tabs */}
           <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '4px', marginBottom: '30px', gap: '4px' }}>
             {['Login', 'Join Network'].map((t, i) => {
               const active = isRegister === (i === 1);
               return (
-                <button key={t} type="button" onClick={() => { setIsRegister(i === 1); setError(''); }} style={{ flex: 1, padding: '10px', border: 'none', borderRadius: '9px', fontFamily: 'inherit', fontSize: '0.87rem', fontWeight: active ? '600' : '400', cursor: 'pointer', transition: 'all 0.3s ease', background: active ? 'linear-gradient(135deg, rgba(129,140,248,0.15), rgba(192,132,252,0.1))' : 'none', color: active ? '#818cf8' : 'rgba(255,255,255,0.3)', boxShadow: active ? 'inset 0 1px 0 rgba(129,140,248,0.2)' : 'none' }}>
+                <button key={t} type="button" onClick={() => { setIsRegister(i === 1); setError(''); }} style={{ flex: 1, padding: '10px', border: 'none', borderRadius: '9px', fontFamily: 'inherit', fontSize: '0.87rem', fontWeight: active ? '600' : '400', cursor: 'pointer', transition: 'all 0.3s ease', background: active ? 'linear-gradient(135deg, rgba(230, 198, 103,0.15), rgba(192,132,252,0.1))' : 'none', color: active ? '#E6C667' : 'rgba(255,255,255,0.3)', boxShadow: active ? 'inset 0 1px 0 rgba(230, 198, 103,0.2)' : 'none' }}>
                   {t}
                 </button>
               );
@@ -203,7 +203,7 @@ const EditorLogin = () => {
           </div>
 
           <div style={{ marginBottom: '28px' }}>
-            <h1 style={{ fontSize: '1.9rem', fontWeight: '700', background: 'linear-gradient(to right, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: '8px', letterSpacing: '-0.5px' }}>
+            <h1 style={{ fontSize: '1.9rem', fontWeight: '700', background: 'linear-gradient(to right, #E6C667, #B8962E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: '8px', letterSpacing: '-0.5px' }}>
               {isRegister ? 'Join the Network' : 'Creator Login'}
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.87rem' }}>
@@ -231,7 +231,7 @@ const EditorLogin = () => {
             <div>
               <label style={{ display: 'block', marginBottom: '6px', color: 'rgba(255,255,255,0.35)', fontSize: '0.77rem', fontWeight: '500', letterSpacing: '0.5px' }}>Email Address</label>
               <div style={{ position: 'relative' }}>
-                <Mail size={15} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(129,140,248,0.4)', pointerEvents: 'none' }} />
+                <Mail size={15} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(230, 198, 103,0.4)', pointerEvents: 'none' }} />
                 <input type="email" required style={inputSt()} placeholder="creator@example.com" value={email} onChange={e => setEmail(e.target.value)} {...focusBind()} />
               </div>
             </div>
@@ -239,7 +239,7 @@ const EditorLogin = () => {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <label style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.77rem', fontWeight: '500', letterSpacing: '0.5px' }}>Password</label>
-                {!isRegister && <button type="button" style={{ background: 'none', border: 'none', color: '#818cf8', fontSize: '0.77rem', cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>Forgot?</button>}
+                {!isRegister && <button type="button" style={{ background: 'none', border: 'none', color: '#E6C667', fontSize: '0.77rem', cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>Forgot?</button>}
               </div>
               <div style={{ position: 'relative' }}>
                 <Lock size={15} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.2)', pointerEvents: 'none' }} />
@@ -253,7 +253,7 @@ const EditorLogin = () => {
             {/* Registration extras */}
             {isRegister && (
               <>
-                <div style={{ height: '1px', background: 'rgba(129,140,248,0.1)', margin: '4px 0' }} />
+                <div style={{ height: '1px', background: 'rgba(230, 198, 103,0.1)', margin: '4px 0' }} />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
@@ -290,9 +290,9 @@ const EditorLogin = () => {
             )}
 
             {/* CTA Button */}
-            <button type="submit" disabled={loading} style={{ width: '100%', padding: '14px 24px', marginTop: '8px', background: loading ? 'rgba(129,140,248,0.2)' : 'linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #c084fc 100%)', border: 'none', borderRadius: '14px', color: '#fff', fontSize: '0.93rem', fontWeight: '700', fontFamily: 'inherit', letterSpacing: '0.5px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.2)', transition: 'all 0.3s ease' }}
-              onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 32px rgba(99,102,241,0.5)'; } }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = loading ? 'none' : '0 8px 24px rgba(99,102,241,0.35)'; }}
+            <button type="submit" disabled={loading} style={{ width: '100%', padding: '14px 24px', marginTop: '8px', background: loading ? 'rgba(230, 198, 103,0.2)' : 'linear-gradient(135deg, #E6C667 0%, #D4AF37 50%, #B8962E 100%)', border: 'none', borderRadius: '14px', color: '#14100a', fontSize: '0.93rem', fontWeight: '700', fontFamily: 'inherit', letterSpacing: '0.5px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(212, 175, 55,0.35), inset 0 1px 0 rgba(255,255,255,0.2)', transition: 'all 0.3s ease' }}
+              onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 32px rgba(212, 175, 55,0.5)'; } }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = loading ? 'none' : '0 8px 24px rgba(212, 175, 55,0.35)'; }}
             >
               {loading ? 'Please wait…' : (isRegister ? 'Apply to Network' : 'Enter Workspace')}
               {!loading && <ArrowRight size={16} />}
@@ -302,7 +302,7 @@ const EditorLogin = () => {
 
         <div style={{ marginTop: '24px', textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: '0.83rem' }}>
           {isRegister ? 'Already in the network?' : "Want to join our editor network?"}
-          <button type="button" onClick={() => { setIsRegister(v => !v); setError(''); }} style={{ background: 'none', border: 'none', color: '#818cf8', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', marginLeft: '5px' }}>
+          <button type="button" onClick={() => { setIsRegister(v => !v); setError(''); }} style={{ background: 'none', border: 'none', color: '#E6C667', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', marginLeft: '5px' }}>
             {isRegister ? 'Sign in here' : 'Apply here →'}
           </button>
         </div>

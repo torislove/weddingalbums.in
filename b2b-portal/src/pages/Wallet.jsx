@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Wallet as WalletIcon, Plus, History, ArrowUpRight, ArrowDownRight, Send, CheckCircle2, RefreshCw } from 'lucide-react';
 import { API } from '../apiConfig';
+import Toast from '../components/ui/Toast';
 
 const Wallet = () => {
   const [balance, setBalance] = useState(0);
@@ -10,6 +11,7 @@ const Wallet = () => {
   const [upiId, setUpiId] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState('');
+  const [toast, setToast] = useState(null); // { msg, tone }
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const fetchWallet = async () => {
@@ -36,8 +38,8 @@ const Wallet = () => {
 
   const handleWithdraw = async (e) => {
     e.preventDefault();
-    if (!withdrawAmount || Number(withdrawAmount) <= 0) return alert('Enter a valid withdrawal amount');
-    if (Number(withdrawAmount) > balance) return alert(`Insufficient funds. Your balance is ₹${balance}`);
+    if (!withdrawAmount || Number(withdrawAmount) <= 0) return setToast({ msg: 'Enter a valid withdrawal amount', tone: 'danger' });
+    if (Number(withdrawAmount) > balance) return setToast({ msg: `Insufficient funds. Your balance is ₹${balance}`, tone: 'danger' });
 
     setSubmitting(true);
     try {
@@ -57,11 +59,11 @@ const Wallet = () => {
         setWithdrawAmount('');
         fetchWallet();
       } else {
-        alert(data.error || 'Withdrawal failed');
+        setToast({ msg: data.error || 'Withdrawal failed', tone: 'danger' });
       }
     } catch (err) {
       console.error(err);
-      alert('Network error during payout request');
+      setToast({ msg: 'Network error during payout request', tone: 'danger' });
     } finally {
       setSubmitting(false);
     }
@@ -85,7 +87,7 @@ const Wallet = () => {
       </div>
 
       {message && (
-        <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', borderRadius: '8px', color: '#10b981', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--ok)', borderRadius: '8px', color: 'var(--ok)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <CheckCircle2 size={18} /> {message}
         </div>
       )}
@@ -113,7 +115,7 @@ const Wallet = () => {
               <Send size={18} /> Request Payout / Withdrawal
             </button>
             <button 
-              onClick={() => alert(`To recharge your studio wallet balance, please contact our dedicated account manager at support@weddingalbums.in or WhatsApp +91-9876543210.`)}
+              onClick={() => setToast({ msg: 'To recharge, contact your account manager: support@weddingalbums.in or WhatsApp +91-9876543210', tone: 'default' })}
               className="btn-outline" 
               style={{ width: '100%', justifyContent: 'center', cursor: 'pointer' }}
             >
@@ -140,7 +142,7 @@ const Wallet = () => {
                   <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>Verified Studio Partner Account</p>
                 </div>
               </div>
-              <h4 style={{ margin: 0, color: '#10b981' }}>+ ₹5,000</h4>
+              <h4 style={{ margin: 0, color: 'var(--ok)' }}>+ ₹5,000</h4>
             </div>
 
             <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -179,7 +181,7 @@ const Wallet = () => {
                   max={balance}
                   min={100}
                   required
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--paper)', boxSizing: 'border-box' }}
                 />
               </div>
 
@@ -191,7 +193,7 @@ const Wallet = () => {
                   onChange={e => setUpiId(e.target.value)} 
                   placeholder="yourname@okicici"
                   required
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--paper)', boxSizing: 'border-box' }}
                 />
               </div>
 
@@ -217,6 +219,8 @@ const Wallet = () => {
           </div>
         </div>
       )}
+
+      <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, Save } from 'lucide-react';
 import Toast from '../components/Toast';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
 import { API } from '../apiConfig';
 
 const ProfileSettings = () => {
@@ -17,6 +18,7 @@ const ProfileSettings = () => {
   });
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,11 +50,12 @@ const ProfileSettings = () => {
     }
   };
 
-  const handleLogout = async () => {
-    if (window.confirm('Are you sure you want to sign out?')) {
-      await logout();
-      navigate('/login');
-    }
+  const handleLogout = () => setConfirmLogout(true);
+
+  const doLogout = async () => {
+    setConfirmLogout(false);
+    await logout();
+    navigate('/login');
   };
 
   return (
@@ -126,6 +129,16 @@ const ProfileSettings = () => {
       </div>
       
       <Toast message={toast} onClose={() => setToast(null)} />
+
+      <ConfirmDialog
+        open={confirmLogout}
+        tone="danger"
+        title="Sign out?"
+        message="You will be signed out of your client portal session on this device."
+        confirmLabel="Sign out"
+        onConfirm={doLogout}
+        onCancel={() => setConfirmLogout(false)}
+      />
     </div>
   );
 };

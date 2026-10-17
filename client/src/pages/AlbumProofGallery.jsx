@@ -15,12 +15,12 @@ const AlbumProofGallery = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.78rem', background: 'rgba(212,175,55,0.15)', color: '#D4AF37', padding: '3px 10px', borderRadius: '999px', fontWeight: 600, border: '1px solid rgba(212,175,55,0.3)' }}>
+              <span style={{ fontSize: '0.78rem', background: 'rgba(212,175,55,0.15)', color: 'var(--brand)', padding: '3px 10px', borderRadius: '999px', fontWeight: 600, border: '1px solid rgba(212,175,55,0.3)' }}>
                 3D Interactive Proof
               </span>
               <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Updated 2 hours ago</span>
             </div>
-            <h3 style={{ margin: '4px 0 6px 0', fontSize: '1.2rem', color: '#fff' }}>Royal Wedding Photobook — First Draft Spreads</h3>
+            <h3 style={{ margin: '4px 0 6px 0', fontSize: '1.2rem', color: 'var(--paper)' }}>Royal Wedding Photobook — First Draft Spreads</h3>
             <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>40 Pages • Flush Mount 12x18 • Matte Velvet Finish</p>
           </div>
           <Link 
@@ -35,9 +35,9 @@ const AlbumProofGallery = () => {
         {/* Spread Previews */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '12px', marginTop: '16px' }}>
           {[
-            { title: 'Cover & Title Spread', img: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=400' },
-            { title: 'Ceremony & Vows', img: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400' },
-            { title: 'Reception Highlights', img: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=400' }
+            { title: 'Cover & Title Spread', img: '/images/weddingalbums-layflat-album.png' },
+            { title: 'Ceremony & Vows', img: '/images/saptapadi.png' },
+            { title: 'Reception Highlights', img: '/images/bride-polished.jpg' }
           ].map((spread, i) => (
             <div key={i} style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.4)' }}>
               <img src={spread.img} alt={spread.title} style={{ width: '100%', height: '110px', objectFit: 'cover' }} />
@@ -51,7 +51,7 @@ const AlbumProofGallery = () => {
 
       {/* Info Guidelines */}
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(14px, 3vw, 24px)', border: '1px solid rgba(255,255,255,0.06)' }}>
-        <h4 style={{ margin: '0 0 12px 0', fontSize: '1.1rem', color: '#fff' }}>Proofing Instructions</h4>
+        <h4 style={{ margin: '0 0 12px 0', fontSize: '1.1rem', color: 'var(--paper)' }}>Proofing Instructions</h4>
         <ul style={{ margin: 0, paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6' }}>
           <li>Flip through the virtual pages using arrow keys or clicking corner edges.</li>
           <li>Check that all names, dates, and religious inscriptions are spelled correctly.</li>

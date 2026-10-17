@@ -17,14 +17,14 @@
 
 .network-status-bar.offline {
   background: linear-gradient(90deg, #780016 0%, #991b1b 100%);
-  color: #fff;
+  color: var(--paper);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 15px rgba(120, 0, 22, 0.5);
 }
 
 .network-status-bar.reconnected {
   background: linear-gradient(90deg, #065f46 0%, #059669 100%);
-  color: #fff;
+  color: var(--paper);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 15px rgba(5, 150, 105, 0.5);
 }

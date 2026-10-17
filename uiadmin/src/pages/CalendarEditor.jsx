@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, RefreshCw, Save, Info, Sparkles } from 'lucide-react';
 import { API } from '../apiConfig';
+import Toast from '../components/Toast';
 
 const CalendarEditor = ({ adminState }) => {
   const { content, updateGlobal, saveContent, isDirty, saving } = adminState;
@@ -13,6 +14,7 @@ const CalendarEditor = ({ adminState }) => {
   });
   
   const [fetching, setFetching] = useState(false);
+  const [toast, setToast] = useState(null); // { msg, tone }
   const [currentMonthOffset, setCurrentMonthOffset] = useState(0); // 0 = current month, 1 = next, etc
 
   useEffect(() => {
@@ -59,11 +61,11 @@ const CalendarEditor = ({ adminState }) => {
           ...availability,
           auspiciousDates: data.dates
         });
-        alert(`Successfully fetched ${data.dates.length} auspicious dates!`);
+        setToast({ msg: `Fetched ${data.dates.length} auspicious dates`, type: 'success' });
       }
     } catch (err) {
       console.error("Failed to fetch muhurthams", err);
-      alert("Failed to fetch muhurthams from server.");
+      setToast({ msg: 'Failed to fetch muhurthams from server', type: 'error' });
     }
     setFetching(false);
   };
@@ -92,7 +94,7 @@ const CalendarEditor = ({ adminState }) => {
       
       let statusClass = "bg-white/5 hover:bg-white/10 text-gray-300";
       if (bookedCount > 0 && bookedCount < availability.slotsPerDay) {
-        statusClass = "bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37]"; // Filling fast
+        statusClass = "bg-[var(--brand)]/20 border border-[var(--brand)]/40 text-[var(--brand)]"; // Filling fast
       } else if (bookedCount >= availability.slotsPerDay) {
         statusClass = "bg-red-500/20 border border-red-500/40 text-red-400"; // Fully booked
       }
@@ -136,7 +138,7 @@ const CalendarEditor = ({ adminState }) => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/10">
           <div>
             <h1 className="text-3xl font-serif text-white mb-2 flex items-center gap-3">
-              <Calendar className="text-[#D4AF37]" size={28} /> Booking Availability
+              <Calendar className="text-[var(--brand)]" size={28} /> Booking Availability
             </h1>
             <p className="text-gray-400 max-w-2xl text-sm leading-relaxed">
               Manage your calendar slots dynamically. Click on any date to cycle through booking statuses (Available ➔ Filling ➔ Fully Booked ➔ Available).
@@ -146,7 +148,7 @@ const CalendarEditor = ({ adminState }) => {
           <button 
             onClick={saveContent}
             disabled={!isDirty || saving}
-            className={`btn px-6 py-2.5 rounded-xl whitespace-nowrap shadow-sm flex items-center gap-2 ${isDirty ? 'bg-[#D4AF37] text-black hover:bg-[#F3E5AB]' : 'bg-white/5 text-gray-500 cursor-not-allowed'}`}
+            className={`btn px-6 py-2.5 rounded-xl whitespace-nowrap shadow-sm flex items-center gap-2 ${isDirty ? 'bg-[var(--brand)] text-black hover:bg-[#F3E5AB]' : 'bg-white/5 text-gray-500 cursor-not-allowed'}`}
           >
             <Save size={16} /> {saving ? 'Publishing...' : 'Publish Calendar'}
           </button>
@@ -167,7 +169,7 @@ const CalendarEditor = ({ adminState }) => {
                   max="10" 
                   value={availability.slotsPerDay} 
                   onChange={handleSlotsChange}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#D4AF37] focus:outline-none transition-colors"
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--brand)] focus:outline-none transition-colors"
                 />
               </div>
               <p className="text-xs text-gray-500">How many bookings can you handle simultaneously on a single day? (e.g. 2 concurrent events)</p>
@@ -202,7 +204,7 @@ const CalendarEditor = ({ adminState }) => {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-serif text-white">Select Dates</h2>
             <div className="flex gap-4">
-              <div className="flex items-center gap-2 text-xs text-gray-400"><div className="w-3 h-3 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40"></div> Filling Fast</div>
+              <div className="flex items-center gap-2 text-xs text-gray-400"><div className="w-3 h-3 rounded-full bg-[var(--brand)]/20 border border-[var(--brand)]/40"></div> Filling Fast</div>
               <div className="flex items-center gap-2 text-xs text-gray-400"><div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40"></div> Fully Booked</div>
             </div>
           </div>
@@ -214,6 +216,8 @@ const CalendarEditor = ({ adminState }) => {
         </div>
 
       </div>
+
+      <Toast message={toast?.msg} type={toast?.type} onClose={() => setToast(null)} />
     </div>
   );
 };

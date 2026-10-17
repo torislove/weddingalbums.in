@@ -58,7 +58,7 @@ const PackageSection = ({ type = 'b2c' }) => {
       <div className="grid grid-3 package-grid">
         {loading ? (
           <div className="col-span-3 flex justify-center py-10">
-            <Loader className="animate-spin text-[#D4AF37]" size={32} />
+            <Loader className="animate-spin text-[var(--brand)]" size={32} />
           </div>
         ) : filteredPackages.length === 0 ? (
           <div className="col-span-3 text-center text-gray-500 py-10">

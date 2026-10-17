@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PenTool, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight, FileText, Image, Settings } from 'lucide-react';
 import Logo from '../components/Logo';
 import { API } from '../apiConfig';
+import { OPS_URL } from '../config/urls';
 
 /* ── Typewriter hook ── */
 const useTypewriter = (text, speed = 55) => {
@@ -68,7 +69,7 @@ const AdminLogin = ({ setToken }) => {
     background: 'rgba(255,255,255,0.04)',
     border: '1px solid rgba(245,158,11,0.15)',
     borderRadius: '12px',
-    color: '#fff',
+    color: 'var(--paper)',
     fontSize: '0.93rem',
     fontFamily: 'inherit',
     outline: 'none',
@@ -108,9 +109,9 @@ const AdminLogin = ({ setToken }) => {
 
           <div style={{ marginBottom: '48px' }}>
             <div style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '3px', textTransform: 'uppercase', color: 'rgba(245,158,11,0.6)', marginBottom: '16px' }}>Content Management</div>
-            <h1 style={{ fontSize: '3.2rem', fontWeight: '700', color: '#fff', lineHeight: '1.1', letterSpacing: '-1.5px', marginBottom: '20px' }}>
+            <h1 style={{ fontSize: '3.2rem', fontWeight: '700', color: 'var(--paper)', lineHeight: '1.1', letterSpacing: '-1.5px', marginBottom: '20px' }}>
               {headline}
-              <span style={{ color: '#f59e0b', animation: 'uiaBlink 1s infinite' }}>|</span>
+              <span style={{ color: 'var(--warn)', animation: 'uiaBlink 1s infinite' }}>|</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.95rem', lineHeight: '1.7', maxWidth: '300px' }}>
               Your command center for editing live website content, managing media, and configuring global settings.
@@ -125,7 +126,7 @@ const AdminLogin = ({ setToken }) => {
                   <f.icon size={16} color="#f59e0b" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.87rem', fontWeight: '500', color: '#fff', marginBottom: '2px' }}>{f.label}</div>
+                  <div style={{ fontSize: '0.87rem', fontWeight: '500', color: 'var(--paper)', marginBottom: '2px' }}>{f.label}</div>
                   <div style={{ fontSize: '0.76rem', color: 'rgba(255,255,255,0.3)' }}>{f.desc}</div>
                 </div>
               </div>
@@ -147,9 +148,9 @@ const AdminLogin = ({ setToken }) => {
           <div style={{ marginBottom: '40px' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '20px', marginBottom: '20px' }}>
               <PenTool size={11} color="#f59e0b" />
-              <span style={{ fontSize: '0.71rem', fontWeight: '600', letterSpacing: '1.5px', textTransform: 'uppercase', color: '#f59e0b' }}>Content Admin</span>
+              <span style={{ fontSize: '0.71rem', fontWeight: '600', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--warn)' }}>Content Admin</span>
             </div>
-            <h2 style={{ fontSize: '2rem', fontWeight: '700', color: '#fff', letterSpacing: '-0.5px', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--paper)', letterSpacing: '-0.5px', marginBottom: '8px' }}>
               Sign In
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.88rem' }}>
@@ -205,7 +206,7 @@ const AdminLogin = ({ setToken }) => {
             <button
               type="submit"
               disabled={loading}
-              style={{ width: '100%', padding: '14px 20px', marginTop: '8px', background: loading ? 'rgba(245,158,11,0.15)' : 'linear-gradient(135deg, #f59e0b, #d97706)', border: 'none', borderRadius: '12px', color: loading ? 'rgba(0,0,0,0.3)' : '#111', fontSize: '0.92rem', fontWeight: '700', fontFamily: 'inherit', letterSpacing: '0.3px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(245,158,11,0.3), inset 0 1px 0 rgba(255,255,255,0.25)', transition: 'all 0.3s ease' }}
+              style={{ width: '100%', padding: '14px 20px', marginTop: '8px', background: loading ? 'rgba(245,158,11,0.15)' : 'linear-gradient(135deg, var(--warn), #d97706)', border: 'none', borderRadius: '12px', color: loading ? 'rgba(0,0,0,0.3)' : '#111', fontSize: '0.92rem', fontWeight: '700', fontFamily: 'inherit', letterSpacing: '0.3px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(245,158,11,0.3), inset 0 1px 0 rgba(255,255,255,0.25)', transition: 'all 0.3s ease' }}
               onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 32px rgba(245,158,11,0.45)'; } }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = loading ? 'none' : '0 8px 24px rgba(245,158,11,0.3)'; }}
             >
@@ -217,7 +218,7 @@ const AdminLogin = ({ setToken }) => {
           <div style={{ marginTop: '36px', padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px' }}>
             <p style={{ fontSize: '0.76rem', color: 'rgba(255,255,255,0.2)', textAlign: 'center', lineHeight: '1.6' }}>
               This portal is for authorized content administrators only.<br />
-              <a href="http://localhost:5176" style={{ color: 'rgba(245,158,11,0.5)', textDecoration: 'none' }}>Need Operations Panel?</a>
+              <a href={OPS_URL} style={{ color: 'rgba(245,158,11,0.5)', textDecoration: 'none' }}>Need Operations Panel?</a>
             </p>
           </div>
         </div>

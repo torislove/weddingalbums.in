@@ -177,7 +177,7 @@
 }
 
 .remove-btn:hover {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .cart-footer {

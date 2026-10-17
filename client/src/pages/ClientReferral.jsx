@@ -41,7 +41,7 @@ const ClientReferral = () => {
       {/* Hero Banner */}
       <div style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.18), rgba(244,63,94,0.1))', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '16px', padding: 'clamp(18px, 4vw, 32px)', marginBottom: '24px', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.4)' }}>
         <Sparkles size={36} color="#D4AF37" style={{ marginBottom: '12px' }} />
-        <h1 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', margin: '0 0 10px 0', color: '#fff', fontWeight: 800 }}>
+        <h1 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', margin: '0 0 10px 0', color: 'var(--paper)', fontWeight: 800 }}>
           Give ₹500, Get ₹1,000
         </h1>
         <p style={{ maxWidth: '520px', margin: '0 auto 24px', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
@@ -54,7 +54,7 @@ const ClientReferral = () => {
             type="text" 
             readOnly 
             value={referralLink} 
-            style={{ flex: '1 1 180px', minWidth: 0, background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', fontSize: '0.85rem', outline: 'none' }}
+            style={{ flex: '1 1 180px', minWidth: 0, background: 'transparent', border: 'none', color: 'var(--paper)', padding: '8px 12px', fontSize: '0.85rem', outline: 'none' }}
           />
           <button 
             onClick={handleCopy}
@@ -70,12 +70,12 @@ const ClientReferral = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '16px', marginBottom: '24px' }}>
         <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px', textAlign: 'center' }}>
           <Users size={28} color="#38bdf8" style={{ marginBottom: '8px' }} />
-          <h2 style={{ fontSize: '1.8rem', margin: '0 0 4px', color: '#fff' }}>{data.referralCount}</h2>
+          <h2 style={{ fontSize: '1.8rem', margin: '0 0 4px', color: 'var(--paper)' }}>{data.referralCount}</h2>
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Couples Referred</p>
         </div>
         <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px', textAlign: 'center' }}>
           <Gift size={28} color="#D4AF37" style={{ marginBottom: '8px' }} />
-          <h2 style={{ fontSize: '1.8rem', margin: '0 0 4px', color: '#D4AF37' }}>₹{Number(data.referralEarnings).toLocaleString('en-IN')}</h2>
+          <h2 style={{ fontSize: '1.8rem', margin: '0 0 4px', color: 'var(--brand)' }}>₹{Number(data.referralEarnings).toLocaleString('en-IN')}</h2>
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Total Credits Earned</p>
         </div>
       </div>
@@ -85,18 +85,18 @@ const ClientReferral = () => {
         <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem' }}>How the Referral Program Works</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '20px' }}>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px' }}>
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#D4AF37' }}>01</span>
-            <h4 style={{ margin: '8px 0 4px', color: '#fff' }}>Send Your Invite</h4>
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--brand)' }}>01</span>
+            <h4 style={{ margin: '8px 0 4px', color: 'var(--paper)' }}>Send Your Invite</h4>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Share your link on WhatsApp, Instagram, or email with couples planning their photobook.</p>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px' }}>
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#D4AF37' }}>02</span>
-            <h4 style={{ margin: '8px 0 4px', color: '#fff' }}>They Save ₹500</h4>
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--brand)' }}>02</span>
+            <h4 style={{ margin: '8px 0 4px', color: 'var(--paper)' }}>They Save ₹500</h4>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>When they design their custom album, ₹500 is instantly deducted from their checkout price.</p>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px' }}>
-            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#D4AF37' }}>03</span>
-            <h4 style={{ margin: '8px 0 4px', color: '#fff' }}>You Receive ₹1,000</h4>
+            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--brand)' }}>03</span>
+            <h4 style={{ margin: '8px 0 4px', color: 'var(--paper)' }}>You Receive ₹1,000</h4>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>As soon as their order is confirmed, ₹1,000 drops into your wallet for future albums.</p>
           </div>
         </div>

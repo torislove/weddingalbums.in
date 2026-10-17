@@ -3,7 +3,7 @@
 .b2b-page {
   background-color: var(--color-b2b-bg);
   min-height: 100vh;
-  color: #fff;
+  color: var(--paper);
   font-family: 'Inter', 'Outfit', sans-serif;
   position: relative;
   overflow: hidden;
@@ -65,7 +65,7 @@
   letter-spacing: -1px;
   margin-bottom: 20px;
   word-break: break-word;
-  background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+  background: linear-gradient(180deg, var(--paper) 0%, #a1a1aa 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -87,7 +87,7 @@
   padding: 16px 36px;
   border-radius: 12px;
   background: var(--color-b2b-accent);
-  color: #fff;
+  color: var(--paper);
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
@@ -400,7 +400,7 @@
 }
 
 .b2b-sheet-icon {
-  color: #d4af37;
+  color: var(--brand);
   width: 40px;
   height: 40px;
   margin-bottom: 20px;
@@ -410,7 +410,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 12px;
-  color: #fff;
+  color: var(--paper);
 }
 
 .b2b-sheet-card p {

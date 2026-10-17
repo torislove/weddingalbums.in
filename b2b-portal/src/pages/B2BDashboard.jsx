@@ -7,35 +7,36 @@ const B2BDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
-        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+  const fetchData = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token') || localStorage.getItem('b2bToken');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
-        const [jobsRes, walletRes] = await Promise.all([
-          fetch(`${API}/api/b2b/jobs`, { headers }),
-          fetch(`${API}/api/b2b/wallet`, { headers })
-        ]);
+      const [jobsRes, walletRes] = await Promise.all([
+        fetch(`${API}/api/b2b/jobs`, { headers }),
+        fetch(`${API}/api/b2b/wallet`, { headers })
+      ]);
 
-        if (jobsRes.ok) {
-          const data = await jobsRes.json();
-          setJobs(Array.isArray(data) ? data : []);
-        }
-        if (walletRes.ok) {
-          const wData = await walletRes.json();
-          setWalletBalance(wData.wallet_balance ?? user.wallet_balance ?? 0);
-        }
-      } catch (err) {
-        console.error('Failed to fetch studio data', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+      if (!jobsRes.ok || !walletRes.ok) throw new Error('Request failed');
+
+      const data = await jobsRes.json();
+      setJobs(Array.isArray(data) ? data : []);
+      const wData = await walletRes.json();
+      setWalletBalance(wData.wallet_balance ?? user.wallet_balance ?? 0);
+    } catch (err) {
+      console.error('Failed to fetch studio data', err);
+      setError('Could not load your studio data');
+    } finally {
+      setLoading(false);
+    }
+  }, [user.wallet_balance]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   // Studio Live Margin Calculator State
   const [calcSize, setCalcSize] = useState('12x36');
@@ -104,6 +105,15 @@ const B2BDashboard = () => {
         </Link>
       </div>
 
+      {error && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem', padding: '1rem 1.25rem', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontSize: '0.9rem' }}>
+          <span>⚠ {error}. Your figures below may be stale.</span>
+          <button onClick={fetchData} className="btn-outline" style={{ padding: '0.5rem 1rem', cursor: 'pointer', borderColor: 'rgba(239,68,68,0.4)', color: '#f87171' }}>
+            Retry
+          </button>
+        </div>
+      )}
+
       {/* KPI Cards */}
       <div className="stats-grid" style={{ marginBottom: '2.5rem' }}>
         <div className="glass-panel stat-card" style={{ padding: '1.5rem' }}>
@@ -151,10 +161,10 @@ const B2BDashboard = () => {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '3px 10px', borderRadius: '99px', background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold-primary)', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>
               ⚡ Protected Wholesale Rate Engine
             </div>
-            <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', margin: 0, color: '#fff' }}>Studio Profit Margin Calculator</h2>
+            <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', margin: 0, color: 'var(--paper)' }}>Studio Profit Margin Calculator</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: '4px 0 0' }}>Configure album specs, sheets, and video edits to view your retained profit margin.</p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--ok)', background: 'rgba(16,185,129,0.1)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)' }}>
             <ShieldCheck size={16} /> 100% White-Label Drop-Shipping Included
           </div>
         </div>
@@ -167,10 +177,10 @@ const B2BDashboard = () => {
               value={calcSize} 
               onChange={e => setCalcSize(e.target.value)}
               className="form-control"
-              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
               {ALBUM_SIZES.map(s => (
-                <option key={s.id} value={s.id} style={{ background: '#111', color: '#fff' }}>
+                <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
                   {s.name} (Lab: ₹{s.wholesaleBase.toLocaleString('en-IN')})
                 </option>
               ))}
@@ -184,10 +194,10 @@ const B2BDashboard = () => {
               value={calcSheet} 
               onChange={e => setCalcSheet(e.target.value)}
               className="form-control"
-              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
               {SHEET_TYPES.map(s => (
-                <option key={s.id} value={s.id} style={{ background: '#111', color: '#fff' }}>
+                <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
                   {s.name} (Trade: ₹{s.rate}/sheet)
                 </option>
               ))}
@@ -217,10 +227,10 @@ const B2BDashboard = () => {
               value={calcVideo} 
               onChange={e => setCalcVideo(e.target.value)}
               className="form-control"
-              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
+              style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
               {VIDEO_OPTIONS.map(v => (
-                <option key={v.id} value={v.id} style={{ background: '#111', color: '#fff' }}>
+                <option key={v.id} value={v.id} style={{ background: '#111', color: 'var(--paper)' }}>
                   {v.name} {v.wholesaleRate > 0 ? `(+₹${v.wholesaleRate.toLocaleString('en-IN')})` : ''}
                 </option>
               ))}
@@ -232,7 +242,7 @@ const B2BDashboard = () => {
         <div style={{ padding: '1.25rem', background: 'rgba(0,0,0,0.5)', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>Wholesale Lab Cost (Your Cost)</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#fff', fontFamily: 'monospace' }}>
+            <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--paper)', fontFamily: 'monospace' }}>
               ₹{wholesaleLabCost.toLocaleString('en-IN')}
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>All Taxes + Courier Included</div>
@@ -253,8 +263,8 @@ const B2BDashboard = () => {
           </div>
 
           <div>
-            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#10b981', letterSpacing: '0.5px', fontWeight: 'bold' }}>Your Retained Studio Margin</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', fontFamily: 'monospace' }}>
+            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--ok)', letterSpacing: '0.5px', fontWeight: 'bold' }}>Your Retained Studio Margin</div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--ok)', fontFamily: 'monospace' }}>
               +₹{studioProfit.toLocaleString('en-IN')}
             </div>
             <div style={{ fontSize: '12px', color: '#34d399', fontWeight: 600 }}>
@@ -300,6 +310,10 @@ const B2BDashboard = () => {
               <tbody>
                 {loading ? (
                   <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>Loading jobs...</td></tr>
+                ) : error && jobs.length === 0 ? (
+                  <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#f87171' }}>
+                    {error}. <button onClick={fetchData} style={{ background: 'none', border: 'none', color: 'var(--gold-primary)', cursor: 'pointer', textDecoration: 'underline' }}>Retry</button>
+                  </td></tr>
                 ) : jobs.length === 0 ? (
                   <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center' }}>No jobs submitted yet. Click "Submit New Job" to begin.</td></tr>
                 ) : jobs.map(job => (

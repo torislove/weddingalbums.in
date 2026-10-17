@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background-color: #050505;
+  background-color: var(--ink);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +19,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 0%, #050505 100%);
+  background: radial-gradient(circle at center, transparent 0%, var(--ink) 100%);
   pointer-events: none;
 }
 

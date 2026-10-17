@@ -3,7 +3,7 @@
 .b2c-page {
   background-color: var(--color-b2c-bg);
   min-height: 100vh;
-  color: #fff;
+  color: var(--paper);
   font-family: 'Outfit', sans-serif;
   position: relative;
   overflow: hidden;
@@ -66,7 +66,7 @@
   line-height: 1.15;
   margin-bottom: 20px;
   word-break: break-word;
-  background: linear-gradient(180deg, #ffffff 0%, #fbcfe8 100%);
+  background: linear-gradient(180deg, var(--paper) 0%, #fbcfe8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -89,7 +89,7 @@
   padding: 18px 40px;
   border-radius: 50px;
   background: var(--color-b2c-accent);
-  color: #fff;
+  color: var(--paper);
   font-weight: 500;
   font-size: 1.1rem;
   letter-spacing: 1px;
@@ -248,7 +248,7 @@
 }
 .b2c-process-card:hover .b2c-process-icon {
   background: var(--color-b2c-accent);
-  color: #fff;
+  color: var(--paper);
   transform: scale(1.1);
 }
 
@@ -339,7 +339,7 @@
   right: 30px;
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.2);
-  color: #fff;
+  color: var(--paper);
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -396,7 +396,7 @@
   font-size: 2rem;
   font-family: 'Playfair Display', serif;
   margin-bottom: 20px;
-  color: #fff;
+  color: var(--paper);
 }
 .b2c-quality-text p {
   color: #9ca3af;
@@ -430,7 +430,7 @@
 }
 
 .b2c-sheet-icon {
-  color: #d4af37;
+  color: var(--brand);
   width: 32px;
   height: 32px;
   background: rgba(212, 175, 55, 0.1);
@@ -440,7 +440,7 @@
 
 .b2c-sheet-card h4 {
   font-size: 1.2rem;
-  color: #fff;
+  color: var(--paper);
   margin-bottom: 8px;
 }
 .b2c-sheet-card p {

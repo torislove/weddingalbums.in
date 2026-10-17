@@ -148,7 +148,7 @@ const AdminLogin = ({ setToken }) => {
             <Terminal size={16} color="#0ea5e9" />
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.7rem', color: 'rgba(14,165,233,0.6)', letterSpacing: '2px' }}>{typedText}<span style={{ animation: 'sysAdminBlink 1s infinite', color: '#22d3ee' }}>_</span></span>
           </div>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: '700', color: '#fff', letterSpacing: '-0.5px', marginBottom: '6px' }}>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: '700', color: 'var(--paper)', letterSpacing: '-0.5px', marginBottom: '6px' }}>
             Operations<br />
             <span style={{ background: 'linear-gradient(to right, #0ea5e9, #22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Control Center</span>
           </h1>
@@ -216,7 +216,7 @@ const AdminLogin = ({ setToken }) => {
           <button
             type="submit"
             disabled={loading}
-            style={{ width: '100%', padding: '14px 20px', marginTop: '8px', background: loading ? 'rgba(14,165,233,0.15)' : 'linear-gradient(135deg, #0ea5e9, #0284c7)', border: 'none', borderRadius: '12px', color: loading ? 'rgba(255,255,255,0.3)' : '#fff', fontSize: '0.88rem', fontWeight: '600', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '1.5px', textTransform: 'uppercase', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(14,165,233,0.3)', transition: 'all 0.3s ease' }}
+            style={{ width: '100%', padding: '14px 20px', marginTop: '8px', background: loading ? 'rgba(14,165,233,0.15)' : 'linear-gradient(135deg, #0ea5e9, #0284c7)', border: 'none', borderRadius: '12px', color: loading ? 'rgba(255,255,255,0.3)' : 'var(--paper)', fontSize: '0.88rem', fontWeight: '600', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '1.5px', textTransform: 'uppercase', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(14,165,233,0.3)', transition: 'all 0.3s ease' }}
             onMouseEnter={e => { if (!loading) { e.currentTarget.style.boxShadow = '0 14px 32px rgba(14,165,233,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
             onMouseLeave={e => { e.currentTarget.style.boxShadow = loading ? 'none' : '0 8px 24px rgba(14,165,233,0.3)'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >

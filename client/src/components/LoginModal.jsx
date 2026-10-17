@@ -21,8 +21,11 @@ const LoginModal = ({ isOpen, onClose, defaultRole, onSuccess }) => {
     e.preventDefault();
     setError('');
 
-    const endpoint = isLogin ? '/api/login' : '/api/register';
-    const payload = isLogin ? { email: formData.email, password: formData.password } : formData;
+    // Server exposes auth under /api/auth/* (audience-scoped JWT + rotating refresh cookie)
+    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+    const payload = isLogin
+      ? { email: formData.email, password: formData.password, portalRole: 'b2c' }
+      : formData;
 
     try {
       const res = await fetch(`${API}${endpoint}`, {

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useContent } from '../context/ContentContext';
+import { useLanguage } from '../context/LanguageContext';
 import Logo from './Logo';
 import './Navbar.css';
 
@@ -15,7 +16,7 @@ const Navbar = () => {
   const { content } = useContent();
 
   const navData = content?.global?.navbar || {};
-  const [lang, setLang] = useState(() => localStorage.getItem('site_lang') || 'EN');
+  const { lang, toggleLang } = useLanguage();
 
   const defaultLinks = lang === 'TE' 
     ? [
@@ -23,6 +24,7 @@ const Navbar = () => {
         { name: 'సేవలు', path: '/services' },
         { name: 'గ్యాలరీ', path: '/portfolio' },
         { name: 'ధరలు', path: '/pricing' },
+        { name: 'ట్రాక్', path: '/track' },
         { name: 'ముహూర్తాలు', path: '/muhurtham' },
       ]
     : [
@@ -30,6 +32,7 @@ const Navbar = () => {
         { name: 'Services', path: '/services' },
         { name: 'Portfolio', path: '/portfolio' },
         { name: 'Pricing', path: '/pricing' },
+        { name: 'Track Order', path: '/track' },
         { name: 'Muhurtham Dates', path: '/muhurtham' },
       ];
 
@@ -113,12 +116,7 @@ const Navbar = () => {
           {/* Desktop Nav Actions */}
           <div className="nav-actions">
             <button 
-              onClick={() => {
-                const next = lang === 'EN' ? 'TE' : 'EN';
-                setLang(next);
-                localStorage.setItem('site_lang', next);
-                window.dispatchEvent(new Event('languageChange'));
-              }}
+              onClick={toggleLang}
               className="lang-toggle-btn"
               title="తెలుగు / English"
             >
@@ -141,12 +139,7 @@ const Navbar = () => {
           {/* Mobile Header Controls (Cart, Lang, Hamburger) */}
           <div className="mobile-nav-controls">
             <button 
-              onClick={() => {
-                const next = lang === 'EN' ? 'TE' : 'EN';
-                setLang(next);
-                localStorage.setItem('site_lang', next);
-                window.dispatchEvent(new Event('languageChange'));
-              }}
+              onClick={toggleLang}
               className="lang-toggle-btn mobile-lang-btn"
               title="తెలుగు / English"
             >
