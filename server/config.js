@@ -24,6 +24,23 @@ dotenv.config();
 /** The public, well-known development secret. Never valid in production. */
 export const DEV_JWT_SECRET = 'super_secret_wedding_key_2026';
 
+/**
+ * Values that must never be trusted in production: the published default, the weak
+ * secret that ships in this repo's local `server/.env`, and other guessable
+ * placeholders. Anything shorter than MIN_SECRET_LENGTH is rejected too — an HS256
+ * key that short is brute-forceable.
+ */
+const KNOWN_INSECURE_SECRETS = new Set([
+  DEV_JWT_SECRET,
+  'development_secret_key_12345',
+  'changeme',
+  'change-me',
+  'secret',
+  'jwt_secret',
+]);
+
+const MIN_SECRET_LENGTH = 32;
+
 /** Issuer embedded in every token; verified on decode. */
 export const JWT_ISSUER = 'weddingalbums.in';
 
@@ -46,13 +63,17 @@ const configuredSecret = (process.env.JWT_SECRET || '').trim();
  * True when we are about to run with the public fallback secret in a non-dev environment.
  * `index.js` turns this into a hard, loud failure instead of a silent security hole.
  */
-export const JWT_INSECURE = !configuredSecret || configuredSecret === DEV_JWT_SECRET;
+export const JWT_INSECURE =
+  !configuredSecret ||
+  KNOWN_INSECURE_SECRETS.has(configuredSecret) ||
+  configuredSecret.length < MIN_SECRET_LENGTH;
 
 export const JWT_SECRET = configuredSecret || DEV_JWT_SECRET;
 
 if (JWT_INSECURE && isProduction) {
   console.error(
-    '\n🚨 SECURITY: JWT_SECRET is not set (or is still the public development default).\n' +
+    '\n🚨 SECURITY: JWT_SECRET is missing, is a known/guessable default, or is shorter\n' +
+    `   than ${MIN_SECRET_LENGTH} characters.\n` +
     '   Refusing to serve traffic with a guessable signing key.\n' +
     '   Fix: create `server/.env.<projectId>` (or set the Cloud Functions env var) with\n' +
     '   `JWT_SECRET=<64+ random chars>`. See server/.env.example.\n'

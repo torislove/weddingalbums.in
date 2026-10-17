@@ -119,7 +119,7 @@ Shell has **three modes** (marketing / portal `/client*` / auth). Keep, but unif
 |---|---|---|
 | **UX-0** | Tokens + primitives + Toast/ConfirmDialog + ErrorBoundary per app | One page per app rebuilt with **zero hex / zero inline style** as proof |
 | **UX-1** | C1 (all native dialogs), C4 (states), C6 (boundaries) | `grep` for `alert(\|confirm(\|prompt(` in `*/src` returns 0; every fetch has loading+empty+error. **✅ Done** — C1 all apps (0 native dialogs), C4 done for the named fetch pages, C6 ErrorBoundary in all 5 apps. |
-| **UX-2** | C2/C3/C5/C7 token + a11y migration app-by-app | `grep` raw hex in pages → 0; every icon button labelled; `LazyImage` alt required. **▶ Mostly done** — see §6. Token layer + focus ring in all 5 apps; 1,085 brand/status hex → tokens; **0** unlabelled icon buttons; **0** `<img>` without alt; editor-portal re-tokenised to gold. Remaining: 1,056 hex literals (functional type colours + grey scales, tracked by `npm run audit:ui`). |
+| **UX-2** | C2/C3/C5/C7 token + a11y migration app-by-app | `grep` raw hex in pages → 0; every icon button labelled; `LazyImage` alt required. **▶ Mostly done** — see §6. Token layer + focus ring in all 5 apps; 1,085 brand/status hex → tokens; **0** unlabelled icon buttons; **0** `<img>` without alt; editor-portal re-tokenised to gold. Remaining: ~816 hex literals (functional type colours + gold ramp + token definitions, tracked by `npm run audit:ui`). |
 | **UX-3** | Big-page refactors (BookingPage 3,320 → steps; PricingEngine; App.jsx split) | Each < ~500 lines, routes deep-linkable, mobile sticky bars. **✅ Done** — see §6. sysadmin `App.jsx` 431 → 15 lines (split into `context/AuthContext`, `layout/AppShell`, `layout/Sidebar`, `components/Guard`, `pages/Dashboard`); `BookingPage.jsx` 3,530 → **1,242 lines** (static catalogue → `pages/booking/bookingData.js`; component body split into `pages/booking/` pathway + chrome components on a shared `ctx`); `PricingEngine.jsx` 847 → **236 lines** (grids/hints/estimator/modal-forms → `pages/pricing/`). |
 | **UX-4** | EN↔TE rollout to all client pages | Language toggle flips every public page. **✅ Done** — see §7. `useT()` hook + **585-key** EN/TE dictionary; **every** client page wired: marketing (Footer, Hero, About, Services, Pricing, Portfolio, Contact, Testimonials, Careers, Blog, BlogPost, B2C, MuhurthamCalendar, AlbumsShowcase, B2B trade page) + transactional (Cart, Checkout, OrderTracking, OrderHistory) + dashboards (ClientDashboard/couples, EditorDashboard, PhotographerDashboard) + account/tools (PortalLogin, ProfileSettings, ForgotPassword, ClientWallet, ClientReferral, ClientProofing, AlbumProofGallery, PhotoCulling). `BookingPage` is bilingual via its own inline `lang === 'TE'` convention; `Terms`/`PrivacyPolicy` stay English (B2B legal); `Home`/`OrderAlbum` are copy-less wrappers. |
 
@@ -143,9 +143,17 @@ Shell has **three modes** (marketing / portal `/client*` / auth). Keep, but unif
   imperative canvas lines, CSS custom-property definitions, and files that append an alpha suffix to a colour
   (`` `${c}22` `` — a `var()` cannot be concatenated). Functional type colours (blue/pink/yellow) are kept
   per §3.3. Total raw hex: **2,141 → 1,056**.
-- **Tailwind note:** sysadmin/uiadmin use Tailwind v4, which emits `bg-[var(--brand)]`,
-  `text-[var(--brand)]/80` and `border-[var(--brand)]/30` correctly (verified in the built CSS, incl. the
-  `color-mix()` alpha fallback). client/b2b/editor do not use Tailwind.
+- **Grey scale → tokens (C2 follow-up, 2026-10-17):** a neutral ramp `--n-0 … --n-1000` was added to all five
+  apps and `tools/tokenize-greys.mjs` migrated a further **326** achromatic literals (`#111`/`#1a1a1a`/`#888`/`#ccc` …)
+  across **82 files**. It reuses `migrate-hex`'s context guards and *only* touches near-neutral values — the gold
+  ramp, crimson brand, WhatsApp green and the status/type hues are intentionally left as hex. Raw hex:
+  **1,056 → 816**. The script is idempotent (a re-run reports 0) and, inside Tailwind arbitrary values, emits the
+  v4 shorthand `bg-(--n-900)`.
+- **Tailwind note:** sysadmin/uiadmin use Tailwind v4. Arbitrary values use the v4 **shorthand**
+  (`bg-(--n-900)`, `border-(--brand)/30`) because the square-bracket `var()` spelling makes Tailwind emit a class
+  selector with unescaped parentheses that `lightningcss` cannot minify (G13). Both apps also **pin their content
+  sources** (`@import "tailwindcss" source(none)` + `@source`) so a build no longer walks up to the git root and
+  scans sibling portals' `dist` bundles. client/b2b/editor do not use Tailwind.
 - **Icon-button labels (C3):** PricingEngine Edit/Delete/Close (9), ClientDashboard log-out,
   uiadmin refresh/close controls and MediaLibrary "open in new tab" — all now carry `aria-label`/`title`.
   Audit reports **0** unlabelled icon-only buttons.
@@ -186,8 +194,9 @@ Shell has **three modes** (marketing / portal `/client*` / auth). Keep, but unif
     `'sheets'`/`'packages'`/`"Close dialog"` and property reads like `contentCat.albumSizes`). Runtime
     click-through isn't possible here without a logged-in sysadmin session + backend, unlike the client page.
 
-> **Still open (tracked):** the remaining 1,056 hex literals (mostly intentional functional type colours +
-> greys, §3.3). UX-4 is now **complete** across every client page (§7).
+> **Still open (tracked):** the remaining ~816 hex literals are intentional functional type colours
+> (blue/pink/yellow), the gold gradient ramp and token *definitions* — see §3.3. UX-4 is complete across every
+> client page (§7).
 
 ---
 

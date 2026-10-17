@@ -136,6 +136,8 @@ with pre-seeded wedding catalog data", listening on `http://localhost:4000`.
 | G9 | Info | Client dev calls the absolute API host rather than the Vite proxy (fine; CORS-allowed). Consider preferring relative in dev to exercise the proxy. | ⏳ Backlog |
 | G10 | Info | `/api/health` exists (`server/index.js:117`); the audit's "unmatched" was a path-join artifact. | ✅ Verified |
 | G11 | Med | Sysadmin `TaskBoard` PATCHed `/api/admin/jobs/:id` to change task status / assign an editor, but **no such route existed** — the update silently 404'd. | ✅ **Fixed** — added `PATCH`/`PUT /api/admin/jobs/:id` (`server/routes/admin.js`) updating `status`/`assigned_editor_id`/etc. with an audit log. |
+| G12 | **High** | CI deploy failed on **runs #22–#30** with *"Missing permissions required for functions deploy … `iam.serviceAccounts.ActAs` on `weddingalbums-b4bcd@appspot.gserviceaccount.com`"*. Because the single deploy command ran functions before hosting, the **public site never shipped** (live bundles were stale from run #21). | ✅ **Workflow fixed + documented** — deploy is split **hosting → rules → functions**, `firebase-tools` is pinned, and the required IAM grant + a deploy-identity preflight are documented in the workflow header and §8. ⚠️ The IAM grant itself is a Google Cloud action for the project owner (see §8). |
+| G13 | Med | Tailwind v4 builds were fragile: a hand-written escaped selector in `sysadmin/src/premium.css` (`.bg-\[\#111\]`) was re-scanned as a candidate, and a sibling portal's `dist` was being auto-scanned up to the git root — either could abort `lightningcss` minify. | ✅ **Fixed** — arbitrary values now use v4 shorthand (`bg-(--n-900)`), `sysadmin`/`uiadmin` pin their sources (`@import "tailwindcss" source(none)` + `@source`), and the escaped selector was restored. |
 
 ### 5.1 Price ownership — two admin surfaces (by design)
 
@@ -156,8 +158,18 @@ Prices are intentionally editable from **both** admin surfaces; the estimator co
 > `sheet-*` rows have generic names that don't match any CMS sheet, so they are (correctly) reported as unmatched.
 > Follow-up (low): let the owner **link** a builder row to a CMS item (or default new rows to the CMS id) so the two surfaces line up 1:1.
 
-**production-hardening reminders:** set `JWT_SECRET` (currently a dev default), keep `allowedOrigins`
-in sync with real domains, and confirm the prod reverse proxy maps `/api/*` → the API service.
+**Production hardening (done 2026-10-17):**
+
+- **`JWT_SECRET`** — `server/config.js` is the single source of truth (`JWT_SECRET` + `JWT_ISSUER`). In
+  production a missing/default secret is **fail-closed**: a loud startup error, `process.exit(1)` for the
+  standalone server, and `503 JWT_SECRET_MISSING` on every non-health route. Import still succeeds so Cloud
+  Functions discovery/deploy is not blocked. CI writes `JWT_SECRET` from the `JWT_SECRET` repository secret
+  into `server/.env.<projectId>` and fails fast when the secret is absent.
+- **CORS** — the allow-list is `DEFAULT_ORIGINS` **plus** the comma-separated `CORS_ORIGINS` env var, so a new
+  origin no longer needs a code change.
+- **Reverse proxy `/api`** — mapped in `firebase.json` (`/api/**` → the `api` function); the client keeps
+  calling a relative `/api` in production.
+- **Smoke tests** — `npm run smoke` (pages + API) and the static audits below are the pre-deploy gate.
 
 ---
 
@@ -206,4 +218,54 @@ node tools/audit_connectivity.mjs --json     # → tools/connectivity_report.jso
 
 # pricing engine tests
 node --test client/src/lib/__tests__/pricing.test.mjs
+
+# smoke tests
+npm run smoke:api                            # boots the server: 34 checks incl. the 6-role separation matrix
+npm run smoke:pages                          # route inventory + import integrity across all 5 apps
+npm run smoke:pages:live                     # …plus a live fetch of each route (needs the dev servers)
+npm run smoke                                # pages + api
+
+# UI/UX audit (HARD GATE: 0 native dialogs) + grey-scale sweep
+npm run audit:ui
+node tools/tokenize-greys.mjs                # dry run + histogram; add --write to apply
 ```
+
+---
+
+## 8. Deploying (CI/CD)
+
+`.github/workflows/firebase-hosting-merge.yml` runs on every push to `main` and deploys in **three ordered
+steps** so an API/permissions problem can never block the public site again:
+
+1. `firebase deploy --only hosting` (all 5 sites)
+2. `firebase deploy --only firestore:rules`
+3. `firebase deploy --only functions` — after writing `server/.env.<projectId>`
+
+**Required repository secrets**
+
+| Secret | Purpose |
+|---|---|
+| `FIREBASE_SERVICE_ACCOUNT_WEDDINGALBUMS_B4BCD` | JSON key of the CI deployer service account |
+| `JWT_SECRET` | API signing key (≥ 64 random chars). The functions step fails fast without it, because the API now refuses to serve production traffic with a guessable key. |
+
+**Required IAM for the deployer service account** (project `weddingalbums-b4bcd`). A Functions / Cloud Run
+deploy must be allowed to *act as* the runtime service account. Without this the CLI aborts with
+*"Missing permissions required for functions deploy … `iam.serviceAccounts.ActAs` on
+`weddingalbums-b4bcd@appspot.gserviceaccount.com`"* — which, before the split, failed the whole job **ahead of
+hosting** (see G12):
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding \
+  weddingalbums-b4bcd@appspot.gserviceaccount.com \
+  --member="serviceAccount:<CI_DEPLOYER_SA_EMAIL>" \
+  --role="roles/iam.serviceAccountUser" \
+  --project=weddingalbums-b4bcd
+```
+
+Typical additional roles for the deployer: `roles/firebasehosting.admin`, `roles/firebaserules.admin`,
+`roles/cloudfunctions.developer`, `roles/run.developer`, `roles/artifactregistry.writer`,
+`roles/cloudbuild.builds.editor`, `roles/storage.admin`, `roles/serviceusage.serviceUsageAdmin`.
+
+> `<CI_DEPLOYER_SA_EMAIL>` is the `client_email` inside the `FIREBASE_SERVICE_ACCOUNT_WEDDINGALBUMS_B4BCD`
+> secret. In the Cloud console: **IAM & Admin → IAM → Grand access →** that SA → role **Service Account User**,
+> scoped by adding it on the `weddingalbums-b4bcd@appspot.gserviceaccount.com` principal.
