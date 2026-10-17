@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 950" role="img" aria-label="Layflat album open spread mockup — WeddingAlbums.in">
+  <defs>
+    <radialGradient id="sceneGlow" cx="50%" cy="42%" r="70%">
+      <stop offset="0%" stop-color="#1c1c26"/>
+      <stop offset="60%" stop-color="#0e0e15"/>
+      <stop offset="100%" stop-color="#07070b"/>
+    </radialGradient>
+    <linearGradient id="photoWarm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c98e64"/>
+      <stop offset="45%" stop-color="#9a6547"/>
+      <stop offset="100%" stop-color="#3a271c"/>
+    </linearGradient>
+    <linearGradient id="photoCool" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#aab6c8"/>
+      <stop offset="50%" stop-color="#68788d"/>
+      <stop offset="100%" stop-color="#2b3844"/>
+    </linearGradient>
+    <linearGradient id="pageEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7f1e6"/>
+      <stop offset="100%" stop-color="#d9d0c0"/>
+    </linearGradient>
+    <linearGradient id="gutter" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(0,0,0,0)"/>
+      <stop offset="46%" stop-color="rgba(0,0,0,0.35)"/>
+      <stop offset="50%" stop-color="rgba(0,0,0,0.6)"/>
+      <stop offset="54%" stop-color="rgba(0,0,0,0.35)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="950" fill="url(#sceneGlow)"/>
+
+  <!-- ground shadow -->
+  <ellipse cx="800" cy="812" rx="560" ry="36" fill="rgba(0,0,0,0.55)"/>
+
+  <!-- page stack (thickness) -->
+  <g>
+    <rect x="206" y="168" width="1188" height="560" fill="#cbbfae"/>
+    <rect x="202" y="164" width="1196" height="560" fill="url(#pageEdge)"/>
+  </g>
+
+  <!-- LEFT PAGE -->
+  <g>
+    <rect x="212" y="174" width="586" height="548" fill="#f6efe3"/>
+    <!-- photo block -->
+    <rect x="252" y="214" width="506" height="368" fill="url(#photoWarm)"/>
+    <radialGradient id="warmHighlight" cx="38%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="rgba(255,226,189,0.5)"/>
+      <stop offset="100%" stop-color="rgba(255,226,189,0)"/>
+    </radialGradient>
+    <rect x="252" y="214" width="506" height="368" fill="url(#warmHighlight)"/>
+    <rect x="252" y="214" width="506" height="368" fill="none" stroke="#c9a86a" stroke-width="2"/>
+    <rect x="262" y="224" width="486" height="348" fill="none" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
+    <!-- row of layout thumbnails -->
+    <g id="thumbs-left">
+      <rect x="252" y="600" width="118" height="76" rx="3" fill="url(#photoWarm)" opacity="0.85"/>
+      <rect x="382" y="600" width="118" height="76" rx="3" fill="url(#photoCool)" opacity="0.85"/>
+      <rect x="512" y="600" width="118" height="76" rx="3" fill="url(#photoWarm)" opacity="0.7"/>
+      <rect x="642" y="600" width="116" height="76" rx="3" fill="url(#photoCool)" opacity="0.7"/>
+    </g>
+    <text x="252" y="706" font-family="Georgia, 'Times New Roman', serif" font-size="20" letter-spacing="6" fill="#a8802f">MANGALYA DHARANAM</text>
+    <text x="252" y="730" font-family="Nirmala UI, Noto Serif Telugu, sans-serif" font-size="14" fill="#8a7a5f">మాంగల్య ధారణ · Vijayawada</text>
+  </g>
+
+  <!-- RIGHT PAGE -->
+  <g>
+    <rect x="802" y="174" width="586" height="548" fill="#f6efe3"/>
+    <rect x="842" y="214" width="506" height="368" fill="url(#photoCool)"/>
+    <radialGradient id="coolHighlight" cx="60%" cy="34%" r="55%">
+      <stop offset="0%" stop-color="rgba(240,246,255,0.45)"/>
+      <stop offset="100%" stop-color="rgba(240,246,255,0)"/>
+    </radialGradient>
+    <rect x="842" y="214" width="506" height="368" fill="url(#coolHighlight)"/>
+    <rect x="842" y="214" width="506" height="368" fill="none" stroke="#c9a86a" stroke-width="2"/>
+    <rect x="852" y="224" width="486" height="348" fill="none" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
+    <rect x="842" y="600" width="118" height="76" rx="3" fill="url(#photoCool)" opacity="0.85"/>
+    <rect x="972" y="600" width="118" height="76" rx="3" fill="url(#photoWarm)" opacity="0.85"/>
+    <rect x="1102" y="600" width="118" height="76" rx="3" fill="url(#photoCool)" opacity="0.7"/>
+    <rect x="1232" y="600" width="116" height="76" rx="3" fill="url(#photoWarm)" opacity="0.7"/>
+    <text x="842" y="706" font-family="Georgia, 'Times New Roman', serif" font-size="20" letter-spacing="6" fill="#a8802f" text-anchor="start">TALAMBRALU</text>
+    <text x="842" y="730" font-family="Nirmala UI, Noto Serif Telugu, sans-serif" font-size="14" fill="#8a7a5f">తలంబ్రాలు · Rajahmundry</text>
+  </g>
+
+  <!-- gutter shadow -->
+  <rect x="212" y="174" width="1176" height="548" fill="url(#gutter)"/>
+
+  <!-- cover fold hints -->
+  <rect x="200" y="160" width="1200" height="576" fill="none" stroke="rgba(212,175,55,0.28)" stroke-width="2"/>
+
+  <!-- annotations -->
+  <g font-family="'Segoe UI', Arial, sans-serif">
+    <text x="48" y="72" font-size="17" letter-spacing="4" fill="#d4af37">WEDDINGALBUMS.IN</text>
+    <text x="48" y="98" font-size="30" font-family="Georgia, serif" fill="#f4ede1">Layflat Open Spread · 12 × 36 in</text>
+    <rect x="1268" y="52" width="288" height="64" rx="32" fill="rgba(212,175,55,0.12)" stroke="#d4af37"/>
+    <text x="1412" y="80" font-size="15" letter-spacing="2" fill="#d4af37" text-anchor="middle">180° FLAT-OPEN</text>
+    <text x="1412" y="102" font-size="13" fill="#9c8b64" text-anchor="middle">0.5 mm gutterless · Park Avenue</text>
+  </g>
+</svg>

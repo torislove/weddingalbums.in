@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" role="img" aria-label="Acrylic glass cover album mockup — WeddingAlbums.in">
+  <defs>
+    <radialGradient id="bgGlow2" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#1b1b25"/>
+      <stop offset="65%" stop-color="#0d0d13"/>
+      <stop offset="100%" stop-color="#060609"/>
+    </radialGradient>
+    <linearGradient id="leather" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a3227"/>
+      <stop offset="50%" stop-color="#38251c"/>
+      <stop offset="100%" stop-color="#241611"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.28)"/>
+      <stop offset="18%" stop-color="rgba(255,255,255,0.05)"/>
+      <stop offset="40%" stop-color="rgba(255,255,255,0.12)"/>
+      <stop offset="60%" stop-color="rgba(255,255,255,0.02)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.10)"/>
+    </linearGradient>
+    <linearGradient id="portraitTone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b98861"/>
+      <stop offset="55%" stop-color="#8a5c40"/>
+      <stop offset="100%" stop-color="#3d2a1e"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="30%" cy="18%" r="60%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="950" fill="url(#bgGlow2)"/>
+  <ellipse cx="600" cy="806" rx="380" ry="30" fill="rgba(0,0,0,0.55)"/>
+
+  <!-- album block: acrylic cover over leather -->
+  <g>
+    <!-- leather block -->
+    <rect x="330" y="140" width="540" height="680" fill="url(#leather)"/>
+    <rect x="330" y="140" width="540" height="680" fill="none" stroke="#5b4536" stroke-width="2"/>
+    <!-- stitched border -->
+    <rect x="348" y="158" width="504" height="644" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="1.5" stroke-dasharray="8 6"/>
+    <!-- portrait photo inset -->
+    <rect x="380" y="200" width="440" height="440" fill="url(#portraitTone)"/>
+    <rect x="380" y="200" width="440" height="440" fill="url(#sheen)"/>
+    <rect x="380" y="200" width="440" height="440" fill="none" stroke="#c9a86a" stroke-width="2"/>
+    <!-- monogram + brand -->
+    <text x="600" y="700" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#e6c877" text-anchor="middle" letter-spacing="8">S &amp; R</text>
+    <text x="600" y="738" font-family="'Segoe UI', Arial, sans-serif" font-size="14" letter-spacing="6" fill="#b09669" text-anchor="middle">WEDDINGALBUMS.IN</text>
+
+    <!-- acrylic sheet overlay -->
+    <rect x="322" y="132" width="556" height="696" fill="url(#glass)" opacity="0.6"/>
+    <rect x="322" y="132" width="556" height="696" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+    <!-- diagonal glass streaks -->
+    <path d="M 322 300 L 700 132 L 760 132 L 322 356 Z" fill="rgba(255,255,255,0.08)"/>
+    <path d="M 322 430 L 830 132 L 856 132 L 322 462 Z" fill="rgba(255,255,255,0.05)"/>
+  </g>
+
+  <!-- annotations -->
+  <g font-family="'Segoe UI', Arial, sans-serif">
+    <text x="48" y="72" font-size="17" letter-spacing="4" fill="#d4af37">WEDDINGALBUMS.IN</text>
+    <text x="48" y="98" font-size="30" font-family="Georgia, serif" fill="#f4ede1">Acrylic Glass Cover · 40 × 60 cm</text>
+    <rect x="886" y="52" width="272" height="64" rx="32" fill="rgba(212,175,55,0.12)" stroke="#d4af37"/>
+    <text x="1022" y="80" font-size="15" letter-spacing="2" fill="#d4af37" text-anchor="middle">CRYSTAL GLOSS</text>
+    <text x="1022" y="102" font-size="13" fill="#9c8b64" text-anchor="middle">5 mm UV-print · gold foil edge</text>
+  </g>
+</svg>

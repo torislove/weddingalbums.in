@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-label="Client album preview — embossed leatherette cover sheet-style sample">
+  <defs>
+    <radialGradient id="pvGlow" cx="50%" cy="38%" r="75%">
+      <stop offset="0%" stop-color="#1d1d28"/>
+      <stop offset="70%" stop-color="#0d0d14"/>
+      <stop offset="100%" stop-color="#07070b"/>
+    </radialGradient>
+    <linearGradient id="pvLthr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a3227"/>
+      <stop offset="55%" stop-color="#35251b"/>
+      <stop offset="100%" stop-color="#201311"/>
+    </linearGradient>
+    <linearGradient id="pvPhoto" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c08a5e"/>
+      <stop offset="55%" stop-color="#8f5f42"/>
+      <stop offset="100%" stop-color="#452e20"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="1200" fill="url(#pvGlow)"/>
+  <ellipse cx="450" cy="1108" rx="300" ry="24" fill="rgba(0,0,0,0.55)"/>
+
+  <g>
+    <rect x="170" y="150" width="560" height="900" fill="url(#pvLthr)"/>
+    <rect x="170" y="150" width="560" height="900" fill="none" stroke="#5b4536" stroke-width="2"/>
+    <rect x="188" y="168" width="524" height="864" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="1.5" stroke-dasharray="8 6"/>
+    <rect x="230" y="230" width="440" height="440" fill="url(#pvPhoto)"/>
+    <rect x="230" y="230" width="440" height="440" fill="none" stroke="#c9a86a" stroke-width="2"/>
+    <radialGradient id="pvSheen" cx="35%" cy="25%" r="55%">
+      <stop offset="0%" stop-color="rgba(255,232,196,0.4)"/>
+      <stop offset="100%" stop-color="rgba(255,232,196,0)"/>
+    </radialGradient>
+    <rect x="230" y="230" width="440" height="440" fill="url(#pvSheen)"/>
+    <text x="450" y="780" font-family="Georgia, serif" font-size="48" fill="#e6c877" text-anchor="middle" letter-spacing="8">S &amp; R</text>
+    <text x="450" y="826" font-family="'Segoe UI', Arial" font-size="15" letter-spacing="6" fill="#b09669" text-anchor="middle">WEDDINGALBUMS.IN</text>
+    <text x="450" y="940" font-family="Nirmala UI, Noto Serif Telugu, sans-serif" font-size="18" fill="#8a7a5f" text-anchor="middle">శుభాయాత్రలు · Shubha Yatralu</text>
+  </g>
+
+  <g font-family="'Segoe UI', Arial, sans-serif">
+    <text x="48" y="72" font-size="16" letter-spacing="4" fill="#d4af37">WEDDINGALBUMS.IN</text>
+    <text x="48" y="98" font-size="27" font-family="Georgia, serif" fill="#f4ede1">Leatherette Emboss Preview</text>
+  </g>
+</svg>

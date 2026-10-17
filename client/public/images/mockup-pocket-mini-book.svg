@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" role="img" aria-label="Parent pocket mini-book mockup — WeddingAlbums.in">
+  <defs>
+    <radialGradient id="bgGlow4" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#1b1b25"/>
+      <stop offset="65%" stop-color="#0d0d13"/>
+      <stop offset="100%" stop-color="#060609"/>
+    </radialGradient>
+    <linearGradient id="miniCover" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c2f33"/>
+      <stop offset="55%" stop-color="#5d2126"/>
+      <stop offset="100%" stop-color="#39151a"/>
+    </linearGradient>
+    <linearGradient id="miniPhoto" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d7a06b"/>
+      <stop offset="100%" stop-color="#5a3a26"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="950" fill="url(#bgGlow4)"/>
+  <ellipse cx="600" cy="792" rx="330" ry="26" fill="rgba(0,0,0,0.55)"/>
+
+  <!-- set of 3 scaled books -->
+  <g>
+    <!-- big -->
+    <g>
+      <rect x="380" y="200" width="360" height="540" fill="url(#miniCover)"/>
+      <rect x="380" y="200" width="360" height="540" fill="none" stroke="#96464c" stroke-width="2"/>
+      <rect x="396" y="216" width="328" height="280" fill="url(#miniPhoto)"/>
+      <rect x="396" y="216" width="328" height="280" fill="none" stroke="#d4af37" stroke-width="1.5"/>
+      <text x="560" y="560" font-family="Georgia, serif" font-size="26" letter-spacing="5" fill="#e6c877" text-anchor="middle">KALYANAM</text>
+      <text x="560" y="592" font-family="'Segoe UI', Arial" font-size="12" letter-spacing="4" fill="#c9a86a" text-anchor="middle">WEDDINGALBUMS.IN</text>
+      <rect x="396" y="530" width="328" height="2" fill="rgba(212,175,55,0.5)"/>
+    </g>
+    <!-- medium -->
+    <g transform="translate(790 330) scale(0.62)">
+      <rect x="0" y="0" width="360" height="540" fill="url(#miniCover)"/>
+      <rect x="0" y="0" width="360" height="540" fill="none" stroke="#96464c" stroke-width="2.4"/>
+      <rect x="16" y="16" width="328" height="280" fill="url(#miniPhoto)"/>
+      <rect x="16" y="16" width="328" height="280" fill="none" stroke="#d4af37" stroke-width="2"/>
+      <text x="180" y="344" font-family="Georgia, serif" font-size="26" letter-spacing="5" fill="#e6c877" text-anchor="middle">KALYANAM</text>
+      <text x="180" y="376" font-family="'Segoe UI', Arial" font-size="12" letter-spacing="4" fill="#c9a86a" text-anchor="middle">WEDDINGALBUMS.IN</text>
+      <rect x="16" y="314" width="328" height="2" fill="rgba(212,175,55,0.5)"/>
+    </g>
+    <!-- small -->
+    <g transform="translate(860 500) scale(0.4)">
+      <rect x="0" y="0" width="360" height="540" fill="url(#miniCover)"/>
+      <rect x="0" y="0" width="360" height="540" fill="none" stroke="#96464c" stroke-width="3"/>
+      <rect x="20" y="20" width="320" height="270" fill="url(#miniPhoto)"/>
+      <rect x="20" y="20" width="320" height="270" fill="none" stroke="#d4af37" stroke-width="2.4"/>
+      <text x="180" y="330" font-family="Georgia, serif" font-size="24" letter-spacing="4" fill="#e6c877" text-anchor="middle">KALYANAM</text>
+      <text x="180" y="360" font-family="'Segoe UI', Arial" font-size="11" letter-spacing="3" fill="#c9a86a" text-anchor="middle">WEDDINGALBUMS.IN</text>
+      <rect x="20" y="302" width="320" height="2" fill="rgba(212,175,55,0.5)"/>
+    </g>
+  </g>
+
+  <!-- annotations -->
+  <g font-family="'Segoe UI', Arial, sans-serif">
+    <text x="48" y="72" font-size="17" letter-spacing="4" fill="#d4af37">WEDDINGALBUMS.IN</text>
+    <text x="48" y="98" font-size="30" font-family="Georgia, serif" fill="#f4ede1">Parent Pocket Mini Books · 6 × 9 in</text>
+    <rect x="850" y="52" width="308" height="64" rx="32" fill="rgba(212,175,55,0.12)" stroke="#d4af37"/>
+    <text x="1004" y="80" font-size="15" letter-spacing="2" fill="#d4af37" text-anchor="middle">1 MAIN + 2 MINI</text>
+    <text x="1004" y="102" font-size="13" fill="#9c8b64" text-anchor="middle">bundle discount applied at cart</text>
+  </g>
+</svg>

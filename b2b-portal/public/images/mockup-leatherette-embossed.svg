@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" role="img" aria-label="Embossed Italian leatherette album mockup — WeddingAlbums.in">
+  <defs>
+    <radialGradient id="bgGlow3" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#1b1b25"/>
+      <stop offset="65%" stop-color="#0d0d13"/>
+      <stop offset="100%" stop-color="#060609"/>
+    </radialGradient>
+    <linearGradient id="lthr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#37474f"/>
+      <stop offset="50%" stop-color="#263238"/>
+      <stop offset="100%" stop-color="#161e22"/>
+    </linearGradient>
+    <pattern id="grain" width="26" height="26" patternUnits="userSpaceOnUse">
+      <rect width="26" height="26" fill="none"/>
+      <circle cx="6" cy="6" r="1.1" fill="rgba(255,255,255,0.045)"/>
+      <circle cx="18" cy="14" r="0.9" fill="rgba(255,255,255,0.035)"/>
+      <circle cx="10" cy="21" r="1.0" fill="rgba(255,255,255,0.03)"/>
+      <circle cx="22" cy="4" r="0.8" fill="rgba(255,255,255,0.03)"/>
+    </pattern>
+    <radialGradient id="emboss" cx="50%" cy="46%" r="40%">
+      <stop offset="0%" stop-color="rgba(255,215,120,0.28)"/>
+      <stop offset="70%" stop-color="rgba(255,215,120,0.04)"/>
+      <stop offset="100%" stop-color="rgba(255,215,120,0)"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="950" fill="url(#bgGlow3)"/>
+  <ellipse cx="600" cy="806" rx="380" ry="30" fill="rgba(0,0,0,0.55)"/>
+
+  <g>
+    <rect x="350" y="140" width="500" height="680" fill="url(#lthr)"/>
+    <rect x="350" y="140" width="500" height="680" fill="url(#grain)"/>
+    <rect x="350" y="140" width="500" height="680" fill="none" stroke="#4b5c64" stroke-width="2"/>
+    <rect x="368" y="158" width="464" height="644" fill="none" stroke="rgba(212,175,55,0.35)" stroke-width="1.5" stroke-dasharray="8 6"/>
+
+    <!-- embossed gold-foil mandala -->
+    <circle cx="600" cy="430" r="150" fill="url(#emboss)"/>
+    <g fill="none" stroke="#d4af37" stroke-opacity="0.8" stroke-width="2">
+      <circle cx="600" cy="430" r="150"/>
+      <circle cx="600" cy="430" r="118"/>
+      <circle cx="600" cy="430" r="64"/>
+      <g id="petalring">
+        <path d="M600 280 C 628 340, 628 380, 600 436 C 572 380, 572 340, 600 280 Z"/>
+        <path d="M600 580 C 628 520, 628 480, 600 424 C 572 480, 572 520, 600 580 Z"/>
+        <path d="M450 430 C 510 402, 550 402, 606 430 C 550 458, 510 458, 450 430 Z"/>
+        <path d="M750 430 C 690 402, 650 402, 594 430 C 650 458, 690 458, 750 430 Z"/>
+        <path d="M491 321 C 556 330, 589 352, 606 376 C 578 396, 536 396, 491 321 Z"/>
+        <path d="M709 321 C 644 330, 611 352, 594 376 C 622 396, 664 396, 709 321 Z"/>
+        <path d="M491 539 C 556 530, 589 508, 606 484 C 578 464, 536 464, 491 539 Z"/>
+        <path d="M709 539 C 644 530, 611 508, 594 484 C 622 464, 664 464, 709 539 Z"/>
+      </g>
+    </g>
+    <circle cx="600" cy="430" r="26" fill="#d4af37" fill-opacity="0.85"/>
+
+    <text x="600" y="700" font-family="Georgia, 'Times New Roman', serif" font-size="42" letter-spacing="10" fill="none" stroke="#d4af37" stroke-width="1.2" text-anchor="middle">KALYANAM</text>
+    <text x="600" y="740" font-family="'Segoe UI', Arial, sans-serif" font-size="13" letter-spacing="7" fill="#9fb0b8" text-anchor="middle">ITALIAN LEATHERETTE · GOLD FOIL</text>
+    <text x="600" y="766" font-family="'Segoe UI', Arial, sans-serif" font-size="12" letter-spacing="5" fill="#6f8088" text-anchor="middle">WEDDINGALBUMS.IN</text>
+  </g>
+
+  <!-- annotations -->
+  <g font-family="'Segoe UI', Arial, sans-serif">
+    <text x="48" y="72" font-size="17" letter-spacing="4" fill="#d4af37">WEDDINGALBUMS.IN</text>
+    <text x="48" y="98" font-size="30" font-family="Georgia, serif" fill="#f4ede1">Embossed Leatherette · 12 × 18 in</text>
+    <rect x="886" y="52" width="272" height="64" rx="32" fill="rgba(212,175,55,0.12)" stroke="#d4af37"/>
+    <text x="1022" y="80" font-size="15" letter-spacing="2" fill="#d4af37" text-anchor="middle">DEBOSSED FOIL</text>
+    <text x="1022" y="102" font-size="13" fill="#9c8b64" text-anchor="middle">custom monogram · 40+ shades</text>
+  </g>
+</svg>
