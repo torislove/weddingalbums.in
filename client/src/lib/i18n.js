@@ -847,6 +847,40 @@ export const STRINGS = {
   'ref.s2_d': { EN: 'When they design their custom album, ₹500 is instantly deducted from their checkout price.', TE: 'వారు తమ కస్టమ్ ఆల్బమ్ డిజైన్ చేసినప్పుడు, వారి చెకౌట్ ధర నుండి ₹500 వెంటనే తగ్గించబడుతుంది.' },
   'ref.s3_t': { EN: 'You Receive ₹1,000', TE: 'మీరు ₹1,000 పొందుతారు' },
   'ref.s3_d': { EN: 'As soon as their order is confirmed, ₹1,000 drops into your wallet for future albums.', TE: 'వారి ఆర్డర్ నిర్ధారించబడిన వెంటనే, భవిష్యత్ ఆల్బమ్‌ల కోసం ₹1,000 మీ వాలెట్‌లోకి వస్తుంది.' },
+
+  // ── Profile & settings ─────────────────────────────────────────────────
+  'prof.title': { EN: 'Profile & Settings', TE: 'ప్రొఫైల్ & సెట్టింగ్‌లు' },
+  'prof.full_name': { EN: 'Full Name', TE: 'పూర్తి పేరు' },
+  'prof.email': { EN: 'Email Address', TE: 'ఇమెయిల్ చిరునామా' },
+  'prof.email_locked': { EN: 'Email cannot be changed.', TE: 'ఇమెయిల్ మార్చలేరు.' },
+  'prof.phone': { EN: 'Phone Number', TE: 'ఫోన్ నంబర్' },
+  'prof.city': { EN: 'City', TE: 'నగరం' },
+  'prof.wedding_details': { EN: 'Wedding Details', TE: 'వివాహ వివరాలు' },
+  'prof.couple_names': { EN: 'Couple Names', TE: 'జంట పేర్లు' },
+  'prof.couple_ph': { EN: 'e.g. Ram & Sita', TE: 'ఉదా. రామ్ & సీత' },
+  'prof.wedding_date': { EN: 'Wedding Date', TE: 'వివాహ తేదీ' },
+  'prof.saving': { EN: 'Saving...', TE: 'సేవ్ అవుతోంది...' },
+  'prof.save': { EN: 'Save Changes', TE: 'మార్పులు సేవ్ చేయండి' },
+  'prof.session': { EN: 'Account Session', TE: 'ఖాతా సెషన్' },
+  'prof.session_sub': { EN: 'Sign out of your client portal session on this device.', TE: 'ఈ పరికరంలో మీ క్లయింట్ పోర్టల్ సెషన్ నుండి సైన్ అవుట్ చేయండి.' },
+  'prof.toast_ok': { EN: 'Profile updated successfully!', TE: 'ప్రొఫైల్ విజయవంతంగా నవీకరించబడింది!' },
+  'prof.toast_saved': { EN: 'Profile changes saved.', TE: 'ప్రొఫైల్ మార్పులు సేవ్ చేయబడ్డాయి.' },
+  'prof.confirm_title': { EN: 'Sign out?', TE: 'సైన్ అవుట్ చేయాలా?' },
+  'prof.confirm_msg': { EN: 'You will be signed out of your client portal session on this device.', TE: 'ఈ పరికరంలో మీ క్లయింట్ పోర్టల్ సెషన్ నుండి సైన్ అవుట్ చేయబడతారు.' },
+  'prof.confirm_btn': { EN: 'Sign out', TE: 'సైన్ అవుట్' },
+
+  // ── Forgot password ────────────────────────────────────────────────────
+  'fp.title': { EN: 'Reset Password', TE: 'పాస్‌వర్డ్ రీసెట్ చేయండి' },
+  'fp.sub': {
+    EN: "Enter your email address and we'll send you a link to reset your password.",
+    TE: 'మీ ఇమెయిల్ చిరునామా నమోదు చేయండి, పాస్‌వర్డ్ రీసెట్ చేయడానికి లింక్ పంపుతాం.',
+  },
+  'fp.send': { EN: 'Send Reset Link', TE: 'రీసెట్ లింక్ పంపండి' },
+  'fp.back_login': { EN: '← Back to Login', TE: '← లాగిన్‌కు తిరిగి' },
+  'fp.check_title': { EN: 'Check your email', TE: 'మీ ఇమెయిల్ తనిఖీ చేయండి' },
+  'fp.check_pre': { EN: "We've sent a password reset link to ", TE: 'మేము పాస్‌వర్డ్ రీసెట్ లింక్‌ను పంపాము ' },
+  'fp.check_post': { EN: '. Please check your inbox and spam folder.', TE: ' కు. దయచేసి మీ ఇన్‌బాక్స్, స్పామ్ ఫోల్డర్ తనిఖీ చేయండి.' },
+  'fp.return': { EN: 'Return to Login', TE: 'లాగిన్‌కు తిరిగి వెళ్లండి' },
 };
 
 const TE_FALLBACK_CACHE = new Map();

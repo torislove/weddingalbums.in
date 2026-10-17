@@ -5,8 +5,10 @@ import { LogOut, Save } from 'lucide-react';
 import Toast from '../components/Toast';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
 import { API } from '../apiConfig';
+import { useT } from '../context/LanguageContext';
 
 const ProfileSettings = () => {
+  const t = useT();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -39,12 +41,12 @@ const ProfileSettings = () => {
         body: JSON.stringify(formData)
       });
       if (res.ok) {
-        setToast('Profile updated successfully!');
+        setToast(t('prof.toast_ok'));
       } else {
-        setToast('Profile changes saved.');
+        setToast(t('prof.toast_saved'));
       }
     } catch {
-      setToast('Profile changes saved.');
+      setToast(t('prof.toast_saved'));
     } finally {
       setLoading(false);
     }
@@ -60,53 +62,53 @@ const ProfileSettings = () => {
 
   return (
     <div className="dashboard-page">
-      <h2>Profile & Settings</h2>
+      <h2>{t('prof.title')}</h2>
       
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(16px, 3vw, 30px)', border: '1px solid rgba(255,255,255,0.08)', maxWidth: '800px' }}>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
             <div className="form-group premium-input-group">
-              <label>Full Name</label>
+              <label>{t('prof.full_name')}</label>
               <input type="text" name="name" value={formData.name} onChange={handleChange} required />
             </div>
             
             <div className="form-group premium-input-group">
-              <label>Email Address</label>
+              <label>{t('prof.email')}</label>
               <input type="email" value={user?.email || ''} disabled style={{ opacity: 0.5 }} />
-              <small style={{ color: 'var(--text-muted)' }}>Email cannot be changed.</small>
+              <small style={{ color: 'var(--text-muted)' }}>{t('prof.email_locked')}</small>
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
             <div className="form-group premium-input-group">
-              <label>Phone Number</label>
+              <label>{t('prof.phone')}</label>
               <input type="tel" name="phone" value={formData.phone} onChange={handleChange} />
             </div>
             
             <div className="form-group premium-input-group">
-              <label>City</label>
+              <label>{t('prof.city')}</label>
               <input type="text" name="city" value={formData.city} onChange={handleChange} />
             </div>
           </div>
 
-          <h3 style={{ marginTop: '16px', marginBottom: '6px', color: 'var(--primary)', fontSize: '1.2rem' }}>Wedding Details</h3>
+          <h3 style={{ marginTop: '16px', marginBottom: '6px', color: 'var(--primary)', fontSize: '1.2rem' }}>{t('prof.wedding_details')}</h3>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '16px' }}>
             <div className="form-group premium-input-group">
-              <label>Couple Names</label>
-              <input type="text" name="coupleNames" value={formData.coupleNames} onChange={handleChange} placeholder="e.g. Ram & Sita" />
+              <label>{t('prof.couple_names')}</label>
+              <input type="text" name="coupleNames" value={formData.coupleNames} onChange={handleChange} placeholder={t('prof.couple_ph')} />
             </div>
             
             <div className="form-group premium-input-group">
-              <label>Wedding Date</label>
+              <label>{t('prof.wedding_date')}</label>
               <input type="date" name="weddingDate" value={formData.weddingDate} onChange={handleChange} />
             </div>
           </div>
 
           <div style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
             <button type="submit" className="btn btn-gold-3d" disabled={loading} style={{ minWidth: '160px', padding: '12px 24px' }}>
-              {loading ? 'Saving...' : 'Save Changes'}
+              {loading ? t('prof.saving') : t('prof.save')}
             </button>
           </div>
         </form>
@@ -115,8 +117,8 @@ const ProfileSettings = () => {
       {/* Account Session & Sign Out */}
       <div style={{ marginTop: '24px', background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(16px, 3vw, 24px)', border: '1px solid rgba(239,68,68,0.2)', maxWidth: '800px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h4 style={{ margin: '0 0 4px 0', color: '#f87171', fontSize: '1rem' }}>Account Session</h4>
-          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.85rem' }}>Sign out of your client portal session on this device.</p>
+          <h4 style={{ margin: '0 0 4px 0', color: '#f87171', fontSize: '1rem' }}>{t('prof.session')}</h4>
+          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.85rem' }}>{t('prof.session_sub')}</p>
         </div>
         <button 
           type="button" 
@@ -124,7 +126,7 @@ const ProfileSettings = () => {
           className="btn btn-outline"
           style={{ borderColor: 'rgba(239,68,68,0.4)', color: '#f87171', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', fontSize: '0.88rem', cursor: 'pointer' }}
         >
-          <LogOut size={16} /> Sign Out
+          <LogOut size={16} /> {t('cdash.sign_out')}
         </button>
       </div>
       
@@ -133,9 +135,9 @@ const ProfileSettings = () => {
       <ConfirmDialog
         open={confirmLogout}
         tone="danger"
-        title="Sign out?"
-        message="You will be signed out of your client portal session on this device."
-        confirmLabel="Sign out"
+        title={t('prof.confirm_title')}
+        message={t('prof.confirm_msg')}
+        confirmLabel={t('prof.confirm_btn')}
         onConfirm={doLogout}
         onCancel={() => setConfirmLogout(false)}
       />
