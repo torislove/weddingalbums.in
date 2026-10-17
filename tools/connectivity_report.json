@@ -1,0 +1,2228 @@
+{
+  "generatedAt": "2026-10-16T15:13:21.229Z",
+  "mounts": [
+    {
+      "prefix": "/api/auth",
+      "routerVar": "authRouter",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "prefix": "/api/admin",
+      "routerVar": "adminRouter",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "prefix": "/api/b2b",
+      "routerVar": "b2bRouter",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "prefix": "/api/editor",
+      "routerVar": "editorRouter",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "prefix": "/api/client",
+      "routerVar": "clientRouter",
+      "file": "server/routes/client.js"
+    },
+    {
+      "prefix": "/api/public",
+      "routerVar": "publicRouter",
+      "file": "server/routes/public.js"
+    },
+    {
+      "prefix": "/api/builder",
+      "routerVar": "publicRouter",
+      "file": "server/routes/public.js"
+    },
+    {
+      "prefix": "/api",
+      "routerVar": "contentRouter",
+      "file": "server/routes/content.js"
+    },
+    {
+      "prefix": "/api",
+      "routerVar": "publicRouter",
+      "file": "server/routes/public.js"
+    }
+  ],
+  "routes": [
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/register",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/login",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/refresh",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/logout",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/send-otp",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/verify-otp",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/login-with-otp",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/firebase-login",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/forgot-password",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/auth",
+      "path": "/reset-password",
+      "guard": "PUBLIC",
+      "file": "server/routes/auth.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/stats",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/users",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/users/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/admin",
+      "path": "/users/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/orders",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/orders/:id/transition",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/orders/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/payouts",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/payouts/:id/approve",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/payouts/:id/reject",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/jobs/pending-qc",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/jobs/:id/approve",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/jobs/:id/reject",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PATCH",
+      "mount": "/api/admin",
+      "path": "/jobs/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/jobs/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/audit-logs",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/jobs",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/packages",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/packages",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/packages/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/admin",
+      "path": "/packages/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/services|/builder/services",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/services|/builder/services",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/services/:id|/builder/services/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/admin",
+      "path": "/services/:id|/builder/services/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/sheets|/builder/sheets",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/sheets|/builder/sheets",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/sheets/:id|/builder/sheets/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/admin",
+      "path": "/sheets/:id|/builder/sheets/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/album-sizes|/builder/album-sizes",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/album-sizes|/builder/album-sizes",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/album-sizes/:id|/builder/album-sizes/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/admin",
+      "path": "/album-sizes/:id|/builder/album-sizes/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/services|/builder/services",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/services|/builder/services",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/services/:id|/builder/services/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/admin",
+      "path": "/services/:id|/builder/services/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/packages|/builder/packages",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/admin",
+      "path": "/packages|/builder/packages",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/admin",
+      "path": "/packages/:id|/builder/packages/:id",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/admin",
+      "path": "/configs",
+      "guard": "admin|sysadmin|content_admin",
+      "file": "server/routes/admin.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/b2b",
+      "path": "/jobs",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/jobs",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/jobs/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/albums",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/invoices",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/wallet",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/b2b",
+      "path": "/payout-request",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/analytics",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/b2b",
+      "path": "/referral",
+      "guard": "PUBLIC",
+      "file": "server/routes/b2b.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/editor",
+      "path": "/available-jobs",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/editor",
+      "path": "/claim-job/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/editor",
+      "path": "/my-jobs",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/editor",
+      "path": "/submit-job/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/editor",
+      "path": "/stats",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/editor",
+      "path": "/payout",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/editor",
+      "path": "/payout-request",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/editor",
+      "path": "/payouts",
+      "guard": "PUBLIC",
+      "file": "server/routes/editor.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/client",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/client.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/client",
+      "path": "/orders/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/client.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/client",
+      "path": "/projects",
+      "guard": "PUBLIC",
+      "file": "server/routes/client.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/client",
+      "path": "/profile",
+      "guard": "PUBLIC",
+      "file": "server/routes/client.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/client",
+      "path": "/profile",
+      "guard": "PUBLIC",
+      "file": "server/routes/client.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/client",
+      "path": "/referral",
+      "guard": "PUBLIC",
+      "file": "server/routes/client.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/packages",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/services",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/sheets",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/album-sizes",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/muhurtham",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/orders/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/orders/:id/invoice",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/tasks",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "PATCH",
+      "mount": "/api/public",
+      "path": "/tasks/:id",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/public",
+      "path": "/tasks/:id",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/tasks",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/projects",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/projects",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/public",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/pay/create-order",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/pay/verify",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/pay/webhook",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/configs|/admin/configs",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/contact",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/calculate-eta",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/public",
+      "path": "/whatsapp-lead",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/portfolio",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/public",
+      "path": "/testimonials",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/packages",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/services",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/sheets",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/album-sizes",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/muhurtham",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/orders/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/orders/:id/invoice",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/tasks",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "PATCH",
+      "mount": "/api/builder",
+      "path": "/tasks/:id",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api/builder",
+      "path": "/tasks/:id",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/tasks",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/projects",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/projects",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api/builder",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/pay/create-order",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/pay/verify",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/pay/webhook",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/configs|/admin/configs",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/contact",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/calculate-eta",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api/builder",
+      "path": "/whatsapp-lead",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/portfolio",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api/builder",
+      "path": "/testimonials",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/content",
+      "guard": "PUBLIC",
+      "file": "server/routes/content.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/content",
+      "guard": "content_admin|admin|sysadmin",
+      "file": "server/routes/content.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/content/history",
+      "guard": "content_admin|admin|sysadmin",
+      "file": "server/routes/content.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/upload",
+      "guard": "content_admin|admin|sysadmin",
+      "file": "server/routes/content.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/images",
+      "guard": "PUBLIC",
+      "file": "server/routes/content.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/images/add-url",
+      "guard": "content_admin|admin|sysadmin",
+      "file": "server/routes/content.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/packages",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/services",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/sheets",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/album-sizes",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/muhurtham",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/orders",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/orders/:id",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/orders/:id/invoice",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/tasks",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "PATCH",
+      "mount": "/api",
+      "path": "/tasks/:id",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "PUT",
+      "mount": "/api",
+      "path": "/tasks/:id",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/tasks",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/projects",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/projects",
+      "guard": "staff(b2b,editor,admin,sysadmin)",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "DELETE",
+      "mount": "/api",
+      "path": "/cart",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/pay/create-order",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/pay/verify",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/pay/webhook",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/configs|/admin/configs",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/contact",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/calculate-eta",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "POST",
+      "mount": "/api",
+      "path": "/whatsapp-lead",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/portfolio",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    },
+    {
+      "method": "GET",
+      "mount": "/api",
+      "path": "/testimonials",
+      "guard": "PUBLIC",
+      "file": "server/routes/public.js"
+    }
+  ],
+  "appRoutes": [
+    {
+      "method": "GET",
+      "mount": "",
+      "path": "/api/health",
+      "guard": "app-level",
+      "file": "server/index.js"
+    },
+    {
+      "method": "GET",
+      "mount": "",
+      "path": "/health",
+      "guard": "app-level",
+      "file": "server/index.js"
+    },
+    {
+      "method": "GET",
+      "mount": "",
+      "path": "/api/events/stream",
+      "guard": "app-level",
+      "file": "server/index.js"
+    }
+  ],
+  "appRefs": [
+    {
+      "app": "client",
+      "file": "client/src/components/LoginModal.jsx",
+      "line": 25,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/components/LoginModal.jsx",
+      "line": 25,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/components/PackageSection.jsx",
+      "line": 23,
+      "path": "/api/packages",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 41,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 60,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 76,
+      "path": "/api/auth/send-otp",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 88,
+      "path": "/api/auth/verify-otp",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 100,
+      "path": "/api/auth/login-with-otp",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 115,
+      "path": "/api/auth/firebase-login",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 136,
+      "path": "/api/auth/forgot-password",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 148,
+      "path": "/api/auth/reset-password",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 160,
+      "path": "/api/auth/logout",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/AuthContext.jsx",
+      "line": 185,
+      "path": "/api/auth/refresh",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/CartContext.jsx",
+      "line": 26,
+      "path": "/api/cart",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/CartContext.jsx",
+      "line": 48,
+      "path": "/api/cart",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/ContentContext.jsx",
+      "line": 43,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/ContentContext.jsx",
+      "line": 86,
+      "path": "/api/builder/album-sizes",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/ContentContext.jsx",
+      "line": 87,
+      "path": "/api/builder/sheets",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/context/ContentContext.jsx",
+      "line": 88,
+      "path": "/api/builder/services",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/lib/packages.js",
+      "line": 143,
+      "path": "/api/packages",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 55,
+      "path": "/api/builder/album-sizes",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 56,
+      "path": "/api/builder/sheets",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 57,
+      "path": "/api/builder/services",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 58,
+      "path": "/api/packages",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 1038,
+      "path": "/api/orders",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 1047,
+      "path": "/api/cart",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/BookingPage.jsx",
+      "line": 1063,
+      "path": "/api/whatsapp-lead",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/Checkout.jsx",
+      "line": 25,
+      "path": "/api/pay/create-order",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/Checkout.jsx",
+      "line": 50,
+      "path": "/api/pay/verify",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/Checkout.jsx",
+      "line": 67,
+      "path": "/api/orders",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientDashboard.jsx",
+      "line": 199,
+      "path": "/api/orders/:p/invoice",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientDashboard.jsx",
+      "line": 226,
+      "path": "/api/client/profile",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientDashboard.jsx",
+      "line": 236,
+      "path": "/api/orders",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientProofing.jsx",
+      "line": 17,
+      "path": "/api/orders/:p",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientProofing.jsx",
+      "line": 32,
+      "path": "/api/orders/:p",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientReferral.jsx",
+      "line": 18,
+      "path": "/api/client/referral",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ClientWallet.jsx",
+      "line": 15,
+      "path": "/api/client/profile",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/Contact.jsx",
+      "line": 46,
+      "path": "/api/contact",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/EditorDashboard.jsx",
+      "line": 28,
+      "path": "/api/tasks",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/EditorDashboard.jsx",
+      "line": 38,
+      "path": "/api/editor/stats",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/EditorDashboard.jsx",
+      "line": 52,
+      "path": "/api/editor/payout-request",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/EditorDashboard.jsx",
+      "line": 74,
+      "path": "/api/tasks/:p",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/MuhurthamCalendar.jsx",
+      "line": 17,
+      "path": "/api/muhurtham",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/OrderHistory.jsx",
+      "line": 20,
+      "path": "/api/orders",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/OrderHistory.jsx",
+      "line": 256,
+      "path": "/api/orders",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/OrderTracking.jsx",
+      "line": 19,
+      "path": "/api/orders/:p",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/PhotographerDashboard.jsx",
+      "line": 39,
+      "path": "/api/projects",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/PhotographerDashboard.jsx",
+      "line": 60,
+      "path": "/api/upload",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/PhotographerDashboard.jsx",
+      "line": 88,
+      "path": "/api/projects",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/PhotographerDashboard.jsx",
+      "line": 105,
+      "path": "/api/tasks",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/pages/ProfileSettings.jsx",
+      "line": 33,
+      "path": "/api/client/profile",
+      "absolute": false
+    },
+    {
+      "app": "client",
+      "file": "client/src/utils/apiClient.js",
+      "line": 79,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/context/AuthContext.jsx",
+      "line": 34,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/context/AuthContext.jsx",
+      "line": 50,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/context/AuthContext.jsx",
+      "line": 67,
+      "path": "/api/auth/logout",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/context/AuthContext.jsx",
+      "line": 76,
+      "path": "/api/auth/refresh",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/AlbumOrders.jsx",
+      "line": 24,
+      "path": "/api/b2b/albums",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/B2BDashboard.jsx",
+      "line": 21,
+      "path": "/api/b2b/jobs",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/B2BDashboard.jsx",
+      "line": 22,
+      "path": "/api/b2b/wallet",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/B2BLogin.jsx",
+      "line": 67,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/B2BRegister.jsx",
+      "line": 80,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/BusinessAnalytics.jsx",
+      "line": 15,
+      "path": "/api/b2b/jobs",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/Invoices.jsx",
+      "line": 15,
+      "path": "/api/b2b/invoices",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/JobHistory.jsx",
+      "line": 16,
+      "path": "/api/b2b/jobs",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/SubmitJob.jsx",
+      "line": 311,
+      "path": "/api/b2b/jobs",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/Wallet.jsx",
+      "line": 21,
+      "path": "/api/b2b/wallet",
+      "absolute": false
+    },
+    {
+      "app": "b2b-portal",
+      "file": "b2b-portal/src/pages/Wallet.jsx",
+      "line": 47,
+      "path": "/api/b2b/payout-request",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/context/AuthContext.jsx",
+      "line": 34,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/context/AuthContext.jsx",
+      "line": 50,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/context/AuthContext.jsx",
+      "line": 67,
+      "path": "/api/auth/logout",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/context/AuthContext.jsx",
+      "line": 76,
+      "path": "/api/auth/refresh",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/Earnings.jsx",
+      "line": 26,
+      "path": "/api/editor/stats",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/Earnings.jsx",
+      "line": 54,
+      "path": "/api/editor/payout",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/EditorDashboard.jsx",
+      "line": 26,
+      "path": "/api/editor/stats",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/EditorDashboard.jsx",
+      "line": 27,
+      "path": "/api/editor/my-jobs",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/EditorLogin.jsx",
+      "line": 93,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/EditorLogin.jsx",
+      "line": 124,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/EditorRegister.jsx",
+      "line": 75,
+      "path": "/api/auth/register",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/Rating.jsx",
+      "line": 21,
+      "path": "/api/editor/stats",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/TaskQueue.jsx",
+      "line": 32,
+      "path": "/api/editor/available-jobs",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/TaskQueue.jsx",
+      "line": 33,
+      "path": "/api/editor/my-jobs",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/TaskQueue.jsx",
+      "line": 59,
+      "path": "/api/editor/claim-job/:p",
+      "absolute": false
+    },
+    {
+      "app": "editor-portal",
+      "file": "editor-portal/src/pages/TaskQueue.jsx",
+      "line": 86,
+      "path": "/api/editor/submit-job/:p",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/context/AuthContext.jsx",
+      "line": 42,
+      "path": "/api/auth/logout",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/context/AuthContext.jsx",
+      "line": 54,
+      "path": "/api/auth/refresh",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/AdminLogin.jsx",
+      "line": 68,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/AuditLogs.jsx",
+      "line": 33,
+      "path": "/api/admin/audit-logs",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Dashboard.jsx",
+      "line": 18,
+      "path": "/api/admin/stats",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Editors.jsx",
+      "line": 13,
+      "path": "/api/admin/users",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/JobQC.jsx",
+      "line": 30,
+      "path": "/api/admin/jobs",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/JobQC.jsx",
+      "line": 54,
+      "path": "/api/admin/jobs/:p/:p",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/OrderManager.jsx",
+      "line": 20,
+      "path": "/api/admin/orders",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/OrderManager.jsx",
+      "line": 44,
+      "path": "/api/admin/orders/:p/transition",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Payouts.jsx",
+      "line": 19,
+      "path": "/api/admin/payouts",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Payouts.jsx",
+      "line": 46,
+      "path": "/api/admin/payouts/:p/:p",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 55,
+      "path": "/api/builder/services",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 56,
+      "path": "/api/builder/sheets",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 57,
+      "path": "/api/admin/packages",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 58,
+      "path": "/api/builder/album-sizes",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 59,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 94,
+      "path": "/api/admin/builder/services",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 95,
+      "path": "/api/admin/builder/album-sizes",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 96,
+      "path": "/api/admin/builder/sheets",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 97,
+      "path": "/api/admin/packages",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 140,
+      "path": "/api/admin/builder/services",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 141,
+      "path": "/api/admin/builder/album-sizes",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 142,
+      "path": "/api/admin/builder/sheets",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/PricingEngine.jsx",
+      "line": 143,
+      "path": "/api/admin/packages",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Settings.jsx",
+      "line": 11,
+      "path": "/api/pay/webhook",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Settings.jsx",
+      "line": 16,
+      "path": "/api/health",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Settings.jsx",
+      "line": 17,
+      "path": "/api/public/packages",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Settings.jsx",
+      "line": 18,
+      "path": "/api/public/configs",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Settings.jsx",
+      "line": 19,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/Settings.jsx",
+      "line": 28,
+      "path": "/api/health",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/TaskBoard.jsx",
+      "line": 24,
+      "path": "/api/admin/jobs",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/TaskBoard.jsx",
+      "line": 36,
+      "path": "/api/admin/orders",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/TaskBoard.jsx",
+      "line": 46,
+      "path": "/api/admin/users",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/TaskBoard.jsx",
+      "line": 60,
+      "path": "/api/admin/jobs/:p",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/TaskBoard.jsx",
+      "line": 240,
+      "path": "/api/admin/orders",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/UserManager.jsx",
+      "line": 20,
+      "path": "/api/admin/users",
+      "absolute": false
+    },
+    {
+      "app": "sysadmin",
+      "file": "sysadmin/src/pages/UserManager.jsx",
+      "line": 43,
+      "path": "/api/admin/users/:p",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/App.jsx",
+      "line": 58,
+      "path": "/api/auth/logout",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/App.jsx",
+      "line": 69,
+      "path": "/api/auth/refresh",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/components/ImagePickerModal.jsx",
+      "line": 22,
+      "path": "/api/images",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/components/ImagePickerModal.jsx",
+      "line": 57,
+      "path": "/api/upload",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/hooks/useAdminContent.js",
+      "line": 62,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/hooks/useAdminContent.js",
+      "line": 170,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/AdminLogin.jsx",
+      "line": 43,
+      "path": "/api/auth/login",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/CalendarEditor.jsx",
+      "line": 57,
+      "path": "/api/muhurtham",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/Dashboard.jsx",
+      "line": 14,
+      "path": "/api/admin/stats",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/History.jsx",
+      "line": 17,
+      "path": "/api/auth/refresh",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/History.jsx",
+      "line": 64,
+      "path": "/api/content/history",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/History.jsx",
+      "line": 91,
+      "path": "/api/content",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/MediaLibrary.jsx",
+      "line": 23,
+      "path": "/api/images",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/MediaLibrary.jsx",
+      "line": 65,
+      "path": "/api/upload",
+      "absolute": false
+    },
+    {
+      "app": "uiadmin",
+      "file": "uiadmin/src/pages/MediaLibrary.jsx",
+      "line": 100,
+      "path": "/api/images/add-url",
+      "absolute": false
+    }
+  ],
+  "unmatched": [],
+  "unusedRoutes": [
+    "/api/admin/album-sizes",
+    "/api/admin/album-sizes/:p",
+    "/api/admin/builder/album-sizes/:p",
+    "/api/admin/builder/packages",
+    "/api/admin/builder/packages/:p",
+    "/api/admin/builder/services/:p",
+    "/api/admin/builder/sheets/:p",
+    "/api/admin/configs",
+    "/api/admin/orders/:p",
+    "/api/admin/packages/:p",
+    "/api/admin/services",
+    "/api/admin/services/:p",
+    "/api/admin/sheets",
+    "/api/admin/sheets/:p",
+    "/api/album-sizes",
+    "/api/b2b/analytics",
+    "/api/b2b/jobs/:p",
+    "/api/b2b/referral",
+    "/api/builder/admin/configs",
+    "/api/builder/calculate-eta",
+    "/api/builder/cart",
+    "/api/builder/configs",
+    "/api/builder/contact",
+    "/api/builder/muhurtham",
+    "/api/builder/orders",
+    "/api/builder/orders/:p",
+    "/api/builder/orders/:p/invoice",
+    "/api/builder/packages",
+    "/api/builder/pay/create-order",
+    "/api/builder/pay/verify",
+    "/api/builder/pay/webhook",
+    "/api/builder/portfolio",
+    "/api/builder/projects",
+    "/api/builder/tasks",
+    "/api/builder/tasks/:p",
+    "/api/builder/testimonials",
+    "/api/builder/whatsapp-lead",
+    "/api/calculate-eta",
+    "/api/client/orders",
+    "/api/client/orders/:p",
+    "/api/client/projects",
+    "/api/configs",
+    "/api/editor/payouts",
+    "/api/events/stream",
+    "/api/portfolio",
+    "/api/public/admin/configs",
+    "/api/public/album-sizes",
+    "/api/public/calculate-eta",
+    "/api/public/cart",
+    "/api/public/contact",
+    "/api/public/muhurtham",
+    "/api/public/orders",
+    "/api/public/orders/:p",
+    "/api/public/orders/:p/invoice",
+    "/api/public/pay/create-order",
+    "/api/public/pay/verify",
+    "/api/public/pay/webhook",
+    "/api/public/portfolio",
+    "/api/public/projects",
+    "/api/public/services",
+    "/api/public/sheets",
+    "/api/public/tasks",
+    "/api/public/tasks/:p",
+    "/api/public/testimonials",
+    "/api/public/whatsapp-lead",
+    "/api/services",
+    "/api/sheets",
+    "/api/testimonials",
+    "/health"
+  ]
+}

@@ -1,0 +1,1482 @@
+{
+  "generatedAt": "2026-10-16T10:59:48.716Z",
+  "quality": 82,
+  "widths": [
+    800,
+    1600,
+    2400
+  ],
+  "avif": false,
+  "files": [
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow800.webp",
+      "width": 800,
+      "bytes": 76610
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow1600.webp",
+      "width": 1600,
+      "bytes": 199754
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow2400.webp",
+      "width": 1672,
+      "bytes": 212518
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw800.webp",
+      "width": 800,
+      "bytes": 108794
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw1600.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw2400.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw800.webp",
+      "width": 800,
+      "bytes": 192482
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw1600.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "client",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw2400.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "client",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw800.webp",
+      "width": 800,
+      "bytes": 131638
+    },
+    {
+      "app": "client",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw1600.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "client",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw2400.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "client",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw800.webp",
+      "width": 800,
+      "bytes": 166560
+    },
+    {
+      "app": "client",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw1600.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "client",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw2400.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "client",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw800.webp",
+      "width": 800,
+      "bytes": 188076
+    },
+    {
+      "app": "client",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw1600.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "client",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw2400.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "client",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw800.webp",
+      "width": 800,
+      "bytes": 162698
+    },
+    {
+      "app": "client",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw1600.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "client",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw2400.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "client",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw800.webp",
+      "width": 800,
+      "bytes": 127598
+    },
+    {
+      "app": "client",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw1600.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "client",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw2400.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "client",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww800.webp",
+      "width": 800,
+      "bytes": 122868
+    },
+    {
+      "app": "client",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww1600.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "client",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww2400.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "client",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw800.webp",
+      "width": 800,
+      "bytes": 69884
+    },
+    {
+      "app": "client",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw1600.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "client",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw2400.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "client",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw800.webp",
+      "width": 800,
+      "bytes": 63072
+    },
+    {
+      "app": "client",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw1600.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "client",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw2400.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "client",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw800.webp",
+      "width": 800,
+      "bytes": 41868
+    },
+    {
+      "app": "client",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw1600.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "client",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw2400.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "client",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew800.webp",
+      "width": 800,
+      "bytes": 50502
+    },
+    {
+      "app": "client",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew1600.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "client",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew2400.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "client",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw800.webp",
+      "width": 800,
+      "bytes": 71038
+    },
+    {
+      "app": "client",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw1600.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "client",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw2400.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow800.webp",
+      "width": 800,
+      "bytes": 76610
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow1600.webp",
+      "width": 1600,
+      "bytes": 199754
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow2400.webp",
+      "width": 1672,
+      "bytes": 212518
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw800.webp",
+      "width": 800,
+      "bytes": 108794
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw1600.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw2400.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw800.webp",
+      "width": 800,
+      "bytes": 192482
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw1600.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw2400.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw800.webp",
+      "width": 800,
+      "bytes": 131638
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw1600.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw2400.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw800.webp",
+      "width": 800,
+      "bytes": 166560
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw1600.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw2400.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw800.webp",
+      "width": 800,
+      "bytes": 188076
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw1600.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw2400.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw800.webp",
+      "width": 800,
+      "bytes": 162698
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw1600.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw2400.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw800.webp",
+      "width": 800,
+      "bytes": 127598
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw1600.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw2400.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww800.webp",
+      "width": 800,
+      "bytes": 122868
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww1600.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww2400.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw800.webp",
+      "width": 800,
+      "bytes": 69884
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw1600.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw2400.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw800.webp",
+      "width": 800,
+      "bytes": 63072
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw1600.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw2400.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw800.webp",
+      "width": 800,
+      "bytes": 41868
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw1600.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw2400.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew800.webp",
+      "width": 800,
+      "bytes": 50502
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew1600.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew2400.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw800.webp",
+      "width": 800,
+      "bytes": 71038
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw1600.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "b2b-portal",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw2400.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow800.webp",
+      "width": 800,
+      "bytes": 76610
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow1600.webp",
+      "width": 1600,
+      "bytes": 199754
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow2400.webp",
+      "width": 1672,
+      "bytes": 212518
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw800.webp",
+      "width": 800,
+      "bytes": 108794
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw1600.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw2400.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw800.webp",
+      "width": 800,
+      "bytes": 192482
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw1600.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw2400.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw800.webp",
+      "width": 800,
+      "bytes": 131638
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw1600.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw2400.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw800.webp",
+      "width": 800,
+      "bytes": 166560
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw1600.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw2400.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw800.webp",
+      "width": 800,
+      "bytes": 188076
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw1600.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw2400.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw800.webp",
+      "width": 800,
+      "bytes": 162698
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw1600.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw2400.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw800.webp",
+      "width": 800,
+      "bytes": 127598
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw1600.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw2400.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww800.webp",
+      "width": 800,
+      "bytes": 122868
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww1600.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww2400.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw800.webp",
+      "width": 800,
+      "bytes": 69884
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw1600.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw2400.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw800.webp",
+      "width": 800,
+      "bytes": 63072
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw1600.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw2400.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw800.webp",
+      "width": 800,
+      "bytes": 41868
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw1600.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw2400.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew800.webp",
+      "width": 800,
+      "bytes": 50502
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew1600.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew2400.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw800.webp",
+      "width": 800,
+      "bytes": 71038
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw1600.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "editor-portal",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw2400.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow800.webp",
+      "width": 800,
+      "bytes": 76610
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow1600.webp",
+      "width": 1600,
+      "bytes": 199754
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow2400.webp",
+      "width": 1672,
+      "bytes": 212518
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw800.webp",
+      "width": 800,
+      "bytes": 108794
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw1600.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw2400.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw800.webp",
+      "width": 800,
+      "bytes": 192482
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw1600.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw2400.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw800.webp",
+      "width": 800,
+      "bytes": 131638
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw1600.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw2400.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw800.webp",
+      "width": 800,
+      "bytes": 166560
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw1600.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw2400.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw800.webp",
+      "width": 800,
+      "bytes": 188076
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw1600.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw2400.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw800.webp",
+      "width": 800,
+      "bytes": 162698
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw1600.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw2400.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw800.webp",
+      "width": 800,
+      "bytes": 127598
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw1600.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw2400.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww800.webp",
+      "width": 800,
+      "bytes": 122868
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww1600.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww2400.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw800.webp",
+      "width": 800,
+      "bytes": 69884
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw1600.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw2400.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw800.webp",
+      "width": 800,
+      "bytes": 63072
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw1600.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw2400.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw800.webp",
+      "width": 800,
+      "bytes": 41868
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw1600.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw2400.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew800.webp",
+      "width": 800,
+      "bytes": 50502
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew1600.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew2400.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw800.webp",
+      "width": 800,
+      "bytes": 71038
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw1600.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "sysadmin",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw2400.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow800.webp",
+      "width": 800,
+      "bytes": 76610
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow1600.webp",
+      "width": 1600,
+      "bytes": 199754
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-home-hero.png",
+      "to": "/images/opt/weddingalbums-home-herow2400.webp",
+      "width": 1672,
+      "bytes": 212518
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw800.webp",
+      "width": 800,
+      "bytes": 108794
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw1600.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-layflat-album.png",
+      "to": "/images/opt/weddingalbums-layflat-albumw2400.webp",
+      "width": 1448,
+      "bytes": 268586
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw800.webp",
+      "width": 800,
+      "bytes": 192482
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw1600.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/weddingalbums-talambralu.png",
+      "to": "/images/opt/weddingalbums-talambraluw2400.webp",
+      "width": 1122,
+      "bytes": 297062
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw800.webp",
+      "width": 800,
+      "bytes": 131638
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw1600.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/mangalya-dharana.png",
+      "to": "/images/opt/mangalya-dharanaw2400.webp",
+      "width": 1122,
+      "bytes": 198302
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw800.webp",
+      "width": 800,
+      "bytes": 166560
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw1600.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/appagintalu-farewell.png",
+      "to": "/images/opt/appagintalu-farewellw2400.webp",
+      "width": 1122,
+      "bytes": 263136
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw800.webp",
+      "width": 800,
+      "bytes": 188076
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw1600.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/saptapadi.png",
+      "to": "/images/opt/saptapadiw2400.webp",
+      "width": 1122,
+      "bytes": 291914
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw800.webp",
+      "width": 800,
+      "bytes": 162698
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw1600.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/family-blessings.png",
+      "to": "/images/opt/family-blessingsw2400.webp",
+      "width": 1122,
+      "bytes": 248884
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw800.webp",
+      "width": 800,
+      "bytes": 127598
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw1600.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bride-polished.jpg",
+      "to": "/images/opt/bride-polishedw2400.webp",
+      "width": 896,
+      "bytes": 158168
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww800.webp",
+      "width": 800,
+      "bytes": 122868
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww1600.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bride-raw.jpg",
+      "to": "/images/opt/bride-raww2400.webp",
+      "width": 896,
+      "bytes": 145886
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw800.webp",
+      "width": 800,
+      "bytes": 69884
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw1600.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/bridal.jpg",
+      "to": "/images/opt/bridalw2400.webp",
+      "width": 1000,
+      "bytes": 97422
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw800.webp",
+      "width": 800,
+      "bytes": 63072
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw1600.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/prewedding.jpg",
+      "to": "/images/opt/preweddingw2400.webp",
+      "width": 1000,
+      "bytes": 87036
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw800.webp",
+      "width": 800,
+      "bytes": 41868
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw1600.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/cinematic.jpg",
+      "to": "/images/opt/cinematicw2400.webp",
+      "width": 1000,
+      "bytes": 55472
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew800.webp",
+      "width": 800,
+      "bytes": 50502
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew1600.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/cinematic-video-suite.jpg",
+      "to": "/images/opt/cinematic-video-suitew2400.webp",
+      "width": 1376,
+      "bytes": 116750
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw800.webp",
+      "width": 800,
+      "bytes": 71038
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw1600.webp",
+      "width": 1376,
+      "bytes": 162134
+    },
+    {
+      "app": "uiadmin",
+      "from": "/images/luxury-album-craftsmanship.jpg",
+      "to": "/images/opt/luxury-album-craftsmanshipw2400.webp",
+      "width": 1376,
+      "bytes": 162134
+    }
+  ]
+}
