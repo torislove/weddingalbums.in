@@ -101,7 +101,7 @@ export default function HubCatalogEditor({ adminState }) {
           <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--paper)', margin: 0 }}>
             Hub Services, Sheet Styles & Indian Market Sizes
           </h1>
-          <p style={{ fontSize: 13, color: '#94a3b8', margin: '4px 0 0 0' }}>
+          <p style={{ fontSize: 13, color: 'var(--n-400)', margin: '4px 0 0 0' }}>
             Configure client retail rates, studio wholesale rates, and orientation hierarchies synced live across all 5 portals.
           </p>
         </div>
@@ -114,7 +114,7 @@ export default function HubCatalogEditor({ adminState }) {
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '10px 20px', borderRadius: 10, border: 'none',
             background: isDirty && !saving ? 'linear-gradient(135deg, var(--warn), #d97706)' : 'rgba(255,255,255,0.06)',
-            color: isDirty && !saving ? '#000' : 'rgba(255,255,255,0.3)',
+            color: isDirty && !saving ? 'var(--n-1000)' : 'rgba(255,255,255,0.3)',
             fontWeight: 700, fontSize: 13, cursor: isDirty && !saving ? 'pointer' : 'not-allowed',
             transition: 'all 0.2s', boxShadow: isDirty && !saving ? '0 4px 16px rgba(245,158,11,0.3)' : 'none'
           }}
@@ -140,7 +140,7 @@ export default function HubCatalogEditor({ adminState }) {
         background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.22)'
       }}>
         <AlertCircle size={16} style={{ color: 'var(--warn)', flexShrink: 0, marginTop: 2 }} />
-        <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.55, color: '#cbd5e1' }}>
+        <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.55, color: 'var(--n-300)' }}>
           <strong style={{ color: 'var(--warn)' }}>Two ways to set prices — you win.</strong> What you publish
           here (<strong>CMS Studio</strong>) is the live catalog the couple estimator reads, and your value
           is authoritative. <strong> SysAdmin → Pricing Engine</strong> builder rows can also set prices,
@@ -164,7 +164,7 @@ export default function HubCatalogEditor({ adminState }) {
             style={{
               padding: '8px 16px', borderRadius: 8, border: 'none',
               background: activeTab === t.id ? 'rgba(245,158,11,0.15)' : 'transparent',
-              color: activeTab === t.id ? 'var(--warn)' : '#94a3b8',
+              color: activeTab === t.id ? 'var(--warn)' : 'var(--n-400)',
               fontWeight: activeTab === t.id ? 700 : 500,
               fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap',
               borderBottom: activeTab === t.id ? '2px solid var(--warn)' : '2px solid transparent'
@@ -186,7 +186,7 @@ export default function HubCatalogEditor({ adminState }) {
               const marginPercent = Math.round((studioMargin / retailRate) * 100);
 
               return (
-                <div key={sheet.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
+                <div key={sheet.id || idx} style={{ background: 'var(--n-950)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ width: 14, height: 14, borderRadius: '50%', background: sheet.color || 'var(--brand)', display: 'inline-block' }} />
@@ -199,7 +199,7 @@ export default function HubCatalogEditor({ adminState }) {
 
                   {/* Telugu Name */}
                   <div style={{ marginBottom: 12 }}>
-                    <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Telugu Name</label>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Telugu Name</label>
                     <input
                       type="text"
                       value={sheet.telugu || ''}
@@ -237,7 +237,7 @@ export default function HubCatalogEditor({ adminState }) {
                   {/* GSM & Texture */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Paper Weight & Core</label>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Paper Weight & Core</label>
                       <input
                         type="text"
                         value={sheet.gsm || ''}
@@ -246,7 +246,7 @@ export default function HubCatalogEditor({ adminState }) {
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Water Resistance</label>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Water Resistance</label>
                       <input
                         type="text"
                         value={sheet.waterResistance || ''}
@@ -258,12 +258,12 @@ export default function HubCatalogEditor({ adminState }) {
 
                   {/* Best For */}
                   <div>
-                    <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Recommended Ritual / Moments</label>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Recommended Ritual / Moments</label>
                     <input
                       type="text"
                       value={sheet.bestFor || ''}
                       onChange={e => updateSheetStyle(idx, 'bestFor', e.target.value)}
-                      style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#cbd5e1', fontSize: 12, boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--n-300)', fontSize: 12, boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
@@ -284,7 +284,7 @@ export default function HubCatalogEditor({ adminState }) {
               const marginPercent = Math.round((studioMargin / retailBase) * 100);
 
               return (
-                <div key={size.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
+                <div key={size.id || idx} style={{ background: 'var(--n-950)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <div>
                       <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--paper)' }}>{size.title}</span>
@@ -299,7 +299,7 @@ export default function HubCatalogEditor({ adminState }) {
 
                   {/* Open Spread Dimensions */}
                   <div style={{ marginBottom: 12 }}>
-                    <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Open Panoramic Spread</label>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Open Panoramic Spread</label>
                     <input
                       type="text"
                       value={size.openSpread || ''}
@@ -337,7 +337,7 @@ export default function HubCatalogEditor({ adminState }) {
                   {/* Orientation & Scale */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Orientation</label>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Orientation</label>
                       <select
                         value={size.orientation || 'landscape'}
                         onChange={e => updateAlbumSize(idx, 'orientation', e.target.value)}
@@ -350,7 +350,7 @@ export default function HubCatalogEditor({ adminState }) {
                       </select>
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Scale Category</label>
+                      <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Scale Category</label>
                       <select
                         value={size.scaleCategory || 'big'}
                         onChange={e => updateAlbumSize(idx, 'scaleCategory', e.target.value)}
@@ -379,7 +379,7 @@ export default function HubCatalogEditor({ adminState }) {
               const studioMargin = retailRate - studioRate;
 
               return (
-                <div key={v.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
+                <div key={v.id || idx} style={{ background: 'var(--n-950)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--paper)' }}>{v.title}</span>
                     <span style={{ fontSize: 11, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>
@@ -409,12 +409,12 @@ export default function HubCatalogEditor({ adminState }) {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Turnaround SLA</label>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Turnaround SLA</label>
                     <input
                       type="text"
                       value={v.turnaround || ''}
                       onChange={e => updateVideoService(idx, 'turnaround', e.target.value)}
-                      style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#cbd5e1', fontSize: 12, boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--n-300)', fontSize: 12, boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
@@ -434,7 +434,7 @@ export default function HubCatalogEditor({ adminState }) {
               const studioMargin = retailRate - studioRate;
 
               return (
-                <div key={f.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
+                <div key={f.id || idx} style={{ background: 'var(--n-950)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--paper)' }}>{f.title}</span>
                     <span style={{ fontSize: 11, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>
@@ -464,12 +464,12 @@ export default function HubCatalogEditor({ adminState }) {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: 11, color: '#94a3b8', marginBottom: 4, textTransform: 'uppercase' }}>Turnaround</label>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--n-400)', marginBottom: 4, textTransform: 'uppercase' }}>Turnaround</label>
                     <input
                       type="text"
                       value={f.turnaround || ''}
                       onChange={e => updateFlexItem(idx, 'turnaround', e.target.value)}
-                      style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#cbd5e1', fontSize: 12, boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: 'var(--n-300)', fontSize: 12, boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
@@ -484,17 +484,17 @@ export default function HubCatalogEditor({ adminState }) {
         <div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
             {catalog.bundles?.map((b, idx) => (
-              <div key={b.id || idx} style={{ background: '#0e0e12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
+              <div key={b.id || idx} style={{ background: 'var(--n-950)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--paper)' }}>{b.title}</span>
                   <span style={{ fontSize: 10, background: 'rgba(245,158,11,0.2)', color: 'var(--warn)', padding: '2px 7px', borderRadius: 99, fontWeight: 700 }}>
                     {b.badge}
                   </span>
                 </div>
-                <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.5, marginBottom: 12 }}>{b.desc}</p>
+                <p style={{ fontSize: 12, color: 'var(--n-400)', lineHeight: 1.5, marginBottom: 12 }}>{b.desc}</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {b.inclusions?.map((inc, iIdx) => (
-                    <div key={iIdx} style={{ fontSize: 11, color: '#cbd5e1', display: 'flex', gap: 6, alignItems: 'center' }}>
+                    <div key={iIdx} style={{ fontSize: 11, color: 'var(--n-300)', display: 'flex', gap: 6, alignItems: 'center' }}>
                       <span style={{ color: 'var(--warn)' }}>✓</span> <span>{inc}</span>
                     </div>
                   ))}

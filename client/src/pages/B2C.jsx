@@ -58,7 +58,7 @@ const B2C = () => {
       </section>
 
       {/* Dynamic Pricing Section */}
-      <section className="b2c-pricing-container" style={{ padding: '80px 0', backgroundColor: '#0a0a0a' }}>
+      <section className="b2c-pricing-container" style={{ padding: '80px 0', backgroundColor: 'var(--n-950)' }}>
         <PackageSection type="b2c" />
       </section>
 

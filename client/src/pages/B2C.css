@@ -74,7 +74,7 @@
 
 .b2c-subtitle {
   font-size: clamp(1rem, 2.5vw, 1.3rem);
-  color: #f3f4f6;
+  color: var(--n-100);
   font-weight: 300;
   max-width: 600px;
   margin: 0 auto 40px;
@@ -136,7 +136,7 @@
 }
 .b2c-interactive-content p {
   font-size: 1.2rem;
-  color: #d1d5db;
+  color: var(--n-300);
   font-weight: 300;
   line-height: 1.6;
   margin-bottom: 32px;
@@ -153,7 +153,7 @@
   gap: 16px;
   margin-bottom: 20px;
   font-size: 1.1rem;
-  color: #f3f4f6;
+  color: var(--n-100);
 }
 .b2c-check {
   width: 32px;
@@ -181,7 +181,7 @@
   text-align: center;
   margin-top: 24px;
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--n-400);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,7 +258,7 @@
   font-weight: 500;
 }
 .b2c-process-card p {
-  color: #9ca3af;
+  color: var(--n-400);
   font-weight: 300;
   line-height: 1.5;
 }
@@ -399,7 +399,7 @@
   color: var(--paper);
 }
 .b2c-quality-text p {
-  color: #9ca3af;
+  color: var(--n-400);
   font-size: 1.1rem;
   line-height: 1.8;
 }
@@ -444,7 +444,7 @@
   margin-bottom: 8px;
 }
 .b2c-sheet-card p {
-  color: #9ca3af;
+  color: var(--n-400);
   font-size: 0.95rem;
   line-height: 1.5;
 }

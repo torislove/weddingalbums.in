@@ -51,7 +51,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}
           >
             <Bell size={17} />
-            <span style={{ position: 'absolute', top: '6px', right: '6px', width: '7px', height: '7px', background: 'var(--danger)', borderRadius: '50%', border: '1.5px solid var(--bg-secondary, #0f0f0f)' }} />
+            <span style={{ position: 'absolute', top: '6px', right: '6px', width: '7px', height: '7px', background: 'var(--danger)', borderRadius: '50%', border: '1.5px solid var(--bg-secondary, var(--n-950))' }} />
           </button>
 
           {notifOpen && (

@@ -91,7 +91,7 @@ const ImagePickerModal = ({ isOpen, onClose, onSelect }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-4xl h-[85vh] flex flex-col shadow-2xl animate-slide-up">
+      <div className="bg-(--n-950) border border-white/10 rounded-2xl w-full max-w-4xl h-[85vh] flex flex-col shadow-2xl animate-slide-up">
         
         {/* Header */}
         <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/40">

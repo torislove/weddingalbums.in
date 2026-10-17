@@ -73,7 +73,7 @@ const OrderTracking = () => {
 
         <form onSubmit={handleTrack} style={{ display: 'flex', gap: '10px', marginBottom: '3rem', flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: '1 1 240px' }}>
-            <Search style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#888' }} size={20} />
+            <Search style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--n-500)' }} size={20} />
             <input 
               type="text" 
               placeholder="e.g. ORD-123456" 

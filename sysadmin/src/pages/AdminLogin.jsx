@@ -94,7 +94,7 @@ const AdminLogin = ({ setToken }) => {
     background: 'rgba(14,165,233,0.04)',
     border: '1px solid rgba(14,165,233,0.15)',
     borderRadius: '10px',
-    color: '#e2e8f0',
+    color: 'var(--n-200)',
     fontSize: '0.9rem',
     fontFamily: "'JetBrains Mono', 'Courier New', monospace",
     outline: 'none',
@@ -163,7 +163,7 @@ const AdminLogin = ({ setToken }) => {
             <Shield size={22} color="#0ea5e9" />
           </div>
           <div>
-            <div style={{ fontSize: '0.8rem', fontWeight: '600', color: '#e2e8f0', marginBottom: '3px' }}>Admin Access Required</div>
+            <div style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--n-200)', marginBottom: '3px' }}>Admin Access Required</div>
             <div style={{ fontSize: '0.73rem', color: 'rgba(255,255,255,0.3)', fontFamily: "'JetBrains Mono', monospace" }}>Clearance Level: RESTRICTED</div>
           </div>
         </div>

@@ -51,7 +51,7 @@ const ForgotPassword = () => {
             </form>
 
             <div className="mt-4 text-center">
-              <Link to="/login" style={{ fontSize: '0.875rem', color: '#aaa', transition: 'color 0.2s ease' }} onMouseOver={e => e.currentTarget.style.color = '#D4AF37'} onMouseOut={e => e.currentTarget.style.color = '#aaa'}>
+              <Link to="/login" style={{ fontSize: '0.875rem', color: 'var(--n-300)', transition: 'color 0.2s ease' }} onMouseOver={e => e.currentTarget.style.color = '#D4AF37'} onMouseOut={e => e.currentTarget.style.color = '#aaa'}>
                 {t('fp.back_login')}
               </Link>
             </div>

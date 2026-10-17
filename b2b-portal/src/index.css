@@ -57,7 +57,7 @@ body {
 /* Buttons */
 .btn-gold {
   background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
-  color: #000;
+  color: var(--n-1000);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -385,7 +385,7 @@ input:checked + .slider:before {
   background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
   background-size: 200% 200%;
   animation: liquidGradient 5s ease infinite, liquidPulse 2s infinite;
-  color: #000;
+  color: var(--n-1000);
   border: none;
   font-weight: bold;
   text-transform: uppercase;
@@ -507,6 +507,22 @@ input:checked + .slider:before {
 
   --ink: #050505;
   --paper: #ffffff;
+
+  /* Neutral ramp — replaces ad-hoc greyscale hex (var(--n-900)/var(--n-700)/var(--n-500)/var(--n-300) …) so dark
+     and light surfaces stay consistent. Additive; see UI_UX_POLISH_PLAN.md §3.3. */
+  --n-0: #ffffff;
+  --n-50: #fafafa;
+  --n-100: #f4f4f5;
+  --n-200: #e4e4e7;
+  --n-300: #d4d4d4;
+  --n-400: #a1a1aa;
+  --n-500: #71717a;
+  --n-600: #52525b;
+  --n-700: #3f3f46;
+  --n-800: #27272a;
+  --n-900: #18181b;
+  --n-950: #0a0a0a;
+  --n-1000: #000000;
 
   --ring: rgba(212, 175, 55, 0.6);
 

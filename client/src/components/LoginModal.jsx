@@ -49,7 +49,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole, onSuccess }) => {
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center' }} onClick={onClose}>
-      <div style={{ backgroundColor: '#1a1a1a', padding: '40px', borderRadius: '16px', maxWidth: '400px', width: '90%' }} onClick={e => e.stopPropagation()}>
+      <div style={{ backgroundColor: 'var(--n-900)', padding: '40px', borderRadius: '16px', maxWidth: '400px', width: '90%' }} onClick={e => e.stopPropagation()}>
         <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>Please authenticate to continue submitting your request.</p>
         

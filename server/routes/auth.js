@@ -7,11 +7,9 @@ import { User, RefreshToken, AuditLog } from '../db.js';
 import { loginRateLimiter, otpRateLimiter } from '../middleware/rateLimit.js';
 import { sendEmailOtp, sendPhoneOtp, verifyOtp } from '../otpService.js';
 import { verifyFirebaseToken } from '../firebaseAdmin.js';
-
-dotenv.config();
+import { JWT_SECRET, JWT_ISSUER } from '../config.js';
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
 
 const AUDIENCE_MAP = {
   b2c:       'client-portal',
@@ -28,7 +26,7 @@ const generateTokens = (user) => {
   const accessToken = jwt.sign(
     { id: user._id || user.id, name: user.name, email: user.email, role: user.role },
     JWT_SECRET,
-    { expiresIn: '8h', audience, issuer: 'weddingalbums.in' }
+    { expiresIn: '8h', audience, issuer: JWT_ISSUER }
   );
 
   const refreshTokenValue = crypto.randomBytes(40).toString('hex');

@@ -104,7 +104,7 @@ const AlbumsShowcase = () => {
               padding: '0.6rem 1.5rem', 
               fontSize: '0.9rem',
               background: activeTab === 'covers' ? 'var(--color-secondary)' : 'rgba(255,255,255,0.06)',
-              color: activeTab === 'covers' ? '#000' : '#ccc',
+              color: activeTab === 'covers' ? 'var(--n-1000)' : 'var(--n-300)',
               border: 'none',
               cursor: 'pointer'
             }}
@@ -119,7 +119,7 @@ const AlbumsShowcase = () => {
               padding: '0.6rem 1.5rem', 
               fontSize: '0.9rem',
               background: activeTab === 'paper' ? 'var(--color-secondary)' : 'rgba(255,255,255,0.06)',
-              color: activeTab === 'paper' ? '#000' : '#ccc',
+              color: activeTab === 'paper' ? 'var(--n-1000)' : 'var(--n-300)',
               border: 'none',
               cursor: 'pointer'
             }}

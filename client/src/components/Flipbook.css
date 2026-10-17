@@ -12,7 +12,7 @@
   position: relative;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
-  background: #111;
+  background: var(--n-900);
   padding: 10px; /* simulating cover overhang */
 }
 
@@ -80,7 +80,7 @@
 
 /* Cover Styling */
 .demoPage.cover {
-  background: #1a1a1a;
+  background: var(--n-900);
 }
 .demoPage.cover img {
   opacity: 0.9;

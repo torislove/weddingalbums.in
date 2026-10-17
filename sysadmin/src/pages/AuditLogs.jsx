@@ -4,7 +4,7 @@ import { API } from '../apiConfig';
 
 const ACTION_TONES = {
   LOGIN: { bg: 'rgba(34,211,238,0.12)', color: '#22d3ee', border: 'rgba(34,211,238,0.3)' },
-  LOGOUT: { bg: 'rgba(148,163,184,0.12)', color: '#94a3b8', border: 'rgba(148,163,184,0.3)' },
+  LOGOUT: { bg: 'rgba(148,163,184,0.12)', color: 'var(--n-400)', border: 'rgba(148,163,184,0.3)' },
   ORDER_CREATE: { bg: 'rgba(34,197,94,0.12)', color: '#22c55e', border: 'rgba(34,197,94,0.3)' },
   CONTENT_PUBLISH: { bg: 'rgba(168,85,247,0.12)', color: '#a855f7', border: 'rgba(168,85,247,0.3)' },
 };
@@ -85,7 +85,7 @@ const AuditLogs = () => {
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Filter by action, user, IP or details…"
-          style={{ background: 'none', border: 'none', outline: 'none', color: '#e2e8f0', fontFamily: 'inherit', fontSize: 13, width: '100%' }}
+          style={{ background: 'none', border: 'none', outline: 'none', color: 'var(--n-200)', fontFamily: 'inherit', fontSize: 13, width: '100%' }}
         />
       </div>
 

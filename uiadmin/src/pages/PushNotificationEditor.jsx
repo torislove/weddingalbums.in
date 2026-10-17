@@ -54,7 +54,7 @@ const PushNotificationEditor = ({ adminState }) => {
     <div className="flex flex-col lg:flex-row h-screen overflow-hidden bg-black/20">
       {/* Mobile Tab Switcher */}
       {isMobile && (
-        <div className="flex bg-[#0e0e0e] border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">
+        <div className="flex bg-(--n-950) border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">
           <button
             onClick={() => setMobileTab('editor')}
             className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
@@ -98,7 +98,7 @@ const PushNotificationEditor = ({ adminState }) => {
 
       {/* 3. Live Preview Iframe */}
       {(!isMobile || mobileTab === 'preview') && (
-        <div className="flex-1 flex flex-col bg-[#000000] relative overflow-hidden">
+        <div className="flex-1 flex flex-col bg-(--n-1000) relative overflow-hidden">
           {/* Preview Toolbar */}
           <div className="h-14 border-b border-white/10 bg-black/60 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 z-10">
           <div className="flex items-center gap-2 text-sm text-gray-400">
@@ -149,7 +149,7 @@ const PushNotificationEditor = ({ adminState }) => {
         {/* Iframe Container */}
         <div className="flex-1 overflow-hidden flex justify-center items-center p-4 md:p-8 bg-[var(--ink)]">
           {previewMode === 'mobile' && (
-            <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
+            <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-(--n-900) flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
               <iframe 
                 ref={iframeRef}
                 src={previewUrl} 
@@ -160,7 +160,7 @@ const PushNotificationEditor = ({ adminState }) => {
           )}
 
           {previewMode === 'tablet' && (
-            <div className="relative w-full max-w-[768px] h-full max-h-[960px] bg-black rounded-[36px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[12px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
+            <div className="relative w-full max-w-[768px] h-full max-h-[960px] bg-black rounded-[36px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[12px] border-(--n-900) flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
               <iframe 
                 ref={iframeRef}
                 src={previewUrl} 
@@ -171,8 +171,8 @@ const PushNotificationEditor = ({ adminState }) => {
           )}
 
           {previewMode === 'desktop' && (
-            <div className="relative w-full h-full bg-black rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[6px] border-[#1a1a1a] flex flex-col flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
-              <div className="h-7 bg-[#1a1a1a] w-full flex items-center px-4 gap-2 border-b border-[#2a2a2a]">
+            <div className="relative w-full h-full bg-black rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[6px] border-(--n-900) flex flex-col flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
+              <div className="h-7 bg-(--n-900) w-full flex items-center px-4 gap-2 border-b border-(--n-800)">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>

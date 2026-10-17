@@ -180,7 +180,7 @@ const B2BDashboard = () => {
               style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
               {ALBUM_SIZES.map(s => (
-                <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                   {s.name} (Lab: ₹{s.wholesaleBase.toLocaleString('en-IN')})
                 </option>
               ))}
@@ -197,7 +197,7 @@ const B2BDashboard = () => {
               style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
               {SHEET_TYPES.map(s => (
-                <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                   {s.name} (Trade: ₹{s.rate}/sheet)
                 </option>
               ))}
@@ -230,7 +230,7 @@ const B2BDashboard = () => {
               style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
               {VIDEO_OPTIONS.map(v => (
-                <option key={v.id} value={v.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                <option key={v.id} value={v.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                   {v.name} {v.wholesaleRate > 0 ? `(+₹${v.wholesaleRate.toLocaleString('en-IN')})` : ''}
                 </option>
               ))}

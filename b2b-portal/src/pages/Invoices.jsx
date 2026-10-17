@@ -129,8 +129,8 @@ const Invoices = () => {
           .no-print, .sidebar, .topbar, aside, nav, header { display: none !important; }
           .page-content { padding: 0 !important; }
           .glass-panel { background: var(--paper) !important; border: none !important; box-shadow: none !important; }
-          body, .data-table, .data-table th, .data-table td { color: #000 !important; background: var(--paper) !important; }
-          .data-table th, .data-table td { border-bottom: 1px solid #ccc !important; }
+          body, .data-table, .data-table th, .data-table td { color: var(--n-1000) !important; background: var(--paper) !important; }
+          .data-table th, .data-table td { border-bottom: 1px solid var(--n-300) !important; }
         }
       `}</style>
     </div>

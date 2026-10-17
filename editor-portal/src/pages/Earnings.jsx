@@ -186,7 +186,7 @@ const Earnings = () => {
             className="btn-primary" 
             onClick={handleWithdraw} 
             disabled={submitting || Number(stats.walletBalance || 0) <= 0}
-            style={{ padding: '1rem', fontSize: '1.05rem', background: 'var(--accent-success)', color: '#000', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', cursor: 'pointer' }}
+            style={{ padding: '1rem', fontSize: '1.05rem', background: 'var(--accent-success)', color: 'var(--n-1000)', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', cursor: 'pointer' }}
           >
             {submitting ? 'Submitting...' : 'Withdraw Instantly'} <ArrowUpRight size={20} />
           </button>

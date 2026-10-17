@@ -23,7 +23,7 @@
 .reviews-header p {
   margin: 0;
   font-size: 0.9rem;
-  color: #aaa;
+  color: var(--n-300);
 }
 
 .stars {
@@ -65,7 +65,7 @@
 
 .review-author span {
   font-size: 0.8rem;
-  color: #aaa;
+  color: var(--n-300);
 }
 
 .review-stars {
@@ -76,7 +76,7 @@
 
 .review-text {
   font-size: 0.95rem;
-  color: #ddd;
+  color: var(--n-200);
   line-height: 1.5;
   font-style: italic;
 }

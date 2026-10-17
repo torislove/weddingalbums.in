@@ -33,7 +33,7 @@
 }
 
 .craft-subtitle {
-  color: #9CA3AF;
+  color: var(--n-400);
   font-size: 1.05rem;
   line-height: 1.6;
 }
@@ -52,7 +52,7 @@
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #D1D5DB;
+  color: var(--n-300);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -70,7 +70,7 @@
 
 .craft-tab-btn.active {
   background: linear-gradient(135deg, var(--brand) 0%, #AA7C11 100%);
-  color: #000000;
+  color: var(--n-1000);
   font-weight: 700;
   border-color: var(--brand);
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
@@ -106,7 +106,7 @@
   width: 100%;
   aspect-ratio: 16 / 11;
   overflow: hidden;
-  background: #000;
+  background: var(--n-1000);
 }
 
 .craft-card-img {
@@ -153,7 +153,7 @@
 
 .craft-item-desc {
   font-size: 0.85rem;
-  color: #9CA3AF;
+  color: var(--n-400);
   line-height: 1.5;
   margin-bottom: 1.25rem;
 }
@@ -174,7 +174,7 @@
   align-items: center;
   gap: 0.45rem;
   font-size: 0.78rem;
-  color: #D1D5DB;
+  color: var(--n-300);
 }
 
 .craft-spec-dot {
@@ -226,7 +226,7 @@
 
 .craft-guarantee-text {
   font-size: 0.85rem;
-  color: #9CA3AF;
+  color: var(--n-400);
 }
 
 .craft-order-sample-btn {

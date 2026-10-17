@@ -84,7 +84,7 @@ const PortalLogin = () => {
     return (
       <div style={{
         minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        gap: '16px', color: 'var(--text-secondary, #aaa)', fontFamily: 'inherit',
+        gap: '16px', color: 'var(--text-secondary, var(--n-300))', fontFamily: 'inherit',
       }}>
         <div style={{
           width: 42, height: 42, borderRadius: '50%',

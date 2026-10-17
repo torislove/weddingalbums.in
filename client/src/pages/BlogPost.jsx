@@ -103,7 +103,7 @@ const BlogPost = () => {
                   color: 'var(--primary)', fontFamily: "'Playfair Display', serif",
                   fontSize: '1.5rem', margin: '2.25rem 0 0.85rem',
                 }}>{heading}</h2>
-                <p style={{ color: 'var(--text, #eee)', lineHeight: 1.9, fontSize: '1.02rem' }}>{paragraph}</p>
+                <p style={{ color: 'var(--text, var(--n-100))', lineHeight: 1.9, fontSize: '1.02rem' }}>{paragraph}</p>
               </ScrollReveal>
             ))}
 

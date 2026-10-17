@@ -114,7 +114,7 @@
 
 .flex-card-desc {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--n-400);
   line-height: 1.5;
   margin-bottom: 16px;
   flex: 1;
@@ -134,7 +134,7 @@
   align-items: center;
   gap: 7px;
   font-size: 11.5px;
-  color: #cbd5e1;
+  color: var(--n-300);
 }
 
 .flex-card-footer {
@@ -147,7 +147,7 @@
 
 .flex-turnaround-badge {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--n-400);
   font-weight: 600;
 }
 

@@ -22,7 +22,7 @@ export default function BookingSuccess({ ctx }) {
 
   return (
       <div className="min-h-screen pt-32 pb-20 px-4 flex items-center justify-center bg-[var(--ink)]">
-        <div className="max-w-xl w-full p-8 sm:p-10 rounded-3xl bg-[#111] border border-[var(--brand)]/40 text-center shadow-[0_0_50px_rgba(212,175,55,0.2)]">
+        <div className="max-w-xl w-full p-8 sm:p-10 rounded-3xl bg-(--n-900) border border-[var(--brand)]/40 text-center shadow-[0_0_50px_rgba(212,175,55,0.2)]">
           <div className="w-20 h-20 rounded-full bg-[var(--brand)]/20 border-2 border-[var(--brand)] flex items-center justify-center mx-auto mb-6 text-[var(--brand)]">
             <CheckCircle2 size={44} />
           </div>

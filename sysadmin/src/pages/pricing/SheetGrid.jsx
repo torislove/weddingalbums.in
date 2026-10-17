@@ -11,7 +11,7 @@ export default function SheetGrid({ sheets, contentCat, openModal, handleDelete 
   return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {sheets.map(s => (
-            <div key={s._id || s.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[var(--brand)]/50 transition">
+            <div key={s._id || s.id} className="bg-(--n-900) p-6 rounded-xl border border-white/10 relative group hover:border-(--brand)/50 transition">
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h3 className="text-xl font-bold text-white mb-1">{s.name}</h3>

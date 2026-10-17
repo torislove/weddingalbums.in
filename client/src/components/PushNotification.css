@@ -42,7 +42,7 @@
   right: 1rem;
   background: rgba(255,255,255,0.05);
   border: none;
-  color: #888;
+  color: var(--n-500);
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -89,7 +89,7 @@
 
 .push-body {
   font-size: 0.85rem;
-  color: #aaa;
+  color: var(--n-300);
   line-height: 1.5;
   margin-bottom: 1.25rem;
 }
@@ -116,7 +116,7 @@
 
 .push-btn-primary {
   background: var(--color-primary);
-  color: #000;
+  color: var(--n-1000);
 }
 
 .push-btn-primary:hover {
@@ -126,7 +126,7 @@
 
 .push-btn-secondary {
   background: rgba(255, 255, 255, 0.05);
-  color: #ccc;
+  color: var(--n-300);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

@@ -205,7 +205,7 @@ const OrderHistory = () => {
                       ))}
                     </div>
                   ) : (
-                    <div style={{ padding: '12px 16px', borderRadius: '12px', background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.06)', color: '#ccc', fontSize: '0.88rem' }}>
+                    <div style={{ padding: '12px 16px', borderRadius: '12px', background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.06)', color: 'var(--n-300)', fontSize: '0.88rem' }}>
                       <strong>{order.size?.label || order.size || t('oh.default_album')}</strong> {order.coverType?.label ? `— ${order.coverType.label} ${t('oh.cover')}` : ''}
                     </div>
                   )}

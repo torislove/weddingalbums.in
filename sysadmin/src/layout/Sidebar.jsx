@@ -78,11 +78,11 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* User */}
       <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+        <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg, #0ea5e9, #0284c7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: 'var(--paper)', flexShrink: 0 }}>
           {user?.name?.charAt(0)?.toUpperCase() || 'A'}
         </div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{user?.name || 'Admin'}</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--paper)' }}>{user?.name || 'Admin'}</div>
           <div style={{ fontSize: 10, color: 'rgba(14,165,233,0.6)', fontFamily: 'JetBrains Mono, monospace', letterSpacing: 1 }}>SYSADMIN</div>
         </div>
       </div>

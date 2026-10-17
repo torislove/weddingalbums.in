@@ -1,4 +1,36 @@
 # WeddingAlbums.in — Full-Stack Continuous Deployment
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# REQUIRED REPOSITORY SECRETS
+#   FIREBASE_SERVICE_ACCOUNT_WEDDINGALBUMS_B4BCD — JSON key of the CI deployer SA.
+#   JWT_SECRET                                   — signing key for the deployed API.
+#        Generate with:  node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+#        Previously the API silently fell back to a public dev secret in production
+#        (full auth bypass). server/config.js now refuses to serve without it, so the
+#        functions step below fails fast with a clear message when it is missing.
+#
+# REQUIRED IAM FOR THE DEPLOYER SA (project weddingalbums-b4bcd)
+#   The functions/Cloud Run deploy needs `iam.serviceAccounts.ActAs` on the runtime
+#   service account. Without it the CLI stops with:
+#     "Missing permissions required for functions deploy. You must have permission
+#      iam.serviceAccounts.ActAs on service account
+#      weddingalbums-b4bcd@appspot.gserviceaccount.com"
+#   Grant it with (any project Owner, once):
+#     gcloud iam service-accounts add-iam-policy-binding \
+#       weddingalbums-b4bcd@appspot.gserviceaccount.com \
+#       --member="serviceAccount:<CI_DEPLOYER_SA_EMAIL>" \
+#       --role="roles/iam.serviceAccountUser" \
+#       --project=weddingalbums-b4bcd
+#   Typical role set for a full Firebase deployer (least-privilege-ish, per product):
+#     roles/firebasehosting.admin   roles/firebaserules.admin   roles/firebase.admin
+#     roles/cloudfunctions.developer   roles/run.developer
+#     roles/artifactregistry.writer   roles/cloudbuild.builds.editor   roles/storage.admin
+#     roles/serviceusage.serviceUsageAdmin   (the CLI enables required APIs)
+#
+# Deploy is deliberately split into three steps (hosting → rules → functions) so an
+# API/permissions problem can no longer freeze the public site the way it did for
+# nine consecutive runs (see SYSTEM_INTEGRATION_PLAN.md §5, G12).
+# ─────────────────────────────────────────────────────────────────────────────
 name: Deploy Full Stack to Firebase on Merge
 on:
   push:
@@ -38,6 +70,43 @@ jobs:
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WEDDINGALBUMS_B4BCD }}
 
-      - name: Deploy All (5 Hosting Targets, Cloud Functions & Security Rules)
+      - name: Setup Firebase CLI
+        run: npm install --global firebase-tools@15
+
+      - name: "Preflight: show deploy identity & function runtime account"
         run: |
-          npx --yes firebase-tools@latest deploy --only hosting,functions,firestore:rules --project weddingalbums-b4bcd --non-interactive
+          echo "──── deploy identity ────"
+          gcloud auth list --filter=status:ACTIVE --format="value(account)"
+          echo "──── target ────"
+          echo "project    : weddingalbums-b4bcd"
+          echo "runtime SA : weddingalbums-b4bcd@appspot.gserviceaccount.com"
+          echo "(functions deploy needs iam.serviceAccounts.ActAs on the runtime SA)"
+          echo "──── can the deployer read the runtime SA? ────"
+          if gcloud iam service-accounts describe weddingalbums-b4bcd@appspot.gserviceaccount.com \
+               --project=weddingalbums-b4bcd --format="value(email)" >/dev/null 2>&1; then
+            echo "✅ runtime service account exists and is visible"
+          else
+            echo "::warning title=IAM::Deployer cannot read the runtime service account. If the functions step fails with iam.serviceAccounts.ActAs, grant roles/iam.serviceAccountUser (see the header of this workflow)."
+          fi
+
+      - name: "Deploy Hosting (5 sites)"
+        run: firebase deploy --only hosting --project weddingalbums-b4bcd --non-interactive
+
+      - name: "Deploy Firestore security rules"
+        run: firebase deploy --only firestore:rules --project weddingalbums-b4bcd --non-interactive
+
+      - name: "Prepare Cloud Functions runtime environment"
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          if [ -z "$JWT_SECRET" ]; then
+            echo "::error title=JWT_SECRET missing::Add a repository secret named JWT_SECRET (server/.env.example). Without it the deployed API refuses to serve traffic, so the functions deploy is blocked."
+            exit 1
+          fi
+          # Firebase uploads `.env.<projectId>` from the functions source dir as the
+          # deployed function's environment.
+          printf 'NODE_ENV=production\nJWT_SECRET=%s\n' "$JWT_SECRET" > server/.env.weddingalbums-b4bcd
+          echo "✅ wrote server/.env.weddingalbums-b4bcd (JWT_SECRET set, ${#JWT_SECRET} chars)"
+
+      - name: "Deploy Cloud Functions (api)"
+        run: firebase deploy --only functions --project weddingalbums-b4bcd --non-interactive

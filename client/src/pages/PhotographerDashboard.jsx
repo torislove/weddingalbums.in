@@ -259,7 +259,7 @@ const PhotographerDashboard = () => {
 
       {previewAlbum && (
         <div className="modal-backdrop" onClick={() => setPreviewAlbum(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: '#1a1a1a', padding: '40px', borderRadius: '16px', maxWidth: '800px', width: '100%' }}>
+          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--n-900)', padding: '40px', borderRadius: '16px', maxWidth: '800px', width: '100%' }}>
             <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>{t('pdash.proofing')}</h2>
             <Flipbook pages={[
               '/images/weddingalbums-talambralu.png',

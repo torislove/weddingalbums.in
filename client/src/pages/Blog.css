@@ -51,7 +51,7 @@
   gap: 1rem;
   margin-bottom: 1rem;
   font-size: 0.85rem;
-  color: #aaa;
+  color: var(--n-300);
 }
 
 .blog-meta span {
@@ -68,7 +68,7 @@
 }
 
 .blog-content p {
-  color: #ccc;
+  color: var(--n-300);
   margin-bottom: 1.5rem;
   flex-grow: 1;
 }

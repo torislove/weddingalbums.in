@@ -74,7 +74,7 @@ export const ToastProvider = ({ children }) => {
               <Icon size={18} color={iconColor} style={{ marginTop: '2px', flexShrink: 0 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 {t.title && <div style={{ fontSize: '13px', fontWeight: 700, marginBottom: '2px' }}>{t.title}</div>}
-                <div style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: 1.4 }}>{t.message}</div>
+                <div style={{ fontSize: '13px', color: 'var(--n-300)', lineHeight: 1.4 }}>{t.message}</div>
               </div>
               <button
                 type="button"
@@ -82,7 +82,7 @@ export const ToastProvider = ({ children }) => {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--n-400)',
                   cursor: 'pointer',
                   padding: '2px',
                   display: 'flex',

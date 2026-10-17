@@ -14,7 +14,7 @@ export default function PricingItemModal({
 }) {
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-[#111] border border-white/10 w-full max-w-2xl rounded-2xl p-4 sm:p-8 relative my-6 sm:my-10 max-h-[92vh] overflow-y-auto">
+      <div className="bg-(--n-900) border border-white/10 w-full max-w-2xl rounded-2xl p-4 sm:p-8 relative my-6 sm:my-10 max-h-[92vh] overflow-y-auto">
         <button onClick={onClose} aria-label="Close dialog" title="Close" className="absolute top-6 right-6 text-gray-400 hover:text-white"><X size={24} /></button>
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
           {editingItem ? 'Edit' : 'Add New'} {activeTab === 'services' ? 'Service' : activeTab === 'sizes' ? 'Album Size' : activeTab === 'sheets' ? 'Sheet Type' : 'Bundle'}

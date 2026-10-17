@@ -51,7 +51,7 @@
   padding: 12px 30px;
   border-radius: 40px;
   background: transparent;
-  color: #888;
+  color: var(--n-500);
   border: none;
   font-weight: 500;
   cursor: pointer;
@@ -65,7 +65,7 @@
 
 .ptab-btn.active {
   background: var(--brand);
-  color: #000;
+  color: var(--n-1000);
   box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 

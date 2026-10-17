@@ -11,7 +11,7 @@ export default function SizeGrid({ albumSizes, contentCat, openModal, handleDele
   return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {albumSizes.map(sz => (
-            <div key={sz._id || sz.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[var(--brand)]/50 transition">
+            <div key={sz._id || sz.id} className="bg-(--n-900) p-6 rounded-xl border border-white/10 relative group hover:border-[var(--brand)]/50 transition">
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-2">
                   <span className="text-xs uppercase tracking-widest text-[var(--brand)] font-bold">{sz.dimensions}</span>

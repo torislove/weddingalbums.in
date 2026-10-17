@@ -330,9 +330,9 @@ h3 { font-size: 1.15rem; }
 .text-xl { font-size: 1.25rem; }
 .text-sm { font-size: 0.875rem; }
 .text-xs { font-size: 0.75rem; }
-.text-gray-300 { color: #d1d5db; }
-.text-gray-400 { color: #9ca3af; }
-.text-gray-500 { color: #6b7280; }
+.text-gray-300 { color: var(--n-300); }
+.text-gray-400 { color: var(--n-400); }
+.text-gray-500 { color: var(--n-500); }
 
 /* Grid System */
 .grid { display: grid; gap: 2rem; }
@@ -725,7 +725,7 @@ h3 { font-size: 1.15rem; }
    GRADIENT MESH CTA BACKGROUND
    ============================================================ */
 .mesh-bg {
-  background: linear-gradient(-45deg, #0a0a0a, #1a0005, #0a0a0a, #12080a);
+  background: linear-gradient(-45deg, var(--n-950), #1a0005, var(--n-950), #12080a);
   background-size: 400% 400%;
   animation: gradientShift 10s ease infinite;
 }
@@ -893,6 +893,22 @@ img[data-lazy].img-loaded {
 
   --ink: #050505;
   --paper: #ffffff;
+
+  /* Neutral ramp — replaces ad-hoc greyscale hex (var(--n-900)/var(--n-700)/var(--n-500)/var(--n-300) …) so dark
+     and light surfaces stay consistent. Additive; see UI_UX_POLISH_PLAN.md §3.3. */
+  --n-0: #ffffff;
+  --n-50: #fafafa;
+  --n-100: #f4f4f5;
+  --n-200: #e4e4e7;
+  --n-300: #d4d4d4;
+  --n-400: #a1a1aa;
+  --n-500: #71717a;
+  --n-600: #52525b;
+  --n-700: #3f3f46;
+  --n-800: #27272a;
+  --n-900: #18181b;
+  --n-950: #0a0a0a;
+  --n-1000: #000000;
 
   --ring: rgba(212, 175, 55, 0.6);
 

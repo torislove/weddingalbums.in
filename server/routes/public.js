@@ -6,9 +6,9 @@ import { Package, Service, SheetType, AlbumSize, ContactLead, Order, Task, Cart,
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { requireRole } from '../middleware/auth.js';
+import { JWT_SECRET, JWT_ISSUER } from '../config.js';
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
 
 function isStudioOrAdmin(req) {
   try {
@@ -28,7 +28,7 @@ const decodeUser = (req) => {
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return null;
   try {
-    return jwt.verify(token, JWT_SECRET, { issuer: 'weddingalbums.in' });
+    return jwt.verify(token, JWT_SECRET, { issuer: JWT_ISSUER });
   } catch {
     return null;
   }

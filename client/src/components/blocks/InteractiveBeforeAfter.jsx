@@ -95,7 +95,7 @@ const InteractiveBeforeAfter = ({
                         backdropFilter: 'blur(10px)',
                         background: 'linear-gradient(135deg, var(--brand) 0%, #AA7C11 100%)',
                         border: '2px solid var(--paper)',
-                        color: '#000000',
+                        color: 'var(--n-1000)',
                         boxShadow: '0 0 20px rgba(212, 175, 55, 0.7)'
                       }}
                       linesStyle={{

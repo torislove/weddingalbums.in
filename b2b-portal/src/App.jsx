@@ -36,7 +36,7 @@ const LoadingFallback = () => (
       borderTopColor: 'var(--gold-primary, var(--brand))',
       animation: 'spin 0.8s linear infinite'
     }} />
-    <span style={{ fontSize: '12px', color: 'var(--text-muted, #888)', letterSpacing: '1px' }}>
+    <span style={{ fontSize: '12px', color: 'var(--text-muted, var(--n-500))', letterSpacing: '1px' }}>
       LOADING...
     </span>
     <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

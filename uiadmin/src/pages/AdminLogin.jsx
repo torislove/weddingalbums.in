@@ -80,7 +80,7 @@ const AdminLogin = ({ setToken }) => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#080808',
+      background: 'var(--n-950)',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
       fontFamily: "'Inter', sans-serif",
@@ -89,7 +89,7 @@ const AdminLogin = ({ setToken }) => {
 
       {/* Left — Editorial Panel */}
       <div style={{
-        background: 'linear-gradient(160deg, #0f0f0f 0%, #111008 100%)',
+        background: 'linear-gradient(160deg, var(--n-950) 0%, #111008 100%)',
         borderRight: '1px solid rgba(245,158,11,0.08)',
         display: 'flex',
         flexDirection: 'column',
@@ -142,7 +142,7 @@ const AdminLogin = ({ setToken }) => {
       </div>
 
       {/* Right — Login Form */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 50px', background: '#080808', overflowY: 'auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 50px', background: 'var(--n-950)', overflowY: 'auto' }}>
         <div style={{ width: '100%', maxWidth: '380px', animation: 'uiaFadeIn 0.5s ease both' }}>
 
           <div style={{ marginBottom: '40px' }}>
@@ -206,7 +206,7 @@ const AdminLogin = ({ setToken }) => {
             <button
               type="submit"
               disabled={loading}
-              style={{ width: '100%', padding: '14px 20px', marginTop: '8px', background: loading ? 'rgba(245,158,11,0.15)' : 'linear-gradient(135deg, var(--warn), #d97706)', border: 'none', borderRadius: '12px', color: loading ? 'rgba(0,0,0,0.3)' : '#111', fontSize: '0.92rem', fontWeight: '700', fontFamily: 'inherit', letterSpacing: '0.3px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(245,158,11,0.3), inset 0 1px 0 rgba(255,255,255,0.25)', transition: 'all 0.3s ease' }}
+              style={{ width: '100%', padding: '14px 20px', marginTop: '8px', background: loading ? 'rgba(245,158,11,0.15)' : 'linear-gradient(135deg, var(--warn), #d97706)', border: 'none', borderRadius: '12px', color: loading ? 'rgba(0,0,0,0.3)' : 'var(--n-900)', fontSize: '0.92rem', fontWeight: '700', fontFamily: 'inherit', letterSpacing: '0.3px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: loading ? 'none' : '0 8px 24px rgba(245,158,11,0.3), inset 0 1px 0 rgba(255,255,255,0.25)', transition: 'all 0.3s ease' }}
               onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 32px rgba(245,158,11,0.45)'; } }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = loading ? 'none' : '0 8px 24px rgba(245,158,11,0.3)'; }}
             >

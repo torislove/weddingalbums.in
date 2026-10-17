@@ -10,7 +10,7 @@
   display: flex; gap: 0.75rem 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;
   font-size: 0.85rem;
 }
-.legend-item { display: flex; align-items: center; gap: 0.5rem; color: #ccc; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; color: var(--n-300); }
 .dot { width: 12px; height: 12px; border-radius: 50%; }
 .dot-available { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
 .dot-filling { background: rgba(212,175,55,0.2); border: 1px solid rgba(212,175,55,0.5); }
@@ -24,7 +24,7 @@
 
 .days-grid-header {
   display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;
-  text-align: center; color: #888; font-size: 0.75rem; margin-bottom: 0.5rem;
+  text-align: center; color: var(--n-500); font-size: 0.75rem; margin-bottom: 0.5rem;
 }
 
 .days-grid {
@@ -37,7 +37,7 @@
   transition: all 0.3s ease; position: relative;
 }
 .calendar-day.blank { background: transparent; border: none; }
-.day-available { background: rgba(255,255,255,0.05); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
+.day-available { background: rgba(255,255,255,0.05); color: var(--n-300); border: 1px solid rgba(255,255,255,0.1); }
 .day-available:hover { background: rgba(255,255,255,0.1); }
 .day-filling { background: rgba(212,175,55,0.15); color: var(--brand); border: 1px solid rgba(212,175,55,0.3); }
 .day-booked { background: rgba(229,57,53,0.15); color: #E53935; border: 1px solid rgba(229,57,53,0.3); opacity: 0.6; cursor: not-allowed; }

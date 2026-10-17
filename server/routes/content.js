@@ -65,8 +65,7 @@ const CURATED_DEFAULT_IMAGES = [
 ];
 
 import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
+import { JWT_SECRET } from '../config.js';
 
 function isStudioOrAdmin(req) {
   try {

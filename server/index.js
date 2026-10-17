@@ -19,6 +19,7 @@ import { initDatabase } from './db.js';
 import { eventBus } from './events.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import { JWT_SECRET, JWT_ISSUER, isProduction, JWT_INSECURE } from './config.js';
 
 dotenv.config();
 
@@ -32,7 +33,11 @@ const PORT = process.env.PORT || process.env.SERVER_PORT || 4000;
 // =======================
 // SECURITY & MIDDLEWARE
 // =======================
-const allowedOrigins = [
+/* Browser origins allowed to call the API with credentials.
+ * Extra origins can be appended (comma-separated) via the CORS_ORIGINS env var —
+ * see server/.env.example. Localhost on ANY port and the *.web.app / *.weddingalbums.in
+ * families are always allowed; add real custom domains to CORS_ORIGINS. */
+const DEFAULT_ORIGINS = [
   'https://weddingalbums.in',
   'https://weddingalbums-b4bcd.web.app',
   'https://weddingalbums-b4bcd.firebaseapp.com',
@@ -40,6 +45,7 @@ const allowedOrigins = [
   'https://creator.weddingalbums.in',
   'https://ops.weddingalbums.in',
   'https://cms.weddingalbums.in',
+  // All six local dev portals (client 5173, b2b 5174, editor 5175, sysadmin 5176, uiadmin 5177, api 4000)
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
@@ -48,6 +54,12 @@ const allowedOrigins = [
   'http://localhost:4000',
   'http://localhost:4001',
 ];
+const envOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+const allowedOrigins = [...new Set([...DEFAULT_ORIGINS, ...envOrigins])];
+
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -112,6 +124,24 @@ app.use(async (req, res, next) => {
 });
 
 // =======================
+// FAIL-CLOSED SECURITY GUARD
+// =======================
+/* If we are running in production with the public dev secret (or no secret), every
+ * request would otherwise be a full auth bypass. Refuse to serve non-diagnostic
+ * traffic until JWT_SECRET is configured. `/api/health` and `/health` stay open so
+ * uptime monitors still see the service (and its error body) instead of a timeout. */
+if (isProduction && JWT_INSECURE) {
+  app.use((req, res, next) => {
+    if (req.path === '/api/health' || req.path === '/health') return next();
+    return res.status(503).json({
+      error: 'Server misconfigured: JWT_SECRET is not set',
+      code: 'JWT_SECRET_MISSING',
+      detail: 'Set JWT_SECRET in server/.env.<projectId> (or the Functions env) and redeploy.',
+    });
+  });
+}
+
+// =======================
 // SYSTEM HEALTH & DIAGNOSTICS
 // =======================
 app.get(['/api/health', '/health'], async (req, res) => {
@@ -150,9 +180,7 @@ app.get('/api/events/stream', (req, res) => {
     return res.status(401).json({ error: 'Authentication required for real-time event stream' });
   }
 
-  const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
-
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, { issuer: JWT_ISSUER }, (err, decoded) => {
     if (err) {
       return res.status(403).json({ error: 'Invalid or expired stream token' });
     }
@@ -221,6 +249,10 @@ const isDirectRun = !isRunningInFirebase && Boolean(
 );
 
 if (isDirectRun) {
+  if (isProduction && JWT_INSECURE) {
+    console.error('❌ Refusing to start: production environment without a configured JWT_SECRET.');
+    process.exit(1);
+  }
   const standalonePort = process.env.PORT || process.env.SERVER_PORT || 4000;
   app.listen(standalonePort, () => {
     console.log(`🚀 Standalone server running on http://localhost:${standalonePort}`);

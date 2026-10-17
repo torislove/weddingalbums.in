@@ -18,6 +18,10 @@ build/
 !*.env.example
 !*.env.production
 
+# Firebase Functions per-project env files (uploaded to Cloud Functions; may hold secrets)
+server/.env.*
+!server/.env.example
+
 # Logs
 logs/
 *.log

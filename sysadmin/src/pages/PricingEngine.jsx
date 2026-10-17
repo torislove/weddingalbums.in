@@ -157,7 +157,7 @@ const PricingEngine = () => {
   if (loading) return <div className="p-10 text-white">Loading Engine...</div>;
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 min-h-screen bg-[#0a0a0a]">
+    <div className="p-4 sm:p-6 md:p-10 min-h-screen bg-(--n-950)">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8 border-b border-white/10 pb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">

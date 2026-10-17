@@ -97,7 +97,7 @@ const EditorDashboard = () => {
           <h1>{t('edash.workspace')}</h1>
           <p style={{ color: 'var(--text-muted)' }}>{t('edash.welcome', { name: user.name })}</p>
         </div>
-        <div style={{ backgroundColor: '#1a1a1a', padding: '15px 25px', borderRadius: '12px', border: '1px solid #333', textAlign: 'right' }}>
+        <div style={{ backgroundColor: 'var(--n-900)', padding: '15px 25px', borderRadius: '12px', border: '1px solid var(--n-700)', textAlign: 'right' }}>
           <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t('cdash.wallet_balance')}</p>
           <h2 style={{ color: 'var(--primary)', margin: '5px 0' }}>₹{walletBalance.toLocaleString()}</h2>
           <button 
@@ -181,24 +181,24 @@ const EditorDashboard = () => {
           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_date')}</th>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_project')}</th>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_amount')}</th>
-                <th style={{ padding: '15px 10px', color: '#ccc' }}>{t('edash.th_status')}</th>
+                <th style={{ padding: '15px 10px', color: 'var(--n-300)' }}>{t('edash.th_date')}</th>
+                <th style={{ padding: '15px 10px', color: 'var(--n-300)' }}>{t('edash.th_project')}</th>
+                <th style={{ padding: '15px 10px', color: 'var(--n-300)' }}>{t('edash.th_amount')}</th>
+                <th style={{ padding: '15px 10px', color: 'var(--n-300)' }}>{t('edash.th_status')}</th>
               </tr>
             </thead>
             <tbody>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <td style={{ padding: '15px 10px', color: '#aaa' }}>Oct 1, 2026</td>
-                <td style={{ padding: '15px 10px', color: '#aaa' }}>PRJ-102 (Sneha & Arjun)</td>
+                <td style={{ padding: '15px 10px', color: 'var(--n-300)' }}>Oct 1, 2026</td>
+                <td style={{ padding: '15px 10px', color: 'var(--n-300)' }}>PRJ-102 (Sneha & Arjun)</td>
                 <td style={{ padding: '15px 10px', color: 'var(--ok)' }}>+ ₹1,500</td>
-                <td style={{ padding: '15px 10px', color: '#aaa' }}>Paid</td>
+                <td style={{ padding: '15px 10px', color: 'var(--n-300)' }}>Paid</td>
               </tr>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <td style={{ padding: '15px 10px', color: '#aaa' }}>Sep 28, 2026</td>
-                <td style={{ padding: '15px 10px', color: '#aaa' }}>PRJ-098 (Meera Weds Rahul)</td>
+                <td style={{ padding: '15px 10px', color: 'var(--n-300)' }}>Sep 28, 2026</td>
+                <td style={{ padding: '15px 10px', color: 'var(--n-300)' }}>PRJ-098 (Meera Weds Rahul)</td>
                 <td style={{ padding: '15px 10px', color: 'var(--ok)' }}>+ ₹2,000</td>
-                <td style={{ padding: '15px 10px', color: '#aaa' }}>Paid</td>
+                <td style={{ padding: '15px 10px', color: 'var(--n-300)' }}>Paid</td>
               </tr>
             </tbody>
           </table>

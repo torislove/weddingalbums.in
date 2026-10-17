@@ -40,7 +40,7 @@ const AppShell = () => {
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginBridge />} />
         <Route path="/*" element={
           <Guard>
-            <div style={{ display: 'flex', minHeight: '100vh', background: '#00060f', color: '#e2e8f0' }}>
+            <div style={{ display: 'flex', minHeight: '100vh', background: '#00060f', color: 'var(--n-200)' }}>
               {/* Mobile top bar */}
               {isMobile && (
                 <div style={{

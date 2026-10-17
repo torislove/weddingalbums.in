@@ -360,7 +360,7 @@ const SubmitJob = () => {
               <div style={{ 
                 width: '32px', height: '32px', borderRadius: '50%', 
                 background: step >= s.num ? 'var(--gold-primary)' : 'var(--glass-border)', 
-                color: step >= s.num ? '#000' : 'var(--text-muted)', 
+                color: step >= s.num ? 'var(--n-1000)' : 'var(--text-muted)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold',
                 boxShadow: step >= s.num ? '0 0 15px rgba(212,175,55,0.4)' : 'none',
                 transition: 'all 0.3s ease'
@@ -431,7 +431,7 @@ const SubmitJob = () => {
                       style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {ALBUM_SIZES.map(s => (
-                        <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                        <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                           {s.name} (Wholesale: ₹{s.wholesaleBase.toLocaleString('en-IN')})
                         </option>
                       ))}
@@ -447,7 +447,7 @@ const SubmitJob = () => {
                       style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {BASE_SUBSTRATES.map(sub => (
-                        <option key={sub.id} value={sub.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                        <option key={sub.id} value={sub.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                           {sub.name}
                         </option>
                       ))}
@@ -463,7 +463,7 @@ const SubmitJob = () => {
                       style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {SHEET_TYPES.map(s => (
-                        <option key={s.id} value={s.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                        <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                           {s.name} ({s.gsm} - ₹{s.rate}/sheet)
                         </option>
                       ))}
@@ -494,7 +494,7 @@ const SubmitJob = () => {
                       style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
                       {COVER_FINISHES.map(c => (
-                        <option key={c.id} value={c.id} style={{ background: '#111', color: 'var(--paper)' }}>
+                        <option key={c.id} value={c.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
                           {c.name} {c.wholesaleExtra > 0 ? `(+₹${c.wholesaleExtra.toLocaleString('en-IN')})` : ''}
                         </option>
                       ))}
@@ -526,7 +526,7 @@ const SubmitJob = () => {
                           border: `1px solid ${isChecked ? 'var(--gold-primary)' : 'rgba(255,255,255,0.1)'}`
                         }}
                       >
-                        <div style={{ width: 18, height: 18, borderRadius: '4px', border: `2px solid ${isChecked ? 'var(--gold-primary)' : '#666'}`, background: isChecked ? 'var(--gold-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 18, height: 18, borderRadius: '4px', border: `2px solid ${isChecked ? 'var(--gold-primary)' : 'var(--n-600)'}`, background: isChecked ? 'var(--gold-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {isChecked && <Check size={14} color="#000" strokeWidth={3} />}
                         </div>
                         <div style={{ flex: 1 }}>
@@ -560,7 +560,7 @@ const SubmitJob = () => {
                           border: `1px solid ${isChecked ? 'var(--gold-primary)' : 'rgba(255,255,255,0.1)'}`
                         }}
                       >
-                        <div style={{ width: 18, height: 18, borderRadius: '4px', border: `2px solid ${isChecked ? 'var(--gold-primary)' : '#666'}`, background: isChecked ? 'var(--gold-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 18, height: 18, borderRadius: '4px', border: `2px solid ${isChecked ? 'var(--gold-primary)' : 'var(--n-600)'}`, background: isChecked ? 'var(--gold-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {isChecked && <Check size={14} color="#000" strokeWidth={3} />}
                         </div>
                         <div style={{ flex: 1 }}>
@@ -628,7 +628,7 @@ const SubmitJob = () => {
               <ShieldCheck size={24} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 <div style={{ fontWeight: 700, color: 'var(--ok)', fontSize: '14px' }}>100% Blind White-Label Protection</div>
-                <div style={{ fontSize: '12px', color: '#e2e8f0', marginTop: '2px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--n-200)', marginTop: '2px' }}>
                   The presentation box, shipping invoice, and courier box will carry only YOUR studio identity. We strictly never contact or market to your clients.
                 </div>
               </div>
@@ -743,7 +743,7 @@ const SubmitJob = () => {
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '13px' }}>
                   Please pack your drive securely. Submit this job to generate your Job ID, and write the Job ID on the courier parcel.
                 </p>
-                <div style={{ background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px', border: '1px dashed rgba(212,175,55,0.3)', display: 'inline-block', textAlign: 'left', color: '#e2e8f0', fontSize: '13px' }}>
+                <div style={{ background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '8px', border: '1px dashed rgba(212,175,55,0.3)', display: 'inline-block', textAlign: 'left', color: 'var(--n-200)', fontSize: '13px' }}>
                   <strong>WeddingAlbums.in Production Lab</strong><br/>
                   MG Road, Near Benz Circle<br/>
                   Vijayawada, Andhra Pradesh 520010<br/>

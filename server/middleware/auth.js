@@ -1,8 +1,5 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_wedding_key_2026';
+import { JWT_SECRET, JWT_ISSUER } from '../config.js';
 
 export const requireAuth = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -27,7 +24,7 @@ export const requireRole = (role, audience) => (req, res, next) => {
   const allowedRoles = Array.isArray(role) ? role : [role];
 
   // Verify token with specific audience to ensure cross-portal token usage is blocked for non-admins
-  jwt.verify(token, JWT_SECRET, { audience: allowedAudiences, issuer: 'weddingalbums.in' }, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, { audience: allowedAudiences, issuer: JWT_ISSUER }, (err, decoded) => {
     if (err) {
       if (err.name === 'TokenExpiredError') {
         return res.status(401).json({ error: 'Token expired', code: 'TOKEN_EXPIRED' });

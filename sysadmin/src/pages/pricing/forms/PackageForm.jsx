@@ -23,11 +23,11 @@ export default function PackageForm({ formData, setFormData, services, contentCa
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Package Name / Tier</label>
-                      <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.tier || ''} onChange={e => setFormData({...formData, tier: e.target.value})} placeholder="e.g. Starter Memories" />
+                      <input type="text" className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white" value={formData.tier || ''} onChange={e => setFormData({...formData, tier: e.target.value})} placeholder="e.g. Starter Memories" />
                     </div>
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Audience</label>
-                      <select className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.b2bOrB2c || 'b2c'} onChange={e => setFormData({...formData, b2bOrB2c: e.target.value})}>
+                      <select className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white" value={formData.b2bOrB2c || 'b2c'} onChange={e => setFormData({...formData, b2bOrB2c: e.target.value})}>
                         <option value="b2c">B2C (Couples)</option>
                         <option value="b2b">B2B (Studios)</option>
                       </select>
@@ -37,7 +37,7 @@ export default function PackageForm({ formData, setFormData, services, contentCa
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Price Strategy</label>
-                      <select className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.priceType || 'fixed'} onChange={e => setFormData({...formData, priceType: e.target.value})}>
+                      <select className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white" value={formData.priceType || 'fixed'} onChange={e => setFormData({...formData, priceType: e.target.value})}>
                         <option value="fixed">Fixed Price</option>
                         <option value="starting_at">Starting At</option>
                         <option value="range">Price Range</option>
@@ -45,19 +45,19 @@ export default function PackageForm({ formData, setFormData, services, contentCa
                     </div>
                     <div>
                       <label className="block text-sm text-gray-400 mb-1">Base Price / Min</label>
-                      <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.price || ''} onChange={e => setFormData({...formData, price: e.target.value})} placeholder="e.g. ₹50,000" />
+                      <input type="text" className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white" value={formData.price || ''} onChange={e => setFormData({...formData, price: e.target.value})} placeholder="e.g. ₹50,000" />
                     </div>
                     {formData.priceType === 'range' && (
                       <div>
                         <label className="block text-sm text-gray-400 mb-1">Max Price</label>
-                        <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={formData.priceMax || ''} onChange={e => setFormData({...formData, priceMax: e.target.value})} placeholder="e.g. ₹80,000" />
+                        <input type="text" className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white" value={formData.priceMax || ''} onChange={e => setFormData({...formData, priceMax: e.target.value})} placeholder="e.g. ₹80,000" />
                       </div>
                     )}
                   </div>
 
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">Theme Color</label>
-                    <input type="color" className="w-full h-[40px] bg-[#1a1a1a] border border-white/10 rounded-lg p-1" value={formData.color || '#9E9E9E'} onChange={e => setFormData({...formData, color: e.target.value})} />
+                    <input type="color" className="w-full h-[40px] bg-(--n-900) border border-white/10 rounded-lg p-1" value={formData.color || '#9E9E9E'} onChange={e => setFormData({...formData, color: e.target.value})} />
                   </div>
 
                   <EstimatorBuilder formData={formData} setFormData={setFormData} contentCat={contentCat} />
@@ -79,7 +79,7 @@ export default function PackageForm({ formData, setFormData, services, contentCa
                                 setFormData({...formData, includedServiceIds: [...arr, sId]});
                               }
                             }}
-                            className={`p-2 rounded-lg text-sm cursor-pointer transition flex items-center gap-2 border ${isSelected ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-[#1a1a1a] border-white/10 text-gray-400 hover:bg-white/5'}`}
+                            className={`p-2 rounded-lg text-sm cursor-pointer transition flex items-center gap-2 border ${isSelected ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-(--n-900) border-white/10 text-gray-400 hover:bg-white/5'}`}
                           >
                             <div className={`w-3 h-3 rounded-full ${isSelected ? 'bg-blue-500' : 'bg-gray-600'}`}></div>
                             <div className="truncate">{s.name}</div>
@@ -92,7 +92,7 @@ export default function PackageForm({ formData, setFormData, services, contentCa
                     <label className="block text-sm text-gray-400 mb-2 flex justify-between">Extra Text Features (Optional) <button type="button" onClick={() => setFormData({...formData, features: [...(formData.features || []), '']})} className="text-blue-500 hover:text-blue-400 text-xs flex items-center gap-1"><Plus size={12}/> Add</button></label>
                     {(formData.features || []).map((f, i) => (
                       <div key={i} className="flex gap-2 mb-2">
-                        <input type="text" className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white" value={f} onChange={e => {
+                        <input type="text" className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white" value={f} onChange={e => {
                           const arr = [...formData.features];
                           arr[i] = e.target.value;
                           setFormData({...formData, features: arr});

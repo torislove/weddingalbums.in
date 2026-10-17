@@ -21,7 +21,7 @@ const MockWhatsApp = () => {
     >
       {/* WA Header */}
       <div style={{ backgroundColor: '#075e54', color: 'white', padding: '15px', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#ddd', marginRight: '15px' }}></div>
+        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--n-200)', marginRight: '15px' }}></div>
         <div>
           <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 500 }}>My Wedding Invitation</h4>
           <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>online</span>
@@ -39,7 +39,7 @@ const MockWhatsApp = () => {
           >
             <div style={{ padding: '5px' }}>
               {/* Mock video player UI */}
-              <div style={{ position: 'relative', width: '100%', height: '150px', backgroundColor: '#000', borderRadius: '4px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', width: '100%', height: '150px', backgroundColor: 'var(--n-1000)', borderRadius: '4px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                  <img src="/images/bride-polished.jpg" alt="Video thumb" style={{position:'absolute', width:'100%', height:'100%', objectFit:'cover', opacity: 0.6}} />
                  {/* Play button overlay */}
                  <motion.div 
@@ -49,13 +49,13 @@ const MockWhatsApp = () => {
                    whileTap={{ scale: 0.9 }}
                    style={{ zIndex: 10, width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}
                  >
-                   <div style={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '15px solid #000', marginLeft: '5px' }}></div>
+                   <div style={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '15px solid var(--n-1000)', marginLeft: '5px' }}></div>
                  </motion.div>
               </div>
-              <p style={{ margin: '8px 0 4px', fontSize: '0.9rem', color: '#303030', lineHeight: 1.4 }}>
+              <p style={{ margin: '8px 0 4px', fontSize: '0.9rem', color: 'var(--n-800)', lineHeight: 1.4 }}>
                 We invite you to share our joy as we get married! 💍✨
               </p>
-              <span style={{ fontSize: '0.7rem', color: '#999', display: 'block', textAlign: 'right' }}>10:42 AM</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--n-400)', display: 'block', textAlign: 'right' }}>10:42 AM</span>
             </div>
           </motion.div>
 
@@ -66,10 +66,10 @@ const MockWhatsApp = () => {
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               style={{ backgroundColor: 'var(--paper)', padding: '10px 15px', borderRadius: '8px', maxWidth: '85%', marginRight: 'auto', marginBottom: '10px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
             >
-              <p style={{ margin: 0, fontSize: '0.9rem', color: '#303030', lineHeight: 1.4 }}>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--n-800)', lineHeight: 1.4 }}>
                 Thanks! The test link has been sent to your WhatsApp number. Check your phone.
               </p>
-              <span style={{ fontSize: '0.7rem', color: '#999', display: 'block', textAlign: 'right', marginTop: '4px' }}>Just now</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--n-400)', display: 'block', textAlign: 'right', marginTop: '4px' }}>Just now</span>
             </motion.div>
           )}
         </AnimatePresence>

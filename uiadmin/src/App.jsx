@@ -92,7 +92,7 @@ const AuthProvider = ({ children }) => {
 const Guard = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return (
-    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#080808', flexDirection: 'column', gap: 16 }}>
+    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--n-950)', flexDirection: 'column', gap: 16 }}>
       <div style={{ width: 40, height: 40, borderRadius: '50%', border: '3px solid rgba(245,158,11,0.15)', borderTopColor: 'var(--warn)', animation: 'spin 0.8s linear infinite' }} />
       <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, fontFamily: 'Inter, sans-serif' }}>Loading CMS…</span>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -281,7 +281,7 @@ function AppInner() {
                 <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
               </div>
             ) : (
-              <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)', color: '#e2e8f0', fontFamily: 'Inter, sans-serif' }}>
+              <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)', color: 'var(--n-200)', fontFamily: 'Inter, sans-serif' }}>
                 {/* Mobile hamburger header */}
                 {isMobile && (
                   <div style={{

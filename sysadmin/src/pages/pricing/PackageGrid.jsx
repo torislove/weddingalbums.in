@@ -9,7 +9,7 @@ export default function PackageGrid({ packages, openModal, handleDelete }) {
   return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {packages.map(pkg => (
-            <div key={pkg._id || pkg.id} className="bg-[#111] rounded-xl border relative group overflow-hidden" style={{ borderColor: pkg.color }}>
+            <div key={pkg._id || pkg.id} className="bg-(--n-900) rounded-xl border relative group overflow-hidden" style={{ borderColor: pkg.color }}>
               {pkg.coverImage && (
                 <div className="h-40 w-full bg-cover bg-center" style={{ backgroundImage: `url(${pkg.coverImage})` }} />
               )}

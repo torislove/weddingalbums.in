@@ -164,7 +164,7 @@ const Wallet = () => {
       {/* Withdrawal Modal */}
       {showWithdrawModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', padding: '2rem', background: '#111', border: '1px solid var(--gold-primary)' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', padding: '2rem', background: 'var(--n-900)', border: '1px solid var(--gold-primary)' }}>
             <h3 style={{ margin: '0 0 0.5rem 0' }}>Request Payout</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
               Available Balance: <strong style={{ color: 'var(--gold-primary)' }}>₹{balance}</strong>

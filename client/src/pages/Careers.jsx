@@ -34,7 +34,7 @@ const Careers = () => {
                       <input type="range" min="1" max="20" defaultValue="5" className="w-full" style={{ accentColor: 'var(--brand)' }} onChange={(e) => document.getElementById('calc-result').innerText = `₹${(e.target.value * 3000).toLocaleString()}`} />
                     </div>
                     <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--brand)' }}>
-                      <span id="calc-result">₹15,000</span><span style={{ fontSize: '0.8rem', color: '#999', fontWeight: 'normal' }}> {t('careers.earn_permo')}</span>
+                      <span id="calc-result">₹15,000</span><span style={{ fontSize: '0.8rem', color: 'var(--n-400)', fontWeight: 'normal' }}> {t('careers.earn_permo')}</span>
                     </div>
                   </div>
                 </div>

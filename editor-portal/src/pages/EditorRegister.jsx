@@ -431,7 +431,7 @@ const EditorRegister = () => {
                   }}>
                     {formData.agreedToTrial && <CheckCircle size={16} color="#000" strokeWidth={3} />}
                   </div>
-                  <label style={{ color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.9rem', cursor: 'pointer', flex: 1 }}>
+                  <label style={{ color: 'var(--n-200)', lineHeight: '1.6', fontSize: '0.9rem', cursor: 'pointer', flex: 1 }}>
                     By submitting this application, I agree to a <strong style={{ color: 'var(--paper)' }}>1-week trial period</strong> where I will be assigned 1-2 test jobs. I understand that I will be paid for these jobs <em style={{ color: 'var(--accent-primary)' }}>only after Quality Control (QC) approval</em>, and any failure to meet deadlines will result in immediate network removal.
                   </label>
                 </div>

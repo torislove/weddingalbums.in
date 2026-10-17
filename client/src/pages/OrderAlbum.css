@@ -101,7 +101,7 @@
 
 .process-step-text p {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--n-400);
   margin: 2px 0 0;
   line-height: 1.2;
 }
@@ -131,7 +131,7 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  color: #6b7280;
+  color: var(--n-500);
   font-size: 0.82rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -146,14 +146,14 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #111;
+  background: var(--n-900);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  color: #9ca3af;
+  color: var(--n-400);
 }
 
 .progress-step.active {
@@ -174,7 +174,7 @@
 
 .progress-step.completed .step-icon {
   background: var(--brand);
-  color: #000;
+  color: var(--n-1000);
   border-color: var(--brand);
 }
 
@@ -206,7 +206,7 @@
   border-radius: 14px;
   border: 1px solid transparent;
   background: transparent;
-  color: #9ca3af;
+  color: var(--n-400);
   font-weight: 600;
   font-size: 0.92rem;
   cursor: pointer;
@@ -293,7 +293,7 @@
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #d1d5db;
+  color: var(--n-300);
   transition: all 0.25s ease;
 }
 
@@ -319,7 +319,7 @@
 .service-tile-card.checked .service-tile-check-circle {
   background: var(--brand);
   border-color: var(--brand);
-  color: #000;
+  color: var(--n-1000);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
@@ -333,7 +333,7 @@
 
 .service-tile-telugu {
   font-size: 0.74rem;
-  color: #9ca3af;
+  color: var(--n-400);
   margin-bottom: 8px;
 }
 
@@ -460,7 +460,7 @@
 .service-check-card.checked .service-checkbox-circle {
   background: var(--brand);
   border-color: var(--brand);
-  color: #000;
+  color: var(--n-1000);
 }
 
 /* --- Interactive Luxury Bubbles & Pills --- */
@@ -476,7 +476,7 @@
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
-  color: #e5e7eb;
+  color: var(--n-200);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   user-select: none;
@@ -491,7 +491,7 @@
 
 .bubble-pill.active {
   background: linear-gradient(135deg, var(--brand) 0%, #F5D061 100%);
-  color: #000;
+  color: var(--n-1000);
   border-color: var(--brand);
   font-weight: 700;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
@@ -511,7 +511,7 @@
   border-radius: 9999px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
-  color: #d1d5db;
+  color: var(--n-300);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -530,7 +530,7 @@
 .orientation-pill.active {
   border-color: var(--brand);
   background: var(--brand);
-  color: #000;
+  color: var(--n-1000);
   font-weight: 700;
   box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
 }

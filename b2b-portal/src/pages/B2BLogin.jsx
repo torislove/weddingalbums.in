@@ -278,7 +278,7 @@ const B2BLogin = () => {
                   />
                 </div>
               </div>
-              <button type="submit" style={{ width: '100%', padding: '14px', background: '#25D366', border: 'none', borderRadius: '12px', color: '#000', fontWeight: '700', fontSize: '0.93rem', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <button type="submit" style={{ width: '100%', padding: '14px', background: '#25D366', border: 'none', borderRadius: '12px', color: 'var(--n-1000)', fontWeight: '700', fontSize: '0.93rem', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                 <MessageCircle size={16} /> Send WhatsApp OTP
               </button>
             </form>

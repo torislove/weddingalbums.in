@@ -37,7 +37,7 @@ const SURFACE_FINISHES = [
     gsm: "350 GSM Lay-Flat",
     texture: "Super-reflective crystal mirror gloss",
     shineType: "crystal-reflection",
-    color: "#E0E0E0",
+    color: "var(--n-200)",
     waterResistance: "100% Immersion Proof",
     bestFor: "Vivid saturated colors, deep blacks, high-contrast night shots",
     description: "Ultra-glossy clear thermal finish that maximizes color saturation and contrast. Highlights the deep reds of bridal silk and sparkling mandap decor with vivid punch.",
@@ -188,7 +188,7 @@ const BASE_SUBSTRATES = [
     lifespan: "20-30 Years (Dry Storage)",
     pricingNote: "Economical / Budget Tier",
     description: "Standard high-bulk coated printing paper. Excellent for economical pocket parent books and lightweight guest albums, but requires careful indoor handling and dry storage away from humidity.",
-    color: "#94A3B8"
+    color: "var(--n-400)"
   },
   {
     id: "silver-halide",

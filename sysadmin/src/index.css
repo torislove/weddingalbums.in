@@ -1,20 +1,27 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* Pin Tailwind's content detection to this app only. Without this, v4's automatic
+   source detection walks up to the git root and scans the *other* portals' built
+   bundles under ../<app>/dist, which slows the build and can leak stale
+   arbitrary-value candidates into this stylesheet. */
+@source "../index.html";
+@source "../src";
 
 body {
   background-color: var(--ink);
-  color: #f3f4f6;
+  color: var(--n-100);
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: dark;
   overflow-x: hidden;
 }
 
 select {
-  background-color: #111 !important;
+  background-color: var(--n-900) !important;
   color: var(--paper) !important;
 }
 
 select option {
-  background-color: #111 !important;
+  background-color: var(--n-900) !important;
   color: var(--paper) !important;
 }
 
@@ -111,6 +118,22 @@ select option {
 
   --ink: #050505;
   --paper: #ffffff;
+
+  /* Neutral ramp — replaces ad-hoc greyscale hex (var(--n-900)/var(--n-700)/var(--n-500)/var(--n-300) …) so dark
+     and light surfaces stay consistent. Additive; see UI_UX_POLISH_PLAN.md §3.3. */
+  --n-0: #ffffff;
+  --n-50: #fafafa;
+  --n-100: #f4f4f5;
+  --n-200: #e4e4e7;
+  --n-300: #d4d4d4;
+  --n-400: #a1a1aa;
+  --n-500: #71717a;
+  --n-600: #52525b;
+  --n-700: #3f3f46;
+  --n-800: #27272a;
+  --n-900: #18181b;
+  --n-950: #0a0a0a;
+  --n-1000: #000000;
 
   --ring: rgba(212, 175, 55, 0.6);
 

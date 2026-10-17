@@ -32,7 +32,7 @@ export default function EstimatorBuilder({ formData, setFormData, contentCat }) 
                             <div>
                               <label className="block text-xs text-gray-400 mb-1">Album Size (client catalog prices)</label>
                               <select
-                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white text-sm"
+                                className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white text-sm"
                                 value={applyCfg.sizeId || ''}
                                 onChange={e => setApply({ sizeId: e.target.value })}
                               >
@@ -46,7 +46,7 @@ export default function EstimatorBuilder({ formData, setFormData, contentCat }) 
                               <input
                                 type="number"
                                 min="20" max="120" step="2"
-                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white text-sm"
+                                className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white text-sm"
                                 value={applyCfg.pages || 60}
                                 onChange={e => setApply({ pages: Math.max(20, Math.min(120, Math.round(Number(e.target.value) || 60) / 2) * 2) })}
                               />
@@ -59,7 +59,7 @@ export default function EstimatorBuilder({ formData, setFormData, contentCat }) 
                               {(contentCat.sheetStyles || []).map(sh => {
                                 const n = (applyCfg.mix || {})[sh.id] || 0;
                                 return (
-                                  <div key={sh.id} className={`flex items-center gap-2 p-2 rounded-lg border transition ${n > 0 ? 'border-[var(--brand)]/50 bg-[var(--brand)]/10' : 'border-white/10 bg-[#1a1a1a]'}`}>
+                                  <div key={sh.id} className={`flex items-center gap-2 p-2 rounded-lg border transition ${n > 0 ? 'border-[var(--brand)]/50 bg-[var(--brand)]/10' : 'border-white/10 bg-(--n-900)'}`}>
                                     <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: sh.color }} />
                                     <span className="flex-1 text-xs text-gray-200 truncate" title={sh.title}>{sh.title}</span>
                                     <span className="text-[10px] text-gray-500 shrink-0">₹{sh.clientPricePerSheet}/sh</span>
@@ -78,7 +78,7 @@ export default function EstimatorBuilder({ formData, setFormData, contentCat }) 
                             <div>
                               <label className="block text-xs text-gray-400 mb-1">Cover</label>
                               <select
-                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white text-sm"
+                                className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white text-sm"
                                 value={applyCfg.coverId || ''}
                                 onChange={e => setApply({ coverId: e.target.value })}
                               >
@@ -92,7 +92,7 @@ export default function EstimatorBuilder({ formData, setFormData, contentCat }) 
                               <label className="block text-xs text-gray-400 mb-1">Parent Pocket Books (gift copies)</label>
                               <input
                                 type="number" min="0" max="4"
-                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white text-sm"
+                                className="w-full bg-(--n-900) border border-white/10 rounded-lg p-3 text-white text-sm"
                                 value={Number(applyCfg.parentBooks) || 0}
                                 onChange={e => setApply({ parentBooks: Math.max(0, Math.min(4, Number(e.target.value) || 0)) })}
                               />
@@ -113,9 +113,9 @@ export default function EstimatorBuilder({ formData, setFormData, contentCat }) 
                                       if (on) delete map[v.id]; else map[v.id] = 1;
                                       setApply({ videos: map });
                                     }}
-                                    className={`p-2 rounded-lg text-xs text-left cursor-pointer border transition flex items-center gap-2 ${on ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-[#1a1a1a] border-white/10 text-gray-400 hover:bg-white/5'}`}
+                                    className={`p-2 rounded-lg text-xs text-left cursor-pointer border transition flex items-center gap-2 ${on ? 'bg-blue-500/20 border-blue-500 text-white' : 'bg-(--n-900) border-white/10 text-gray-400 hover:bg-white/5'}`}
                                   >
-                                    <div className={`w-2.5 h-2.5 rounded-full shrink-0`} style={{ background: on ? '#3B82F6' : '#4B5563' }} />
+                                    <div className={`w-2.5 h-2.5 rounded-full shrink-0`} style={{ background: on ? '#3B82F6' : 'var(--n-600)' }} />
                                     <span className="truncate flex-1">{v.title.replace(/\s*\(.*\)\s*$/, '')}</span>
                                     <span className="text-[10px] text-gray-500">₹{v.clientPrice ?? v.price}</span>
                                   </button>

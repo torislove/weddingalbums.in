@@ -29,7 +29,7 @@ const ProtectedRoute = ({ allowedRoles = [], roles = [], children }) => {
           borderTopColor: 'var(--brand)',
           animation: 'prSpin 0.8s linear infinite',
         }} />
-        <span style={{ color: '#888', fontSize: '0.85rem' }}>Loading…</span>
+        <span style={{ color: 'var(--n-500)', fontSize: '0.85rem' }}>Loading…</span>
         <style>{`@keyframes prSpin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );

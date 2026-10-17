@@ -33,6 +33,6 @@
 
 .stat-card p {
   font-size: 0.9rem;
-  color: #ccc;
+  color: var(--n-300);
   margin: 0;
 }

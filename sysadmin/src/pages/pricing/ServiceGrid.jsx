@@ -11,7 +11,7 @@ export default function ServiceGrid({ services, contentCat, openModal, handleDel
   return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {services.map(s => (
-            <div key={s._id || s.id} className="bg-[#111] p-6 rounded-xl border border-white/10 relative group hover:border-[var(--brand)]/50 transition">
+            <div key={s._id || s.id} className="bg-(--n-900) p-6 rounded-xl border border-white/10 relative group hover:border-[var(--brand)]/50 transition">
               <div className="flex justify-between items-start mb-2">
                 <div className="text-xs uppercase tracking-widest text-blue-400 font-semibold">{s.category}</div>
                 {s.popular && <span className="text-xs bg-[var(--brand)]/20 text-[var(--brand)] px-2.5 py-0.5 rounded-full font-semibold border border-[var(--brand)]/30 shrink-0">⭐ Featured</span>}

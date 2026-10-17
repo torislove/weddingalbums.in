@@ -42,7 +42,7 @@ const GlobalEditor = ({ adminState }) => {
     <div className="flex flex-col lg:flex-row h-[calc(100vh-60px)] lg:h-screen overflow-hidden bg-black/30">
       {/* Mobile/Tablet View Switcher */}
       {isMobileOrTablet && (
-        <div className="flex bg-[#0e0e0e] border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">
+        <div className="flex bg-(--n-950) border-b border-white/10 p-2 gap-2 flex-shrink-0 z-20">
           <button
             onClick={() => setMobileTab('sections')}
             className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
@@ -75,7 +75,7 @@ const GlobalEditor = ({ adminState }) => {
       
       {/* 1. Structure Panel */}
       {(!isMobileOrTablet || mobileTab === 'sections') && (
-        <div className={`${isMobileOrTablet ? 'w-full flex-1' : 'w-[300px]'} flex flex-col border-r border-white/10 bg-[#0a0a0a] flex-shrink-0`}>
+        <div className={`${isMobileOrTablet ? 'w-full flex-1' : 'w-[300px]'} flex flex-col border-r border-white/10 bg-(--n-950) flex-shrink-0`}>
           <div className="p-4 border-b border-white/10 bg-black/40 backdrop-blur-md">
             <div className="flex items-center gap-1.5">
               <Sparkles size={14} className="text-[var(--brand)]" />
@@ -115,7 +115,7 @@ const GlobalEditor = ({ adminState }) => {
 
       {/* 2. Editor Panel */}
       {(!isMobileOrTablet || mobileTab === 'properties') && (
-        <div className={`${isMobileOrTablet ? 'w-full flex-1' : 'w-[380px]'} flex flex-col border-r border-white/10 bg-[#0e0e0e] flex-shrink-0 shadow-2xl`}>
+        <div className={`${isMobileOrTablet ? 'w-full flex-1' : 'w-[380px]'} flex flex-col border-r border-white/10 bg-(--n-950) flex-shrink-0 shadow-2xl`}>
           <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/40 backdrop-blur-md">
             <div className="flex items-center gap-3">
               {isMobileOrTablet && (
@@ -147,7 +147,7 @@ const GlobalEditor = ({ adminState }) => {
 
       {/* 3. Live Preview Iframe */}
       {(!isMobileOrTablet || mobileTab === 'preview') && (
-        <div className="flex-1 flex flex-col bg-[#000000] relative overflow-hidden">
+        <div className="flex-1 flex flex-col bg-(--n-1000) relative overflow-hidden">
           {/* Preview Toolbar */}
           <div className="h-14 border-b border-white/10 bg-black/60 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 z-10">
             <div className="flex items-center gap-3 text-xs text-gray-400">
@@ -208,10 +208,10 @@ const GlobalEditor = ({ adminState }) => {
           <div className="flex-1 overflow-hidden flex justify-center items-center p-2 sm:p-4 md:p-8 bg-[var(--ink)]">
             
             {previewMode === 'mobile' && (
-              <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140px] h-[26px] bg-[#1a1a1a] rounded-b-2xl z-20 flex justify-center items-center gap-2">
-                  <div className="w-10 h-1.5 rounded-full bg-[#0a0a0a]"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#0a0a0a] border border-[#2a2a2a]"></div>
+              <div className="relative w-full max-w-[375px] h-full max-h-[812px] bg-black rounded-[45px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[8px] border-(--n-900) flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140px] h-[26px] bg-(--n-900) rounded-b-2xl z-20 flex justify-center items-center gap-2">
+                  <div className="w-10 h-1.5 rounded-full bg-(--n-950)"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-(--n-950) border border-(--n-800)"></div>
                 </div>
                 <div className="w-full h-full bg-white relative z-10 pt-2 rounded-[36px] overflow-hidden">
                   <iframe key={iframeKey} src={previewUrl} className="w-full h-full border-0" title="Live Mobile Preview" />
@@ -220,9 +220,9 @@ const GlobalEditor = ({ adminState }) => {
             )}
 
             {previewMode === 'tablet' && (
-              <div className="relative w-full max-w-[768px] h-full max-h-[960px] bg-black rounded-[36px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[12px] border-[#1a1a1a] flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
+              <div className="relative w-full max-w-[768px] h-full max-h-[960px] bg-black rounded-[36px] shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[12px] border-(--n-900) flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[18px] z-20 flex justify-center items-center">
-                  <div className="w-2 h-2 rounded-full bg-[#2a2a2a] border border-[#000] mt-1"></div>
+                  <div className="w-2 h-2 rounded-full bg-(--n-800) border border-(--n-1000) mt-1"></div>
                 </div>
                 <div className="w-full h-full bg-white relative z-10 rounded-[24px] overflow-hidden">
                   <iframe key={iframeKey} src={previewUrl} className="w-full h-full border-0" title="Live Tablet Preview" />
@@ -231,8 +231,8 @@ const GlobalEditor = ({ adminState }) => {
             )}
 
             {previewMode === 'desktop' && (
-              <div className="relative w-full h-full bg-black rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[6px] border-[#1a1a1a] flex flex-col flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
-                <div className="h-7 bg-[#1a1a1a] w-full flex items-center px-4 gap-2 z-20 border-b border-[#2a2a2a]">
+              <div className="relative w-full h-full bg-black rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.8)] border-[6px] border-(--n-900) flex flex-col flex-shrink-0 transition-all duration-300 overflow-hidden ring-1 ring-white/10">
+                <div className="h-7 bg-(--n-900) w-full flex items-center px-4 gap-2 z-20 border-b border-(--n-800)">
                   <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>

@@ -26,7 +26,7 @@
 .scaler-filter-tab {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  color: #cbd5e1;
+  color: var(--n-300);
   padding: 8px 16px;
   border-radius: 99px;
   font-size: 13px;
@@ -89,7 +89,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #94a3b8;
+  color: var(--n-400);
   font-weight: 700;
 }
 
@@ -104,7 +104,7 @@
   gap: 5px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  color: var(--n-300);
   padding: 5px 10px;
   border-radius: 8px;
   font-size: 11px;
@@ -174,7 +174,7 @@
 
 .layflat-center-gutter {
   width: 3px;
-  background: #000;
+  background: var(--n-1000);
   height: 100%;
   position: relative;
   flex-shrink: 0;
@@ -225,7 +225,7 @@
 
 .ref-note {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--n-400);
   font-family: sans-serif;
 }
 
@@ -263,7 +263,7 @@
 
 .m-label {
   font-size: 10.5px;
-  color: #94a3b8;
+  color: var(--n-400);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -355,7 +355,7 @@
 
 .item-card-desc {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--n-400);
   line-height: 1.45;
   margin: 0;
 }
