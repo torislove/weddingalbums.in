@@ -136,7 +136,7 @@ with pre-seeded wedding catalog data", listening on `http://localhost:4000`.
 | G9 | Info | Client dev calls the absolute API host rather than the Vite proxy (fine; CORS-allowed). Consider preferring relative in dev to exercise the proxy. | ⏳ Backlog |
 | G10 | Info | `/api/health` exists (`server/index.js:117`); the audit's "unmatched" was a path-join artifact. | ✅ Verified |
 | G11 | Med | Sysadmin `TaskBoard` PATCHed `/api/admin/jobs/:id` to change task status / assign an editor, but **no such route existed** — the update silently 404'd. | ✅ **Fixed** — added `PATCH`/`PUT /api/admin/jobs/:id` (`server/routes/admin.js`) updating `status`/`assigned_editor_id`/etc. with an audit log. |
-| G12 | **High** | CI deploy failed on **runs #22–#30** with *"Missing permissions required for functions deploy … `iam.serviceAccounts.ActAs` on `weddingalbums-b4bcd@appspot.gserviceaccount.com`"*. Because the single deploy command ran functions before hosting, the **public site never shipped** (live bundles were stale from run #21). | ✅ **Workflow fixed + documented** — deploy is split **hosting → rules → functions**, `firebase-tools` is pinned, and the required IAM grant + a deploy-identity preflight are documented in the workflow header and §8. ⚠️ The IAM grant itself is a Google Cloud action for the project owner (see §8). |
+| G12 | **High** | CI deploy failed on **runs #22–#30** with *"Missing permissions required for functions deploy … `iam.serviceAccounts.ActAs` on `weddingalbums-b4bcd@appspot.gserviceaccount.com`"*. Because the single deploy command ran functions before hosting, the **public site never shipped** (live bundles were stale from run #21). | ✅ **Fixed** — deploy split **hosting → rules → functions** (#33 reached hosting+rules), CLI pinned, and `iam.serviceAccountUser` granted to the GitHub Actions SA on **both** runtime SAs (`898839169256-compute@developer` and `@appspot`), plus `firebase.admin`/`firebaserules.admin`/`serviceusage.serviceUsageAdmin`. **Run #34 is fully green** (hosting ×5 + rules + functions). See §8. |
 | G13 | Med | Tailwind v4 builds were fragile: a hand-written escaped selector in `sysadmin/src/premium.css` (`.bg-\[\#111\]`) was re-scanned as a candidate, and a sibling portal's `dist` was being auto-scanned up to the git root — either could abort `lightningcss` minify. | ✅ **Fixed** — arbitrary values now use v4 shorthand (`bg-(--n-900)`), `sysadmin`/`uiadmin` pin their sources (`@import "tailwindcss" source(none)` + `@source`), and the escaped selector was restored. |
 
 ### 5.1 Price ownership — two admin surfaces (by design)
@@ -248,23 +248,30 @@ steps** so an API/permissions problem can never block the public site again:
 | `FIREBASE_SERVICE_ACCOUNT_WEDDINGALBUMS_B4BCD` | JSON key of the CI deployer service account |
 | `JWT_SECRET` | API signing key (≥ 64 random chars). The functions step fails fast without it, because the API now refuses to serve production traffic with a guessable key. |
 
-**Required IAM for the deployer service account** (project `weddingalbums-b4bcd`). A Functions / Cloud Run
-deploy must be allowed to *act as* the runtime service account. Without this the CLI aborts with
-*"Missing permissions required for functions deploy … `iam.serviceAccounts.ActAs` on
-`weddingalbums-b4bcd@appspot.gserviceaccount.com`"* — which, before the split, failed the whole job **ahead of
-hosting** (see G12):
+**Required IAM for the deployer service account.** A Functions / Cloud Run deploy must be allowed to *act as*
+the function's **runtime** service account. The error names the exact account, e.g. *"Caller is missing
+permission `iam.serviceaccounts.actAs` on service account
+`898839169256-compute@developer.gserviceaccount.com`"* — which, before the deploy was split, failed the whole
+job **ahead of hosting** (G12).
+
+In this project the runtime SA is the **default compute** account; grant on it *and* on the App Engine default
+(the CLI stages with either):
 
 ```bash
-gcloud iam service-accounts add-iam-policy-binding \
-  weddingalbums-b4bcd@appspot.gserviceaccount.com \
-  --member="serviceAccount:<CI_DEPLOYER_SA_EMAIL>" \
-  --role="roles/iam.serviceAccountUser" \
-  --project=weddingalbums-b4bcd
+for SA in 898839169256-compute@developer.gserviceaccount.com \
+          weddingalbums-b4bcd@appspot.gserviceaccount.com; do
+  gcloud iam service-accounts add-iam-policy-binding "$SA" \
+    --member="serviceAccount:github-action-1391869305@weddingalbums-b4bcd.iam.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountUser" --project=weddingalbums-b4bcd
+done
 ```
 
-Typical additional roles for the deployer: `roles/firebasehosting.admin`, `roles/firebaserules.admin`,
-`roles/cloudfunctions.developer`, `roles/run.developer`, `roles/artifactregistry.writer`,
-`roles/cloudbuild.builds.editor`, `roles/storage.admin`, `roles/serviceusage.serviceUsageAdmin`.
+**As-built (2026-10-17).** The deployer `github-action-1391869305@weddingalbums-b4bcd.iam.gserviceaccount.com`
+(a GitHub Actions SA created for `torislove/weddingalbums.in`) holds: pre-existing
+`cloudfunctions.developer`, `firebasehosting.admin`, `firebaseauth.admin`, `serviceusage.apiKeysViewer`,
+`serviceusage.serviceUsageConsumer`, `run.viewer`; **added** `firebase.admin`, `firebaserules.admin`,
+`serviceusage.serviceUsageAdmin`, and `iam.serviceAccountUser` on both runtime SAs. **Run #34 then deployed
+hosting ×5 + Firestore rules + the `api` function green.**
 
 > `<CI_DEPLOYER_SA_EMAIL>` is the `client_email` inside the `FIREBASE_SERVICE_ACCOUNT_WEDDINGALBUMS_B4BCD`
 > secret. In the Cloud console: **IAM & Admin → IAM → Grand access →** that SA → role **Service Account User**,
