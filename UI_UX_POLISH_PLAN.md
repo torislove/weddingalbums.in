@@ -121,7 +121,7 @@ Shell has **three modes** (marketing / portal `/client*` / auth). Keep, but unif
 | **UX-1** | C1 (all native dialogs), C4 (states), C6 (boundaries) | `grep` for `alert(\|confirm(\|prompt(` in `*/src` returns 0; every fetch has loading+empty+error. **✅ Done** — C1 all apps (0 native dialogs), C4 done for the named fetch pages, C6 ErrorBoundary in all 5 apps. |
 | **UX-2** | C2/C3/C5/C7 token + a11y migration app-by-app | `grep` raw hex in pages → 0; every icon button labelled; `LazyImage` alt required. **▶ Mostly done** — see §6. Token layer + focus ring in all 5 apps; 1,085 brand/status hex → tokens; **0** unlabelled icon buttons; **0** `<img>` without alt; editor-portal re-tokenised to gold. Remaining: 1,056 hex literals (functional type colours + grey scales, tracked by `npm run audit:ui`). |
 | **UX-3** | Big-page refactors (BookingPage 3,320 → steps; PricingEngine; App.jsx split) | Each < ~500 lines, routes deep-linkable, mobile sticky bars. **✅ Done** — see §6. sysadmin `App.jsx` 431 → 15 lines (split into `context/AuthContext`, `layout/AppShell`, `layout/Sidebar`, `components/Guard`, `pages/Dashboard`); `BookingPage.jsx` 3,530 → **1,242 lines** (static catalogue → `pages/booking/bookingData.js`; component body split into `pages/booking/` pathway + chrome components on a shared `ctx`); `PricingEngine.jsx` 847 → **236 lines** (grids/hints/estimator/modal-forms → `pages/pricing/`). |
-| **UX-4** | EN↔TE rollout to remaining client marketing pages | Language toggle flips every public page. **▶ In progress** — see §7. `useT()` hook + 288-key EN/TE dictionary; wired 14 files: Footer, Hero, About, Services, Pricing, Portfolio, Contact, Testimonials, Careers, Blog, BlogPost, B2C, MuhurthamCalendar, AlbumsShowcase. Remaining: B2B + order/dashboard pages (Terms/Privacy stay English — B2B legal). |
+| **UX-4** | EN↔TE rollout to all client pages | Language toggle flips every public page. **✅ Done** — see §7. `useT()` hook + **585-key** EN/TE dictionary; **every** client page wired: marketing (Footer, Hero, About, Services, Pricing, Portfolio, Contact, Testimonials, Careers, Blog, BlogPost, B2C, MuhurthamCalendar, AlbumsShowcase, B2B trade page) + transactional (Cart, Checkout, OrderTracking, OrderHistory) + dashboards (ClientDashboard/couples, EditorDashboard, PhotographerDashboard) + account/tools (PortalLogin, ProfileSettings, ForgotPassword, ClientWallet, ClientReferral, ClientProofing, AlbumProofGallery, PhotoCulling). `BookingPage` is bilingual via its own inline `lang === 'TE'` convention; `Terms`/`PrivacyPolicy` stay English (B2B legal); `Home`/`OrderAlbum` are copy-less wrappers. |
 
 ### Guardrails / acceptance (add to CI)
 - `npm run audit:ui` → **hard gate** fails if any native `alert/confirm/prompt` call exists; reports raw-hex, unlabelled icon buttons and `<img>` without `alt` (use `--strict` to gate those too).
@@ -187,27 +187,38 @@ Shell has **three modes** (marketing / portal `/client*` / auth). Keep, but unif
     click-through isn't possible here without a logged-in sysadmin session + backend, unlike the client page.
 
 > **Still open (tracked):** the remaining 1,056 hex literals (mostly intentional functional type colours +
-> greys, §3.3); and UX-4 on `B2B`, the order/dashboard pages, and testimonial/portfolio *body* content.
+> greys, §3.3). UX-4 is now **complete** across every client page (§7).
 
 ---
 
 ## 7. As-built (UX-4 + backend wiring, 2026-10-16)
 
-### UX-4 — whole-site EN↔TE
-- **Mechanism:** new `useT()` hook (`client/src/context/LanguageContext.jsx`) binds `t(key, vars)` to the
-  current language, so pages call `const t = useT();` and `{t('about.hero_title')}`. All copy lives in the
-  central `client/src/lib/i18n.js` dictionary (per the file's own convention), now ~230 keys.
-- **Wired (EN + reviewed Telugu, 14 files):** `Footer`, home `Hero` block, `About`, `Services` (hero + 4
-  pathways + tab labels + estimator + CTA), `Pricing` (hero + 4 FAQs + CTA), `Portfolio` (filters + category
-  pills + lightbox hint), `Contact` (3-step wizard, all labels/options/placeholders/toasts), `Testimonials`
-  (chrome, filters, stats, CTA), `Careers`, `Blog`, `BlogPost`, `B2C` (hero, 3D viewer, process, sheet types,
-  gallery, digital invites), `MuhurthamCalendar` (incl. `te-IN` date formatting) and `AlbumsShowcase`
-  (6 cover types + 4 paper finishes carry inline `te` variants, matching the `Services` `telugu` pattern).
+### UX-4 — whole-site EN↔TE (complete)
+- **Mechanism:** the `useT()` hook (`client/src/context/LanguageContext.jsx`) binds `t(key, vars)` to the current
+  language, so pages call `const t = useT();` and `{t('about.hero_title')}`. All copy lives in the central
+  `client/src/lib/i18n.js` dictionary — now **585 keys**, each with EN + reviewed Telugu. Persisted to
+  `localStorage['site_lang']`, sets `<html lang>`, and does `{var}` substitution.
+- **Wired — marketing:** `Footer`, home `Hero` block, `About`, `Services` (hero + 4 pathways + tab labels +
+  estimator + CTA), `Pricing` (hero + 4 FAQs + CTA), `Portfolio` (filters + category pills + lightbox hint),
+  `Contact` (3-step wizard), `Testimonials` (chrome, filters, stats, CTA), `Careers`, `Blog`, `BlogPost`, `B2C`
+  (hero, 3D viewer, process, sheet types, gallery, digital invites), `MuhurthamCalendar` (incl. `te-IN` date
+  formatting), `AlbumsShowcase` (6 cover types + 4 paper finishes carry inline `te` variants), and `B2B` — the
+  studio-trade page (workflow steps, sheet arsenal, white-label gate, benefits, trade CTAs).
+- **Wired — transactional:** `Cart`, `Checkout`, `OrderTracking`, `OrderHistory`.
+- **Wired — dashboards:** `ClientDashboard` (couples-portal chrome, timeline steps, order cards, stat tiles,
+  quick actions, sidebar + mobile nav), `EditorDashboard` (available/active jobs, payouts, earnings table),
+  `PhotographerDashboard` (job-submission form, album proofing modal).
+- **Wired — account & tools:** `PortalLogin` (sign-in/register tabs, password + phone/email OTP methods,
+  validation & success messages, Google button, other-portal links, forgot-password modal), `ProfileSettings`,
+  `ForgotPassword`, `ClientWallet`, `ClientReferral`, `ClientProofing`, `AlbumProofGallery`, `PhotoCulling`.
+- **Left as-is (by design):** `Terms` / `PrivacyPolicy` (B2B legal copy — translation is a legal decision, not a
+  UI one); `Home` / `OrderAlbum` (thin wrappers with no copy). `BookingPage` is already bilingual via its own
+  inline `lang === 'TE' ? … : …` convention and was deliberately **not** migrated to the dictionary.
 - **Content vs chrome:** user/editorial content stays as authored — testimonial quotes, blog article bodies,
-  and portfolio item titles are not machine-translated. Portfolio *categories* and *filters* are translated.
-- **Deliberately English:** `Terms` / `PrivacyPolicy` (B2B legal copy — translation is a legal decision, not a
-  UI one).
-- Telugu verified intact (no U+FFFD) across all edited files; client build green.
+  portfolio item titles, sheet brand names + GSM figures, city names, sample/mock rows, and server/API error
+  strings. Chrome, filters, categories, field labels, buttons and local validation copy are translated.
+- Telugu verified intact (no U+FFFD) across all edited files; client build green; `npm run audit:ui` reports
+  **0** native dialogs, **0** unlabelled icon buttons and **0** `<img>` without `alt`.
 
 ### Backend wiring — G5 / G7 / G8 (was §5 of `SYSTEM_INTEGRATION_PLAN.md`)
 - **G5 — dead service layers removed.** Deleted the four unreferenced `{b2b,editor,sysadmin,uiadmin}/src/services/api.js`
