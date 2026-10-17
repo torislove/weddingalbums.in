@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import LoginModal from '../components/LoginModal';
+import Toast from '../components/Toast';
+import BundlesPathway from './booking/BundlesPathway';
+import CustomPathway from './booking/CustomPathway';
+import OrderSummary from './booking/OrderSummary';
+import MobileSummaryBar from './booking/MobileSummaryBar';
+import BookingSuccess from './booking/BookingSuccess';
 
-// TOP AUSPICIOUS TELUGU SUBHA MUHURTHAM DATES (HIGH DEMAND - SLOTS FILLING UP FAST)
-const AUSPICIOUS_MUHURTHAM_DATES = [
-  { date: '2026-10-18', label: 'Oct 18, 2026', telugu: 'ఆశ్వయుజ శుద్ధ విదియ (విజయవాడ/గుంటూరు)', tag: '🔥 85% Booked' },
-  { date: '2026-10-26', label: 'Oct 26, 2026', telugu: 'ఆశ్వయుజ బహుళ పాడ్యమి (అత్యంత శుభం)', tag: '🔥 90% Booked' },
-  { date: '2026-11-04', label: 'Nov 04, 2026', telugu: 'కార్తీక శుద్ధ ఏకాదశి (బోధన ముహూర్తం)', tag: '🔥 95% Booked' },
-  { date: '2026-11-18', label: 'Nov 18, 2026', telugu: 'కార్తీక పూర్ణిమ మహా ముహూర్తం', tag: '🔥 Peak Rush' },
-  { date: '2026-12-06', label: 'Dec 06, 2026', telugu: 'మార్గశిర శుద్ధ త్రయోదశి', tag: '🔥 80% Booked' },
-  { date: '2027-01-22', label: 'Jan 22, 2027', telugu: 'పుష్య బహుళ పూర్ణిమ సంక్రాంతి ముహూర్తం', tag: '⭐ Best Seller' },
-];
 import {
   ShoppingCart, CheckCircle2, Package, Image, Video,
   UploadCloud, Truck, MonitorPlay, Film, Palette,
@@ -22,390 +20,20 @@ import {
 import './OrderAlbum.css';
 import { API } from '../apiConfig';
 
-// COMPREHENSIVE ALBUM SIZES (LANDSCAPE ↔️ & PORTRAIT ↕️)
-const DEFAULT_ALBUM_SIZES = [
-  // LANDSCAPE SIZES
-  {
-    id: '12x36',
-    name: '12×36 Royal Spread (Panoramic)',
-    dimensions: '12×36 inches',
-    orientation: 'landscape',
-    telugu: '12×36 రాయల్ పానోరమిక్ (ఆంధ్ర నెం.1 ఎంపిక ⭐)',
-    basePrice: 9500,
-    popular: true,
-    description: "36 inch wide panoramic lay-flat views. India's #1 wedding choice."
-  },
-  {
-    id: '12x30',
-    name: '12×30 Classic Landscape',
-    dimensions: '12×30 inches',
-    orientation: 'landscape',
-    telugu: '12×30 క్లాసిక్ ల్యాండ్‌స్కేప్',
-    basePrice: 8500,
-    popular: false,
-    description: 'Traditional Telugu standard widescreen layout for mandap & stage spreads.'
-  },
-  {
-    id: '12x24',
-    name: '12×24 Compact Landscape',
-    dimensions: '12×24 inches',
-    orientation: 'landscape',
-    telugu: '12×24 కాంపాక్ట్ ల్యాండ్‌స్కేప్',
-    basePrice: 7500,
-    popular: false,
-    description: 'Budget-friendly album with modern sleek aspect ratio.'
-  },
-  {
-    id: '12x18',
-    name: '12×18 Traditional Landscape',
-    dimensions: '12×18 inches',
-    orientation: 'landscape',
-    telugu: '12×18 ట్రెడిషనల్ ల్యాండ్‌స్కేప్',
-    basePrice: 6500,
-    popular: false,
-    description: 'Traditional portrait-landscape balance, timeless horizontal format.'
-  },
-  {
-    id: '10x24',
-    name: '10×24 Compact Feast Landscape',
-    dimensions: '10×24 inches',
-    orientation: 'landscape',
-    telugu: '10×24 కాంపాక్ట్ ఫీస్ట్ ల్యాండ్‌స్కేప్',
-    basePrice: 5800,
-    popular: false,
-    description: 'Lightweight easy-to-carry format for family functions.'
-  },
-  {
-    id: 'bundle_12x36_parent',
-    name: 'Royal Family Bundle (12×36 + 2x 6×18 Parent)',
-    dimensions: '12×36 + 2x 6×18',
-    orientation: 'landscape',
-    telugu: 'రాయల్ ఫ్యామిలీ బండిల్ (కపుల్ + 2 పేరెంట్ ఆల్బమ్స్)',
-    basePrice: 11500,
-    popular: true,
-    isBundle: true,
-    description: 'Master 12×36 album for couple + 2 matching 6×18 parent duplicate copies.'
-  },
-
-  // PORTRAIT SIZES
-  {
-    id: '18x12',
-    name: '18×12 Grand Vertical Portrait',
-    dimensions: '18×12 inches',
-    orientation: 'portrait',
-    telugu: '18×12 గ్రాండ్ వర్టికల్ పోర్ట్రెయిట్ (రాయల్ మ్యాగజైన్)',
-    basePrice: 9000,
-    popular: true,
-    description: 'Tall royal magazine format. Stunning full-length bridal silk & jewellery spreads.'
-  },
-  {
-    id: '15x12',
-    name: '15×12 Classic Vertical Portrait',
-    dimensions: '15×12 inches',
-    orientation: 'portrait',
-    telugu: '15×12 క్లాసిక్ వర్టికల్ పోర్ట్రెయిట్',
-    basePrice: 8000,
-    popular: false,
-    description: 'Traditional vertical bridal album for stage portraits and couple framing.'
-  },
-  {
-    id: '14x11',
-    name: '14×11 Fine Art Vertical Portrait',
-    dimensions: '14×11 inches',
-    orientation: 'portrait',
-    telugu: '14×11 ఫైన్ ఆర్ట్ పోర్ట్రెయిట్',
-    basePrice: 7200,
-    popular: false,
-    description: 'Editorial fashion photography format for candid contemporary stories.'
-  },
-  {
-    id: '12x9',
-    name: '12×9 Compact Vertical Portrait',
-    dimensions: '12×9 inches',
-    orientation: 'portrait',
-    telugu: '12×9 కాంపాక్ట్ వర్టికల్ పోర్ట్రెయిట్',
-    basePrice: 5500,
-    popular: false,
-    description: 'Handy vertical book for intimate Haldi, Mehendi & Sangeet moments.'
-  },
-  {
-    id: '10x8',
-    name: '10×8 Family Gift Portrait',
-    dimensions: '10×8 inches',
-    orientation: 'portrait',
-    telugu: '10×8 ఫ్యామిలీ గిఫ్ట్ పోర్ట్రెయిట్',
-    basePrice: 4500,
-    popular: false,
-    description: 'Compact vertical keepsake gift album for parents and close relatives.'
-  }
-];
-
-// ============================================================================
-// SERVICE INTENT MODES (FOR COUPLES & CLIENTS)
-// ============================================================================
-const SERVICE_INTENTS = [
-  {
-    id: 'edit_and_print',
-    title: '✨ Complete Suite (Editing + Printing)',
-    telugu: 'ఎడిటింగ్ + డిజైనింగ్ + ఆల్బమ్ ప్రింటింగ్',
-    badge: 'Couples #1 Choice ⭐',
-    shortDesc: 'End-to-end Telugu wedding album creation. Raw photo culling, skin retouching, Karizma PSD layout design, WhatsApp 3D flipbook proof review, and commercial lab printing on archival sheets.',
-    inclusions: ['Photo Culling & Skin Retouching', 'Custom Karizma Telugu PSD Design', 'Interactive 3D Digital Flipbook Proof', 'Lab Lay-Flat Printing (NTR/Silver Halide)', 'Handcrafted Presentation Box'],
-    clientProvides: 'Raw or original wedding photos via Google Drive / WhatsApp',
-    turnaround: '3-5 Working Days after Digital Proof Approval'
-  },
-  {
-    id: 'only_editing',
-    title: '🎨 Only Editing (Digital Master Delivery)',
-    telugu: 'ఫొటో & వీడియో ఎడిటింగ్ మాత్రమే (నో ప్రింట్)',
-    badge: '100% Digital Delivery',
-    shortDesc: 'Professional photo culling, Telugu Pelli skin retouching, Karizma PSD creative layout design, cinematic color grading, or video editing without physical album printing.',
-    inclusions: ['Telugu Pelli Skin Retouching & Beauty Clean-up', 'Custom Karizma PSD Spread Layouts (300 DPI)', 'Cinematic Color Grading & Telugu LUTs', 'High-Res Digital Files via Cloud Link', 'Zero Physical Printing Charges'],
-    clientProvides: 'Original RAW or high-resolution JPEG photos / Camera video files',
-    turnaround: '48-72 Hours Express Cloud Delivery'
-  },
-  {
-    id: 'only_printing',
-    title: '🖨️ Only Printing & Binding (Existing Spreads)',
-    telugu: 'ఆల్బమ్ ల్యాబ్ ప్రింటింగ్ & బైండింగ్ మాత్రమే',
-    badge: 'Direct Lab Press',
-    shortDesc: 'Direct commercial lab printing and binding. Ideal if you already have pre-designed 12×36 / 12×30 album PSD or high-resolution JPEG spreads ready. Choice of 8 surface finishes and luxury covers.',
-    inclusions: ['100% Waterproof NTR Synthetic or Fine Art Substrate', 'Choice of 8 Surface Finishes (Matte, Gloss, Velvet, Metallic...)', 'Seamless 180° Lay-Flat Thermal Core Binding', 'Luxury Acrylic, Velvet, or Leatherette Cover', 'Secure Door Delivery across AP & TS'],
-    clientProvides: 'Pre-designed 12×36, 12×30, or 18×12 spreads in 300 DPI (PSD, PDF, or JPG)',
-    turnaround: '3-4 Working Days to Dispatch'
-  },
-  {
-    id: 'standalone_services',
-    title: '🎬 Any Video or Event Print A-la-Carte',
-    telugu: 'వీడియో రీల్స్, టీజర్లు, వాట్సాప్ ఆహ్వానాలు & ఫ్లెక్స్',
-    badge: 'A-la-Carte Direct',
-    shortDesc: 'Order individual creative media items directly: 9:16 Instagram Wedding Reels 5-Pack, 4K Cinematic Teaser Trailer, Animated WhatsApp Video Invitation with Sannai Melam, Welcome Roll-Up Standees, or Tabletop Desk Calendars.',
-    inclusions: ['4K Cinematic Wedding Teaser Trailers (1-3 min)', 'Instagram Reels & Shorts 5-Pack (9:16 Vertical)', 'Animated WhatsApp Video Invitation with Devotional BGM', 'Mandap Welcome Roll-Up Standees & Entrance Flex', 'Personalized Tabletop Desk Calendars'],
-    clientProvides: 'Event footage, couple photos, wedding date & venue details',
-    turnaround: '24-48 Hours for Digital Media / 2 Days for Flex'
-  },
-  {
-    id: 'bundles',
-    title: '⚡ 1-Click Curated Luxury Bundles',
-    telugu: 'తక్షణ లగ్జరీ ప్యాకేజీలు (బెస్ట్ సెల్లర్స్)',
-    badge: 'Max Bundle Value',
-    shortDesc: 'Pre-configured all-in-one Telugu wedding packages combining master album, cinematic video, parent duplicate books, and entrance standees with massive package savings.',
-    inclusions: ['Pre-Configured Master Royal Album', 'Cinematic 4K Teaser + Instagram Reels', 'Matching Mini Duplicate Parent Albums', 'Velvet Presentation Briefcase', 'Free Express Insured Dispatch'],
-    clientProvides: 'Event date & photos / video link',
-    turnaround: '5-7 Working Days Total'
-  }
-];
-
-// 2-DIMENSIONAL LAB SHEET FINISHES (STANDARD INCLUDED VS LUXURY UPGRADES)
-const DEFAULT_SHEETS = [
-  // STANDARD FINISHES (INCLUDED IN BASE PRICE - ₹0 EXTRA)
-  {
-    id: 'ntr_matte',
-    name: 'NTR Anti-Glare Matte',
-    telugu: 'నాన్-టియరబుల్ మ్యాట్ (స్టాండర్డ్)',
-    tier: 'standard',
-    pricePerSheet: 0,
-    surchargePerSheet: 0,
-    priceLabel: 'Included in Base Price (₹0 Extra)',
-    note: 'Smooth non-reflective matte lamination over non-tearable core. Zero glare, 100% waterproof.'
-  },
-  {
-    id: 'ntr_gloss',
-    name: 'NTR Crystal High Gloss',
-    telugu: 'క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్',
-    tier: 'standard',
-    pricePerSheet: 0,
-    surchargePerSheet: 0,
-    priceLabel: 'Included in Base Price (₹0 Extra)',
-    note: 'Ultra-glossy clear thermal finish. Deep saturated reds and high contrast mirror clarity.'
-  },
-  // LUXURY FINISHES (PER-SHEET SURCHARGES)
-  {
-    id: 'silky_matte',
-    name: 'Silky / Silk Matte Pearl',
-    telugu: 'సిల్కీ / సిల్క్ మ్యాట్ పెర్ల్ లస్టర్',
-    tier: 'luxury',
-    pricePerSheet: 25,
-    surchargePerSheet: 25,
-    priceLabel: '+₹25 / sheet upgrade',
-    note: 'Micro-pearlescent satin texture. True-to-life skin tones with silky tactile glide.'
-  },
-  {
-    id: 'velvet',
-    name: 'Velvet / Feather Touch Soft',
-    telugu: 'రాయల్ వెల్వెట్ ఫెదర్ టచ్',
-    tier: 'luxury',
-    pricePerSheet: 35,
-    surchargePerSheet: 35,
-    priceLabel: '+₹35 / sheet upgrade',
-    note: 'Peach-fuzz tactile velvet, 100% anti-scratch & zero fingerprint smudge.'
-  },
-  {
-    id: 'metallic',
-    name: '24K Metallic Pearl Sheen',
-    telugu: '24K మెటాలిక్ పెర్ల్ గోల్డ్ గ్లోస్',
-    tier: 'luxury',
-    pricePerSheet: 45,
-    surchargePerSheet: 45,
-    priceLabel: '+₹45 / sheet upgrade',
-    note: 'Archival pearlized metallic film with specular shimmer that elevates 22K gold jewelry.'
-  },
-  {
-    id: 'sparkle',
-    name: 'Sparkle / Glitter Film',
-    telugu: 'స్పార్కిల్ / గ్లిట్టర్ లామినేషన్',
-    tier: 'luxury',
-    pricePerSheet: 50,
-    surchargePerSheet: 50,
-    priceLabel: '+₹50 / sheet upgrade',
-    note: 'Micro-crystalline diamond glitter sparkle for high-energy Sangeet and fireworks.'
-  },
-  {
-    id: 'luster',
-    name: 'Luster / Satin Archival',
-    telugu: 'లస్టర్ / శాటిన్ ఆర్కైవల్ ఫినిష్',
-    tier: 'luxury',
-    pricePerSheet: 30,
-    surchargePerSheet: 30,
-    priceLabel: '+₹30 / sheet upgrade',
-    note: 'Classic lab orange-peel fine-grain luster. Balanced contrast and anti-glare viewing.'
-  },
-  {
-    id: 'leatherette',
-    name: 'Canvas / Leatherette Embossed',
-    telugu: 'లెథరెట్ / కాన్వాస్ ఎంబోస్డ్ టెక్స్చర్',
-    tier: 'luxury',
-    pricePerSheet: 40,
-    surchargePerSheet: 40,
-    priceLabel: '+₹40 / sheet upgrade',
-    note: 'Deep tactile woven canvas weave and soft leatherette relief for timeless heirlooms.'
-  }
-];
-
-// 4 BASE SUBSTRATES & CORE MEDIA
-const DEFAULT_BASE_SUBSTRATES = [
-  {
-    id: 'ntr_bopp',
-    name: 'NTR (Non-Tearable BOPP Synthetic)',
-    telugu: 'నాన్-టియరబుల్ సింథటిక్ షీట్ (100% వాటర్‌ప్రూఫ్)',
-    surchargePerSheet: 0,
-    priceLabel: 'Included Standard (100% Waterproof)',
-    note: '100% unbreakable, tear-proof, moisture-proof polymer. 80%+ of Indian weddings.'
-  },
-  {
-    id: 'art_paper',
-    name: 'Regular Wood-Pulp Art Paper (170-300 GSM)',
-    telugu: 'రెగ్యులర్ ఆర్ట్ పేపర్ (వుడ్-పల్ప్)',
-    surchargePerSheet: 0,
-    priceLabel: 'Budget Friendly',
-    note: 'Standard coated paper stock for lightweight pocket books and budget albums.'
-  },
-  {
-    id: 'silver_halide',
-    name: 'Silver Halide True Chemical Photographic (Fuji DP2)',
-    telugu: 'ట్రూ సిల్వర్ హాలైడ్ కెమికల్ పేపర్',
-    surchargePerSheet: 40,
-    priceLabel: '+₹40 / sheet upgrade',
-    note: 'Continuous-tone optical RGB exposure with wet chemistry. Zero digital dots, 100-year archival.'
-  },
-  {
-    id: 'cotton_rag',
-    name: '100% Cotton Rag Fine Art (Hahnemühle / Giclée)',
-    telugu: '100% కాటన్ రాగ్ ఫైన్ ఆర్ట్ (మ్యూజియం గ్రేడ్)',
-    surchargePerSheet: 60,
-    priceLabel: '+₹60 / sheet upgrade',
-    note: 'Museum conservation grade, 100% natural cotton fibers, acid-free watercolor texture.'
-  }
-];
-
-// ALL VIDEO EDITING SERVICES
-const VIDEO_SERVICES = [
-  { id: 'teaser', name: '4K Cinematic Wedding Teaser (1-3 min)', telugu: '4K సినిమాటిక్ టీజర్', price: 6000, note: 'Fast-paced emotional cut, WhatsApp & family ready' },
-  { id: 'reels', name: 'Instagram Reels & Shorts 5-Pack (9:16)', telugu: 'ఇన్‌స్టాగ్రామ్ రీల్స్ 5-ప్యాక్', price: 3500, note: 'Trending music synced 9:16 vertical hooks' },
-  { id: 'highlights', name: 'Story Highlights Film (10-15 min)', telugu: 'స్టోరీ హైలైట్స్ ఫిలిం', price: 10000, note: 'Emotional story with couple vows & speech sync' },
-  { id: 'traditional', name: 'Full Traditional Long-Form Video (60+ min)', telugu: 'ఫుల్ ట్రెడిషనల్ వీడియో', price: 12000, note: 'All rituals: Talambralu, Agni Sakshi multi-cam' },
-  { id: 'sde', name: 'Same-Day Edit (SDE Express for Reception)', telugu: 'సేమ్-డే ఎడిట్ (రిసెప్షన్)', price: 12000, note: 'Morning wedding edited for reception night LED screen' },
-  { id: 'prewedding', name: 'Pre-Wedding Love Story Film', telugu: 'ప్రీ-వెడ్డింగ్ లవ్ స్టోరీ', price: 5000, note: 'Romantic couple teaser with licensed music' },
-  { id: 'sound', name: 'Mangalasnanam Sound & Mantra Mastering', telugu: 'సంప్రదాయ సౌండ్ మాస్టరింగ్', price: 3000, note: 'Mantra clarity, Purohit de-noise & Sannai Melam' }
-];
-
-// ALL PHOTO EDITING SERVICES
-const PHOTO_SERVICES = [
-  { id: 'retouching', name: 'Telugu Pelli Skin Retouching & Beauty Clean-up', telugu: 'స్కిన్ రీటచింగ్ & బ్యూటీ క్లీనప్', rate: 60, note: 'Blemish removal, eye brightening, gold jewelry shine' },
-  { id: 'karizma_psd', name: 'Traditional Karizma PSD Creative Designing', telugu: 'కరిజ్మా క్రియేటివ్ డిజైనింగ్', rate: 45, note: 'Custom Telugu shlokas, spread layouts & typography' },
-  { id: 'cinematic_luts', name: 'Cinematic Color Grading & Wedding LUTs', telugu: 'సినిమాటిక్ కలర్ గ్రేడింగ్', rate: 30, note: 'Warm golden Andhra wedding palette & LUTs' },
-  { id: 'background', name: 'AI Sky, Mandap & Lighting Background Replacement', telugu: 'బ్యాక్‌గ్రౌండ్ రీప్లేస్‌మెంట్', rate: 90, note: 'Replace cluttered venue with royal mandap/gardens' },
-  { id: 'restoration', name: 'Old & Vintage Photo Restoration', telugu: 'పాత ఫొటోల రీస్టోరేషన్', rate: 120, note: 'Fix scratched, faded, or torn ancestral photos' },
-  { id: 'culling', name: 'AI RAW Photo Culling & Best Selection', telugu: 'రా ఫొటోల కల్లింగ్ & సెలక్షన్', rate: 15, note: 'Filter blinks, blurs & tag top highlight moments' }
-];
-
-// ALL FLEX & BANNER SERVICES
-const FLEX_SERVICES = [
-  { id: 'mandap', name: 'Grand Mandap Entrance Flex (10×8 ft Star Media)', telugu: 'మండపం ఎంట్రన్స్ ఫ్లెక్స్', price: 2400, note: 'Heavy Star Flex 340 GSM with brass eyelets' },
-  { id: 'hoarding', name: 'Roadside Wedding Hoarding (40×20 ft Heavy Duty)', telugu: 'రోడ్‌సైడ్ వెడ్డింగ్ హోర్డింగ్', price: 12000, note: 'Ultra-high visibility large format solvent press' },
-  { id: 'standee', name: 'Retractable Welcome Roll-Up Standee (6×3 ft)', telugu: 'వెల్‌కమ్ రోల్-అప్ స్టాండీ', price: 1800, note: 'Anodized aluminum stand with carry bag' },
-  { id: 'invite', name: 'Animated Telugu WhatsApp Video Invitation', telugu: 'వాట్సాప్ వీడియో ఆహ్వానం', price: 1999, note: 'Auspicious Sannai Melam BGM & temple motifs' }
-];
-
-// ALL CALENDAR SERVICES
-const CALENDAR_SERVICES = [
-  { id: 'desk_easel', name: 'Personalized 12-Month Tabletop Desk Calendar', telugu: '12-నెలల టేబుల్‌టాప్ డెస్క్ క్యాలెండర్', price: 1200, note: '12 Couple photos with wooden easel stand' },
-  { id: 'wall_poster', name: 'Grand Wall Hanging Poster Calendar (12×18 Metallic)', telugu: 'గ్రాండ్ వాల్ పోస్టర్ క్యాలెండర్', price: 650, note: 'High-gloss metallic print with metal rim hanger' },
-  { id: 'pocket_pack', name: 'Pocket Mini Calendars (Pack of 10 Copies)', telugu: 'పాకెట్ మినీ క్యాలెండర్లు (10 కాపీలు)', price: 990, note: 'Waterproof wallet cards with rounded corners' }
-];
-
-// 5 PRIMARY SERVICE TILES FOR RESPONSIVE GRID (ZERO SCROLLBARS)
-const SERVICE_CATEGORIES = [
-  {
-    id: 'album',
-    key: 'albumPrint',
-    name: 'Karizma & Flush Mount Album',
-    telugu: 'కరిజ్మా & ఫ్లష్ మౌంట్ ఆల్బమ్ డిజైన్',
-    icon: BookOpen,
-    priceTag: 'from ₹5,200'
-  },
-  {
-    id: 'video',
-    key: 'videoEdit',
-    name: 'Cinematic Films & Reels',
-    telugu: '4K సినిమాటిక్ వీడియో & రీల్స్',
-    icon: Film,
-    priceTag: 'from ₹3,500'
-  },
-  {
-    id: 'photo',
-    key: 'photoEdit',
-    name: 'Photo Retouch & Color',
-    telugu: 'ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్',
-    icon: Palette,
-    priceTag: 'from ₹30/photo'
-  },
-  {
-    id: 'flex',
-    key: 'flexBanner',
-    name: 'Flex, Banners & Invites',
-    telugu: 'కళ్యాణ మండపం ఫ్లెక్స్ & ఆహ్వానాలు',
-    icon: MonitorPlay,
-    priceTag: 'from ₹1,800'
-  },
-  {
-    id: 'calendar',
-    key: 'calendars',
-    name: 'Calendars & Keepsakes',
-    telugu: 'కపుల్ టేబుల్‌టాప్ & వాల్ క్యాలెండర్లు',
-    icon: Calendar,
-    priceTag: 'from ₹650'
-  }
-];
+import {
+  AUSPICIOUS_MUHURTHAM_DATES, DEFAULT_ALBUM_SIZES, SERVICE_INTENTS, DEFAULT_SHEETS, DEFAULT_BASE_SUBSTRATES,
+  VIDEO_SERVICES, PHOTO_SERVICES, FLEX_SERVICES, CALENDAR_SERVICES, SERVICE_CATEGORIES,
+} from './booking/bookingData';
 
 const BookingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   
   const [step, setStep] = useState(1);
-  const [lang, setLang] = useState(() => localStorage.getItem('site_lang') || 'EN');
+  const { lang } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null); // { msg, type }
   const [showAuthModal, setShowAuthModal] = useState(false);
   
   // SERVICE INTENT: 'edit_and_print' | 'only_editing' | 'only_printing' | 'standalone_services' | 'bundles'
@@ -505,13 +133,7 @@ const BookingPage = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    const handleLangChange = () => {
-      setLang(localStorage.getItem('site_lang') || 'EN');
-    };
-    window.addEventListener('languageChange', handleLangChange);
-    return () => window.removeEventListener('languageChange', handleLangChange);
-  }, []);
+  // (global language comes from LanguageContext — no local listener needed)
 
   // Service category toggle (for 5 grid tiles)
   const toggleServiceCategory = (key) => {
@@ -687,7 +309,9 @@ const BookingPage = () => {
 
   const [searchParams] = useSearchParams();
 
-  // Prepopulate from URL params (?date=YYYY-MM-DD, ?bundle=..., ?mode=..., ?intent=..., ?finish=..., ?sheets=...)
+  // Prepopulate from URL params.
+  // Estimator 2.0 contract: ?service&size&pages&photos&finishmode&finish&cover&engrave&parentbooks&express&name&phone&city&price
+  // Legacy paths still honoured: ?date ?bundle ?mode ?intent ?finish ?sheets ?substrate
   useEffect(() => {
     const urlDate = searchParams.get('date');
     const urlBundle = searchParams.get('bundle');
@@ -695,8 +319,19 @@ const BookingPage = () => {
     const urlIntent = searchParams.get('intent') || urlMode;
     const urlService = searchParams.get('service');
     const urlFinish = searchParams.get('finish');
-    const urlSheets = searchParams.get('sheets');
+    const urlFinishMode = searchParams.get('finishmode');
+    const urlSheets = searchParams.get('sheets');     // legacy: SHEETS count
+    const urlPages = searchParams.get('pages');       // NEW: PAGES count (sheets = ceil/2)
+    const urlSize = searchParams.get('size');
+    const urlCover = searchParams.get('cover');
+    const urlPhotos = searchParams.get('photos');
+    const urlEngrave = searchParams.get('engrave');
+    const urlParentBooks = searchParams.get('parentbooks');
+    const urlExpress = searchParams.get('express');
     const urlSubstrate = searchParams.get('substrate');
+    const urlName = searchParams.get('name');
+    const urlPhone = searchParams.get('phone');
+    const urlCity = searchParams.get('city');
 
     if (urlDate) {
       setFormData(prev => ({ ...prev, eventDate: urlDate }));
@@ -704,10 +339,14 @@ const BookingPage = () => {
     if (urlBundle) {
       applyBundle(urlBundle, false);
     }
-    
-    if (urlIntent === 'only_editing' || urlService?.includes('photo') || urlService?.includes('culling')) {
+
+    // Intent mapping. NOTE: edit_print MUST be matched before generic 'print'
+    // substring checks, otherwise it lands in only_printing.
+    if (urlIntent === 'edit_print' || urlService === 'edit_print') {
+      selectServiceIntent('edit_and_print');
+    } else if (urlIntent === 'only_editing' || urlService?.includes('photo') || urlService?.includes('culling')) {
       selectServiceIntent('only_editing');
-    } else if (urlIntent === 'only_printing' || urlService?.includes('print') || urlService?.includes('sheet')) {
+    } else if (urlIntent === 'only_printing' || urlService === 'only_printing' || (urlService && !urlService.includes('edit') && urlService?.includes('print'))) {
       selectServiceIntent('only_printing');
     } else if (urlIntent === 'standalone_services' || urlService?.includes('video') || urlService?.includes('flex') || urlService?.includes('invite')) {
       selectServiceIntent('standalone_services');
@@ -717,10 +356,17 @@ const BookingPage = () => {
       selectServiceIntent('edit_and_print');
     }
 
+    // Finish mapping — a single sheet id, or an estimator mix "id:count+id:count".
     if (urlFinish) {
-      const matched = DEFAULT_SHEETS.find(s => s.id === urlFinish || s.id.includes(urlFinish) || urlFinish.includes(s.id));
-      if (matched) {
-        setFormData(prev => ({ ...prev, selectedSheetTypes: [matched.id] }));
+      const ids = (urlFinishMode === 'mix' && urlFinish.includes(':'))
+        ? urlFinish.split('+').map(chunk => chunk.split(':')[0])
+        : [urlFinish];
+      const valid = ids
+        .map(id => DEFAULT_SHEETS.find(s => s.id === id || s.id.includes(id) || id.includes(s.id)))
+        .filter(Boolean)
+        .map(s => s.id);
+      if (valid.length) {
+        setFormData(prev => ({ ...prev, selectedSheetTypes: valid }));
       }
     }
 
@@ -728,12 +374,72 @@ const BookingPage = () => {
       setFormData(prev => ({ ...prev, baseSubstrate: urlSubstrate }));
     }
 
-    if (urlSheets) {
-      const num = parseInt(urlSheets, 10);
-      if (!isNaN(num) && num >= 20) {
-        setFormData(prev => ({ ...prev, pages: num }));
-      }
+    // Album size (estimator sends "size-12x36"-style ids)
+    if (urlSize) {
+      const mapped = urlSize.replace(/^size-/, '');
+      if (mapped) setFormData(prev => ({ ...prev, albumSize: mapped }));
     }
+
+    // Estimator cover → builder albumType (legacy estimator ids + CMS descriptive ids)
+    const COVER_MAP = {
+      acrylic: 'acrylic', 'acrylic-glass': 'acrylic',
+      'velvet-foil': 'velvet', 'royal-velvet-foil': 'velvet',
+      leatherette: 'leather', 'leatherette-box': 'leather',
+      'matte-hardcover': 'karizma', 'hardcover-matte': 'karizma',
+    };
+    if (urlCover && COVER_MAP[urlCover]) {
+      setFormData(prev => ({ ...prev, albumType: COVER_MAP[urlCover] }));
+    }
+
+    // Photo count (drives photo editing panels)
+    if (urlPhotos) {
+      const n = parseInt(urlPhotos, 10);
+      if (!isNaN(n) && n > 0) setFormData(prev => ({ ...prev, photoCount: n }));
+    }
+
+    // Parent mini-books → parentAlbums (builder pills go up to 3)
+    if (urlParentBooks) {
+      const n = parseInt(urlParentBooks, 10);
+      if (!isNaN(n) && n >= 0) setFormData(prev => ({ ...prev, parentAlbums: Math.min(n, 3) }));
+    }
+
+    if (urlExpress === '1' || urlExpress === 'true') {
+      setFormData(prev => ({ ...prev, deliverySpeed: 'express' }));
+    }
+
+    if (urlName || urlPhone || urlCity) {
+      setFormData(prev => ({
+        ...prev,
+        name: urlName || prev.name,
+        phone: urlPhone || prev.phone,
+        city: urlCity || prev.city,
+      }));
+    }
+
+    // Pages-as-sheets reconciliation (BookingPage stores PAGES in SHEETS).
+    const sheetsFromPages = urlPages ? Math.ceil(parseInt(urlPages, 10) / 2) : NaN;
+    const legacySheets = urlSheets ? parseInt(urlSheets, 10) : NaN;
+    const sheets = (!isNaN(sheetsFromPages) && sheetsFromPages >= 10)
+      ? sheetsFromPages
+      : (!isNaN(legacySheets) && legacySheets >= 10 ? legacySheets : null);
+
+    const noteBits = [];
+    if (urlEngrave === '1' || urlEngrave === 'true') {
+      noteBits.push('24K Gold cover engraving confirmed in instant quote.');
+    }
+    if (sheets) {
+      noteBits.push(urlPages
+        ? `${urlPages} pages (${sheets} sheets) chosen in the instant estimator.`
+        : `${sheets} sheets chosen via shared link.`);
+    }
+    if (sheets || noteBits.length) {
+      setFormData(prev => ({
+        ...prev,
+        pages: sheets || prev.pages,
+        instructions: [prev.instructions, ...noteBits].filter(Boolean).join(' ').slice(0, 800),
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   // Multi-select toggle helpers
@@ -965,10 +671,10 @@ const BookingPage = () => {
     const activeIntentObj = SERVICE_INTENTS.find(i => i.id === serviceIntent) || SERVICE_INTENTS[0];
 
     return (
-      <div className="service-intent-box p-5 rounded-2xl bg-black/60 border border-[#D4AF37]/30 mb-6 backdrop-blur-md">
+      <div className="service-intent-box p-5 rounded-2xl bg-black/60 border border-[var(--brand)]/30 mb-6 backdrop-blur-md">
         <div className="mb-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <span className="text-xs font-mono font-bold text-[#D4AF37] uppercase tracking-wider block">
+            <span className="text-xs font-mono font-bold text-[var(--brand)] uppercase tracking-wider block">
               Step 1: Choose Your Service Scope
             </span>
             <span className="text-[11px] text-gray-400">
@@ -995,18 +701,18 @@ const BookingPage = () => {
                 onClick={() => selectServiceIntent(intent.id)}
                 className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
                   isSelected
-                    ? 'bg-gradient-to-br from-[#D4AF37]/25 via-black to-black border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.25)] scale-[1.02]'
+                    ? 'bg-gradient-to-br from-[var(--brand)]/25 via-black to-black border-[var(--brand)] shadow-[0_0_15px_rgba(212,175,55,0.25)] scale-[1.02]'
                     : 'bg-white/5 border-white/10 hover:border-white/20'
                 }`}
               >
                 <div>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block mb-1.5 ${
-                    isSelected ? 'bg-[#D4AF37] text-black font-extrabold' : 'bg-white/10 text-gray-300'
+                    isSelected ? 'bg-[var(--brand)] text-black font-extrabold' : 'bg-white/10 text-gray-300'
                   }`}>
                     {intent.badge}
                   </span>
                   <div className="font-bold text-xs text-white leading-snug">{intent.title}</div>
-                  <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{intent.telugu}</div>
+                  <div className="text-[11px] text-[var(--brand)] font-telugu mt-0.5">{intent.telugu}</div>
                 </div>
                 <div className="text-[10px] text-gray-400 mt-2 line-clamp-2">
                   {intent.shortDesc}
@@ -1022,7 +728,7 @@ const BookingPage = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-white text-sm">{activeIntentObj.title}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] font-mono">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--brand)]/20 text-[var(--brand)] font-mono">
                   {activeIntentObj.badge}
                 </span>
               </div>
@@ -1042,7 +748,7 @@ const BookingPage = () => {
               <div className="space-y-1">
                 {activeIntentObj.inclusions.map((inc, i) => (
                   <div key={i} className="flex items-center gap-1.5 text-gray-300 text-[11px]">
-                    <CheckCircle2 size={12} className="text-[#D4AF37] shrink-0" />
+                    <CheckCircle2 size={12} className="text-[var(--brand)] shrink-0" />
                     <span>{inc}</span>
                   </div>
                 ))}
@@ -1070,15 +776,15 @@ const BookingPage = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (step === 2) {
         if (!formData.name.trim()) {
-          alert(lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.', type: 'error' });
           return;
         }
         if (!formData.phone.trim() || formData.phone.length < 10) {
-          alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.', type: 'error' });
           return;
         }
         if (!formData.eventDate) {
-          alert(lang === 'TE' ? 'దయచేసి మీ ఈవెంట్ లేదా వివాహ ముహూర్తం తేదీని ఎంచుకోండి.' : 'Please select your event or wedding muhurtham date.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి మీ ఈవెంట్ లేదా వివాహ ముహూర్తం తేదీని ఎంచుకోండి.' : 'Please select your event or wedding muhurtham date.', type: 'error' });
           return;
         }
         setStep(3);
@@ -1089,7 +795,7 @@ const BookingPage = () => {
       if (step === 1) {
         const hasAnyService = Object.values(formData.services).some(Boolean);
         if (!hasAnyService) {
-          alert(lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి.' : 'Please select at least one service to continue.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి.' : 'Please select at least one service to continue.', type: 'error' });
           return;
         }
         setStep(2);
@@ -1097,22 +803,22 @@ const BookingPage = () => {
       } else if (step === 2) {
         const hasAnyService = Object.values(formData.services).some(Boolean);
         if (!hasAnyService) {
-          alert(lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి లేదా తక్షణ బండిల్స్ మోడ్‌కి మారండి.' : 'Please select at least one service to continue, or switch to 1-Click Fast Bundles.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి కనీసం ఒక సేవను ఎంచుకోండి లేదా తక్షణ బండిల్స్ మోడ్‌కి మారండి.' : 'Please select at least one service to continue, or switch to 1-Click Fast Bundles.', type: 'error' });
           return;
         }
         setStep(3);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (step === 3) {
         if (!formData.name.trim()) {
-          alert(lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి మీ పేరు నమోదు చేయండి.' : 'Please enter your name.', type: 'error' });
           return;
         }
         if (!formData.phone.trim() || formData.phone.length < 10) {
-          alert(lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి సరైన వాట్సాప్ ఫోన్ నెంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit WhatsApp phone number.', type: 'error' });
           return;
         }
         if (!formData.eventDate) {
-          alert(lang === 'TE' ? 'దయచేసి మీ ఈవెంట్ లేదా వివాహ ముహూర్తం తేదీని ఎంచుకోండి.' : 'Please select your event or wedding muhurtham date.');
+          setToast({ msg: lang === 'TE' ? 'దయచేసి మీ ఈవెంట్ లేదా వివాహ ముహూర్తం తేదీని ఎంచుకోండి.' : 'Please select your event or wedding muhurtham date.', type: 'error' });
           return;
         }
         setStep(4);
@@ -1374,7 +1080,7 @@ const BookingPage = () => {
       setSubmitted(true);
     } catch (err) {
       console.error('Order submission error:', err);
-      alert('Order registered in queue. Our coordinator will contact you shortly.');
+      setToast({ msg: 'Order registered in queue. Our coordinator will contact you shortly.', type: 'info' });
       setSubmitted(true);
     } finally {
       setSubmitting(false);
@@ -1412,64 +1118,23 @@ const BookingPage = () => {
     return sz.orientation === selectedOrientation;
   });
 
+  // ── Shared context for the extracted step components (client/src/pages/booking/*) ──
+  const ctx = {
+    step, setStep, submitted, setSubmitted, submitting, setSubmitting,
+    toast, setToast, showAuthModal, setShowAuthModal,
+    serviceIntent, setServiceIntent, experienceMode, setExperienceMode,
+    appliedBundle, setAppliedBundle, selectedOrientation, setSelectedOrientation,
+    dynamicPricing, formData, setFormData, user, lang, navigate,
+    totalSteps, wizardSteps,
+    toggleServiceCategory, applyBundle, applyDynamicPackage, selectServiceIntent,
+    toggleSheetType, toggleVideoService, togglePhotoService, toggleFlexService, toggleCalendarService,
+    calculateTotal, renderServiceIntentSelector, proceedToNextStep, goBackStep,
+    generateStructuredItems, submitOrder, openWhatsAppDirect, filteredSizes,
+  };
+
   // SUCCESS SCREEN
   if (submitted) {
-    return (
-      <div className="min-h-screen pt-32 pb-20 px-4 flex items-center justify-center bg-[#050505]">
-        <div className="max-w-xl w-full p-8 sm:p-10 rounded-3xl bg-[#111] border border-[#D4AF37]/40 text-center shadow-[0_0_50px_rgba(212,175,55,0.2)]">
-          <div className="w-20 h-20 rounded-full bg-[#D4AF37]/20 border-2 border-[#D4AF37] flex items-center justify-center mx-auto mb-6 text-[#D4AF37]">
-            <CheckCircle2 size={44} />
-          </div>
-          <h2 className="text-3xl font-serif text-white font-bold mb-2">
-            {lang === 'TE' ? 'ఆర్డర్ విజయవంతంగా నమోదైంది! 🎉' : 'Booking Confirmed! 🎉'}
-          </h2>
-          <p className="text-sm text-gray-300 mb-6">
-            {lang === 'TE'
-              ? 'ధన్యవాదాలు! మీ ఆర్డర్ వివరాలు మా పోస్ట్-ప్రొడక్షన్ మేనేజర్‌కు చేరాయి. మా టీమ్ త్వరలోనే మీ వాట్సాప్‌లో కనెక్ట్ అవుతారు.'
-              : 'Thank you! Your project details have reached our lab team. We will connect on your WhatsApp with digital proofs and updates.'}
-          </p>
-
-          <div className="p-4 rounded-2xl bg-black/60 border border-white/10 text-left mb-6 space-y-2 text-sm">
-            <div className="flex justify-between text-gray-400">
-              <span>Order Reference:</span>
-              <span className="text-[#D4AF37] font-mono font-bold">{formData.createdOrderId || 'ORD-VERIFIED'}</span>
-            </div>
-            <div className="flex justify-between text-gray-400">
-              <span>Booking Mode:</span>
-              <span className="text-white font-semibold">{experienceMode === 'bundles' ? '⚡ Curated Luxury Bundle' : '🛠️ Custom Multi-Service'}</span>
-            </div>
-            <div className="flex justify-between text-gray-400">
-              <span>Booking Type:</span>
-              <span className="text-white font-semibold">✨ Couple Royal Wedding Suite</span>
-            </div>
-            <div className="flex justify-between text-gray-400">
-              <span>Total Estimated:</span>
-              <span className="text-emerald-400 font-mono font-bold">₹{calculateTotal().toLocaleString('en-IN')}</span>
-            </div>
-            <div className="flex justify-between text-gray-400">
-              <span>Delivery Speed:</span>
-              <span className="text-white capitalize">{formData.deliverySpeed === 'express' ? '🚀 Express (24-48 Hours)' : '⚡ Standard (3-5 Days)'}</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={openWhatsAppDirect}
-              className="flex-1 py-3.5 px-4 rounded-xl bg-[#25D366] text-black font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#20ba59] transition"
-            >
-              <MessageCircle size={18} />
-              <span>Track on WhatsApp</span>
-            </button>
-            <button
-              onClick={() => navigate('/client')}
-              className="flex-1 py-3.5 px-4 rounded-xl bg-[#D4AF37] text-black font-bold text-sm hover:bg-[#b8952b] transition"
-            >
-              Go to Client Dashboard →
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return <BookingSuccess ctx={ctx} />;
   }
 
   return (
@@ -1479,7 +1144,7 @@ const BookingPage = () => {
         
         {/* Header */}
         <div className="order-header mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--brand)]/15 border border-[var(--brand)]/30 text-[var(--brand)] text-xs font-semibold uppercase tracking-wider mb-3">
             <Sparkles size={14} />
             {lang === 'TE' ? 'ఆంధ్రప్రదేశ్ నెం.1 పోస్ట్-ప్రొడక్షన్ హబ్' : "Andhra Pradesh's #1 Post-Production Hub"}
           </div>
@@ -1494,15 +1159,15 @@ const BookingPage = () => {
         </div>
 
         {/* Couple Direct Booking Suite */}
-        <div className="flex items-center justify-between p-4 rounded-2xl bg-black/70 border border-[#D4AF37]/30 mb-8 flex-wrap gap-4 shadow-lg backdrop-blur-md">
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-black/70 border border-[var(--brand)]/30 mb-8 flex-wrap gap-4 shadow-lg backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37]">
+            <div className="p-2.5 rounded-xl bg-[var(--brand)]/20 text-[var(--brand)]">
               <Sparkles size={22} />
             </div>
             <div>
               <div className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                 <span>✨ Couple Direct Booking Suite</span>
-                <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30">
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase bg-[var(--brand)]/20 text-[var(--brand)] border border-[var(--brand)]/30">
                   Direct Lab Order
                 </span>
               </div>
@@ -1537,1870 +1202,23 @@ const BookingPage = () => {
             PATHWAY 1: CURATED FAST BUNDLES (3 CLEAN STEPS)
             ========================================================================= */}
         {experienceMode === 'bundles' && (
-          <div className="space-y-6">
-
-            {/* STEP 1 (BUNDLES): PICK CURATED BUNDLE */}
-            {step === 1 && (
-              <div className="space-y-6">
-                {/* 5 SERVICE INTENT MODES SELECTOR */}
-                {renderServiceIntentSelector()}
-
-                <div className="flex justify-between items-center flex-wrap gap-2">
-                  <div>
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                      <Sparkles size={20} className="text-[#D4AF37]" />
-                      <span>{lang === 'TE' ? 'తక్షణ లగ్జరీ బండిల్స్ (1-క్లిక్)' : 'Curated Luxury Bundles (1-Click Suites)'}</span>
-                    </h3>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {lang === 'TE' ? 'పూర్తి ప్యాకేజీని తక్షణమే ఎంచుకోండి. క్లిష్టమైన కాన్ఫిగరేషన్ అవసరం లేదు.' : 'Complete ready-to-go suites crafted for Andhra weddings. Pick your suite and proceed.'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {/* Bundle 1 */}
-                  <div
-                    onClick={() => setAppliedBundle('royal_telugu')}
-                    className={`luxury-bundle-card ${appliedBundle === 'royal_telugu' ? 'active' : ''}`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="bundle-badge">⭐ Best Value Master Suite</span>
-                      <span className="bundle-savings">Save ₹8,500 with Bundle!</span>
-                    </div>
-                    <h4 className="text-lg font-bold text-white">Royal Telugu Muhurtham Master Suite</h4>
-                    <div className="text-xs text-gray-400 font-telugu mb-3">రాయల్ తెలుగు ముహూర్తం మాస్టర్ సూట్</div>
-                    
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹17,999</span>
-                      <span className="text-sm text-gray-500 line-through">₹26,499</span>
-                    </div>
-
-                    <ul className="text-xs text-gray-300 space-y-2 mb-6">
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 12×36 Royal Panoramic Karizma Layflat (40 sheets, Velvet Touch)</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 4K Cinematic Wedding Teaser (3-5 min) + 5 IG Reels</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> High-End Skin Retouching & Color Grading (50 photos)</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Royal Velvet Briefcase Presentation Box</li>
-                    </ul>
-
-                    <div className="space-y-2">
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); applyBundle('royal_telugu', true); }}
-                        className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
-                      >
-                        <span>Select Bundle & Continue</span>
-                        <ArrowRight size={14} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); applyBundle('royal_telugu', false); }}
-                        className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
-                      >
-                        Customize Options in Builder ✏️
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Bundle 2 */}
-                  <div
-                    onClick={() => setAppliedBundle('cinematic_duo')}
-                    className={`luxury-bundle-card ${appliedBundle === 'cinematic_duo' ? 'active' : ''}`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="bundle-badge">🎬 Most Popular Duo</span>
-                      <span className="bundle-savings">Save ₹6,200 with Bundle!</span>
-                    </div>
-                    <h4 className="text-lg font-bold text-white">Cinematic Story & Karizma Duo</h4>
-                    <div className="text-xs text-gray-400 font-telugu mb-3">సినిమాటిక్ స్టోరీ & కరిజ్మా డ్యుయో</div>
-                    
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹13,200</span>
-                      <span className="text-sm text-gray-500 line-through">₹19,400</span>
-                    </div>
-
-                    <ul className="text-xs text-gray-300 space-y-2 mb-6">
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 12×30 Classic Landscape Lay-Flat Album (30 sheets, Metallic Pearl)</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 4K Cinematic Wedding Teaser + 5 Instagram Reels (9:16)</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Pro Retouching & Warm Andhra Color Grading (30 photos)</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Standard Presentation Box Included</li>
-                    </ul>
-
-                    <div className="space-y-2">
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); applyBundle('cinematic_duo', true); }}
-                        className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
-                      >
-                        <span>Select Bundle & Continue</span>
-                        <ArrowRight size={14} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); applyBundle('cinematic_duo', false); }}
-                        className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
-                      >
-                        Customize Options in Builder ✏️
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Bundle 3 */}
-                  <div
-                    onClick={() => setAppliedBundle('lab_express')}
-                    className={`luxury-bundle-card ${appliedBundle === 'lab_express' ? 'active' : ''}`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="bundle-badge">🚀 Express Archival Lab Printing Suite</span>
-                      <span className="bundle-savings">Save ₹4,200 with Bundle!</span>
-                    </div>
-                    <h4 className="text-lg font-bold text-white">Express Archival Lab Printing Suite</h4>
-                    <div className="text-xs text-gray-400 font-telugu mb-3">ఎక్స్‌ప్రెస్ ల్యాబ్ ప్రింటింగ్ సూట్</div>
-                    
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-black text-[#D4AF37]">₹8,200</span>
-                      <span className="text-sm text-gray-500 line-through">₹12,400</span>
-                    </div>
-
-                    <ul className="text-xs text-gray-300 space-y-2 mb-6">
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> 12×36 Lay-flat Karizma Flush Mount (30 sheets, Metallic Pearl)</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Royal Velvet Briefcase Presentation Box</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Doorstep Courier Delivery within 3-4 working days</li>
-                      <li className="flex items-start gap-2"><Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" /> Waterproof & Tear-Resistant Coating</li>
-                    </ul>
-
-                    <div className="space-y-2">
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); applyBundle('lab_express', true); }}
-                        className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
-                      >
-                        <span>Select Bundle & Continue</span>
-                        <ArrowRight size={14} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); applyBundle('lab_express', false); }}
-                        className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
-                      >
-                        Customize Options in Builder ✏️
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Dynamic Packages Configured by SysAdmin */}
-                  {dynamicPricing.packages && dynamicPricing.packages
-                    .filter(pkg => pkg.isActive !== false && (!pkg.b2bOrB2c || pkg.b2bOrB2c === 'b2c'))
-                    .map(pkg => {
-                      const isSelected = appliedBundle === (pkg.id || pkg._id || pkg.tier);
-                      return (
-                        <div
-                          key={pkg.id || pkg._id}
-                          onClick={() => applyDynamicPackage(pkg, false)}
-                          className={`luxury-bundle-card ${isSelected ? 'active' : ''}`}
-                        >
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="bundle-badge" style={{ borderColor: pkg.color || '#D4AF37', color: pkg.color || '#D4AF37' }}>
-                              {pkg.popular ? '⭐ Most Popular Suite' : (pkg.category ? pkg.category.toUpperCase() : 'CURATED SUITE')}
-                            </span>
-                            {pkg.priceType === 'starting_at' && <span className="bundle-savings">Starting Rate</span>}
-                          </div>
-                          <h4 className="text-lg font-bold text-white">{pkg.tier}</h4>
-                          <div className="text-xs text-gray-400 font-telugu mb-3">కస్టమ్ క్యూరేటెడ్ సూట్</div>
-
-                          <div className="flex items-baseline gap-2 mb-4">
-                            <span className="text-2xl font-black text-[#D4AF37]">{pkg.price}</span>
-                            {pkg.priceMax && <span className="text-sm text-gray-400 font-medium">to {pkg.priceMax}</span>}
-                            {pkg.suffix && <span className="text-xs text-gray-500">{pkg.suffix}</span>}
-                          </div>
-
-                          {pkg.features && Array.isArray(pkg.features) && (
-                            <ul className="text-xs text-gray-300 space-y-2 mb-6">
-                              {pkg.features.map((f, fi) => (
-                                <li key={fi} className="flex items-start gap-2">
-                                  <Check size={14} className="text-[#D4AF37] mt-0.5 shrink-0" />
-                                  <span>{f}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-
-                          <div className="space-y-2">
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); applyDynamicPackage(pkg, true); }}
-                              className="w-full py-3 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
-                            >
-                              <span>Select Suite & Continue</span>
-                              <ArrowRight size={14} />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); applyDynamicPackage(pkg, false); }}
-                              className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-medium text-xs transition"
-                            >
-                              Customize Options in Builder ✏️
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center flex-wrap gap-2">
-                  <span className="text-xs text-gray-400">Prefer selecting individual services a-la-carte?</span>
-                  <button
-                    type="button"
-                    onClick={() => { setExperienceMode('custom'); setStep(1); }}
-                    className="text-xs text-[#D4AF37] font-bold hover:underline"
-                  >
-                    Open Custom Multi-Service Builder →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 2 (BUNDLES): EVENT & DELIVERY DETAILS */}
-            {step === 2 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    2. {lang === 'TE' ? 'మీ ఈవెంట్ & డెలివరీ వివరాలు' : 'Your Event & Delivery Details'}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-6">
-                    {lang === 'TE'
-                      ? 'మీ వాట్సాప్ నెంబర్‌కు ఆర్డర్ అప్‌డేట్స్ మరియు ప్రూఫ్ లింక్ వస్తుంది.'
-                      : 'We will send preview proofs and tracking updates directly to your WhatsApp.'}
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">
-                        {lang === 'TE' ? 'మీ పూర్తి పేరు *' : 'Your Full Name *'}
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={e => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Ramesh Varma"
-                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">
-                        {lang === 'TE' ? 'వాట్సాప్ మొబైల్ నెంబర్ *' : 'WhatsApp Phone Number *'}
-                      </label>
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="+91 98765 43210"
-                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 font-semibold mb-2">
-                      {lang === 'TE' ? 'ఈవెంట్ రకం' : 'Event Type'}
-                    </label>
-                    <div className="flex gap-2 flex-wrap">
-                      {[
-                        { id: 'Wedding', telugu: 'పెళ్ళి' },
-                        { id: 'Engagement', telugu: 'నిశ్చితార్థం' },
-                        { id: 'Reception', telugu: 'రిసెప్షన్' },
-                        { id: 'Half-Saree / Dhoti', telugu: 'లంగా వోణి' },
-                        { id: 'Birthday / Other', telugu: 'పుట్టినరోజు' },
-                      ].map(evt => (
-                        <button
-                          key={evt.id}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, eventType: evt.id })}
-                          className={`bubble-pill ${formData.eventType === evt.id ? 'active' : ''}`}
-                        >
-                          {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* EVENT DATE & SUBHA MUHURTHAM SELECTOR */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-black/40 to-yellow-500/10 border border-[#D4AF37]/30 space-y-3">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <Calendar size={18} className="text-[#D4AF37]" />
-                        <label className="text-sm text-white font-bold">
-                          {lang === 'TE' ? 'ఈవెంట్ / ముహూర్తం తేదీ *' : 'Event / Wedding Muhurtham Date *'}
-                        </label>
-                      </div>
-                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 font-bold flex items-center gap-1 animate-pulse">
-                        🔥 {lang === 'TE' ? 'ముహూర్తాలు వేగంగా పూర్తవుతున్నాయి!' : 'Muhurtham Slots Filling Up Fast!'}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-gray-400">
-                      {lang === 'TE'
-                        ? 'క్రింది ప్రముఖ శుభ ముహూర్తాల నుండి ఎంచుకోండి లేదా మీ వివాహ తేదీని నేరుగా సెలెక్ట్ చేయండి.'
-                        : 'Select from peak Andhra/Telangana Subha Muhurtham dates below, or pick your wedding date.'}
-                    </p>
-
-                    {/* Quick Auspicious Date Pills */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-                      {AUSPICIOUS_MUHURTHAM_DATES.map(m => {
-                        const isSelected = formData.eventDate === m.date;
-                        return (
-                          <button
-                            key={m.date}
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, eventDate: m.date }))}
-                            className={`p-2.5 rounded-xl border text-left transition-all ${
-                              isSelected
-                                ? 'border-[#D4AF37] bg-[#D4AF37]/25 text-white shadow-[0_0_12px_rgba(212,175,55,0.3)]'
-                                : 'border-white/10 bg-black/40 text-gray-300 hover:border-white/20'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-bold text-white">{m.label}</span>
-                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-500/20 text-red-300 font-semibold">{m.tag}</span>
-                            </div>
-                            <div className="text-[10px] text-[#D4AF37] font-telugu mt-0.5 truncate">{m.telugu}</div>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Custom Date Input */}
-                    <div className="pt-2 flex items-center gap-3 flex-wrap sm:flex-nowrap">
-                      <div className="flex-1 min-w-[200px]">
-                        <label className="block text-[11px] text-gray-400 mb-1">
-                          {lang === 'TE' ? 'లేదా ఇతర తేదీని ఎంచుకోండి:' : 'Or pick your custom event date:'}
-                        </label>
-                        <input
-                          type="date"
-                          value={formData.eventDate}
-                          min={new Date().toISOString().split('T')[0]}
-                          onChange={e => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
-                          className="w-full p-2.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none text-xs"
-                          required
-                        />
-                      </div>
-                      {formData.eventDate && (
-                        <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shrink-0 self-end">
-                          <CheckCircle2 size={15} />
-                          <span>Selected: {new Date(formData.eventDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">
-                        {lang === 'TE' ? 'నగరం / పట్టణం' : 'City / District'}
-                      </label>
-                      <select
-                        value={formData.city}
-                        onChange={e => setFormData({ ...formData, city: e.target.value })}
-                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                      >
-                        <option value="Vijayawada">Vijayawada (విజయవాడ)</option>
-                        <option value="Guntur">Guntur (గుంటూరు)</option>
-                        <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
-                        <option value="Hyderabad">Hyderabad (హైదరాబాద్)</option>
-                        <option value="Tirupati">Tirupati (తిరుపతి)</option>
-                        <option value="Rajahmundry">Rajahmundry (రాజమండ్రి)</option>
-                        <option value="Kakinada">Kakinada (కాకినాడ)</option>
-                        <option value="Nellore">Nellore (నెల్లూరు)</option>
-                        <option value="Kurnool">Kurnool (కర్నూలు)</option>
-                        <option value="Other">Other City (ఇతర నగరం)</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">
-                        {lang === 'TE' ? 'డెలివరీ వేగం' : 'Delivery Speed'}
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, deliverySpeed: 'standard' })}
-                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
-                            formData.deliverySpeed === 'standard'
-                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                              : 'border-white/10 bg-white/5 text-gray-400'
-                          }`}
-                        >
-                          <div className="font-bold text-white">⚡ Standard (3-5 Days)</div>
-                          <div className="text-emerald-400 mt-0.5">Free Delivery</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, deliverySpeed: 'express' })}
-                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
-                            formData.deliverySpeed === 'express'
-                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                              : 'border-white/10 bg-white/5 text-gray-400'
-                          }`}
-                        >
-                          <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
-                          <div className="text-[#D4AF37] mt-0.5 font-bold">
-                            +₹1,500 Rush
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 font-semibold mb-2">
-                      {lang === 'TE' ? 'కొరియర్ డెలివరీ అడ్రస్' : 'Shipping Address (For physical album delivery)'}
-                    </label>
-                    <textarea
-                      rows="2"
-                      value={formData.address}
-                      onChange={e => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="Door No, Street, Landmark, Town, PIN Code..."
-                      className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <button
-                    type="button"
-                    onClick={goBackStep}
-                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
-                  >
-                    <ArrowLeft size={16} />
-                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={proceedToNextStep}
-                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
-                  >
-                    <span>{lang === 'TE' ? 'తదుపరి దశ: ఫోటోలు పంపండి' : 'Next: Media Transfer'}</span>
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3 (BUNDLES): MEDIA TRANSFER & CONFIRM */}
-            {step === 3 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    3. {lang === 'TE' ? 'మీ ఫోటోలు / వీడియోలు ఎలా పంపుతారు?' : 'How will you share your photos/videos?'}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-6">
-                    {lang === 'TE'
-                      ? 'మీకు నచ్చిన సులభమైన పద్ధతిని ఎంచుకోండి:'
-                      : 'Choose the most convenient transfer method for you:'}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div
-                    onClick={() => setFormData({ ...formData, uploadMethod: 'cloud' })}
-                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                      formData.uploadMethod === 'cloud'
-                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                    }`}
-                  >
-                    <UploadCloud size={26} className="text-[#D4AF37] mb-2" />
-                    <h4 className="font-bold text-white text-sm">Google Drive / Link</h4>
-                    <p className="text-xs text-gray-400 mt-1">Paste Drive, WeTransfer, or OneDrive link</p>
-                  </div>
-
-                  <div
-                    onClick={() => setFormData({ ...formData, uploadMethod: 'whatsapp' })}
-                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                      formData.uploadMethod === 'whatsapp'
-                        ? 'border-[#25D366] bg-[#25D366]/20 text-white shadow-[0_0_20px_rgba(37,211,102,0.2)]'
-                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                    }`}
-                  >
-                    <MessageCircle size={26} className="text-[#25D366] mb-2" />
-                    <h4 className="font-bold text-white text-sm">Send via WhatsApp</h4>
-                    <p className="text-xs text-gray-400 mt-1">Our coordinator will message you</p>
-                  </div>
-
-                  <div
-                    onClick={() => setFormData({ ...formData, uploadMethod: 'courier' })}
-                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                      formData.uploadMethod === 'courier'
-                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                    }`}
-                  >
-                    <Truck size={26} className="text-[#D4AF37] mb-2" />
-                    <h4 className="font-bold text-white text-sm">Courier Pen Drive</h4>
-                    <p className="text-xs text-gray-400 mt-1">Ship USB/Hard disk to AP hub</p>
-                  </div>
-                </div>
-
-                {formData.uploadMethod === 'cloud' && (
-                  <div className="p-6 rounded-2xl bg-black/60 border border-white/20">
-                    <label className="block text-sm text-gray-200 font-semibold mb-2">
-                      Paste your Google Drive or WeTransfer Link
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="https://drive.google.com/drive/folders/..."
-                      value={formData.cloudLink}
-                      onChange={e => setFormData({ ...formData, cloudLink: e.target.value })}
-                      className="w-full p-3.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none font-mono text-sm"
-                    />
-                    <p className="text-xs text-[#D4AF37] mt-2 flex items-center gap-1.5 font-medium">
-                      <ShieldCheck size={14} /> Please set link access to "Anyone with the link can view".
-                    </p>
-                  </div>
-                )}
-
-                {formData.uploadMethod === 'whatsapp' && (
-                  <div className="p-6 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/30 text-left">
-                    <h4 className="font-bold text-[#25D366] text-sm mb-1 flex items-center gap-2">
-                      <MessageCircle size={18} />
-                      {lang === 'TE' ? 'వాట్సాప్ ద్వారా సులభంగా పంపండి' : 'Super Easy: Direct WhatsApp Concierge'}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-gray-300">
-                      {lang === 'TE'
-                        ? `మీరు ఇక్కడ ఆర్డర్ సబ్మిట్ చేసిన వెంటనే, మా టీమ్ ${formData.phone || 'మీ నంబరు'} కి వాట్సాప్‌లో మెసేజ్ చేసి ఫోటోలు సేకరిస్తుంది.`
-                        : `No technical hassle. Once you place the order, our coordinator will message ${formData.phone || 'your WhatsApp'} to collect the high-res photos.`}
-                    </p>
-                  </div>
-                )}
-
-                {formData.uploadMethod === 'courier' && (
-                  <div className="p-6 rounded-2xl bg-black/60 border border-white/20 text-left text-xs sm:text-sm text-gray-300 space-y-3">
-                    <p className="font-bold text-white">Send your Pen Drive / Hard Disk to:</p>
-                    <div className="p-4 rounded-xl bg-black/80 border border-[#D4AF37]/30 text-gray-200 leading-relaxed">
-                      <strong className="text-[#D4AF37] text-base">WeddingAlbums.in Production Center</strong><br />
-                      Plot 14, 2nd Floor, MG Road, Vijayawada, Andhra Pradesh 520010<br />
-                      Contact: +91 98765 43210 (Attn: Media Inward Team)
-                    </div>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm text-gray-300 font-semibold mb-2">
-                    {lang === 'TE' ? 'ప్రత్యేక సూచనలు (ఐచ్ఛికం)' : 'Special Instructions / Notes (Optional)'}
-                  </label>
-                  <textarea
-                    rows="2"
-                    value={formData.instructions}
-                    onChange={e => setFormData({ ...formData, instructions: e.target.value })}
-                    placeholder="e.g. Include Talambralu ritual focus, use devotional Telugu songs, highlight family..."
-                    className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                  />
-                </div>
-
-                <div className="flex justify-between items-center pt-4">
-                  <button
-                    type="button"
-                    onClick={goBackStep}
-                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
-                  >
-                    <ArrowLeft size={16} />
-                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => submitOrder()}
-                    disabled={submitting}
-                    className="btn btn-gold-3d flex items-center gap-2 px-10 py-4 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-50"
-                  >
-                    <CheckCircle2 size={20} />
-                    <span>{submitting ? 'Placing Order...' : (lang === 'TE' ? 'ఆర్డర్ కన్ఫర్మ్ చేయండి' : 'Confirm & Place Order')}</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+        <BundlesPathway ctx={ctx} />
         )}
 
         {/* =========================================================================
             PATHWAY 2: CUSTOM MULTI-SERVICE BUILDER (4 DEDICATED STEPS)
             ========================================================================= */}
         {experienceMode === 'custom' && (
-          <div className="space-y-6">
-
-            {/* STEP 1 (CUSTOM): CHOOSE SERVICES (ZERO SCROLLBARS - RESPONSIVE TILES) */}
-            {step === 1 && (
-              <div className="space-y-6">
-                {/* 5 SERVICE INTENT MODES SELECTOR */}
-                {renderServiceIntentSelector()}
-
-                <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-                  <div>
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                      <CheckSquare size={20} className="text-[#D4AF37]" />
-                      <span>{lang === 'TE' ? 'కావాల్సిన సర్వీసులను ఎంచుకోండి' : 'Choose Your Services (Pick 1 or More)'}</span>
-                    </h3>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Click tiles to toggle services. Customize their detailed specs in the next step.
-                    </p>
-                  </div>
-                  <span className="text-xs text-[#D4AF37] font-semibold bg-[#D4AF37]/15 px-3 py-1 rounded-full border border-[#D4AF37]/30">
-                    {Object.values(formData.services).filter(Boolean).length} Services Selected
-                  </span>
-                </div>
-
-                {/* 5 SERVICE TILES (RESPONSIVE GRID) */}
-                <div className="service-tiles-grid">
-                  {SERVICE_CATEGORIES.map(cat => {
-                    const isChecked = Boolean(formData.services[cat.key]);
-                    return (
-                      <div
-                        key={cat.id}
-                        onClick={() => toggleServiceCategory(cat.key)}
-                        className={`service-tile-card ${isChecked ? 'checked' : ''}`}
-                      >
-                        <div className="service-tile-top">
-                          <div className="service-tile-icon-box">
-                            <cat.icon size={22} />
-                          </div>
-                          <div className="service-tile-check-circle">
-                            {isChecked && <Check size={14} className="text-black stroke-[3]" />}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="service-tile-title">{cat.name}</div>
-                          <div className="service-tile-telugu font-telugu">{cat.telugu}</div>
-                          <div className="service-tile-price">{cat.priceTag}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Next Button */}
-                <div className="flex justify-end pt-4">
-                  <button
-                    type="button"
-                    onClick={proceedToNextStep}
-                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)]"
-                  >
-                    <span>{lang === 'TE' ? 'తదుపరి దశ: కాన్ఫిగరేషన్' : 'Next: Customize Selected Services'}</span>
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 2 (CUSTOM): CUSTOMIZE SELECTED SERVICES (ONLY ACTIVE SERVICES SHOWN!) */}
-            {step === 2 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    2. {lang === 'TE' ? 'ఎంచుకున్న సేవల కాన్ఫిగరేషన్' : 'Customize Selected Services'}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-4">
-                    Only the services you picked in Step 1 are shown below. Configure sizes, sheets, cuts, and quantities.
-                  </p>
-
-                  {/* Contextual Mode Explanation Banner */}
-                  {serviceIntent === 'only_editing' && (
-                    <div className="p-4 rounded-xl bg-purple-950/40 border border-purple-500/40 mb-4 flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-lg bg-purple-500/20 text-purple-300"><Palette size={20} /></span>
-                        <div>
-                          <h4 className="font-bold text-sm text-white">🎨 Only Editing Mode Active (Digital Master Delivery)</h4>
-                          <p className="text-xs text-gray-300">Physical album printing is excluded (₹0 printing charge). Choose your photo retouching styles and video cuts below. We deliver 300 DPI high-resolution files via Cloud.</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/30">
-                        Zero Print Cost
-                      </span>
-                    </div>
-                  )}
-
-                  {serviceIntent === 'only_printing' && (
-                    <div className="p-4 rounded-xl bg-blue-950/40 border border-blue-500/40 mb-4 flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-lg bg-blue-500/20 text-blue-300"><BookOpen size={20} /></span>
-                        <div>
-                          <h4 className="font-bold text-sm text-white">🖨️ Only Printing & Binding Active</h4>
-                          <p className="text-xs text-gray-300">Photo editing is excluded (₹0 design fee). Upload your pre-designed 12×36 / 12×30 spreads. Configure your base substrate, surface finish, and presentation box below.</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono font-bold text-blue-300 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/30">
-                        Direct Lab Press
-                      </span>
-                    </div>
-                  )}
-
-                  {serviceIntent === 'edit_and_print' && (
-                    <div className="p-4 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 mb-4 flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-lg bg-[#D4AF37]/20 text-[#D4AF37]"><Sparkles size={20} /></span>
-                        <div>
-                          <h4 className="font-bold text-sm text-white">✨ Complete Master Suite Active (Editing + Printing)</h4>
-                          <p className="text-xs text-gray-300">Full end-to-end craftsmanship: photo culling, Telugu skin retouching, custom Karizma design, 3D flipbook proof approval on WhatsApp, and archival lab printing.</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono font-bold text-[#D4AF37] bg-[#D4AF37]/20 px-2.5 py-1 rounded-full border border-[#D4AF37]/30">
-                        End-to-End Suite
-                      </span>
-                    </div>
-                  )}
-
-                  {serviceIntent === 'standalone_services' && (
-                    <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 mb-4 flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300"><Film size={20} /></span>
-                        <div>
-                          <h4 className="font-bold text-sm text-white">🎬 Standalone Services Active (A-la-carte)</h4>
-                          <p className="text-xs text-gray-300">Individual creative media items selected. Configure video styles, invitations, or welcome flex standees below.</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
-                        A-la-Carte
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Empty State Guard if user deselected all services */}
-                {!Object.values(formData.services).some(Boolean) && (
-                  <div className="p-8 sm:p-10 rounded-3xl bg-black/70 border border-[#D4AF37]/30 text-center my-6 space-y-4 shadow-[0_0_35px_rgba(212,175,55,0.15)]">
-                    <div className="w-16 h-16 rounded-full bg-[#D4AF37]/15 border-2 border-[#D4AF37] flex items-center justify-center mx-auto text-[#D4AF37]">
-                      <Layers size={32} />
-                    </div>
-                    <h4 className="text-2xl font-bold text-white font-serif">
-                      {lang === 'TE' ? 'ప్రస్తుతం ఏ సర్వీసు ఎంపిక చేయలేదు' : 'No Services Selected Yet'}
-                    </h4>
-                    <p className="text-sm text-gray-400 max-w-lg mx-auto">
-                      {lang === 'TE'
-                        ? 'దయచేసి కింద ఇవ్వబడిన బటన్లతో సర్వీసులను ఎంచుకోండి లేదా తక్షణ బండిల్స్ మోడ్‌కి మారండి.'
-                        : 'Select one or more services below to configure, or switch to 1-Click Fast Bundles.'}
-                    </p>
-                    <div className="flex justify-center gap-3 flex-wrap pt-2">
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('albumPrint')}
-                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 border border-white/20 transition"
-                      >
-                        <BookOpen size={16} className="text-[#D4AF37]" />
-                        + Add Album Printing
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('videoEdit')}
-                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 border border-white/20 transition"
-                      >
-                        <Film size={16} className="text-[#D4AF37]" />
-                        + Add Video Editing
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('photoEdit')}
-                        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 border border-white/20 transition"
-                      >
-                        <Palette size={16} className="text-[#D4AF37]" />
-                        + Add Photo Retouching
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setExperienceMode('bundles'); setStep(1); }}
-                        className="px-5 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-bold text-xs flex items-center gap-2 shadow-lg transition"
-                      >
-                        <Sparkles size={16} />
-                        Switch to 1-Click Fast Bundles
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* 1. ALBUM CONFIGURATOR */}
-                {formData.services.albumPrint && (
-                  <div className="dynamic-config-section">
-                    <div className="dynamic-config-header">
-                      <div>
-                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
-                          <BookOpen size={20} />
-                          <span>{lang === 'TE' ? 'ఆల్బమ్ సైజులు, కవర్లు & షీట్లు' : 'Album Cover, Sizes & Paper Sheets'}</span>
-                        </h4>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          Configure layout dimensions, cover binding, and transparent per-sheet finishes.
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('albumPrint')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
-                      >
-                        Remove Album
-                      </button>
-                    </div>
-
-                    <div className="space-y-6">
-                      {/* Cover Style */}
-                      <div>
-                        <label className="block text-xs text-gray-200 font-bold mb-2 uppercase tracking-wider">
-                          1. Cover & Binding Style
-                        </label>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                          {[
-                            { id: 'karizma', label: 'Karizma Royal Spread', note: "India's #1 Choice", surcharge: 'Standard' },
-                            { id: 'acrylic', label: 'Crystal Acrylic Glass 3D', note: 'Ultra-modern high-gloss face', surcharge: '+₹1,500' },
-                            { id: 'velvet', label: 'Royal Velvet Touch', note: 'Soft luxury fabric feel', surcharge: '+₹1,000' },
-                            { id: 'leather', label: 'Embossed Leatherette', note: 'Timeless gold foil heirloom', surcharge: '+₹1,200' },
-                            { id: 'flushmount', label: 'Seamless Flush Mount', note: 'Edge-to-edge panoramic view', surcharge: 'Included' },
-                          ].map(opt => (
-                            <div
-                              key={opt.id}
-                              onClick={() => setFormData(p => ({ ...p, albumType: opt.id }))}
-                              className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
-                                formData.albumType === opt.id
-                                  ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                                  : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
-                              }`}
-                            >
-                              <div className="flex justify-between items-start">
-                                <span className="font-bold text-xs text-white">{opt.label}</span>
-                                <span className="text-[11px] text-[#D4AF37] font-mono font-bold">{opt.surcharge}</span>
-                              </div>
-                              <div className="text-[11px] text-gray-400 mt-1">{opt.note}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Dimensions & Orientation Filter */}
-                      <div>
-                        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">
-                            2. Dimensions (Landscape ↔️ & Portrait ↕️)
-                          </label>
-                          <div className="orientation-filter-bar mb-0">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedOrientation('all')}
-                              className={`orientation-pill ${selectedOrientation === 'all' ? 'active' : ''}`}
-                            >
-                              All
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setSelectedOrientation('landscape')}
-                              className={`orientation-pill ${selectedOrientation === 'landscape' ? 'active' : ''}`}
-                            >
-                              ↔️ Landscape
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setSelectedOrientation('portrait')}
-                              className={`orientation-pill ${selectedOrientation === 'portrait' ? 'active' : ''}`}
-                            >
-                              ↕️ Portrait
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                          {filteredSizes.map(sz => {
-                            const szBase = Number(sz.basePrice || sz.clientBasePrice || 9500);
-                            const isSelected = formData.albumSize === sz.id || formData.albumSize === sz._id || formData.albumSize === sz.dimensions || (formData.albumSize && sz.dimensions && formData.albumSize.includes(sz.dimensions)) || (formData.albumSize && sz.id && formData.albumSize.includes(sz.id));
-
-                            return (
-                              <div
-                                key={sz.id || sz._id}
-                                onClick={() => setFormData(p => ({ ...p, albumSize: sz.id || sz._id }))}
-                                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
-                                  isSelected
-                                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.25)]'
-                                    : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
-                                }`}
-                              >
-                                <div className="flex justify-between items-start mb-1 gap-2">
-                                  <div>
-                                    <span className="font-bold text-xs text-white block">{sz.name}</span>
-                                    {sz.popular && (
-                                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] bg-[#D4AF37]/25 text-[#D4AF37] px-2 py-0.5 rounded-full font-bold border border-[#D4AF37]/40">
-                                        ⭐ Most Popular
-                                      </span>
-                                    )}
-                                  </div>
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-white/10 text-gray-300 shrink-0">
-                                    {sz.orientation === 'portrait' ? '↕️ Port' : '↔️ Land'}
-                                  </span>
-                                </div>
-                                {sz.telugu && <div className="text-[11px] text-[#D4AF37] font-telugu">{sz.telugu}</div>}
-                                <div className="flex justify-between items-baseline mt-2 pt-1 border-t border-white/5">
-                                  <span className="text-xs text-[#D4AF37] font-mono font-bold">
-                                    ₹{szBase.toLocaleString('en-IN')}
-                                  </span>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* DIMENSION 1: BASE SUBSTRATES & CORE MEDIA */}
-                      <div>
-                        <div className="flex justify-between items-center mb-1 flex-wrap gap-2">
-                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                            <Layers size={13} className="text-[#D4AF37]" />
-                            3. Dimension 1: Base Substrates & Core Media
-                          </label>
-                          <span className="text-xs text-[#D4AF37] font-semibold">
-                            {formData.baseSubstrate === 'ntr_bopp' ? '100% Waterproof BOPP Core' : 'Specialty Lab Core'}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-gray-400 mb-2.5">
-                          The physical core layer determines sheet stiffness, tear resistance, and archival lifespan.
-                        </p>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                          {DEFAULT_BASE_SUBSTRATES.map(sub => {
-                            const isSelected = formData.baseSubstrate === sub.id;
-                            return (
-                              <div
-                                key={sub.id}
-                                onClick={() => setFormData(p => ({ ...p, baseSubstrate: sub.id }))}
-                                className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
-                                  isSelected
-                                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                                    : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/20'
-                                }`}
-                              >
-                                <div className="flex justify-between items-start mb-1">
-                                  <span className="font-bold text-xs text-white leading-snug">{sub.name}</span>
-                                </div>
-                                <div className="text-[10px] text-[#D4AF37] font-telugu">{sub.telugu}</div>
-                                <div className="text-xs font-mono font-bold text-emerald-400 mt-1">{sub.priceLabel}</div>
-                                <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sub.note}</div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* DIMENSION 2: SURFACE FINISHES & COATINGS */}
-                      <div>
-                        <div className="flex justify-between items-center mb-1 flex-wrap gap-2">
-                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                            <Sparkles size={13} className="text-[#D4AF37]" />
-                            4. Dimension 2: Surface Finishes & Lamination
-                          </label>
-                          <span className="text-xs text-emerald-400 font-semibold">
-                            {formData.selectedSheetTypes.length} Surface Finish(es) Active
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-gray-400 mb-2.5">
-                          Standard finishes (Matte & Gloss) are included at normal price; luxury finishes carry itemized per-sheet surcharges.
-                        </p>
-
-                        {/* Standard Finishes (Included in Base Price) */}
-                        <div className="mb-3">
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 block mb-1.5">
-                            ⭐ Standard Finishes (Included in Base Price - ₹0 Extra)
-                          </span>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                            {DEFAULT_SHEETS.filter(s => s.tier === 'standard').map(sht => {
-                              const isSelected = formData.selectedSheetTypes.includes(sht.id);
-                              return (
-                                <div
-                                  key={sht.id}
-                                  onClick={() => toggleSheetType(sht.id)}
-                                  className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                                >
-                                  <div className="service-checkbox-circle">
-                                    {isSelected && <Check size={14} />}
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-start justify-between gap-1">
-                                      <h5 className="font-bold text-xs text-white">{sht.name}</h5>
-                                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
-                                        Included (₹0)
-                                      </span>
-                                    </div>
-                                    <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>
-                                    <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note}</div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {/* Luxury Surface Upgrades (Itemized Surcharge) */}
-                        <div>
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#D4AF37] block mb-1.5">
-                            ✨ Luxury Surface Upgrades (Itemized Per-Sheet Surcharges)
-                          </span>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                            {DEFAULT_SHEETS.filter(s => s.tier === 'luxury').map(sht => {
-                              const isSelected = formData.selectedSheetTypes.includes(sht.id);
-                              return (
-                                <div
-                                  key={sht.id}
-                                  onClick={() => toggleSheetType(sht.id)}
-                                  className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                                >
-                                  <div className="service-checkbox-circle">
-                                    {isSelected && <Check size={14} />}
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-start justify-between gap-1">
-                                      <h5 className="font-bold text-xs text-white">{sht.name}</h5>
-                                      <span className="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-mono font-bold border border-[#D4AF37]/30">
-                                        +₹{sht.surchargePerSheet}/sheet
-                                      </span>
-                                    </div>
-                                    <div className="text-[11px] text-[#D4AF37] font-telugu mt-0.5">{sht.telugu}</div>
-                                    <div className="text-[10px] text-gray-400 mt-1 leading-snug">{sht.note}</div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Total Sheets (1 Sheet = 2 Pages) */}
-                      <div>
-                        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-                          <label className="text-xs text-gray-200 font-bold uppercase tracking-wider">
-                            5. Total Sheets (1 Sheet = 2 Sides = 2 Pages)
-                          </label>
-                          <span className="text-[#D4AF37] font-bold text-xs bg-[#D4AF37]/15 px-2.5 py-0.5 rounded-full border border-[#D4AF37]/30">
-                            {formData.pages} Sheets = {formData.pages * 2} Pages (~{formData.pages * 5}-{formData.pages * 6} photos)
-                          </span>
-                        </div>
-                        <div className="flex gap-2 flex-wrap">
-                          {[
-                            { count: 20, label: '20 Sheets (40 Pages)' },
-                            { count: 25, label: '25 Sheets (50 Pages)' },
-                            { count: 30, label: '30 Sheets (60 Pages - Base Standard)' },
-                            { count: 35, label: '35 Sheets (70 Pages)' },
-                            { count: 40, label: '40 Sheets (80 Pages)' },
-                            { count: 50, label: '50 Sheets (100 Pages)' },
-                          ].map(item => (
-                            <button
-                              key={item.count}
-                              type="button"
-                              onClick={() => setFormData(p => ({ ...p, pages: item.count }))}
-                              className={`bubble-pill ${formData.pages === item.count ? 'active' : ''}`}
-                            >
-                              {item.label}
-                            </button>
-                          ))}
-                        </div>
-                        <p className="text-[11px] text-gray-400 mt-2">
-                          💡 30 sheets are included in the base album price. Additional sheets above 30 cost ₹70/sheet for the base substrate plus any selected luxury finish upgrade.
-                        </p>
-                      </div>
-
-                      {/* Luxury Box & Duplicate Parent Albums */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-white/10">
-                        <div>
-                          <label className="text-xs text-gray-200 font-bold mb-2 block uppercase tracking-wider">5. Presentation Box</label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {[
-                              { id: 'standard', label: 'Standard Box', surcharge: 'Included' },
-                              { id: 'velvet_case', label: 'Velvet Briefcase', surcharge: '+₹1,200' },
-                              { id: 'wooden_box', label: 'Wooden Box', surcharge: '+₹1,800' },
-                              { id: 'acrylic_box', label: 'Acrylic Box', surcharge: '+₹2,200' },
-                            ].map(box => (
-                              <div
-                                key={box.id}
-                                onClick={() => setFormData({ ...formData, boxType: box.id })}
-                                className={`p-2.5 rounded-xl border text-left cursor-pointer text-xs ${
-                                  formData.boxType === box.id
-                                    ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white'
-                                    : 'border-white/10 bg-white/5 text-gray-300'
-                                }`}
-                              >
-                                <div className="font-semibold">{box.label}</div>
-                                <div className="text-[11px] text-[#D4AF37] font-mono">{box.surcharge}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="text-xs text-gray-200 font-bold mb-2 block uppercase tracking-wider">6. Mini Parent Albums</label>
-                          <div className="flex gap-2">
-                            {[
-                              { cnt: 0, label: 'None' },
-                              { cnt: 1, label: '+1 Mini (+₹2,500)' },
-                              { cnt: 2, label: '+2 Minis (+₹4,500)' },
-                            ].map(b => (
-                              <button
-                                key={b.cnt}
-                                type="button"
-                                onClick={() => setFormData({ ...formData, parentAlbums: b.cnt })}
-                                className={`bubble-pill ${formData.parentAlbums === b.cnt ? 'active' : ''}`}
-                              >
-                                {b.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 2. CINEMATIC VIDEO EDITING CONFIGURATOR */}
-                {formData.services.videoEdit && (
-                  <div className="dynamic-config-section">
-                    <div className="dynamic-config-header">
-                      <div>
-                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
-                          <Film size={20} />
-                          <span>{lang === 'TE' ? 'సినిమాటిక్ వీడియో ఎడిటింగ్ సేవలు' : 'Cinematic Video Editing Services'}</span>
-                        </h4>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          Multi-select video cuts. Transparent itemized rates applied.
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('videoEdit')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
-                      >
-                        Remove Video
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                      {VIDEO_SERVICES.map(v => {
-                        const isSelected = formData.selectedVideoServices.includes(v.id);
-                        const vPrice = v.price;
-
-                        return (
-                          <div
-                            key={v.id}
-                            onClick={() => toggleVideoService(v.id)}
-                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                          >
-                            <div className="service-checkbox-circle">
-                              {isSelected && <Check size={14} />}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start">
-                                <span className="font-bold text-xs text-white">{v.name}</span>
-                                <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
-                                   +₹{vPrice.toLocaleString('en-IN')}
-                                </span>
-                              </div>
-                              <div className="text-[11px] text-gray-400 mt-1">{v.note}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="pt-3 border-t border-white/10">
-                      <label className="text-xs text-gray-200 font-bold mb-1.5 block">Music & Audio Direction</label>
-                      <select
-                        value={formData.musicStyle}
-                        onChange={e => setFormData({ ...formData, musicStyle: e.target.value })}
-                        className="w-full p-3 rounded-xl bg-black/60 border border-white/20 text-white text-xs outline-none focus:border-[#D4AF37]"
-                      >
-                        <option value="telugu_romantic">Classical & Modern Telugu Romantic Melodies</option>
-                        <option value="devotional">Traditional Nadaswaram & Mangala Vaadhyam</option>
-                        <option value="energetic">High-Energy Trending Beats & Bass</option>
-                        <option value="custom">I will provide our custom Telugu song playlist</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {/* 3. PHOTO RETOUCHING CONFIGURATOR */}
-                {formData.services.photoEdit && (
-                  <div className="dynamic-config-section">
-                    <div className="dynamic-config-header">
-                      <div>
-                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
-                          <Palette size={20} />
-                          <span>{lang === 'TE' ? 'ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్' : 'Photo Retouching & Color Grading'}</span>
-                        </h4>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          Multi-select retouching styles calculated per-photo.
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('photoEdit')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
-                      >
-                        Remove Photos
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                      {PHOTO_SERVICES.map(p => {
-                        const isSelected = formData.selectedPhotoServices.includes(p.id);
-                        const pRate = p.rate;
-
-                        return (
-                          <div
-                            key={p.id}
-                            onClick={() => togglePhotoService(p.id)}
-                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                          >
-                            <div className="service-checkbox-circle">
-                              {isSelected && <Check size={14} />}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start">
-                                <span className="font-bold text-xs text-white">{p.name}</span>
-                                <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
-                                  +₹{pRate}/p
-                                </span>
-                              </div>
-                              <div className="text-[11px] text-gray-400 mt-1">{p.note}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
-                      <div>
-                        <label className="text-xs text-gray-200 font-bold block">Estimated Photos to Retouch:</label>
-                        <span className="text-[11px] text-gray-400">Total photos to process</span>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        {[30, 50, 100, 200, 300, 500].map(cnt => (
-                          <button
-                            key={cnt}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, photoCount: cnt })}
-                            className={`bubble-pill ${formData.photoCount === cnt ? 'active' : ''}`}
-                          >
-                            {cnt} Photos
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 4. FLEX & BANNERS CONFIGURATOR */}
-                {formData.services.flexBanner && (
-                  <div className="dynamic-config-section">
-                    <div className="dynamic-config-header">
-                      <div>
-                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
-                          <MonitorPlay size={20} />
-                          <span>{lang === 'TE' ? 'ఫ్లెక్స్, బ్యానర్లు & వాట్సాప్ ఆహ్వానాలు' : 'Wedding Flex & Digital Video Invites'}</span>
-                        </h4>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          Multi-select outdoor print sizes and animated digital cards.
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('flexBanner')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
-                      >
-                        Remove Flex
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {FLEX_SERVICES.map(f => {
-                        const isSelected = formData.selectedFlexServices.includes(f.id);
-                        const fPrice = f.price;
-
-                        return (
-                          <div
-                            key={f.id}
-                            onClick={() => toggleFlexService(f.id)}
-                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                          >
-                            <div className="service-checkbox-circle">
-                              {isSelected && <Check size={14} />}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start">
-                                <span className="font-bold text-xs text-white">{f.name}</span>
-                                <span className="text-xs text-[#D4AF37] font-mono font-bold ml-2">
-                                  +₹{fPrice.toLocaleString('en-IN')}
-                                </span>
-                              </div>
-                              <div className="text-[11px] text-gray-400 mt-1">{f.note}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* 5. CALENDARS CONFIGURATOR */}
-                {formData.services.calendars && (
-                  <div className="dynamic-config-section">
-                    <div className="dynamic-config-header">
-                      <div>
-                        <h4 className="text-lg font-bold text-[#D4AF37] flex items-center gap-2">
-                          <Calendar size={20} />
-                          <span>{lang === 'TE' ? 'కపుల్ క్యాలెండర్లు & బహుమతి వస్తువులు' : 'Personalized Calendars & Keepsakes'}</span>
-                        </h4>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          Desk easels and wall poster calendars with couple photos.
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => toggleServiceCategory('calendars')}
-                        className="text-xs text-red-400 hover:text-red-300 font-semibold bg-red-500/10 px-3 py-1 rounded-lg border border-red-500/20"
-                      >
-                        Remove Calendars
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                      {CALENDAR_SERVICES.map(c => {
-                        const isSelected = formData.selectedCalendarServices.includes(c.id);
-                        const cPrice = c.price;
-
-                        return (
-                          <div
-                            key={c.id}
-                            onClick={() => toggleCalendarService(c.id)}
-                            className={`service-check-card ${isSelected ? 'checked' : ''}`}
-                          >
-                            <div className="service-checkbox-circle">
-                              {isSelected && <Check size={14} />}
-                            </div>
-                            <div className="flex-1">
-                              <span className="font-bold text-xs text-white block">{c.name}</span>
-                              <div className="text-xs text-[#D4AF37] font-mono font-bold mt-1">
-                                +₹{cPrice.toLocaleString('en-IN')} / ea
-                              </div>
-                              <div className="text-[11px] text-gray-400 mt-1">{c.note}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
-                      <div>
-                        <label className="text-xs text-gray-200 font-bold block">Number of Copies:</label>
-                        <span className="text-[11px] text-gray-400">Total calendar copies printed</span>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        {[1, 2, 5, 10, 25, 50].map(cnt => (
-                          <button
-                            key={cnt}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, calendarCopies: cnt })}
-                            className={`bubble-pill ${formData.calendarCopies === cnt ? 'active' : ''}`}
-                          >
-                            {cnt} {cnt === 1 ? 'Copy' : 'Copies'}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Empty State Guard */}
-                {!Object.values(formData.services).some(Boolean) && (
-                  <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center space-y-4">
-                    <p className="text-gray-300 font-semibold">
-                      {lang === 'TE'
-                        ? 'ప్రస్తుతం ఏ సేవలు ఎంపిక చేయబడలేదు. దయచేసి వెనుకకు వెళ్లి సర్వీసులను ఎంచుకోండి లేదా తక్షణ బండిల్స్‌ను ఉపయోగించండి.'
-                        : 'No services are currently selected. Please choose one or more services, or switch to 1-Click Fast Bundles.'}
-                    </p>
-                    <div className="flex justify-center gap-3 flex-wrap">
-                      <button
-                        type="button"
-                        onClick={() => setStep(1)}
-                        className="btn btn-gold-3d px-6 py-2.5 text-xs font-bold"
-                      >
-                        {lang === 'TE' ? '← సర్వీసులను ఎంచుకోండి' : '← Pick Services'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setExperienceMode('bundles'); setStep(1); }}
-                        className="btn btn-outline px-6 py-2.5 text-xs font-bold"
-                      >
-                        {lang === 'TE' ? '⚡ తక్షణ బండిల్స్ చూడండి' : '⚡ Browse 1-Click Bundles'}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex justify-between pt-4">
-                  <button
-                    type="button"
-                    onClick={goBackStep}
-                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
-                  >
-                    <ArrowLeft size={16} />
-                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={proceedToNextStep}
-                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
-                  >
-                    <span>{lang === 'TE' ? 'తదుపరి దశ: ఈవెంట్ వివరాలు' : 'Next: Event & Delivery Details'}</span>
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3 (CUSTOM): EVENT & DELIVERY DETAILS */}
-            {step === 3 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    3. {lang === 'TE' ? 'ఈవెంట్ & సంప్రదింపు వివరాలు' : 'Event & Delivery Details'}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-6">
-                    Enter contact name, WhatsApp number, and delivery city for dispatch.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">Your Full Name *</label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={e => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Ramesh Varma"
-                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">WhatsApp Phone Number *</label>
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="+91 98765 43210"
-                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 font-semibold mb-2">Event Type</label>
-                    <div className="flex gap-2 flex-wrap">
-                      {[
-                        { id: 'Wedding', telugu: 'పెళ్ళి' },
-                        { id: 'Engagement', telugu: 'నిశ్చితార్థం' },
-                        { id: 'Reception', telugu: 'రిసెప్షన్' },
-                        { id: 'Half-Saree / Dhoti', telugu: 'లంగా వోణి' },
-                        { id: 'Birthday / Other', telugu: 'పుట్టినరోజు' },
-                      ].map(evt => (
-                        <button
-                          key={evt.id}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, eventType: evt.id })}
-                          className={`bubble-pill ${formData.eventType === evt.id ? 'active' : ''}`}
-                        >
-                          {evt.id} <span className="font-telugu text-xs opacity-75">({evt.telugu})</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* EVENT DATE & SUBHA MUHURTHAM SELECTOR */}
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-black/40 to-yellow-500/10 border border-[#D4AF37]/30 space-y-3">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <Calendar size={18} className="text-[#D4AF37]" />
-                        <label className="text-sm text-white font-bold">
-                          {lang === 'TE' ? 'ఈవెంట్ / ముహూర్తం తేదీ *' : 'Event / Wedding Muhurtham Date *'}
-                        </label>
-                      </div>
-                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 font-bold flex items-center gap-1 animate-pulse">
-                        🔥 {lang === 'TE' ? 'ముహూర్తాలు వేగంగా పూర్తవుతున్నాయి!' : 'Muhurtham Slots Filling Up Fast!'}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-gray-400">
-                      {lang === 'TE'
-                        ? 'క్రింది ప్రముఖ శుభ ముహూర్తాల నుండి ఎంచుకోండి లేదా మీ వివాహ తేదీని నేరుగా సెలెక్ట్ చేయండి.'
-                        : 'Select from peak Andhra/Telangana Subha Muhurtham dates below, or pick your wedding date.'}
-                    </p>
-
-                    {/* Quick Auspicious Date Pills */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-                      {AUSPICIOUS_MUHURTHAM_DATES.map(m => {
-                        const isSelected = formData.eventDate === m.date;
-                        return (
-                          <button
-                            key={m.date}
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, eventDate: m.date }))}
-                            className={`p-2.5 rounded-xl border text-left transition-all ${
-                              isSelected
-                                ? 'border-[#D4AF37] bg-[#D4AF37]/25 text-white shadow-[0_0_12px_rgba(212,175,55,0.3)]'
-                                : 'border-white/10 bg-black/40 text-gray-300 hover:border-white/20'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-bold text-white">{m.label}</span>
-                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-500/20 text-red-300 font-semibold">{m.tag}</span>
-                            </div>
-                            <div className="text-[10px] text-[#D4AF37] font-telugu mt-0.5 truncate">{m.telugu}</div>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Custom Date Input */}
-                    <div className="pt-2 flex items-center gap-3 flex-wrap sm:flex-nowrap">
-                      <div className="flex-1 min-w-[200px]">
-                        <label className="block text-[11px] text-gray-400 mb-1">
-                          {lang === 'TE' ? 'లేదా ఇతర తేదీని ఎంచుకోండి:' : 'Or pick your custom event date:'}
-                        </label>
-                        <input
-                          type="date"
-                          value={formData.eventDate}
-                          min={new Date().toISOString().split('T')[0]}
-                          onChange={e => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
-                          className="w-full p-2.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none text-xs"
-                          required
-                        />
-                      </div>
-                      {formData.eventDate && (
-                        <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 shrink-0 self-end">
-                          <CheckCircle2 size={15} />
-                          <span>Selected: {new Date(formData.eventDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">City / District</label>
-                      <select
-                        value={formData.city}
-                        onChange={e => setFormData({ ...formData, city: e.target.value })}
-                        className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                      >
-                        <option value="Vijayawada">Vijayawada (విజయవాడ)</option>
-                        <option value="Guntur">Guntur (గుంటూరు)</option>
-                        <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
-                        <option value="Hyderabad">Hyderabad (హైదరాబాద్)</option>
-                        <option value="Tirupati">Tirupati (తిరుపతి)</option>
-                        <option value="Rajahmundry">Rajahmundry (రాజమండ్రి)</option>
-                        <option value="Kakinada">Kakinada (కాకినాడ)</option>
-                        <option value="Nellore">Nellore (నెల్లూరు)</option>
-                        <option value="Kurnool">Kurnool (కర్నూలు)</option>
-                        <option value="Other">Other City (ఇతర నగరం)</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-gray-300 font-semibold mb-2">Delivery Speed</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, deliverySpeed: 'standard' })}
-                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
-                            formData.deliverySpeed === 'standard'
-                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                              : 'border-white/10 bg-white/5 text-gray-400'
-                          }`}
-                        >
-                          <div className="font-bold text-white">⚡ Standard (3-5 Days)</div>
-                          <div className="text-emerald-400 mt-0.5">Free Delivery</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, deliverySpeed: 'express' })}
-                          className={`p-3 rounded-xl text-xs font-semibold border text-left ${
-                            formData.deliverySpeed === 'express'
-                              ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-                              : 'border-white/10 bg-white/5 text-gray-400'
-                          }`}
-                        >
-                          <div className="font-bold text-white">🚀 Express (24-48 Hrs)</div>
-                          <div className="text-[#D4AF37] mt-0.5 font-bold">
-                            +₹1,500 Rush
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 font-semibold mb-2">Shipping Address</label>
-                    <textarea
-                      rows="2"
-                      value={formData.address}
-                      onChange={e => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="Door No, Street, Landmark, Town, PIN Code..."
-                      className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <button
-                    type="button"
-                    onClick={goBackStep}
-                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
-                  >
-                    <ArrowLeft size={16} />
-                    <span>{lang === 'TE' ? 'వెనుకకు' : 'Back'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={proceedToNextStep}
-                    className="btn btn-gold-3d flex items-center gap-2 px-8 py-3.5 font-bold"
-                  >
-                    <span>{lang === 'TE' ? 'తదుపరి దశ: ఫోటోలు & నిర్ధారణ' : 'Next: Media & Confirmation'}</span>
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 4 (CUSTOM): MEDIA UPLOAD & FINAL CONFIRMATION */}
-            {step === 4 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    4. {lang === 'TE' ? 'మీ ఫోటోలు పంపండి & ఆర్డర్ నిర్ధారించండి' : 'Media Transfer & Order Confirmation'}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-6">
-                    Choose how you want to share files and review your itemized package.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div
-                    onClick={() => setFormData({ ...formData, uploadMethod: 'cloud' })}
-                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                      formData.uploadMethod === 'cloud'
-                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                    }`}
-                  >
-                    <UploadCloud size={26} className="text-[#D4AF37] mb-2" />
-                    <h4 className="font-bold text-white text-sm">Google Drive / Link</h4>
-                    <p className="text-xs text-gray-400 mt-1">Paste Drive, WeTransfer link</p>
-                  </div>
-
-                  <div
-                    onClick={() => setFormData({ ...formData, uploadMethod: 'whatsapp' })}
-                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                      formData.uploadMethod === 'whatsapp'
-                        ? 'border-[#25D366] bg-[#25D366]/20 text-white shadow-[0_0_20px_rgba(37,211,102,0.2)]'
-                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                    }`}
-                  >
-                    <MessageCircle size={26} className="text-[#25D366] mb-2" />
-                    <h4 className="font-bold text-white text-sm">Send on WhatsApp</h4>
-                    <p className="text-xs text-gray-400 mt-1">Direct coordinator chat</p>
-                  </div>
-
-                  <div
-                    onClick={() => setFormData({ ...formData, uploadMethod: 'courier' })}
-                    className={`p-5 rounded-2xl border cursor-pointer text-left transition-all ${
-                      formData.uploadMethod === 'courier'
-                        ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-white shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                        : 'border-white/10 bg-black/40 text-gray-400 hover:border-white/25'
-                    }`}
-                  >
-                    <Truck size={26} className="text-[#D4AF37] mb-2" />
-                    <h4 className="font-bold text-white text-sm">Courier Pen Drive</h4>
-                    <p className="text-xs text-gray-400 mt-1">Ship USB to Vijayawada lab</p>
-                  </div>
-                </div>
-
-                {formData.uploadMethod === 'cloud' && (
-                  <div className="p-6 rounded-2xl bg-black/60 border border-white/20">
-                    <label className="block text-sm text-gray-200 font-semibold mb-2">
-                      Google Drive or WeTransfer Link
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="https://drive.google.com/drive/folders/..."
-                      value={formData.cloudLink}
-                      onChange={e => setFormData({ ...formData, cloudLink: e.target.value })}
-                      className="w-full p-3.5 rounded-xl bg-black/70 border border-white/20 text-white focus:border-[#D4AF37] outline-none font-mono text-sm"
-                    />
-                  </div>
-                )}
-
-                {/* Final Order Review Card */}
-                <div className="p-5 rounded-2xl bg-white/5 border border-white/15 space-y-3">
-                  <div className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <CheckSquare size={16} className="text-[#D4AF37]" />
-                    <span>Package Breakdown Review</span>
-                  </div>
-                  <ul className="text-xs text-gray-300 space-y-1.5 pl-2">
-                    {generateStructuredItems().map((it, idx) => (
-                      <li key={idx} className="flex justify-between items-start py-1 border-b border-white/5">
-                        <div>
-                          <strong className="text-white block">{it.name}</strong>
-                          <span className="text-gray-400 text-[11px]">{it.details}</span>
-                        </div>
-                        <span className="text-[#D4AF37] font-mono font-bold ml-2">₹{it.price.toLocaleString('en-IN')}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="flex justify-between items-baseline pt-2 text-sm font-bold">
-                    <span className="text-gray-300">Total Amount:</span>
-                    <span className="text-2xl font-mono text-emerald-400">₹{calculateTotal().toLocaleString('en-IN')}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm text-gray-300 font-semibold mb-2">
-                    Special Instructions / Notes (Optional)
-                  </label>
-                  <textarea
-                    rows="2"
-                    value={formData.instructions}
-                    onChange={e => setFormData({ ...formData, instructions: e.target.value })}
-                    placeholder="e.g. Ritual focus, song preference..."
-                    className="w-full p-3.5 rounded-xl bg-black/60 border border-white/20 text-white focus:border-[#D4AF37] outline-none"
-                  />
-                </div>
-
-                <div className="flex justify-between items-center pt-4">
-                  <button
-                    type="button"
-                    onClick={goBackStep}
-                    className="btn btn-outline flex items-center gap-2 px-6 py-3"
-                  >
-                    <ArrowLeft size={16} />
-                    <span>Back</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => submitOrder()}
-                    disabled={submitting}
-                    className="btn btn-gold-3d flex items-center gap-2 px-10 py-4 text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.4)] disabled:opacity-50"
-                  >
-                    <CheckCircle2 size={20} />
-                    <span>{submitting ? 'Placing Order...' : 'Confirm & Place Order'}</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+        <CustomPathway ctx={ctx} />
         )}
 
       </div>
 
       {/* RIGHT: ITEMIZED STICKY SIDEBAR */}
-      <div className="builder-sidebar">
-        <div className="cart-sticky p-6 sm:p-7 rounded-2xl bg-black/70 border border-[#D4AF37]/30 shadow-2xl backdrop-blur-2xl">
-          <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-            <div className="flex items-center gap-2 text-white font-serif font-bold text-lg">
-              <ShoppingCart size={20} className="text-[#D4AF37]" />
-              <span>{lang === 'TE' ? 'ఆర్డర్ రసీదు' : 'Itemized Quote'}</span>
-            </div>
-            <span className="text-xs font-semibold flex items-center gap-1 px-2.5 py-1 rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-              <Clock size={12} />
-              {formData.deliverySpeed === 'express' ? '24-48h Rush' : '3-5 Days ETA'}
-            </span>
-          </div>
-
-          {/* Itemized Line-By-Line Receipt Breakdown */}
-          <div className="space-y-3 text-xs sm:text-sm">
-            {generateStructuredItems().map((it, idx) => (
-              <div key={idx} className="space-y-1 pb-2 border-b border-white/10">
-                <div className="flex justify-between text-white font-semibold">
-                  <span className="truncate max-w-[210px]">{it.name}</span>
-                  <span className="font-mono text-[#D4AF37]">₹{it.price.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="text-gray-400 text-[11px] leading-tight">{it.details}</div>
-              </div>
-            ))}
-
-            {formData.deliverySpeed === 'express' && (
-              <div className="flex justify-between text-[#D4AF37] text-xs py-1 border-b border-white/10">
-                <span>Express 24-48h Rush Delivery</span>
-                <span className="font-mono font-bold">+₹1,500</span>
-              </div>
-            )}
-
-            <div className="border-t border-white/10 pt-4 mt-2 flex justify-between items-baseline">
-              <div>
-                <span className="text-xs text-gray-400 block font-medium">
-                  Total Itemized Quote
-                </span>
-                <span className="text-3xl font-bold font-mono text-[#D4AF37]">
-                  ₹{calculateTotal().toLocaleString('en-IN')}
-                </span>
-              </div>
-              <span className="text-[11px] text-gray-400">All Taxes Inc.</span>
-            </div>
-
-            <div className="pt-4 border-t border-white/10 space-y-3">
-              <button
-                type="button"
-                onClick={openWhatsAppDirect}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#25D366] text-black font-bold text-sm hover:bg-[#20ba59] transition-all shadow-[0_4px_15px_rgba(37,211,102,0.3)]"
-              >
-                <MessageCircle size={18} />
-                <span>{lang === 'TE' ? 'వాట్సాప్ లో కొటేషన్ పొందండి' : 'Get Quote on WhatsApp'}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => submitOrder()}
-                disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#D4AF37] text-black font-bold text-sm hover:bg-[#b8952b] transition-all shadow-[0_4px_15px_rgba(212,175,55,0.3)]"
-              >
-                <CheckCircle2 size={18} />
-                <span>{submitting ? 'Processing...' : (lang === 'TE' ? 'ఆర్డర్ కన్ఫర్మ్ చేయండి' : 'Save & Book Package')}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <OrderSummary ctx={ctx} />
 
       {/* FLOATING MOBILE BOTTOM BAR */}
-      <div className="mobile-summary-bar">
-        <div>
-          <span className="text-[11px] text-gray-400 block">
-            Total Estimate
-          </span>
-          <span className="text-xl font-bold text-[#D4AF37] font-mono">
-            ₹{calculateTotal().toLocaleString('en-IN')}
-          </span>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={openWhatsAppDirect}
-            className="p-3 rounded-xl bg-[#25D366] text-black font-bold text-xs flex items-center gap-1.5"
-          >
-            <MessageCircle size={16} />
-            <span>WhatsApp</span>
-          </button>
-          <button
-            onClick={() => step < totalSteps ? proceedToNextStep() : submitOrder()}
-            className="px-4 py-3 rounded-xl bg-[#D4AF37] text-black font-bold text-xs flex items-center gap-1.5"
-          >
-            <span>{step < totalSteps ? 'Next Step →' : 'Confirm Book'}</span>
-          </button>
-        </div>
-      </div>
+      <MobileSummaryBar ctx={ctx} />
 
       <LoginModal
         isOpen={showAuthModal}
@@ -3411,6 +1229,8 @@ const BookingPage = () => {
           submitOrder(newUser);
         }}
       />
+
+      <Toast message={toast?.msg} type={toast?.type} onClose={() => setToast(null)} />
     </div>
   );
 };
