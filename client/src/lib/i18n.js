@@ -93,7 +93,7 @@ export const STRINGS = {
   },
   'services.pathways_eyebrow': { EN: '✦ Flexible Service Architecture for Couples & Families ✦', TE: '✦ జంటలకు & కుటుంబాలకు సౌకర్యవంతమైన సర్వీస్ నిర్మాణం ✦' },
   'services.pathways_title': { EN: 'Choose Only Editing, Only Printing, Complete Suite, or Any A-la-Carte Media', TE: 'ఎడిటింగ్ మాత్రమే, ప్రింటింగ్ మాత్రమే, కంప్లీట్ సూట్, లేదా ఏదైనా ఒక్క సేవ — మీ ఇష్టం' },
-  'services.pathways_tagline': { EN: 'Direct Couple Wholesale-Equivalent Pricing • Zero Hidden Lab Markups', TE: 'నేరుగా జంటలకు హోల్‌సేల్-సమాన ధరలు • ల్యాబ్‌లో దాచిన మార్కప్‌లు శూన్యం' },
+  'services.pathways_tagline': { EN: 'Direct Lab Pricing for Couples • Zero Hidden Middlemen Markups', TE: 'నేరుగా ల్యాబ్ ధరలు • మధ్యవర్తుల దాచిన మార్కప్‌లు శూన్యం' },
   'services.starts_from': { EN: 'Starts From', TE: 'ప్రారంభ ధర' },
   'services.lbl_includes': { EN: 'Includes:', TE: 'కలిపి ఉంటుంది:' },
   'services.lbl_provide': { EN: 'Provide:', TE: 'మీరు అందించాల్సినవి:' },
@@ -136,13 +136,13 @@ export const STRINGS = {
   'services.video_title': { EN: 'Cinematic 4K Video Post-Production', TE: 'సినిమాటిక్ 4K వీడియో పోస్ట్-ప్రొడక్షన్' },
   'services.video_sub': { EN: 'Story-driven cinematic wedding films, traditional Muhurtham documentaries, same-day reception edits, and viral 9:16 vertical reels.', TE: 'కథా-కేంద్రిత సినిమాటిక్ వెడ్డింగ్ ఫిల్మ్‌లు, సాంప్రదాయ ముహూర్తం డాక్యుమెంటరీలు, అదే రోజు రిసెప్షన్ ఎడిట్లు, వైరల్ 9:16 వర్టికల్ రీల్స్.' },
   'services.est_eyebrow': { EN: '✦ ANDHRA PRADESH #1 POST-PRODUCTION HUB ✦', TE: '✦ ఆంధ్రప్రదేశ్ నంబర్ 1 పోస్ట్-ప్రొడక్షన్ హబ్ ✦' },
-  'services.est_title': { EN: 'Wedding Album & Video — Instant Quote', TE: 'వెడ్డింగ్ ఆల్బమ్ & వీడియో — తక్షణ కొటేషన్' },
-  'services.est_subtitle': { EN: 'Answer 3 simple questions — what you need, how many pages, which cover — and get an honest, itemised price. Editing only, printing only, or both — your choice.', TE: '3 సులభ ప్రశ్నలకు సమాధానం ఇవ్వండి — ఏమి కావాలి, ఎన్ని పేజీలు, ఏ కవర్ — నిజాయితీగా, అంశాల వారీగా ధర పొందండి. ఎడిటింగ్ మాత్రమే, ప్రింటింగ్ మాత్రమే, లేదా రెండూ — మీ ఇష్టం.' },
-  'services.est_cta': { EN: 'Start My Order', TE: 'నా ఆర్డర్ ప్రారంభించండి' },
+  'services.est_title': { EN: 'Wedding Albums & Media Collection', TE: 'వెడ్డింగ్ ఆల్బమ్స్ & మీడియా కలెక్షన్' },
+  'services.est_subtitle': { EN: 'Transparent per-sheet pricing across all Indian Landscape & Portrait formats. Configure sheets, choose paper finishes, and order directly online.', TE: 'అన్ని ఇండియన్ ల్యాండ్‌స్కేప్ & పోర్ట్రెయిట్ ఫార్మాట్లలో పారదర్శక పర్-షీట్ ధరలు. సైజును ఎంచుకోండి, షీట్లను కాన్ఫిగర్ చేయండి మరియు నేరుగా ఆన్‌లైన్‌లో ఆర్డర్ చేయండి.' },
+  'services.est_cta': { EN: 'Explore All Products & Sizes', TE: 'అన్ని ఉత్పత్తులు & సైజులను చూడండి' },
   'services.cta_title': { EN: 'Ready to elevate your memories?', TE: 'మీ జ్ఞాపకాలను ఉన్నతంగా మార్చేందుకు సిద్ధమా?' },
   'services.cta_desc': { EN: 'Get your albums designed, printed, and delivered with 100% color accuracy guarantee and lifetime archival durability.', TE: '100% రంగు ఖచ్చితత్వ హామీ, జీవితకాల ఆర్కైవల్ మన్నికతో మీ ఆల్బమ్‌లను డిజైన్, ప్రింట్ చేసి అందిస్తాం.' },
   'services.cta_btn1': { EN: 'Start Custom Order', TE: 'కస్టమ్ ఆర్డర్ ప్రారంభించండి' },
-  'services.cta_btn2': { EN: 'Instant Cost Estimator', TE: 'తక్షణ ధర అంచనా' },
+  'services.cta_btn2': { EN: 'Explore Storefront', TE: 'స్టోర్‌ఫ్రంట్‌ను అన్వేషించండి' },
 
   // ── Blog ───────────────────────────────────────────────────────────────
   'blog.title1': { EN: 'Wedding', TE: 'వెడ్డింగ్' },
@@ -268,25 +268,25 @@ export const STRINGS = {
   'about.stat4_label': { EN: 'Avg. Turnaround', TE: 'సగటు టర్న్‌అరౌండ్' },
 
   // ── Careers ────────────────────────────────────────────────────────────
-  'careers.hero_title': { EN: 'Join Our Freelance Network', TE: 'మా ఫ్రీలాన్స్ నెట్‌వర్క్‌లో చేరండి' },
+  'careers.hero_title': { EN: 'Join Our Post-Production Lab Team', TE: 'మా పోస్ట్-ప్రొడక్షన్ ల్యాబ్ టీమ్‌లో చేరండి' },
   'careers.hero_sub': {
-    EN: 'We are looking for talented photo retouch artists, video editors, and album designers to join our remote workforce.',
-    TE: 'నైపుణ్యం గల ఫోటో రీటచ్ ఆర్టిస్టులు, వీడియో ఎడిటర్లు, ఆల్బమ్ డిజైనర్లను మా రిమోట్ టీమ్‌లోకి ఆహ్వానిస్తున్నాం.',
+    EN: 'We are hiring dedicated photo retouchers, Karizma album designers, and cinematic video colorists for our production studio.',
+    TE: 'మా ప్రొడక్షన్ స్టూడియో కోసం నైపుణ్యం గల ఫోటో రీటచర్లు, కరిజ్మా ఆల్బమ్ డిజైనర్లు, సినిమాటిక్ వీడియో కలరిస్టులను ఆహ్వానిస్తున్నాం.',
   },
-  'careers.title': { EN: 'Edit From Anywhere, Get Paid on Time', TE: 'ఎక్కడి నుంచైనా ఎడిట్ చేయండి, సమయానికి డబ్బు పొందండి' },
+  'careers.title': { EN: 'Craft Royal Wedding Albums & Cinematic Films', TE: 'రాయల్ వెడ్డింగ్ ఆల్బమ్స్ & సినిమాటిక్ ఫిల్మ్స్ రూపొందించండి' },
   'careers.desc': {
-    EN: 'weddingalbums.in connects professional wedding studios with elite freelance editors. If you have an eye for cinematic color grading, mastery over Premiere Pro / Lightroom, or love designing premium album spreads, we want you.',
-    TE: 'weddingalbums.in ప్రొఫెషనల్ వెడ్డింగ్ స్టూడియోలను అత్యుత్తమ ఫ్రీలాన్స్ ఎడిటర్లతో కలుపుతుంది. సినిమాటిక్ కలర్ గ్రేడింగ్‌పై అభిరుచి, Premiere Pro / Lightroom‌పై పట్టు, లేదా ప్రీమియం ఆల్బమ్ స్ప్రెడ్‌ల డిజైన్ ఇష్టమైతే — మీరే మాకు కావాలి.',
+    EN: 'WeddingAlbums.in operates the premier digital lab and printing press in Andhra Pradesh & Telangana. Work with cutting-edge workflows in DaVinci Resolve, Photoshop, and commercial lay-flat presses with stable compensation and growth.',
+    TE: 'WeddingAlbums.in ఆంధ్రప్రదేశ్ & తెలంగాణలో ప్రముఖ డిజిటల్ ల్యాబ్ మరియు ప్రింటింగ్ ప్రెస్‌ను నడుపుతోంది. DaVinci Resolve, Photoshop మరియు కమర్షియల్ ప్రెస్‌లలో అధునాతన వర్క్‌ఫ్లోస్‌తో స్థిరమైన ఉద్యోగావకాశాలు పొందండి.',
   },
-  'careers.earn_title': { EN: '💰 Earnings Potential', TE: '💰 ఆదాయ అవకాశం' },
-  'careers.earn_label': { EN: 'Jobs per month (Avg ₹3,000 / job)', TE: 'నెలకు జాబ్‌లు (సగటు ₹3,000 / జాబ్)' },
+  'careers.earn_title': { EN: '🏆 Professional Growth & Benefits', TE: '🏆 వృత్తిపరమైన ఎదుగుదల & ప్రయోజనాలు' },
+  'careers.earn_label': { EN: 'Production Specialist Tiers (Base + Performance)', TE: 'ప్రొడక్షన్ స్పెషలిస్ట్ శ్రేణులు' },
   'careers.earn_permo': { EN: '/mo', TE: '/నెల' },
-  'careers.payout_title': { EN: '⚡ Instant Payouts', TE: '⚡ తక్షణ పేఅవుట్‌లు' },
+  'careers.payout_title': { EN: '⚡ Reliable Bi-Weekly Salaries', TE: '⚡ సమయానికి సకాలంలో జీతాలు' },
   'careers.payout_desc': {
-    EN: 'Complete a job, get the funds in your wallet immediately. Request a payout to your UPI or Bank Account anytime.',
-    TE: 'ఒక జాబ్ పూర్తయ్యాగానే డబ్బు మీ వాలెట్‌లోకి వస్తుంది. ఎప్పుడైనా మీ UPI లేదా బ్యాంక్ ఖాతాకు పేఅవుట్ అడగవచ్చు.',
+    EN: 'Work directly on verified storefront & studio orders with structured milestones, workstation hardware support, and guaranteed on-time bank deposits.',
+    TE: 'నిర్దిష్ట మైల్‌స్టోన్స్, వర్క్‌స్టేషన్ హార్డ్‌వేర్ సపోర్ట్ మరియు గ్యారెంటీడ్ బ్యాంక్ డిపాజిట్‌లతో స్టోర్‌ఫ్రంట్ & స్టూడియో ఆర్డర్లపై పనిచేయండి.',
   },
-  'careers.apply': { EN: 'Apply & Take Skills Test', TE: 'దరఖాస్తు చేయండి & స్కిల్స్ టెస్ట్ రాయండి' },
+  'careers.apply': { EN: 'Apply for Lab Roles', TE: 'ల్యాబ్ ఉద్యోగానికి దరఖాస్తు చేయండి' },
 
   // ── Pricing ────────────────────────────────────────────────────────────
   'pricing.badge': { EN: '100% TRANSPARENT HEIRLOOM PRICING', TE: '100% పారదర్శక హీర్లూమ్ ధరలు' },
@@ -667,7 +667,7 @@ export const STRINGS = {
 
   // ── Editor dashboard ───────────────────────────────────────────────────
   'edash.workspace': { EN: 'Editor Workspace', TE: 'ఎడిటర్ వర్క్‌స్పేస్' },
-  'edash.welcome': { EN: 'Welcome back, {name} | Freelance Editor', TE: 'తిరిగి స్వాగతం, {name} | ఫ్రీలాన్స్ ఎడిటర్' },
+  'edash.welcome': { EN: 'Welcome back, {name} | Lab Production Specialist', TE: 'తిరిగి స్వాగతం, {name} | ల్యాబ్ ప్రొడక్షన్ స్పెషలిస్ట్' },
   'edash.request_payout': { EN: 'Request Payout', TE: 'పేఅవుట్ అభ్యర్థించండి' },
   'edash.tab_active': { EN: 'Active Jobs', TE: 'క్రియాశీల ఉద్యోగాలు' },
   'edash.tab_earnings': { EN: 'Earnings History', TE: 'ఆదాయ చరిత్ర' },

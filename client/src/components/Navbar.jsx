@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, X } from 'lucide-react';
+import { ShoppingBag, X, LogIn, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useContent } from '../context/ContentContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 import './Navbar.css';
 
@@ -14,24 +15,25 @@ const Navbar = () => {
   const location = useLocation();
   const { cartItems, toggleCart } = useCart();
   const { content } = useContent();
+  const { user } = useAuth();
 
-  const navData = content?.global?.navbar || {};
+  const navData = content?.global?.navbar || content?.navbar || {};
   const { lang, toggleLang } = useLanguage();
 
   const defaultLinks = lang === 'TE' 
     ? [
         { name: 'హోమ్', path: '/' },
-        { name: 'సేవలు', path: '/services' },
+        { name: 'స్టోర్ & ధరలు', path: '/shop' },
+        { name: 'ఆల్బమ్స్', path: '/albums' },
         { name: 'గ్యాలరీ', path: '/portfolio' },
-        { name: 'ధరలు', path: '/pricing' },
         { name: 'ట్రాక్', path: '/track' },
         { name: 'ముహూర్తాలు', path: '/muhurtham' },
       ]
     : [
         { name: 'Home', path: '/' },
-        { name: 'Services', path: '/services' },
+        { name: 'Store & Pricing', path: '/shop' },
+        { name: 'Albums', path: '/albums' },
         { name: 'Portfolio', path: '/portfolio' },
-        { name: 'Pricing', path: '/pricing' },
         { name: 'Track Order', path: '/track' },
         { name: 'Muhurtham Dates', path: '/muhurtham' },
       ];
@@ -122,9 +124,17 @@ const Navbar = () => {
             >
               {lang === 'EN' ? 'తెలుగు' : 'English'}
             </button>
-            <Link to="/login" className="btn btn-outline" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
-              Couples Portal
-            </Link>
+            {user ? (
+              <Link to="/client" className="btn btn-outline" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <User size={15} />
+                <span>{user.name ? user.name.split(' ')[0] : 'Dashboard'}</span>
+              </Link>
+            ) : (
+              <Link to="/login" className="btn btn-outline" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <LogIn size={15} />
+                <span>Login</span>
+              </Link>
+            )}
             <button onClick={toggleCart} className="cart-toggle-btn" aria-label="Open cart">
               <ShoppingBag size={22} />
               {cartItems?.length > 0 && (
@@ -188,14 +198,22 @@ const Navbar = () => {
             ))}
             
             <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <Link to="/login" className="btn btn-outline" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
-                Couples Portal
-              </Link>
+              {user ? (
+                <Link to="/client" className="btn btn-outline" style={{ justifyContent: 'center', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => setMenuOpen(false)}>
+                  <User size={16} />
+                  <span>Dashboard ({user.name ? user.name.split(' ')[0] : 'My Account'})</span>
+                </Link>
+              ) : (
+                <Link to="/login" className="btn btn-outline" style={{ justifyContent: 'center', padding: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => setMenuOpen(false)}>
+                  <LogIn size={16} />
+                  <span>Login</span>
+                </Link>
+              )}
               <Link to={ctaLink} className="btn btn-gold-3d" style={{ justifyContent: 'center', padding: '0.8rem' }} onClick={() => setMenuOpen(false)}>
                 {ctaText}
               </Link>
               <a 
-                href={`https://wa.me/${String(content?.global?.siteSettings?.whatsapp || content?.global?.siteSettings?.phone || '919876543210').replace(/[^0-9]/g, '')}?text=${encodeURIComponent("నమస్కారం! నేను వెడ్డింగ్ ఆల్బమ్ డిజైన్ & వీడియో ఎడిటింగ్ సర్వీసెస్ గురించి అడగాలనుకుంటున్నాను.")}`}
+                href={`https://wa.me/${String(content?.global?.siteSettings?.whatsapp || content?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || content?.navbar?.whatsapp || content?.global?.siteSettings?.phone || content?.siteSettings?.phone || '919494845111').replace(/[^0-9]/g, '')}?text=${encodeURIComponent("నమస్కారం! నేను వెడ్డింగ్ ఆల్బమ్ డిజైన్ & వీడియో ఎడిటింగ్ సర్వీసెస్ గురించి అడగాలనుకుంటున్నాను.")}`}
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="btn btn-outline" 

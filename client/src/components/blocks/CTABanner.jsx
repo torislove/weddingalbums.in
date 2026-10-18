@@ -3,19 +3,24 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ScrollReveal from '../ScrollReveal';
 import KolamDivider from '../KolamDivider';
+import { useContent } from '../../context/ContentContext';
 
 const CTABanner = (props) => {
+  const { content } = useContent();
   const {
-    eyebrow = "✦ Start Your Story ✦",
-    titlePart1 = "Book Your Date",
-    titlePart2 = "Before It's Gone",
-    subtitle = "Our calendar fills up quickly, especially for wedding season. Reach out today to check your date availability.",
-    btn1Text = "Request a Quote",
-    btn1Link = "/contact",
+    eyebrow = "✦ Start Your Heirloom Story ✦",
+    titlePart1 = "Preserve Sacred Memories",
+    titlePart2 = "With Pure Artisanal Luxury",
+    subtitle = "Handcrafted flush-mount albums, 4K cinematic video editing, and custom event media tailored for Andhra Pradesh & Telangana weddings.",
+    btn1Text = "Explore Store & Pricing",
+    btn1Link = "/shop",
     btn2Text = "WhatsApp Us",
+    whatsappNumber,
     whatsappMessage = "Hi, I'd like to check availability"
   } = props;
 
+  const rawWa = whatsappNumber || content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
   const encodedMessage = encodeURIComponent(whatsappMessage);
   
   return (
@@ -24,16 +29,22 @@ const CTABanner = (props) => {
       <div className="container text-center">
         <ScrollReveal>
           <div className="hero-eyebrow">{eyebrow}</div>
-          <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'white', margin: '1rem 0' }}>
-            {titlePart1}<span className="blink-cursor">|</span>
-            <br /><span className="text-gradient">{titlePart2}</span>
-          </h2>
+          {props.title ? (
+            <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'white', margin: '1rem 0' }}>
+              <span className="text-gradient">{props.title}</span>
+            </h2>
+          ) : (
+            <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'white', margin: '1rem 0' }}>
+              {titlePart1}<span className="blink-cursor">|</span>
+              <br /><span className="text-gradient">{titlePart2}</span>
+            </h2>
+          )}
           <p className="text-muted" style={{ maxWidth: '500px', margin: '0 auto 2.5rem' }}>
             {subtitle}
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to={btn1Link} className="btn btn-gold">{btn1Text} <ArrowRight size={16} /></Link>
-            <a href={`https://wa.me/910000000000?text=${encodedMessage}`} target="_blank" rel="noopener noreferrer" className="btn btn-white">
+            <a href={`https://wa.me/${cleanWa}?text=${encodedMessage}`} target="_blank" rel="noopener noreferrer" className="btn btn-white">
               {btn2Text}
             </a>
           </div>

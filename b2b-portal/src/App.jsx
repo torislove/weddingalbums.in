@@ -14,6 +14,7 @@ const SubmitJob = lazy(() => import('./pages/SubmitJob'));
 const JobHistory = lazy(() => import('./pages/JobHistory'));
 const Invoices = lazy(() => import('./pages/Invoices'));
 const AlbumOrders = lazy(() => import('./pages/AlbumOrders'));
+const B2BCatalog = lazy(() => import('./pages/B2BCatalog'));
 const SLA = lazy(() => import('./pages/SLA'));
 const Wallet = lazy(() => import('./pages/Wallet'));
 const B2BRegister = lazy(() => import('./pages/B2BRegister'));
@@ -80,6 +81,8 @@ function App() {
 
               {/* Protected routes */}
               <Route path="/dashboard"  element={<ProtectedPage title="Dashboard"><B2BDashboard /></ProtectedPage>} />
+              <Route path="/catalog"    element={<ProtectedPage title="Wholesale Rates & Storefront"><B2BCatalog /></ProtectedPage>} />
+              <Route path="/pricing"    element={<ProtectedPage title="Wholesale Rates & Storefront"><B2BCatalog /></ProtectedPage>} />
               <Route path="/submit"     element={<ProtectedPage title="Submit Job"><SubmitJob /></ProtectedPage>} />
               <Route path="/jobs"       element={<ProtectedPage title="Job History"><JobHistory /></ProtectedPage>} />
               <Route path="/invoices"   element={<ProtectedPage title="Invoices"><Invoices /></ProtectedPage>} />

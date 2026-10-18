@@ -24,11 +24,11 @@ import Careers from './pages/Careers';
 import Pricing from './pages/Pricing';
 import AlbumsShowcase from './pages/AlbumsShowcase';
 import OrderTracking from './pages/OrderTracking';
-import BookingPage from './pages/BookingPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import PhotoCulling from './pages/PhotoCulling';
+import Shop from './pages/Shop';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -43,6 +43,7 @@ import MobileBookingBar from './components/MobileBookingBar';
 import PageTransition from './components/PageTransition';
 import CartDrawer from './components/CartDrawer';
 import ProtectedRoute from './components/ProtectedRoute';
+import PageMetadata from './components/PageMetadata';
 import ClientDashboard from './pages/ClientDashboard';
 import OrderHistory from './pages/OrderHistory';
 import AlbumProofGallery from './pages/AlbumProofGallery';
@@ -61,6 +62,7 @@ function AppContent() {
 
   return (
     <>
+      <PageMetadata />
       <NetworkStatusBar />
       {!isIframe && <ScrollToTop />}
       {!isClientDashboard && <CustomCursor />}
@@ -76,6 +78,8 @@ function AppContent() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/store" element={<Shop />} />
               <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/contact" element={<Contact />} />
@@ -92,7 +96,7 @@ function AppContent() {
               <Route path="/proofing/:id" element={<ClientProofing />} />
               <Route path="/albums" element={<AlbumsShowcase />} />
               <Route path="/track" element={<OrderTracking />} />
-              <Route path="/booking" element={<BookingPage />} />
+              <Route path="/booking" element={<Shop />} />
               <Route path="/muhurtham" element={<MuhurthamCalendar />} />
               <Route path="/cart" element={<Cart />} />
               <Route element={<ProtectedRoute allowedRoles={['b2c', 'admin']} />}>

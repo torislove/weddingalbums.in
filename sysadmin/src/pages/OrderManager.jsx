@@ -12,6 +12,7 @@ const OrderManager = () => {
   const [updatingId, setUpdatingId] = useState(null);
   const [dialog, setDialog] = useState(null); // { orderId, nextStatus }
   const [toast, setToast] = useState(null);   // { msg, tone }
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -152,7 +153,20 @@ const OrderManager = () => {
                       {currentStatus}
                     </span>
                   </td>
-                  <td style={{ padding: '14px 16px' }}>
+                  <td style={{ padding: '14px 16px', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        padding: '6px 10px', background: 'rgba(56,189,248,0.1)',
+                        border: '1px solid rgba(56,189,248,0.3)', color: '#38bdf8',
+                        borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600
+                      }}
+                      title="Inspect full order & media specs"
+                    >
+                      <Eye size={13} /> Specs
+                    </button>
+
                     {nextStatus ? (
                       <button
                         onClick={() => setDialog({ orderId: order.id || order._id, nextStatus })}
@@ -191,6 +205,111 @@ const OrderManager = () => {
       />
 
       <Toast message={toast?.msg} tone={toast?.tone} onDone={() => setToast(null)} />
+
+      {/* ── Order Specs Inspection Modal ─────────────────────────────── */}
+      {selectedOrder && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 1000,
+          background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+        }} onClick={() => setSelectedOrder(null)}>
+          <div style={{
+            background: '#0d1117', border: '1px solid rgba(14,165,233,0.3)',
+            borderRadius: '16px', maxWidth: '650px', width: '100%', maxHeight: '90vh',
+            overflowY: 'auto', padding: '24px', color: '#fff', boxShadow: '0 20px 50px rgba(0,0,0,0.8)'
+          }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#22d3ee' }}>
+                  Order Job Specifications #{selectedOrder.id || selectedOrder._id}
+                </h3>
+                <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
+                  Placed by {selectedOrder.customer_name || selectedOrder.client_name || 'Wedding Couple'} ({selectedOrder.user_email || selectedOrder.email})
+                </span>
+              </div>
+              <button 
+                onClick={() => setSelectedOrder(null)} 
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', fontSize: '20px', cursor: 'pointer' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Status & Pricing Strip */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '10px' }}>
+              <div>
+                <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>Production State</span>
+                <strong style={{ color: getStatusColor(selectedOrder.status) }}>{selectedOrder.status || 'CONFIRMED'}</strong>
+              </div>
+              <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block' }}>Order Value</span>
+                <strong style={{ color: '#D4AF37', fontSize: '16px' }}>₹{Number(selectedOrder.total_amount || selectedOrder.amount || 0).toLocaleString('en-IN')}</strong>
+              </div>
+            </div>
+
+            {/* Dual Asset Handover Data */}
+            <div style={{ background: 'rgba(56,189,248,0.05)', border: '1px solid rgba(56,189,248,0.2)', borderRadius: '10px', padding: '14px', marginBottom: '16px' }}>
+              <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                📦 Asset Handover & Media Tracking
+              </h4>
+              {selectedOrder.assetMethod === 'courier' || selectedOrder.courierTracking ? (
+                <div>
+                  <div style={{ color: '#4ade80', fontSize: '13px', fontWeight: 600, marginBottom: '4px' }}>
+                    📦 Physical Courier Pen Drive / HDD En Route
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)' }}>
+                    Courier: <strong>{selectedOrder.courierCompany || 'DTDC Express'}</strong>
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)' }}>
+                    Consignment Tracking #: <strong style={{ color: '#fbbf24' }}>{selectedOrder.courierTracking || 'Pending Receipt'}</strong>
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#34d399', marginTop: '6px' }}>
+                    🛡️ 100% Safe Return Guarantee: Return original media inside finished album gift box.
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div style={{ color: '#38bdf8', fontSize: '13px', fontWeight: 600, marginBottom: '4px' }}>
+                    ☁️ Cloud Storage Download Link
+                  </div>
+                  <div style={{ fontSize: '12px', wordBreak: 'break-all' }}>
+                    {selectedOrder.driveLink ? (
+                      <a href={selectedOrder.driveLink} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'underline' }}>
+                        {selectedOrder.driveLink}
+                      </a>
+                    ) : (
+                      <span style={{ color: 'rgba(255,255,255,0.4)' }}>No external link provided</span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Special Instructions */}
+            {selectedOrder.instructions && (
+              <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '10px', padding: '12px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: '4px' }}>Couple / Studio Instructions:</span>
+                <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.9)', fontStyle: 'italic' }}>
+                  "{selectedOrder.instructions}"
+                </p>
+              </div>
+            )}
+
+            <div style={{ textAlign: 'right' }}>
+              <button
+                onClick={() => setSelectedOrder(null)}
+                style={{
+                  padding: '8px 18px', background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.2)', color: '#fff',
+                  borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

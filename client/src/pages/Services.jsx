@@ -22,6 +22,8 @@ const CATEGORIES = [
 
 const ServiceCard = ({ service, index }) => {
   const t = useT();
+  const { content } = useContent();
+  const whatsappNum = content?.global?.siteSettings?.whatsapp || '919494845111';
   return (
     <ScrollReveal delay={index * 50} className="service-card-v2 glass-3d glow-border">
       <div className="card-accent-line" />
@@ -52,7 +54,7 @@ const ServiceCard = ({ service, index }) => {
           {t('services.order_service')}
         </a>
         <a 
-          href={`https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను ${service.title} (${service.telugu || ''}) గురించి ఆర్డర్ లేదా సమాచారం తెలుసుకోవాలనుకుంటున్నాను.`)}`}
+          href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`నమస్కారం! నేను ${service.title} (${service.telugu || ''}) గురించి ఆర్డర్ లేదా సమాచారం తెలుసుకోవాలనుకుంటున్నాను.`)}`}
           target="_blank" 
           rel="noopener noreferrer"
           className="btn btn-outline text-xs py-2 px-3 flex items-center justify-center text-[#25D366] border-[#25D366]/40 hover:bg-[#25D366]/15 font-semibold"
@@ -320,7 +322,7 @@ const Services = () => {
             title={t('services.est_title')}
             subtitle={t('services.est_subtitle')}
             ctaText={t('services.est_cta')}
-            ctaLink="/booking"
+            ctaLink="/shop"
           />
         </div>
       </div>

@@ -11,11 +11,16 @@ import { API } from '../apiConfig';
 const Contact = () => {
   const t = useT();
   const { content } = useContent();
-  const settings = content?.global?.siteSettings || {
-    phone: '+91 98765 43210',
-    email: 'hello@cinematicweddings.in',
-    address: 'MG Road, Vijayawada, Andhra Pradesh 520010',
-    whatsapp: '910000000000'
+  const rawSettings = content?.global?.siteSettings || content?.siteSettings || {};
+  const rawFooter = content?.global?.footer || content?.footer || {};
+  const rawNavbar = content?.global?.navbar || content?.navbar || {};
+  const rawContact = content?.global?.contact || content?.contact || {};
+
+  const settings = {
+    phone: rawSettings.phone || rawFooter.phone || rawNavbar.phone || rawContact.phone || '+91 94948 45111',
+    email: rawSettings.email || rawFooter.email || rawNavbar.email || rawContact.email || 'orders@weddingalbums.in',
+    address: rawSettings.address || rawFooter.address || rawContact.address || 'Door No. 4-12-88, Ring Road, Near Collectorate, Guntur - 522006, AP',
+    whatsapp: String(rawSettings.whatsapp || rawNavbar.whatsapp || rawFooter.whatsapp || rawContact.whatsapp || '919494845111').replace(/[^0-9]/g, '')
   };
 
   const [step, setStep] = useState(1);

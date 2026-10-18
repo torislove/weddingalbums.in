@@ -172,20 +172,14 @@ app.get(['/api/health', '/health'], async (req, res) => {
 // =======================
 // REAL-TIME SERVER-SENT EVENTS (SSE) STREAM
 // =======================
-app.get('/api/events/stream', (req, res) => {
+const handleSseConnection = (req, res) => {
   const authHeader = req.headers['authorization'];
   const token = (authHeader && authHeader.split(' ')[1]) || req.query.token;
 
-  if (!token) {
-    return res.status(401).json({ error: 'Authentication required for real-time event stream' });
-  }
+  const clientId = crypto.randomUUID();
 
-  jwt.verify(token, JWT_SECRET, { issuer: JWT_ISSUER }, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ error: 'Invalid or expired stream token' });
-    }
-
-    // Set streaming SSE headers
+  // Helper to establish SSE headers and register client
+  const establishStream = (user) => {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache, no-transform',
@@ -194,14 +188,28 @@ app.get('/api/events/stream', (req, res) => {
     });
     if (res.flushHeaders) res.flushHeaders();
 
-    const clientId = crypto.randomUUID();
-    eventBus.addClient(clientId, res, decoded);
+    eventBus.addClient(clientId, res, user);
 
     req.on('close', () => {
       eventBus.removeClient(clientId);
     });
-  });
-});
+  };
+
+  if (token) {
+    jwt.verify(token, JWT_SECRET, { issuer: JWT_ISSUER }, (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ error: 'Invalid or expired stream token' });
+      }
+      establishStream(decoded);
+    });
+  } else {
+    // Unauthenticated public stream (e.g. client storefront listening for content updates)
+    establishStream({ id: `public-${clientId.slice(0, 8)}`, role: 'public' });
+  }
+};
+
+app.get('/api/events', handleSseConnection);
+app.get('/api/events/stream', handleSseConnection);
 
 // =======================
 // MOUNT MODULAR ROUTES
@@ -222,6 +230,14 @@ app.use('/api/public', publicRouter);
 app.use('/api/builder', publicRouter);
 app.use('/api', contentRouter);
 app.use('/api', publicRouter);
+
+// Root search engine crawl endpoints
+app.get('/sitemap.xml', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/public/sitemap.xml'));
+});
+app.get('/robots.txt', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/public/robots.txt'));
+});
 
 import { onRequest } from 'firebase-functions/v2/https';
 

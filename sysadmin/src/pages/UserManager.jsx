@@ -82,7 +82,7 @@ const UserManager = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Customer & User Management</h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '13px' }}>Comprehensive directory of all B2B studios, wedding couples, and freelance editors.</p>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '13px' }}>Comprehensive directory of all B2B studios, wedding couples, and in-house lab production specialists.</p>
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', width: '100%', maxWidth: '420px', flexWrap: 'wrap' }}>

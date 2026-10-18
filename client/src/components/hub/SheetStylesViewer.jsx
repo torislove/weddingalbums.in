@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Sparkles, Droplets, ShieldCheck, Layers, Eye, HandMetal, CheckCircle2, Sliders, Info, Shield, Award } from 'lucide-react';
+import { useContent } from '../../context/ContentContext';
 import './SheetStylesViewer.css';
 
 // ============================================================================
@@ -219,6 +220,10 @@ const BASE_SUBSTRATES = [
 ];
 
 export default function SheetStylesViewer() {
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
+
   const [activeDimension, setActiveDimension] = useState('finishes'); // 'finishes' | 'substrates'
   const [selectedFinishId, setSelectedFinishId] = useState('ntr-matte');
   const [selectedSubstrateId, setSelectedSubstrateId] = useState('ntr-bopp');
@@ -573,7 +578,7 @@ export default function SheetStylesViewer() {
                     Configure {selectedFinish.title.split(' ')[0]} in Booking →
                   </a>
                   <a
-                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను ${selectedFinish.title} (${sheetCount} షీట్స్) గురించి మరిన్ని వివరాలు మరియు శాంపిల్స్ తెలుసుకోవాలనుకుంటున్నాను.`)}`}
+                    href={`https://wa.me/${cleanWa}?text=${encodeURIComponent(`నమస్కారం! నేను ${selectedFinish.title} (${sheetCount} షీట్స్) గురించి మరిన్ని వివరాలు మరియు శాంపిల్స్ తెలుసుకోవాలనుకుంటున్నాను.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline py-3 px-4 text-[#25D366] border-[#25D366]/40 hover:bg-[#25D366]/15 flex items-center justify-center text-sm font-semibold"

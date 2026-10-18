@@ -20,7 +20,7 @@ const B2C = () => {
     { src: '/images/prewedding.jpg', alt: 'Wedding Couple' },
     { src: '/images/mangalya-dharana.png', alt: 'Rings' },
     { src: '/images/cinematic.jpg', alt: 'Venue' },
-    { src: '/images/mockup-layflat-spread.svg', alt: 'Album Spread' },
+    { src: '/images/weddingalbums-layflat-album.png', alt: '180° Lay-Flat Album Spread' },
     { src: '/images/bride-polished.jpg', alt: 'Details' },
     { src: '/images/saptapadi.png', alt: 'Decor' },
   ];
@@ -51,9 +51,14 @@ const B2C = () => {
           <p className="b2c-subtitle" style={{ fontSize: '1.4rem' }}>
             <span className="telugu-text">{t('b2c.memline')}</span> — {t('b2c.sub')}
           </p>
-          <Link to="/order" className="btn btn-gold-3d">
-            {t('b2c.cta')}
-          </Link>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '20px' }}>
+            <Link to="/shop" className="btn btn-gold-3d">
+              Explore Storefront & Pricing
+            </Link>
+            <Link to="/shop" className="btn" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(212,175,55,0.4)', color: 'var(--brand)' }}>
+              Instant Album Builder
+            </Link>
+          </div>
         </motion.div>
       </section>
 

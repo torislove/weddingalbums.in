@@ -32,15 +32,15 @@ export const ContentProvider = ({ children }) => {
   const [loading, setLoading] = useState(() => !content);
   const isPreviewMode = useRef(false);
 
-  const loadContent = useCallback(async () => {
-    // If currently running in live preview mode inside CMS iframe, don't overwrite with remote published data
-    if (isPreviewMode.current) return;
+  const loadContent = useCallback(async (force = false) => {
+    // If currently running in live preview mode inside CMS iframe, don't overwrite with remote published data unless forced
+    if (isPreviewMode.current && !force) return;
 
     let resolvedContent = null;
 
-    // 1. First Tier: Fetch dynamic published content from Server API with resilient retries
+    // 1. First Tier: Fetch dynamic published content from Server API with cache-busting timestamp
     try {
-      const res = await resilientFetch('/api/content', { cache: 'no-store' }, 2, 600);
+      const res = await resilientFetch(`/api/content?t=${Date.now()}`, { cache: 'no-store' }, 2, 600);
       if (res && res.ok) {
         const data = await res.json();
         if (isValidContent(data)) {
@@ -151,8 +151,19 @@ export const ContentProvider = ({ children }) => {
       }
     } catch { /* ignore cross-origin */ }
 
+    // Real-time SSE listener for instant live updates when CMS publishes
+    let sseSource;
+    try {
+      sseSource = new EventSource('/api/events');
+      sseSource.addEventListener('content:updated', () => {
+        isPreviewMode.current = false;
+        loadContent(true);
+      });
+    } catch { /* SSE unavailable */ }
+
     return () => {
       if (channel) channel.close();
+      if (sseSource) sseSource.close();
       window.removeEventListener('message', handlePostMessage);
     };
   }, [loadContent]);
@@ -165,6 +176,9 @@ export const ContentProvider = ({ children }) => {
     content,
     global: content?.global || {},
     pages: content?.pages || {},
+    siteSettings: content?.global?.siteSettings || content?.siteSettings || {},
+    footer: content?.global?.footer || content?.footer || {},
+    navbar: content?.global?.navbar || content?.navbar || {},
     reload: loadContent,
     setContent
   }), [content, loadContent]);

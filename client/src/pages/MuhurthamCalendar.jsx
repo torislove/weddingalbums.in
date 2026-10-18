@@ -52,9 +52,9 @@ const MuhurthamCalendar = () => {
                 <button 
                   className="btn btn-gold-3d" 
                   style={{ marginTop: '1.25rem', width: '100%', padding: '0 1rem', fontSize: '0.85rem', cursor: 'pointer' }}
-                  onClick={() => navigate(`/booking?date=${dateStr}`)}
+                  onClick={() => navigate('/shop')}
                 >
-                  {t('muhurtham.book')}
+                  {lang === 'TE' ? 'ఈ ముహూర్తానికి ఆర్డర్ చేయండి' : 'Order for this Muhurtham'}
                 </button>
               </div>
             );

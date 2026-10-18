@@ -74,18 +74,26 @@ const CoverMockup = ({ id }) => (
   </div>
 );
 
-// 10 Indian Market Standard Album Sizes for B2B Studios
+// Indian Market Standard Album Sizes for B2B Studios (Landscape & Portrait with Per-Sheet Rates)
 const ALBUM_SIZES = [
-  { id: '14x40', name: '14×40 Magnum Royal Mandap', openSpread: '14" × 40"', wholesaleBase: 10500, suggestedRetail: 16500, category: 'Grand Landscape' },
-  { id: '12x36', name: '12×36 Grand Imperial (AP Standard)', openSpread: '12" × 36"', wholesaleBase: 7800, suggestedRetail: 12500, category: 'Most Popular in AP' },
-  { id: '12x30', name: '12×30 Panoramic Cinema', openSpread: '12" × 30"', wholesaleBase: 6800, suggestedRetail: 10500, category: 'Cinema Landscape' },
-  { id: '10x30', name: '10×30 Slim Cinema', openSpread: '10" × 30"', wholesaleBase: 5900, suggestedRetail: 9200, category: 'Slim Landscape' },
-  { id: '12x24', name: '12×24 Square Celebration', openSpread: '12" × 24"', wholesaleBase: 5400, suggestedRetail: 8500, category: 'Square Classic' },
-  { id: '10x20', name: '10×20 Compact Square', openSpread: '10" × 20"', wholesaleBase: 4600, suggestedRetail: 7200, category: 'Square Compact' },
-  { id: '12x18-vert', name: '12×18 Royal Vertical Portrait', openSpread: '18" × 24"', wholesaleBase: 6200, suggestedRetail: 9800, category: 'Vertical Portrait' },
-  { id: '10x15-vert', name: '10×15 Editorial Vertical', openSpread: '15" × 20"', wholesaleBase: 4900, suggestedRetail: 7600, category: 'Vertical Editorial' },
-  { id: '8x12-vert', name: '8×12 Traditional Vertical', openSpread: '12" × 16"', wholesaleBase: 3800, suggestedRetail: 5800, category: 'Vertical Compact' },
-  { id: '6x9-pocket', name: '6×9 Companion Pocket Parent Book', openSpread: '6" × 18"', wholesaleBase: 2100, suggestedRetail: 3200, category: 'Parent Mini Book' }
+  // LANDSCAPE SIZES (↔️)
+  { id: '14x40', name: '14×40 Magnum Royal Mandap (↔️)', openSpread: '14" × 40"', orientation: 'landscape', wholesalePerSheet: 350, retailPerSheet: 550, wholesaleBase: 10500, suggestedRetail: 16500, category: 'Grand Landscape' },
+  { id: '12x36', name: '12×36 Grand Imperial AP Standard (↔️)', openSpread: '12" × 36"', orientation: 'landscape', wholesalePerSheet: 180, retailPerSheet: 260, wholesaleBase: 7800, suggestedRetail: 12500, category: 'Most Popular in AP' },
+  { id: '12x30', name: '12×30 Panoramic Cinema (↔️)', openSpread: '12" × 30"', orientation: 'landscape', wholesalePerSheet: 155, retailPerSheet: 230, wholesaleBase: 6800, suggestedRetail: 10500, category: 'Cinema Landscape' },
+  { id: '10x30', name: '10×30 Slim Cinema (↔️)', openSpread: '10" × 30"', orientation: 'landscape', wholesalePerSheet: 145, retailPerSheet: 210, wholesaleBase: 5900, suggestedRetail: 9200, category: 'Slim Landscape' },
+  { id: '15x30', name: '15×30 Royal Square Jumbo (↔️)', openSpread: '30" × 15"', orientation: 'landscape', wholesalePerSheet: 210, retailPerSheet: 320, wholesaleBase: 8500, suggestedRetail: 13200, category: 'Royal Square' },
+  { id: '12x24', name: '12×24 Square Celebration (↔️)', openSpread: '12" × 24"', orientation: 'landscape', wholesalePerSheet: 140, retailPerSheet: 200, wholesaleBase: 5400, suggestedRetail: 7500, category: 'Square Classic' },
+  { id: '10x24', name: '10×24 Compact Feast (↔️)', openSpread: '10" × 24"', orientation: 'landscape', wholesalePerSheet: 125, retailPerSheet: 180, wholesaleBase: 4200, suggestedRetail: 5800, category: 'Compact Feast' },
+  { id: '12x18-horiz', name: '12×18 Traditional Horizontal (↔️)', openSpread: '12" × 18"', orientation: 'landscape', wholesalePerSheet: 115, retailPerSheet: 160, wholesaleBase: 3800, suggestedRetail: 5200, category: 'Traditional Horizontal' },
+  { id: '6x9-pocket', name: '6×9 Companion Pocket Parent Book (↔️)', openSpread: '6" × 18"', orientation: 'landscape', wholesalePerSheet: 70, retailPerSheet: 105, wholesaleBase: 2100, suggestedRetail: 3200, category: 'Parent Mini Book' },
+
+  // PORTRAIT SIZES (↕️)
+  { id: '18x12-vert', name: '18×12 Grand Vertical Royal Magazine (↕️)', openSpread: '18"H × 24"W', orientation: 'portrait', wholesalePerSheet: 165, retailPerSheet: 240, wholesaleBase: 6200, suggestedRetail: 9000, category: 'Vertical Portrait' },
+  { id: '15x12-vert', name: '15×12 Classic Vertical Portrait (↕️)', openSpread: '15"H × 24"W', orientation: 'portrait', wholesalePerSheet: 145, retailPerSheet: 210, wholesaleBase: 5400, suggestedRetail: 7800, category: 'Vertical Portrait' },
+  { id: '14x11-vert', name: '14×11 Fine Art Editorial Vertical (↕️)', openSpread: '14"H × 22"W', orientation: 'portrait', wholesalePerSheet: 135, retailPerSheet: 190, wholesaleBase: 4900, suggestedRetail: 7200, category: 'Vertical Editorial' },
+  { id: '12x9-vert', name: '12×9 Compact Vertical Storybook (↕️)', openSpread: '12"H × 18"W', orientation: 'portrait', wholesalePerSheet: 115, retailPerSheet: 160, wholesaleBase: 3900, suggestedRetail: 5500, category: 'Vertical Compact' },
+  { id: '10x8-vert', name: '10×8 Family Keepsake Portrait (↕️)', openSpread: '10"H × 16"W', orientation: 'portrait', wholesalePerSheet: 95, retailPerSheet: 130, wholesaleBase: 3200, suggestedRetail: 4500, category: 'Family Gift' },
+  { id: '8x12-vert', name: '8×12 Traditional Vertical (A4) (↕️)', openSpread: '12"H × 16"W', orientation: 'portrait', wholesalePerSheet: 85, retailPerSheet: 120, wholesaleBase: 2600, suggestedRetail: 3800, category: 'Vertical Compact' },
 ];
 
 // 2-Dimensional Sheet Taxonomy: Base Substrates & Surface Finishes
@@ -196,6 +204,8 @@ const SubmitJob = () => {
     studioBilledQuote: 18500
   });
 
+  const [sizeOrientation, setSizeOrientation] = useState('all'); // 'all' | 'landscape' | 'portrait'
+
   // Calculate Wholesale Lab Cost
   const sizeObj = ALBUM_SIZES.find(s => s.id === formData.albumSize) || ALBUM_SIZES[1];
   const substrateObj = BASE_SUBSTRATES.find(s => s.id === formData.substrateType) || BASE_SUBSTRATES[0];
@@ -207,12 +217,14 @@ const SubmitJob = () => {
 
   if (formData.jobType === 'album' || formData.jobType === 'bundle') {
     const extraSheets = Math.max(0, formData.sheetsCount - 30);
-    const extraSheetsCost = extraSheets * 45; // wholesale base rate per extra sheet
+    const perSheetWholesale = sizeObj.wholesalePerSheet || Math.round(sizeObj.wholesaleBase / 30);
+    const perSheetRetail = sizeObj.retailPerSheet || Math.round(sizeObj.suggestedRetail / 30);
+    const extraSheetsCost = extraSheets * perSheetWholesale;
     const finishCost = formData.sheetsCount * sheetObj.rate;
     const substrateCost = formData.sheetsCount * substrateObj.wholesaleExtra;
 
     wholesaleTotal += sizeObj.wholesaleBase + extraSheetsCost + finishCost + substrateCost + coverObj.wholesaleExtra;
-    suggestedRetailTotal += sizeObj.suggestedRetail + (extraSheets * 70) + (formData.sheetsCount * sheetObj.suggestedRetail) + (formData.sheetsCount * substrateObj.suggestedRetailExtra) + (coverObj.wholesaleExtra * 1.5);
+    suggestedRetailTotal += sizeObj.suggestedRetail + (extraSheets * perSheetRetail) + (formData.sheetsCount * sheetObj.suggestedRetail) + (formData.sheetsCount * substrateObj.suggestedRetailExtra) + (coverObj.wholesaleExtra * 1.5);
   }
 
   if (formData.jobType === 'video' || formData.jobType === 'bundle') {
@@ -423,17 +435,38 @@ const SubmitJob = () => {
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>Album Dimension</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <label style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600, margin: 0 }}>Album Dimension (Per Sheet)</label>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button 
+                          type="button" 
+                          onClick={() => setSizeOrientation('all')}
+                          style={{ background: sizeOrientation === 'all' ? 'var(--gold-primary)' : 'rgba(255,255,255,0.06)', color: sizeOrientation === 'all' ? '#000' : '#888', border: 'none', borderRadius: '4px', fontSize: '10px', padding: '2px 6px', cursor: 'pointer', fontWeight: 600 }}
+                        >All</button>
+                        <button 
+                          type="button" 
+                          onClick={() => setSizeOrientation('landscape')}
+                          style={{ background: sizeOrientation === 'landscape' ? 'var(--gold-primary)' : 'rgba(255,255,255,0.06)', color: sizeOrientation === 'landscape' ? '#000' : '#888', border: 'none', borderRadius: '4px', fontSize: '10px', padding: '2px 6px', cursor: 'pointer', fontWeight: 600 }}
+                        >↔️ Landscape</button>
+                        <button 
+                          type="button" 
+                          onClick={() => setSizeOrientation('portrait')}
+                          style={{ background: sizeOrientation === 'portrait' ? 'var(--gold-primary)' : 'rgba(255,255,255,0.06)', color: sizeOrientation === 'portrait' ? '#000' : '#888', border: 'none', borderRadius: '4px', fontSize: '10px', padding: '2px 6px', cursor: 'pointer', fontWeight: 600 }}
+                        >↕️ Portrait</button>
+                      </div>
+                    </div>
                     <select 
                       value={formData.albumSize} 
                       onChange={e => setFormData({...formData, albumSize: e.target.value})}
                       className="form-control"
                       style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
                     >
-                      {ALBUM_SIZES.map(s => (
-                        <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
-                          {s.name} (Wholesale: ₹{s.wholesaleBase.toLocaleString('en-IN')})
-                        </option>
+                      {ALBUM_SIZES
+                        .filter(s => sizeOrientation === 'all' || s.orientation === sizeOrientation)
+                        .map(s => (
+                          <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
+                            {s.name} — ₹{s.wholesalePerSheet}/sh (Base: ₹{s.wholesaleBase.toLocaleString('en-IN')})
+                          </option>
                       ))}
                     </select>
                   </div>

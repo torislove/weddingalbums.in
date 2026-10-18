@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Smartphone, Flag, Sparkles, Image, CheckCircle, ArrowRight, MessageCircle } from 'lucide-react';
+import { useContent } from '../../context/ContentContext';
 import './EventFlexShowcase.css';
 
 const DEFAULT_FLEX_ITEMS = [
@@ -72,6 +73,10 @@ const DEFAULT_FLEX_ITEMS = [
 ];
 
 export default function EventFlexShowcase({ items = DEFAULT_FLEX_ITEMS }) {
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
+
   const activeItems = items && items.length ? items : DEFAULT_FLEX_ITEMS;
   const [selectedItemId, setSelectedItemId] = useState(activeItems[0].id);
 
@@ -125,7 +130,7 @@ export default function EventFlexShowcase({ items = DEFAULT_FLEX_ITEMS }) {
                 <div className="flex-card-footer">
                   <span className="flex-turnaround-badge">⏱️ {item.turnaround}</span>
                   <a
-                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను ${item.title} (${item.telugu}) గురించి తెలుసుకోవాలనుకుంటున్నాను.`)}`}
+                    href={`https://wa.me/${cleanWa}?text=${encodeURIComponent(`నమస్కారం! నేను ${item.title} (${item.telugu}) గురించి తెలుసుకోవాలనుకుంటున్నాను.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-whatsapp-link"

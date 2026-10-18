@@ -22,7 +22,7 @@ const ALBUM_TYPES = [
     nameTe: 'ప్రీమియం క్రిస్టల్ యాక్రిలిక్ కవర్',
     desc: '4mm diamond-polished glass face that makes couple portraits glow with 3D depth and crystalline clarity.',
     descTe: 'జంట పోర్ట్రెయిట్‌లను 3D లోతు, స్ఫటిక స్పష్టతతో మెరిసేలా చేసే 4mm వజ్రం-పాలిష్ గ్లాస్ ముఖం.',
-    img: '/images/weddingalbums-layflat-album.png',
+    img: '/images/cover-acrylic-3d.jpg',
     tags: ['Ultra Luxury', 'Modern 3D'],
     tagsTe: ['అల్ట్రా లగ్జరీ', 'మోడరన్ 3D']
   },
@@ -32,7 +32,7 @@ const ALBUM_TYPES = [
     nameTe: 'ఫ్లష్ మౌంట్ సీమ్‌లెస్ లే-ఫ్లాట్',
     desc: 'Pages open 100% flat with zero gutter loss. Mounted on heavy archival core sheets designed to resist humidity and sagging.',
     descTe: 'పేజీలు 100% ఫ్లాట్‌గా తెరుచుకుంటాయి, గట్టర్ నష్టం శూన్యం. తేమను, వంగడాన్ని తట్టుకునేలా రూపొందించిన బరువైన ఆర్కైవల్ కోర్ షీట్లపై మౌంట్ చేయబడింది.',
-    img: '/images/weddingalbums-home-hero.png',
+    img: '/images/weddingalbums-layflat-album.png',
     tags: ['100% Lay-Flat', 'Royal Archival'],
     tagsTe: ['100% లే-ఫ్లాట్', 'రాయల్ ఆర్కైవల్']
   },
@@ -42,7 +42,7 @@ const ALBUM_TYPES = [
     nameTe: 'రాయల్ వెల్వెట్ టచ్ హార్డ్‌కవర్',
     desc: 'Soft, textured velvet fabric finish with embossed gold foil typography. Feather-touch feel with anti-scratch coating.',
     descTe: 'ఎంబాస్ చేసిన గోల్డ్ ఫాయిల్ అక్షరాలతో మృదువైన, విన్యాసమైన వెల్వెట్ ఫ్యాబ్రిక్ ఫినిష్. యాంటీ-స్క్రాచ్ కోటింగ్‌తో ఫెదర్-టచ్ అనుభూతి.',
-    img: '/images/mockup-velvet-gold-foil.svg',
+    img: '/images/cover-royal-velvet.jpg',
     tags: ['Trending Luxury', 'Velvet Silk'],
     tagsTe: ['ట్రెండింగ్ లగ్జరీ', 'వెల్వెట్ సిల్క్']
   },
@@ -52,7 +52,7 @@ const ALBUM_TYPES = [
     nameTe: 'క్లాసిక్ ఎంబాస్డ్ లెదరెట్ బాక్స్',
     desc: 'Timeless luxury with vegan leather binding, gold corner protectors, and a matching presentation suitcase box.',
     descTe: 'వీగన్ లెదర్ బైండింగ్, గోల్డ్ కార్నర్ ప్రొటెక్టర్లు, సరిపోలే ప్రజెంటేషన్ సూట్‌కేస్ బాక్స్‌తో కాలాతీత లగ్జరీ.',
-    img: '/images/mockup-leatherette-embossed.svg',
+    img: '/images/cover-leatherette-box.jpg',
     tags: ['Traditional Heritage', 'Briefcase Box'],
     tagsTe: ['సాంప్రదాయ వారసత్వం', 'బ్రీఫ్‌కేస్ బాక్స్']
   },
@@ -62,7 +62,7 @@ const ALBUM_TYPES = [
     nameTe: 'డూప్లికేట్ పాకెట్ పేరెంట్ ఆల్బమ్‌లు',
     desc: 'Miniature luxury replicas of the couple album crafted specifically as sentimental gifts for parents and in-laws.',
     descTe: 'తల్లిదండ్రులు, అత్తవారికి భావనాత్మక బహుమతులుగా ప్రత్యేకంగా తయారు చేసిన జంట ఆల్బమ్ చిన్న లగ్జరీ ప్రతిరూపాలు.',
-    img: '/images/mockup-pocket-mini-book.svg',
+    img: '/images/family-blessings.png',
     tags: ['Parent Gift', 'Portable'],
     tagsTe: ['పేరెంట్ గిఫ్ట్', 'పోర్టబుల్']
   }

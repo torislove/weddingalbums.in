@@ -10,10 +10,12 @@ const TestimonialsCarousel = (props) => {
     title = "Words from Our Couples",
     btnText = "Read All Reviews",
     btnLink = "/testimonials",
-    testimonials = []
+    testimonials = [],
+    reviews = []
   } = props;
 
-  const visibleTestimonials = (testimonials || []).filter(t => !t.isHidden);
+  const rawList = (Array.isArray(testimonials) && testimonials.length > 0) ? testimonials : reviews;
+  const visibleTestimonials = (rawList || []).filter(t => !t.isHidden);
 
   useEffect(() => {
     if (visibleTestimonials.length === 0) return;
@@ -43,8 +45,8 @@ const TestimonialsCarousel = (props) => {
                     </p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
-                        <h4 style={{ color: 'white' }}>{t.name}</h4>
-                        <span style={{ color: 'var(--color-secondary)', fontSize: '0.85rem' }}>{t.event}</span>
+                        <h4 style={{ color: 'white' }}>{t.name || t.couple}</h4>
+                        <span style={{ color: 'var(--color-secondary)', fontSize: '0.85rem' }}>{t.event || t.details}</span>
                       </div>
                       <div style={{ color: 'var(--color-secondary)', fontSize: '1.2rem', letterSpacing: '3px' }}>★★★★★</div>
                     </div>

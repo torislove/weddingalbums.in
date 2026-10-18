@@ -22,7 +22,7 @@ const RitualsScroll = (props) => {
             <ScrollReveal key={i} delay={i * 80}>
               <div className="ritual-card glass">
                 <span className="ritual-number">{String(i + 1).padStart(2, '0')}</span>
-                <h4>{r.title}</h4>
+                <h4>{r.title || r.name}</h4>
                 <span className="telugu-text">{r.telugu}</span>
                 <p className="text-muted" style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>{r.desc}</p>
               </div>

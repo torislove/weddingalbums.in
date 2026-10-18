@@ -33,9 +33,9 @@ const Rating = () => {
   };
 
   const getTier = (count) => {
-    if (count >= 15) return { name: 'Top Rated Artisan', color: 'var(--brand)' };
-    if (count >= 5)  return { name: 'Senior Creator',   color: '#38bdf8' };
-    return { name: 'Pro Rising Talent', color: '#a855f7' };
+    if (count >= 15) return { name: 'Lead Production Specialist', color: 'var(--brand)' };
+    if (count >= 5)  return { name: 'Certified Lab Specialist',   color: '#38bdf8' };
+    return { name: 'Lab Technician', color: '#a855f7' };
   };
 
   const tier = getTier(stats.completedJobs);
@@ -43,9 +43,9 @@ const Rating = () => {
   return (
     <div className="page-content fade-in" style={{ maxWidth: '1100px', margin: '0 auto' }}>
       <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>My Rating & Growth</h1>
+        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>QC Score & Precision Standards</h1>
         <p style={{ color: 'var(--text-secondary)' }}>
-          Maintain an exceptional rating to unlock High-Yield Premium Jobs and instant Escrow payouts.
+          Maintain exceptional lab quality standards to receive priority production order dispatches and accelerated payouts.
         </p>
       </div>
 

@@ -2,11 +2,17 @@
  * server/routes/public.js — Public, unprotected API
  */
 import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { Package, Service, SheetType, AlbumSize, ContactLead, Order, Task, Cart, Project, Config } from '../db.js';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { requireRole } from '../middleware/auth.js';
 import { JWT_SECRET, JWT_ISSUER } from '../config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
@@ -818,6 +824,108 @@ router.get('/testimonials', async (req, res) => {
     res.json({ success: true, count: reviews.length, reviews });
   } catch (err) {
     res.status(500).json({ error: err.message, reviews: [] });
+  }
+});
+
+// ==============================================================================
+// INSTANT SEO & SEARCH ENGINE INDEXING SUITE
+// ==============================================================================
+
+/**
+ * GET /sitemap.xml
+ * Dynamically serves the high-performance XML sitemap with image namespaces
+ */
+router.get('/sitemap.xml', async (req, res) => {
+  try {
+    const sitemapPath = path.resolve(__dirname, '../../client/public/sitemap.xml');
+    if (fs.existsSync(sitemapPath)) {
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+      return res.sendFile(sitemapPath);
+    }
+    res.status(404).send('Sitemap not found');
+  } catch (err) {
+    res.status(500).send('Error loading sitemap');
+  }
+});
+
+/**
+ * GET /robots.txt
+ * Serves canonical robots.txt with crawl directives
+ */
+router.get('/robots.txt', async (req, res) => {
+  try {
+    const robotsPath = path.resolve(__dirname, '../../client/public/robots.txt');
+    if (fs.existsSync(robotsPath)) {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return res.sendFile(robotsPath);
+    }
+    res.status(404).send('Robots.txt not found');
+  } catch (err) {
+    res.status(500).send('Error loading robots.txt');
+  }
+});
+
+/**
+ * POST /api/seo/ping-indexnow
+ * Instant Search Engine Indexing via the IndexNow protocol (Bing, Yandex, Seznam)
+ * Forces immediate search engine crawlers to index newly created or updated URLs.
+ */
+router.post('/seo/ping-indexnow', async (req, res) => {
+  try {
+    const defaultUrls = [
+      'https://weddingalbums.in/',
+      'https://weddingalbums.in/shop',
+      'https://weddingalbums.in/albums',
+      'https://weddingalbums.in/pricing',
+      'https://weddingalbums.in/b2b',
+      'https://weddingalbums.in/services',
+      'https://weddingalbums.in/portfolio',
+      'https://weddingalbums.in/muhurtham',
+      'https://weddingalbums.in/contact'
+    ];
+
+    const urlList = Array.isArray(req.body?.urls) && req.body.urls.length > 0
+      ? req.body.urls
+      : defaultUrls;
+
+    const payload = {
+      host: 'weddingalbums.in',
+      key: 'e5d078a9c8b7463da295e87a29e41b9c',
+      keyLocation: 'https://weddingalbums.in/e5d078a9c8b7463da295e87a29e41b9c.txt',
+      urlList: urlList
+    };
+
+    // Ping IndexNow Endpoint
+    let indexNowResult = { status: 'mock_local', note: 'IndexNow payload prepared' };
+    try {
+      const response = await fetch('https://api.indexnow.org/indexnow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      indexNowResult = {
+        httpStatus: response.status,
+        statusText: response.statusText,
+        submittedUrls: urlList.length
+      };
+    } catch (networkErr) {
+      indexNowResult = {
+        error: networkErr.message,
+        payload
+      };
+    }
+
+    res.json({
+      success: true,
+      protocol: 'IndexNow v1.0',
+      timestamp: new Date().toISOString(),
+      indexNowResult,
+      urls: urlList
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import BookingPage from './BookingPage';
+import Shop from './Shop';
 
 /**
- * OrderAlbum — Main 3-Step Wizard for all Editing, Video, Printing, and Flex services
- * Points directly to BookingPage master implementation
+ * OrderAlbum — Routes directly to the visual E-Commerce Storefront
+ * Replaces the legacy 4-step marketplace booking wizard
  */
 const OrderAlbum = () => {
-  return <BookingPage />;
+  return <Shop />;
 };
 
 export default OrderAlbum;

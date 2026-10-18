@@ -9,8 +9,8 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
     { name: 'Photo Queue', path: '/photo', icon: Scissors },
     { name: 'Video Queue', path: '/video', icon: Video },
     { name: 'Album Queue', path: '/album', icon: BookOpen },
-    { name: 'Earnings', path: '/earnings', icon: IndianRupee },
-    { name: 'My Rating', path: '/rating', icon: Star },
+    { name: 'Compensation', path: '/earnings', icon: IndianRupee },
+    { name: 'QC Score', path: '/rating', icon: Star },
   ];
 
   return (
@@ -33,7 +33,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
 
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem' }}>
-          <Logo size={34} portalTag="Creator Suite" />
+          <Logo size={34} portalTag="Lab Production" />
           {/* Close button on mobile */}
           <button
             onClick={onClose}
@@ -73,8 +73,8 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
               4.9
             </div>
             <div>
-              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Editor Rating</p>
-              <p style={{ fontSize: '0.9rem', margin: 0, fontWeight: 600, color: 'var(--accent-success)' }}>Top Rated</p>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Lab QC Score</p>
+              <p style={{ fontSize: '0.9rem', margin: 0, fontWeight: 600, color: 'var(--accent-success)' }}>Certified Specialist</p>
             </div>
           </div>
         </div>

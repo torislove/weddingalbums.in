@@ -16,12 +16,12 @@ import { X } from 'lucide-react';
 
 const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Wholesale Rates', path: '/catalog', icon: ShoppingBag },
     { name: 'Submit Job', path: '/submit', icon: UploadCloud },
     { name: 'Active Jobs', path: '/jobs', icon: Briefcase },
-    { name: 'Album Orders', path: '/albums', icon: ShoppingBag },
-    { name: 'Invoices', path: '/invoices', icon: FileText },
-    { name: 'Wallet & Payouts', path: '/wallet', icon: Wallet },
+    { name: 'Album Orders', path: '/albums', icon: FileText },
+    { name: 'Invoices', path: '/invoices', icon: Wallet },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },
     { name: 'SLA Guarantees', path: '/sla', icon: Clock },
   ];

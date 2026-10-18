@@ -10,14 +10,14 @@ import './Footer.css';
 const Footer = () => {
   const t = useT();
   const { content } = useContent();
-  const footerData = content?.global?.footer || {};
-  const settings = content?.global?.siteSettings || {};
+  const footerData = content?.global?.footer || content?.footer || {};
+  const settings = content?.global?.siteSettings || content?.siteSettings || {};
 
   const brandName = footerData.companyName || settings.brandName || 'weddingalbums.in';
   const description = footerData.description || t('footer.desc');
-  const address = footerData.address || settings.address || 'MG Road, Vijayawada, AP 520010';
-  const phone = footerData.phone || settings.phone || '+91 98765 43210';
-  const email = footerData.email || settings.email || 'hello@cinematicweddings.in';
+  const address = footerData.address || settings.address || 'Door No. 4-12-88, Ring Road, Near Collectorate, Guntur - 522006, AP';
+  const phone = footerData.phone || settings.phone || '+91 94948 45111';
+  const email = footerData.email || settings.email || 'orders@weddingalbums.in';
   const marqueeText = footerData.marqueeText || 'Vijayawada • Visakhapatnam • Guntur • Tirupati • Rajahmundry • Kurnool • Hyderabad • ';
   
   const instagram = footerData.social?.instagram || settings.instagram || '#';

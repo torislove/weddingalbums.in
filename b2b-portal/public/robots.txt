@@ -1,0 +1,9 @@
+# weddingalbums.in B2B Studio Portal Robots
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Disallow: /dashboard/
+Disallow: /admin/
+
+Sitemap: https://studio.weddingalbums.in/sitemap.xml

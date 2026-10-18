@@ -32,8 +32,8 @@ const Editors = () => {
     <div style={{ padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1400px', margin: '0 auto', color: 'var(--paper)', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Creator & Editor Network</h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '13px' }}>Vetted retouchers, colorists, and wedding video editors in the network.</p>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Lab Production Team & Specialists</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '13px' }}>Certified Karizma album designers, colorists, and video editors fulfilling storefront & studio orders.</p>
         </div>
         <button 
           onClick={fetchEditors}
@@ -45,7 +45,7 @@ const Editors = () => {
             whiteSpace: 'nowrap'
           }}
         >
-          <RefreshCw size={14} className={loading ? "spin" : ""} /> Refresh Network
+          <RefreshCw size={14} className={loading ? "spin" : ""} /> Refresh Lab Team
         </button>
       </div>
 
@@ -59,19 +59,19 @@ const Editors = () => {
         <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
             <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
-              <th style={{ padding: '14px 16px' }}>Editor Name</th>
-              <th style={{ padding: '14px 16px' }}>Specialization</th>
-              <th style={{ padding: '14px 16px' }}>Quality Rating</th>
-              <th style={{ padding: '14px 16px' }}>Escrow Balance</th>
+              <th style={{ padding: '14px 16px' }}>Specialist Name</th>
+              <th style={{ padding: '14px 16px' }}>Lab Role</th>
+              <th style={{ padding: '14px 16px' }}>QC Precision Score</th>
+              <th style={{ padding: '14px 16px' }}>Pending Payout</th>
               <th style={{ padding: '14px 16px' }}>Contact</th>
-              <th style={{ padding: '14px 16px', textAlign: 'right' }}>Status</th>
+              <th style={{ padding: '14px 16px', textAlign: 'right' }}>Certification</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading editors...</td></tr>
+              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading lab specialists...</td></tr>
             ) : editors.length === 0 ? (
-              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>No editors registered in system.</td></tr>
+              <tr><td colSpan="6" style={{ padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>No lab specialists registered in system.</td></tr>
             ) : editors.map(editor => (
               <tr key={editor.id || editor._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                 <td style={{ padding: '14px 16px' }}>
@@ -83,7 +83,7 @@ const Editors = () => {
                     padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
                     background: 'rgba(99,102,241,0.15)', color: '#818cf8', textTransform: 'capitalize'
                   }}>
-                    {editor.specialization || 'Photo & Video'}
+                    {editor.specialization || 'Album & Video'}
                   </span>
                 </td>
                 <td style={{ padding: '14px 16px', color: 'var(--brand)', fontWeight: 700 }}>
@@ -101,7 +101,7 @@ const Editors = () => {
                     padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700,
                     background: 'rgba(16,185,129,0.15)', color: '#34d399'
                   }}>
-                    ACTIVE PRO
+                    CERTIFIED SPECIALIST
                   </span>
                 </td>
               </tr>

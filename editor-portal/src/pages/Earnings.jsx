@@ -80,8 +80,8 @@ const Earnings = () => {
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem' }}>Earnings & Payouts</h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>Track your creator income and withdraw escrow funds to your bank via UPI.</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.5rem' }}>Production Compensation & Payouts</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>Track your lab production compensation and withdraw approved order payouts to your bank via UPI.</p>
         </div>
         <button onClick={fetchStats} className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
           <RefreshCw size={16} className={loading ? "spin" : ""} /> Refresh Stats

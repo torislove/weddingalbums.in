@@ -29,7 +29,7 @@ const CartDrawer = () => {
             <div className="empty-cart">
               <ShoppingBag size={48} className="empty-icon" />
               <p>Your cart is empty.</p>
-              <button className="btn btn-outline" onClick={() => setIsCartOpen(false)}>Continue Shopping</button>
+              <button className="btn btn-outline" onClick={() => { setIsCartOpen(false); navigate('/shop'); }}>Continue Shopping</button>
             </div>
           ) : (
             <div className="cart-items">
@@ -39,6 +39,15 @@ const CartDrawer = () => {
                   <div className="item-details">
                     <h4>{item.name}</h4>
                     <p className="item-meta">{item.category}</p>
+
+                    {Array.isArray(item.configDetails) && item.configDetails.length > 0 && (
+                      <div className="cart-item-tags">
+                        {item.configDetails.map((tag, idx) => (
+                          <span key={idx} className="cart-item-tag">{tag}</span>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="item-price">₹{item.price.toLocaleString()}</div>
                     <div className="item-actions">
                       <div className="quantity-ctrl">

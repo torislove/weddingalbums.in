@@ -16,13 +16,16 @@ const MobileBookingBar = () => {
 
   if (isBookingFlow) return null;
 
-  const settings = content?.global?.siteSettings || {};
-  const footerData = content?.global?.footer || {};
-  const rawPhone = settings.phone || settings.whatsapp || footerData.phone || '919876543210';
-  const cleanPhone = String(rawPhone).replace(/[^0-9]/g, '') || '919876543210';
+  const settings = content?.global?.siteSettings || content?.siteSettings || {};
+  const footerData = content?.global?.footer || content?.footer || {};
+  const navbarData = content?.global?.navbar || content?.navbar || {};
+  const rawPhone = settings.phone || navbarData.phone || footerData.phone || '+91 9346793364';
+  const cleanPhone = String(rawPhone).replace(/[^0-9]/g, '') || '919346793364';
+  const rawWa = settings.whatsapp || navbarData.whatsapp || footerData.whatsapp || cleanPhone;
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919346793364';
 
   const defaultMsg = "నమస్కారం! నేను వెడ్డింగ్ ఆల్బమ్ డిజైన్ & వీడియో ఎడిటింగ్ సర్వీసెస్ గురించి తెలుసుకోవాలనుకుంటున్నాను.";
-  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(defaultMsg)}`;
+  const whatsappUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent(defaultMsg)}`;
 
   return (
     <div className="mobile-booking-bar" role="navigation" aria-label="Quick Contact Actions">

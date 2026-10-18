@@ -3,10 +3,14 @@ import { Info, PhoneCall, Sparkles, ShieldCheck } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import PackageSection from '../components/PackageSection';
 import { useT } from '../context/LanguageContext';
+import { useContent } from '../context/ContentContext';
 import './Pricing.css';
 
 const Pricing = () => {
   const t = useT();
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919346793364';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919346793364';
   return (
     <div className="pricing-page">
       {/* Hero Section */}
@@ -90,7 +94,7 @@ const Pricing = () => {
             <h3 className="font-serif text-white mb-4">{t('pricing.cta_title')}</h3>
             <p className="text-gray-400 mb-6">{t('pricing.cta_desc')}</p>
             <a 
-              href="https://wa.me/919876543210?text=Hello!%20I%20would%20like%20to%20discuss%20a%20custom%20wedding%20album%20package." 
+              href={`https://wa.me/${cleanWa}?text=${encodeURIComponent("Hello! I would like to discuss a custom wedding album package.")}`} 
               target="_blank" 
               rel="noreferrer" 
               className="btn btn-gold-3d flex items-center gap-2 mx-auto w-fit"

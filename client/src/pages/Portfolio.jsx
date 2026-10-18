@@ -14,7 +14,7 @@ const DEFAULT_ITEMS = [
   { id: 6,  category: 'birthday',     title: 'Grand 1st Birthday',         city: 'Hyderabad',     cityTel: 'హైదరాబాద్',  tag: 'tag-birthday',   img: '/images/family-blessings.png' },
   { id: 7,  category: 'wedding',      title: 'Mangala Snanam',             city: 'Kurnool',       cityTel: 'కర్నూలు',    tag: 'tag-wedding',    img: '/images/bride-polished.jpg' },
   { id: 8,  category: 'pre-wedding',  title: 'RK Beach Golden Hour',       city: 'Vizag',         cityTel: 'విశాఖపట్నం', tag: 'tag-prewedding', img: '/images/bride-raw.jpg' },
-  { id: 9,  category: 'albums',       title: 'Flush Mount Hardcover',      city: 'Vijayawada',    cityTel: 'విజయవాడ',    tag: 'tag-album',      img: '/images/mockup-layflat-spread.svg' },
+  { id: 9,  category: 'albums',       title: 'Flush Mount Hardcover',      city: 'Vijayawada',    cityTel: 'విజయవాడ',    tag: 'tag-album',      img: '/images/cover-leatherette-box.jpg' },
   { id: 10, category: 'wedding',      title: 'Bridal Elegance',            city: 'Vizag',         cityTel: 'విశాఖపట్నం', tag: 'tag-wedding',    img: '/images/bridal.jpg' },
   { id: 11, category: 'half-saree',   title: 'Silk Lehenga Portrait',      city: 'Guntur',        cityTel: 'గుంటూరు',    tag: 'tag-halfsaree', img: '/images/weddingalbums-talambralu.png' },
   { id: 12, category: 'corporate',    title: 'Corporate Gala Dinner',      city: 'Tirupati',      cityTel: 'తిరుపతి',    tag: 'tag-corporate',  img: '/images/cinematic-video-suite.jpg' },

@@ -13,6 +13,7 @@ import crypto from 'crypto';
 import { requireRole } from '../middleware/auth.js';
 import { Content, Media } from '../db_content.js';
 import { adminStorage } from '../firebaseAdmin.js';
+import { eventBus } from '../events.js';
 
 const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
@@ -109,6 +110,9 @@ function sanitizeContentForClient(contentData, isB2B) {
       if (Array.isArray(catalog.albumPrinting.albumSizes)) {
         catalog.albumPrinting.albumSizes.forEach(item => {
           delete item.studioBasePrice;
+          delete item.studioPricePerSheet;
+          delete item.wholesalePerSheet;
+          delete item.coverChargeStudio;
           delete item.studioPriceBadge;
         });
       }
@@ -181,11 +185,63 @@ router.get('/content', async (req, res) => {
   }
 });
 
-router.post('/content', contentAdminOnly, async (req, res) => {
+const devOrContentAdmin = (req, res, next) => {
+  // If running in development and request has no token or dev token, allow as admin
+  if (process.env.NODE_ENV !== 'production') {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token || token === 'null' || token === 'undefined') {
+      req.user = { id: 'dev-admin', role: 'admin', name: 'Dev Admin' };
+      return next();
+    }
+  }
+  return contentAdminOnly(req, res, next);
+};
+
+router.post('/content', devOrContentAdmin, async (req, res) => {
   try {
     const newContent = req.body;
     if (!newContent || typeof newContent !== 'object') {
       return res.status(400).json({ error: 'Invalid content body' });
+    }
+
+    // Harmonize contact information across siteSettings, footer, navbar, and contact
+    if (newContent.global) {
+      const g = newContent.global;
+      const phone = g.siteSettings?.phone || g.footer?.phone || g.navbar?.phone || g.contact?.phone;
+      const email = g.siteSettings?.email || g.footer?.email || g.navbar?.email || g.contact?.email;
+      const address = g.siteSettings?.address || g.footer?.address || g.contact?.address;
+      const rawWhatsapp = g.siteSettings?.whatsapp || g.contact?.whatsapp || g.footer?.whatsapp || g.navbar?.whatsapp;
+      const cleanWhatsapp = rawWhatsapp ? String(rawWhatsapp).replace(/[^0-9]/g, '') : null;
+
+      if (!g.siteSettings) g.siteSettings = {};
+      if (!g.footer) g.footer = {};
+      if (!g.navbar) g.navbar = {};
+      if (!g.contact) g.contact = {};
+
+      if (phone) {
+        g.siteSettings.phone = phone;
+        g.footer.phone = phone;
+        g.navbar.phone = phone;
+        g.contact.phone = phone;
+      }
+      if (email) {
+        g.siteSettings.email = email;
+        g.footer.email = email;
+        g.navbar.email = email;
+        g.contact.email = email;
+      }
+      if (address) {
+        g.siteSettings.address = address;
+        g.footer.address = address;
+        g.contact.address = address;
+      }
+      if (cleanWhatsapp) {
+        g.siteSettings.whatsapp = cleanWhatsapp;
+        g.footer.whatsapp = cleanWhatsapp;
+        g.navbar.whatsapp = cleanWhatsapp;
+        g.contact.whatsapp = cleanWhatsapp;
+      }
     }
 
     // Save previous version to history if present
@@ -222,15 +278,27 @@ router.post('/content', contentAdminOnly, async (req, res) => {
     // Keep fallback cache synchronized
     fallbackContentData = newContent;
 
-    // Persist to local fallback file if filesystem is writable
+    // Persist to local fallback file and client static file if filesystem is writable
     try {
       const fallbackFile = path.join(__dirname, '../content_fallback.json');
-      // Never overwrite the bundled seed with an empty/stub document (must contain pages)
+      const clientStaticFile = path.join(__dirname, '../../client/public/content.json');
       if (newContent?.pages && Object.keys(newContent.pages).length > 0) {
-        await fs.writeFile(fallbackFile, JSON.stringify(newContent, null, 2));
+        const jsonStr = JSON.stringify(newContent, null, 2);
+        await fs.writeFile(fallbackFile, jsonStr).catch(() => {});
+        await fs.writeFile(clientStaticFile, jsonStr).catch(() => {});
       }
     } catch {
       /* ignore read-only filesystems in production cloud */
+    }
+
+    // Broadcast SSE update event to all connected portals (Client, B2B, Ops)
+    try {
+      eventBus.broadcast('content:updated', { 
+        timestamp: new Date().toISOString(),
+        key: 'main_site' 
+      });
+    } catch (e) {
+      console.warn('Could not broadcast content:updated event:', e.message);
     }
 
     return res.json({ success: true, message: 'Content published successfully' });

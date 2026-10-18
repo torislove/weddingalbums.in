@@ -71,15 +71,15 @@ const TaskQueue = () => {
   return (
     <div className="p-4 md:p-8 lg:p-10 animate-slide-up h-full flex flex-col max-w-7xl mx-auto overflow-y-auto custom-scrollbar">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-4xl font-serif text-white mb-2">Form Submissions Queue</h1>
-        <p className="text-gray-400 text-sm md:text-base">Manage incoming B2B editing jobs and B2C retail orders.</p>
+        <h1 className="text-2xl md:text-4xl font-serif text-white mb-2">Storefront & Studio Order Fulfillment</h1>
+        <p className="text-gray-400 text-sm md:text-base">Assign and dispatch incoming customer storefront orders and studio trade jobs to lab specialists.</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
         
-        {/* Editor Tasks Column */}
+        {/* Studio Production Tasks Column */}
         <div className="bg-black/20 p-6 rounded-2xl border border-white/5">
-          <h2 className="text-2xl text-[var(--brand)] font-medium mb-6 border-b border-white/10 pb-4">B2B Job Requests (Photographers)</h2>
+          <h2 className="text-2xl text-[var(--brand)] font-medium mb-6 border-b border-white/10 pb-4">Studio B2B Production Jobs</h2>
           <div className="space-y-6">
             {tasks.length === 0 && <p className="text-gray-500 italic">No pending B2B jobs.</p>}
             {tasks.slice().reverse().map(task => (
@@ -103,7 +103,7 @@ const TaskQueue = () => {
                 </div>
 
                 <div className="bg-black/20 p-4 rounded-lg border border-white/5 mb-4">
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Lab Specialist</p>
                   <div className="flex gap-2">
                     <select 
                       className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[var(--brand)]"
@@ -120,7 +120,7 @@ const TaskQueue = () => {
                       ) : (
                         <>
                           <option value="editor-001">Suresh (In-House)</option>
-                          <option value="editor-002">Rahul (Freelancer)</option>
+                          <option value="editor-002">Rahul (Lab Specialist)</option>
                           <option value="editor-003">Divya (Video Dept)</option>
                         </>
                       )}
@@ -201,7 +201,7 @@ const TaskQueue = () => {
                 </div>
 
                 <div className="bg-black/20 p-4 rounded-lg border border-white/5 mb-4">
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Editor</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-bold">Assign Lab Specialist</p>
                   <div className="flex gap-2">
                     <select 
                       className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[var(--brand)]"
@@ -218,7 +218,7 @@ const TaskQueue = () => {
                       ) : (
                         <>
                           <option value="editor-001">Suresh (In-House)</option>
-                          <option value="editor-002">Rahul (Freelancer)</option>
+                          <option value="editor-002">Rahul (Lab Specialist)</option>
                         </>
                       )}
                     </select>

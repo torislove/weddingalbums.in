@@ -16,10 +16,11 @@ const FloatingSocials = () => {
 
   if (isExcluded) return null;
 
-  const settings = content?.global?.siteSettings || {};
-  const footerData = content?.global?.footer || {};
-  const rawPhone = settings.whatsapp || settings.phone || footerData.phone || '919876543210';
-  const cleanPhone = String(rawPhone).replace(/[^0-9]/g, '') || '919876543210';
+  const settings = content?.global?.siteSettings || content?.siteSettings || {};
+  const footerData = content?.global?.footer || content?.footer || {};
+  const navbarData = content?.global?.navbar || content?.navbar || {};
+  const rawPhone = settings.whatsapp || navbarData.whatsapp || settings.phone || footerData.phone || '919494845111';
+  const cleanPhone = String(rawPhone).replace(/[^0-9]/g, '') || '919494845111';
 
   const whatsappMessage = "నమస్కారం! మీ wedding album & video editing services గురించి ఆర్డర్ / కొటేషన్ వివరాలు తెలుసుకోవాలనుకుంటున్నాను.";
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappMessage)}`;

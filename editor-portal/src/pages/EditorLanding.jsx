@@ -1,15 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Target, ShieldCheck, BookOpen, ArrowRight, MapPin, Layers, IndianRupee, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import GoldenParticles from '../components/GoldenParticles';
 import Logo from '../components/Logo';
+import { API } from '../apiConfig';
 
 const EditorLanding = () => {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  const [editorContent, setEditorContent] = useState(null);
+
+  const fetchContent = () => {
+    fetch(`${API}/api/content`)
+      .then(res => res.json())
+      .then(data => {
+        const portal = data?.global?.editorPortal || data?.editorPortal;
+        if (portal) setEditorContent(portal);
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchContent();
+
+    let sseSource;
+    try {
+      sseSource = new EventSource(`${API}/api/events`);
+      sseSource.addEventListener('content:updated', () => {
+        fetchContent();
+      });
+    } catch { /* SSE unavailable */ }
+
+    return () => {
+      if (sseSource) sseSource.close();
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -50,10 +79,10 @@ const EditorLanding = () => {
         </div>
         
         <header style={{ position: 'relative', zIndex: 10, padding: 'clamp(1rem, 3vw, 1.75rem)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1240px', margin: '0 auto', width: '100%', boxSizing: 'border-box', flexWrap: 'wrap', gap: '1rem' }}>
-          <Logo size={40} portalTag="Creator Suite" />
+          <Logo size={40} portalTag="Lab Production" />
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-            <button onClick={() => navigate('/login')} style={{ background: 'transparent', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>Login</button>
-            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>Join Network</button>
+            <button onClick={() => navigate('/login')} style={{ background: 'transparent', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>Lab Login</button>
+            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>Technician Onboarding</button>
           </motion.div>
         </header>
 
@@ -67,22 +96,40 @@ const EditorLanding = () => {
             <Sparkles size={72} color="var(--accent-primary)" style={{ filter: 'drop-shadow(0 0 30px rgba(212, 175, 55,1))' }} />
           </motion.div>
           
+          {editorContent?.announcements?.[0] && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                background: 'rgba(192, 132, 252, 0.12)', border: '1px solid rgba(192, 132, 252, 0.35)',
+                color: '#c084fc', padding: '6px 16px', borderRadius: '999px',
+                fontSize: '0.85rem', fontWeight: 700, marginBottom: '1.5rem'
+              }}
+            >
+              <span style={{ background: '#c084fc', color: '#000', fontSize: '10px', padding: '1px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                {editorContent.announcements[0].tag || 'GUIDELINE'}
+              </span>
+              <span>{editorContent.announcements[0].title}</span>
+            </motion.div>
+          )}
+
           <motion.h1 
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '1.5rem', lineHeight: '1.1', fontWeight: 900, background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep), #F5E6A8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 20px rgba(212, 175, 55,0.3))' }}
+            style={{ fontSize: 'clamp(2.2rem, 5.5vw, 4.2rem)', marginBottom: '1.5rem', lineHeight: '1.15', fontWeight: 900, background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep), #F5E6A8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 20px rgba(212, 175, 55,0.3))' }}
           >
-            Edit. Deliver.<br />Get Paid.
+            {editorContent?.landingHero?.title || 'Craft Royal Heirloom Albums & 4K Wedding Cinema'}
           </motion.h1>
           
           <motion.p 
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            style={{ fontSize: '1.4rem', color: 'var(--text-secondary)', maxWidth: '750px', marginBottom: '3.5rem' }}
+            style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', maxWidth: '750px', marginBottom: '3rem', lineHeight: 1.6 }}
           >
-            Join WeddingAlbums.in's elite network of freelance video editors, photo retouchers, and album designers. Consistent work, guaranteed payouts.
+            {editorContent?.landingHero?.subtitle || "Authorized workbench for WeddingAlbums.in's certified colorists, retouchers, and album layout specialists. Fulfilling storefront customer and studio orders with commercial lab precision."}
           </motion.p>
           
           <motion.div 
@@ -92,8 +139,8 @@ const EditorLanding = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <button onClick={() => navigate('/signup')} className="liquid-btn" style={{ padding: '1.2rem 3rem', fontSize: '1.3rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: '0.75rem', boxShadow: '0 0 30px rgba(212, 175, 55,0.4)' }}>
-              Take the Assessment <ArrowRight size={24} />
+            <button onClick={() => navigate('/login')} className="liquid-btn" style={{ padding: '1.2rem 3rem', fontSize: '1.2rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: '0.75rem', boxShadow: '0 0 30px rgba(212, 175, 55,0.4)' }}>
+              {editorContent?.landingHero?.technicianCtaText || 'Enter Production Workbench'} <ArrowRight size={24} />
             </button>
           </motion.div>
         </main>
@@ -120,7 +167,7 @@ const EditorLanding = () => {
             transition={{ duration: 0.6 }}
             style={{ textAlign: 'center', fontSize: '4rem', marginBottom: '6rem', background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
           >
-            The Creator Journey
+            Lab Production Flow
           </motion.h2>
           
           <motion.div 
@@ -146,8 +193,8 @@ const EditorLanding = () => {
               >
                 <MapPin size={40} color="var(--accent-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>1. Claim Local Jobs</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Browse the queue for jobs in your region. Understand local traditions to grade and edit with cultural context.</p>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>1. Storefront Order Inflow</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Orders placed by couples or submitted by partner studios flow directly into your designated queue with exact sizes and sheet specs.</p>
             </motion.div>
 
             <motion.div variants={itemVariants} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
@@ -157,8 +204,8 @@ const EditorLanding = () => {
               >
                 <Layers size={40} color="var(--accent-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>2. Smart Workspaces</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Use our tailored Kanban boards designed specifically for DaVinci Resolve, Premiere Pro, and Lightroom workflows.</p>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>2. Calibrated Workspaces</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Color grading, skin retouching, Karizma PSD layout, and DaVinci cuts matching master ICC profiles and regional traditions.</p>
             </motion.div>
 
             <motion.div variants={itemVariants} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
@@ -169,8 +216,8 @@ const EditorLanding = () => {
               >
                 <IndianRupee size={40} color="var(--accent-primary)" />
               </motion.div>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>3. 1-Click Payouts</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>No chasing studios for invoices. Complete a job, get it approved by QC, and withdraw instantly to your bank via UPI.</p>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', color: 'var(--paper)' }}>3. Direct Lab Fulfillment</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.6' }}>Approved spreads route automatically to our commercial lay-flat press, followed by instant credit of your production compensation.</p>
             </motion.div>
           </motion.div>
         </div>
@@ -191,24 +238,24 @@ const EditorLanding = () => {
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(99, 102, 241, 0.5)' }}>
                 <Target size={36} color="var(--accent-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Jobs for Free</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>No subscription fees. No bidding wars. We assign high-quality jobs directly to you for <strong style={{color: 'var(--accent-primary)'}}>FREE</strong> based on your skills and regional expertise.</p>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Dedicated Lab Queue</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>No bidding wars or client chasing. Fulfill verified orders directly from the Storefront and Studio portals with clear creative briefs.</p>
             </motion.div>
 
             <motion.div variants={cardVariants} whileHover="hover" className="glass-panel" style={{ padding: '3rem 2rem', borderRadius: '20px', borderTop: '4px solid var(--accent-primary)' }}>
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(99, 102, 241, 0.5)' }}>
                 <ShieldCheck size={36} color="var(--accent-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Guaranteed Payment</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>The money is held in escrow by WeddingAlbums.in. Once the job is completed and approved by QC, payment is released to you instantly. No chasing clients!</p>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Reliable Compensation</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>Structured milestone payouts and competitive production rates directly credited upon QC sign-off. Guaranteed on-time bank deposits.</p>
             </motion.div>
 
             <motion.div variants={cardVariants} whileHover="hover" className="glass-panel" style={{ padding: '3rem 2rem', borderRadius: '20px', borderTop: '4px solid var(--accent-primary)' }}>
               <div style={{ width: '70px', height: '70px', borderRadius: '16px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem', border: '1px solid rgba(99, 102, 241, 0.5)' }}>
                 <BookOpen size={36} color="var(--accent-primary)" />
               </div>
-              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Gamified Growth</h3>
-              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>Maintain a &gt;4.8 star rating to unlock 'Premium Pay' assignments. Plus, get free access to our massive library of premium LUTS and presets.</p>
+              <h3 style={{ marginBottom: '1rem', color: 'var(--paper)', fontSize: '1.8rem', fontWeight: 700 }}>Commercial Lab Tools</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '1.1rem' }}>Full access to our high-end LUT library, South Indian ritual PSD presets, calibrated color profiles, and AI-assisted local culling.</p>
             </motion.div>
 
           </motion.div>
@@ -226,16 +273,16 @@ const EditorLanding = () => {
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
           style={{ position: 'relative', zIndex: 1 }}
         >
-          <h2 style={{ fontSize: '4rem', marginBottom: '2rem', fontWeight: 800, background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ready to Monetize Your Skills?</h2>
+          <h2 style={{ fontSize: '4rem', marginBottom: '2rem', fontWeight: 800, background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Access the Production Workbench</h2>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3rem' }}>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/signup')} 
+              onClick={() => navigate('/login')} 
               className="liquid-btn" 
               style={{ padding: '1.5rem 4rem', fontSize: '1.3rem', borderRadius: '50px', boxShadow: '0 0 30px rgba(212, 175, 55,0.3)' }}
             >
-              Start Application
+              Sign In to Lab Workbench
             </motion.button>
           </div>
         </motion.div>

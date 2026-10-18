@@ -15,7 +15,7 @@ const Cart = () => {
       <div className="cart-page empty">
         <h2>{t('cart.empty_title')}</h2>
         <p>{t('cart.empty_desc')}</p>
-        <button className="btn btn-primary" onClick={() => navigate('/services')}>{t('cart.browse')}</button>
+        <button className="btn btn-primary" onClick={() => navigate('/shop')}>{t('cart.browse')}</button>
       </div>
     );
   }

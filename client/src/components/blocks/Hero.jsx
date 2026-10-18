@@ -24,9 +24,9 @@ const Hero = (props) => {
     titleScramble = t('hero.title2'),
     subtitle = t('hero.sub'),
     btn1Text = t('hero.btn1'),
-    btn1Link = "/pricing",
+    btn1Link = "/shop",
     btn2Text = t('hero.btn2'),
-    btn2Link = "#estimator",
+    btn2Link = "/shop",
     bgImage = "/images/weddingalbums-home-hero.png"
   } = props;
 

@@ -4,10 +4,14 @@ import { Download, ShoppingBag, Clock, Truck, MessageCircle, Eye, CheckCircle2 }
 import { Link } from 'react-router-dom';
 import { API } from '../apiConfig';
 import { useT } from '../context/LanguageContext';
+import { useContent } from '../context/ContentContext';
 
 const OrderHistory = () => {
   const t = useT();
   const { user } = useAuth();
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +44,7 @@ const OrderHistory = () => {
   const openWhatsAppTrack = (order) => {
     const orderId = order.orderId || order.id || order._id || 'ORD-VERIFIED';
     const msg = `నమస్కారం WeddingAlbums.in టీమ్! నా ఆర్డర్ Reference: ${orderId} గురించి స్టేటస్ మరియు ప్రూఫ్ అప్‌డేట్స్ తెలుసుకోవాలనుకుంటున్నాను.`;
-    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/${cleanWa}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   if (loading) {

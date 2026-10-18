@@ -21,7 +21,7 @@ export const ARTICLES = [
     slug: 'karizma-vs-flush-mount-albums',
     title: 'Karizma vs Flush Mount Albums: What is the difference?',
     excerpt: 'Trying to choose the right album for your big day? We break down the differences in durability, cost, and look.',
-    image: '/images/mockup-acrylic-cover.svg',
+    image: '/images/cover-acrylic-3d.jpg',
     date: 'Sep 15, 2026',
     author: 'Print Studio Team'
   },

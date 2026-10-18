@@ -15,8 +15,17 @@ export const CartProvider = ({ children }) => {
     if (user) {
       fetchCart();
     } else {
-      setCartItems([]);
-      setCartTotal(0);
+      try {
+        const local = localStorage.getItem('wedding_guest_cart');
+        if (local) {
+          const parsed = JSON.parse(local);
+          setCartItems(parsed.items || []);
+          setCartTotal(parsed.totalAmount || 0);
+        }
+      } catch {
+        setCartItems([]);
+        setCartTotal(0);
+      }
     }
   }, [user]);
 
@@ -42,6 +51,11 @@ export const CartProvider = ({ children }) => {
     const total = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     setCartItems(items);
     setCartTotal(total);
+
+    // Save locally for guest sessions
+    try {
+      localStorage.setItem('wedding_guest_cart', JSON.stringify({ items, totalAmount: total }));
+    } catch {}
 
     if (user) {
       try {
@@ -78,6 +92,10 @@ export const CartProvider = ({ children }) => {
     syncCart(newItems);
   };
 
+  const clearCart = () => {
+    syncCart([]);
+  };
+
   const updateQuantity = (id, quantity) => {
     if (quantity <= 0) {
       removeFromCart(id);
@@ -94,7 +112,7 @@ export const CartProvider = ({ children }) => {
   return (
     <CartContext.Provider value={{
       cartItems, cartTotal, loading, isCartOpen,
-      addToCart, removeFromCart, updateQuantity, toggleCart, setIsCartOpen
+      addToCart, removeFromCart, clearCart, updateQuantity, toggleCart, setIsCartOpen
     }}>
       {children}
     </CartContext.Provider>

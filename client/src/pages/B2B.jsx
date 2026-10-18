@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import './B2B.css';
 import { useT } from '../context/LanguageContext';
+import { useContent } from '../context/ContentContext';
 
 const STUDIO_PORTAL_URL = typeof window !== 'undefined' && window.location.hostname.includes('localhost')
   ? 'http://localhost:5174'
@@ -54,6 +55,9 @@ const TRADE_TESTIMONIALS = [
 
 const B2B = () => {
   const t = useT();
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
 
   return (
     <div className="b2b-page">
@@ -85,7 +89,7 @@ const B2B = () => {
               <ExternalLink size={16} />
             </a>
             <a 
-              href="https://wa.me/919876543210?text=Hi!%20I%20am%20a%20wedding%20photographer%20and%20would%20like%20to%20apply%20for%20a%20Studio%20Trade%20Account." 
+              href={`https://wa.me/${cleanWa}?text=${encodeURIComponent("Hi! I am a wedding photographer and would like to apply for a Studio Trade Account.")}`} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="btn btn-outline flex items-center gap-2"
@@ -212,7 +216,7 @@ const B2B = () => {
               <ExternalLink size={18} />
             </a>
             <a 
-              href="https://wa.me/919876543210?text=Hi!%20I%20am%20a%20wedding%20photographer%20and%20would%20like%20to%20apply%20for%20a%20Studio%20Trade%20Account." 
+              href={`https://wa.me/${cleanWa}?text=${encodeURIComponent("Hi! I am a wedding photographer and would like to apply for a Studio Trade Account.")}`} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="btn btn-outline px-8 py-4 font-semibold text-base flex items-center justify-center gap-2 w-full sm:w-auto text-[#25D366] border-[#25D366]/40 hover:bg-[#25D366]/15"

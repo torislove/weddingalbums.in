@@ -133,7 +133,7 @@ const EditorRegister = () => {
 
       <header style={{ padding: '1.5rem 1rem', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--glass-border)', zIndex: 1 }}>
         <Link to="/">
-          <Logo size={40} portalTag="Creator Suite" />
+          <Logo size={40} portalTag="Lab Production" />
         </Link>
       </header>
       
@@ -141,11 +141,11 @@ const EditorRegister = () => {
         <div className="glass-panel fade-in" style={{ maxWidth: '800px', width: '100%', padding: 'clamp(1.25rem, 4vw, 3rem)', borderRadius: '24px', background: 'rgba(20, 20, 35, 0.7)', backdropFilter: 'blur(20px)', border: '1px solid rgba(99, 102, 241, 0.2)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)', boxSizing: 'border-box' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', marginBottom: '0.5rem', background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>Join the Creator Network</h2>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', marginBottom: '0.5rem', background: 'linear-gradient(to right, var(--brand-soft), var(--brand-deep))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>Join the Lab Production Team</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Step {step} of 4: {
               step === 1 ? "Personal Details" : 
               step === 2 ? "Location & Availability" :
-              step === 3 ? "Skills & Tools" : "Assessment Agreement"
+              step === 3 ? "Skills & Tools" : "Lab Standards & QC Agreement"
             }</p>
             
             {/* Animated Progress Bar */}

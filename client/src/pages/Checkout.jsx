@@ -9,7 +9,7 @@ import { useT } from '../context/LanguageContext';
 
 const Checkout = () => {
   const t = useT();
-  const { cartItems, cartTotal, removeFromCart, setIsCartOpen } = useCart();
+  const { cartItems, cartTotal, removeFromCart, clearCart, setIsCartOpen } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -85,8 +85,7 @@ const Checkout = () => {
               });
               
               if (orderRes.ok) {
-                // Clear cart locally (in real app, call clearCart context method)
-                cartItems.forEach(item => removeFromCart(item.id));
+                if (clearCart) clearCart();
                 setToastMessage(t('checkout.ok'));
                 setTimeout(() => navigate('/client'), 2000);
               }

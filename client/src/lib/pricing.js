@@ -41,10 +41,10 @@ export const DEFAULT_SHEETS = [
 ];
 
 export const DEFAULT_COVERS = [
-  { id: 'acrylic', label: 'Diamond Acrylic 3D Glass', extra: 2500, mockup: '/images/mockup-acrylic-cover.svg' },
-  { id: 'leatherette', label: 'Italian Leatherette + Box', extra: 2800, mockup: '/images/mockup-leatherette-embossed.svg' },
-  { id: 'velvet-foil', label: 'Royal Velvet + 24K Gold Foil', extra: 2200, mockup: '/images/mockup-velvet-gold-foil.svg' },
-  { id: 'matte-hardcover', label: 'Scuff-Free Hardcover Matte', extra: 0, mockup: '/images/mockup-layflat-spread.svg' },
+  { id: 'acrylic', label: 'Diamond Acrylic 3D Glass', extra: 2500, mockup: '/images/cover-acrylic-3d.jpg' },
+  { id: 'leatherette', label: 'Italian Leatherette + Box', extra: 2800, mockup: '/images/cover-leatherette-box.jpg' },
+  { id: 'velvet-foil', label: 'Royal Velvet + 24K Gold Foil', extra: 2200, mockup: '/images/cover-royal-velvet.jpg' },
+  { id: 'matte-hardcover', label: 'Scuff-Free Hardcover Matte', extra: 0, mockup: '/images/weddingalbums-layflat-album.png' },
 ];
 
 export const DEFAULT_VIDEOS = [
@@ -306,10 +306,10 @@ export const scaleMixToSheets = (mix, sheets) => {
 /* CMS coverFinishes use descriptive ids and omit price fields — keep legacy
    retail premiums + real mockups attached via this alias table. */
 export const COVER_CMS_ALIAS = {
-  'acrylic-glass': { extra: 2500, mockup: '/images/mockup-acrylic-cover.svg' },
-  'leatherette-box': { extra: 2800, mockup: '/images/mockup-leatherette-embossed.svg' },
-  'royal-velvet-foil': { extra: 2200, mockup: '/images/mockup-velvet-gold-foil.svg' },
-  'hardcover-matte': { extra: 0, mockup: '/images/mockup-layflat-spread.svg' },
+  'acrylic-glass': { extra: 2500, mockup: '/images/cover-acrylic-3d.jpg' },
+  'leatherette-box': { extra: 2800, mockup: '/images/cover-leatherette-box.jpg' },
+  'royal-velvet-foil': { extra: 2200, mockup: '/images/cover-royal-velvet.jpg' },
+  'hardcover-matte': { extra: 0, mockup: '/images/weddingalbums-layflat-album.png' },
 };
 
 export const SERVICE_INTENTS = Object.freeze({

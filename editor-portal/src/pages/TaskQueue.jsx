@@ -123,7 +123,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
             {title ? `${title} Workspace` : 'Job Workspace'}
           </h1>
           <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>
-            {description || 'Claim available editing projects, download RAW footage, and submit deliverables for QC.'}
+            {description || 'Fulfill assigned lab production orders, download RAW camera clicks, and submit deliverables for pre-press QC.'}
           </p>
         </div>
         
@@ -156,15 +156,15 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
         <div className="glass-panel" style={{ padding: '1rem', background: 'rgba(255, 255, 255, 0.02)', display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: '550px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem' }}>
             <h3 style={{ margin: 0, fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent-primary)' }} /> Available Queue
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent-primary)' }} /> Production Order Queue
             </h3>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{availableJobs.length} Jobs</span>
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{availableJobs.length} Orders</span>
           </div>
           
           {loading ? (
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem' }}>Loading jobs...</p>
+            <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem' }}>Loading orders...</p>
           ) : availableJobs.length === 0 ? (
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>No open jobs right now.</p>
+            <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>No pending orders in queue right now.</p>
           ) : availableJobs.map(job => (
             <div key={job.id} style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -184,7 +184,7 @@ const TaskQueue = ({ title, description, icon: HeaderIcon, color, type }) => {
                 onClick={() => handleClaim(job.id)} 
                 style={{ width: '100%', justifyContent: 'center', padding: '0.5rem', fontSize: '0.85rem', cursor: 'pointer' }}
               >
-                Claim Task
+                Accept Production Order
               </button>
             </div>
           ))}

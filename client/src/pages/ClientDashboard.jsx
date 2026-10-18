@@ -12,6 +12,7 @@ import Logo from '../components/Logo';
 import './ClientDashboard.css';
 import { API } from '../apiConfig';
 import { useT } from '../context/LanguageContext';
+import { useContent } from '../context/ContentContext';
 
 /* ── Timeline step definitions ─────────────────────────────────────── */
 const TIMELINE_STEPS = [
@@ -54,13 +55,16 @@ const MOCK_ORDERS = [
 /* ── Order card with expandable timeline & full booked specifications ─── */
 const OrderCard = ({ order }) => {
   const t = useT();
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
   const [expanded, setExpanded] = useState(order.status !== 'delivered');
   const items = order.items && order.items.length > 0 ? order.items : [];
 
   const openWhatsAppTrack = (e) => {
     e.stopPropagation();
     const msg = `నమస్కారం WeddingAlbums.in టీమ్! నా ఆర్డర్ Reference: ${order.id} గురించి లేటెస్ట్ స్టేటస్ మరియు ప్రూఫ్ అప్‌డేట్స్ తెలుసుకోవాలనుకుంటున్నాను.`;
-    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/${cleanWa}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (
@@ -314,6 +318,10 @@ const ClientDashboard = () => {
 
   const isHome = location.pathname === '/client';
 
+  const { content } = useContent();
+  const rawWa = content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
+
   const initials = user?.name
     ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
     : 'U';
@@ -330,7 +338,7 @@ const ClientDashboard = () => {
             <Home size={16} />
           </Link>
           <a
-            href={`https://wa.me/919876543210?text=${encodeURIComponent('నమస్కారం WeddingAlbums.in టీమ్! నా కపుల్స్ వెడ్డింగ్ ఆల్బమ్ ఆర్డర్ల గురించి సహాయం కావాలి.')}`}
+            href={`https://wa.me/${cleanWa}?text=${encodeURIComponent('నమస్కారం WeddingAlbums.in టీమ్! నా కపుల్స్ వెడ్డింగ్ ఆల్బమ్ ఆర్డర్ల గురించి సహాయం కావాలి.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="cdash-mobile-btn cdash-mobile-wa-btn"
@@ -467,7 +475,7 @@ const ClientDashboard = () => {
                   { label: t('cdash.new_order'),        icon: ShoppingBag, to: '/order' },
                   { label: t('cdash.view_proofs'),      icon: ImageIcon,   to: '/client/proofs' },
                   { label: t('cdash.download_invoice'), icon: Download,    to: '/client/orders' },
-                  { label: t('cdash.wa_support'),       icon: Phone,       href: `https://wa.me/919876543210?text=${encodeURIComponent(`నమస్కారం! నేను Client Portal (${user?.name || 'Customer'}) నుండి మాట్లాడుతున్నాను. నా ఆర్డర్ గురించి సహాయం కావాలి.`)}` },
+                  { label: t('cdash.wa_support'),       icon: Phone,       href: `https://wa.me/${cleanWa}?text=${encodeURIComponent(`నమస్కారం! నేను Client Portal (${user?.name || 'Customer'}) నుండి మాట్లాడుతున్నాను. నా ఆర్డర్ గురించి సహాయం కావాలి.`)}` },
                   { label: t('cdash.wallet_credits'),   icon: CreditCard,  to: '/client/wallet' },
                   { label: t('cdash.refer_earn'),       icon: Heart,       to: '/client/referral' },
                 ].map((a, i) => (

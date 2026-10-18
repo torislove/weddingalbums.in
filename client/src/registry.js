@@ -34,12 +34,17 @@ const componentRegistry = {
   TestimonialsCarousel,
   ReviewsBar,
   CTABanner,
+  StudioCtaBanner: CTABanner,
   PageHero,
   PillarsList,
   SimpleCTA,
   VisualPillarsShowcase,
   InteractiveBeforeAfter,
   CraftsmanshipDetails,
+  Craftsmanship: CraftsmanshipDetails,
+  TeluguRituals: RitualsScroll,
+  Testimonials: TestimonialsCarousel,
+  TestimonialsCarousel,
   InstantEstimator,
 };
 

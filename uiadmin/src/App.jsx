@@ -2,15 +2,12 @@ import React, { useState, useCallback, createContext, useContext, useEffect } fr
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { LayoutDashboard, FileText, Settings, Image as ImageIcon, Save, ExternalLink, Bell, LogOut, PenTool, Eye, Menu, X, History as HistoryIcon } from 'lucide-react';
 import { useMediaQuery } from './hooks/useMediaQuery';
-import PageEditor from './pages/PageEditor';
-import GlobalEditor from './pages/GlobalEditor';
-import PushNotificationEditor from './pages/PushNotificationEditor';
-import CalendarEditor from './pages/CalendarEditor';
 import MediaLibrary from './pages/MediaLibrary';
 import History from './pages/History';
 import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 import HubCatalogEditor from './pages/HubCatalogEditor';
+import VisualLiveEditor from './pages/VisualLiveEditor';
 import Toast from './components/Toast';
 import Logo from './components/Logo';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -102,23 +99,13 @@ const Guard = ({ children }) => {
   return children;
 };
 
-/* ── Sidebar ───────────────────────────────────────────────────────── */
-const PAGES_MENU = [
-  { name: 'Dashboard',          path: '/',                    icon: LayoutDashboard },
-  { name: 'Home Page',          path: '/pages/home',          icon: FileText },
-  { name: 'About Page',         path: '/pages/about',         icon: FileText },
-  { name: 'Services Page',      path: '/pages/services',      icon: FileText },
-  { name: 'Portfolio Page',     path: '/pages/portfolio',     icon: FileText },
-  { name: 'Testimonials',       path: '/pages/testimonials',  icon: FileText },
-  { name: 'Contact Page',       path: '/pages/contact',       icon: FileText },
-  { name: 'Publish History',    path: '/history',             icon: HistoryIcon },
-];
-const TOOLS_MENU = [
-  { name: 'Hub Catalog & Pricing', path: '/catalog',   icon: PenTool },
-  { name: 'Booking Calendar',   path: '/calendar',   icon: LayoutDashboard },
-  { name: 'Push Notifications', path: '/push',        icon: Bell },
-  { name: 'Global Elements',    path: '/global',      icon: Settings },
-  { name: 'Image Library',      path: '/images',      icon: ImageIcon },
+/* ── Sidebar Navigation (Zero Clutter, 100% Active) ────────────────── */
+const CMS_MENU = [
+  { name: '🌟 Multi-Portal Live Canvas', path: '/',          icon: Eye },
+  { name: '📖 Catalog & Rate Matrix',    path: '/catalog',   icon: PenTool },
+  { name: '🖼️ Media Asset Library',      path: '/images',    icon: ImageIcon },
+  { name: '📜 Publish History',          path: '/history',   icon: HistoryIcon },
+  { name: '📊 Dashboard Overview',       path: '/dashboard', icon: LayoutDashboard },
 ];
 
 const SidebarLink = ({ item }) => {
@@ -143,12 +130,12 @@ const SidebarLink = ({ item }) => {
   );
 };
 
-const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
+const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose, isMobile }) => {
   const { user, logout } = useAuth();
   return (
     <>
-      {/* Mobile overlay backdrop */}
-      {isOpen && (
+      {/* Mobile overlay backdrop: ONLY when isMobile AND isOpen */}
+      {isMobile && isOpen && (
         <div
           onClick={onClose}
           style={{
@@ -186,11 +173,8 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose }) => {
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: '12px 10px' }}>
-        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', padding: '8px 10px 4px' }}>Pages</div>
-        {PAGES_MENU.map(i => <SidebarLink key={i.path} item={i} />)}
-
-        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', padding: '14px 10px 4px', marginTop: 8, borderTop: '1px solid rgba(255,255,255,0.04)' }}>Tools</div>
-        {TOOLS_MENU.map(i => <SidebarLink key={i.path} item={i} />)}
+        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', padding: '8px 10px 6px' }}>Portal Studio</div>
+        {CMS_MENU.map(i => <SidebarLink key={i.path} item={i} />)}
       </nav>
 
       {/* Footer actions */}
@@ -308,6 +292,7 @@ function AppInner() {
                   saving={adminState.saving}
                   isOpen={isMobile ? sidebarOpen : true}
                   onClose={() => setSidebarOpen(false)}
+                  isMobile={isMobile}
                 />
                 <main style={{
                   flex: 1,
@@ -317,15 +302,13 @@ function AppInner() {
                   paddingTop: isMobile ? 60 : 0,
                 }}>
                   <Routes>
-                    <Route path="/"               element={<Dashboard />} />
-                    <Route path="/pages/:pageId"  element={<PageEditor adminState={adminState} />} />
+                    <Route path="/"               element={<VisualLiveEditor adminState={adminState} />} />
+                    <Route path="/visual-editor"  element={<VisualLiveEditor adminState={adminState} />} />
+                    <Route path="/dashboard"      element={<Dashboard />} />
                     <Route path="/catalog"        element={<HubCatalogEditor adminState={adminState} />} />
-                    <Route path="/calendar"        element={<CalendarEditor adminState={adminState} />} />
-                    <Route path="/push"            element={<PushNotificationEditor adminState={adminState} />} />
-                    <Route path="/global"          element={<GlobalEditor adminState={adminState} />} />
-                    <Route path="/images"          element={<MediaLibrary />} />
-                    <Route path="/history"         element={<History />} />
-                    <Route path="*"               element={<div style={{ padding: '60px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', marginTop: 80 }}>Under construction</div>} />
+                    <Route path="/images"         element={<MediaLibrary />} />
+                    <Route path="/history"        element={<History />} />
+                    <Route path="*"               element={<Navigate to="/" replace />} />
                   </Routes>
                 </main>
                 <Toast message={toastMessage} onClose={() => setToastMessage(null)} />

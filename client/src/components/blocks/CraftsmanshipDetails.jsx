@@ -10,7 +10,7 @@ const DEFAULT_COVERS = [
     tag: 'Bestseller',
     title: 'Diamond Beveled Acrylic 3D',
     description: '4mm optical-grade German acrylic glass with laser-polished beveled edges. Unmatched depth and luminescence.',
-    image: '/images/luxury-album-craftsmanship.jpg',
+    image: '/images/cover-acrylic-3d.jpg',
     specs: ['Scratch-resistant UV coat', 'Laser precision engraving', 'Seamless wrap-around spine']
   },
   {
@@ -18,7 +18,7 @@ const DEFAULT_COVERS = [
     tag: 'Royal Heritage',
     title: 'Royal Plush Velvet Touch',
     description: 'Ultra-luxurious tactile fabric available in Crimson Maroon, Emerald Green, and Midnight Navy with 24K gold foil stamping.',
-    image: '/images/weddingalbums-layflat-album.png',
+    image: '/images/cover-royal-velvet.jpg',
     specs: ['Heat-embossed monogramming', 'Cushioned hardbound core', 'Non-staining textile shield']
   },
   {
@@ -26,7 +26,7 @@ const DEFAULT_COVERS = [
     tag: 'Executive',
     title: 'Italian Leatherette & Briefcase',
     description: 'Handcrafted vegan leather album bundled with an identical monogrammed protective hard-shell briefcase box.',
-    image: '/images/weddingalbums-home-hero.png',
+    image: '/images/cover-leatherette-box.jpg',
     specs: ['Magnetic stealth closure', 'Velvet-lined interior cradle', 'Custom brass corner protectors']
   },
   {
@@ -69,7 +69,7 @@ const DEFAULT_PAPERS = [
     tag: 'Zero-Gutter',
     title: '100% Panoramic Lay-Flat Binding',
     description: 'Patented European hinge mechanism opening completely flat at 180°. Spread big mandap group shots across both pages without seam cutoffs.',
-    image: '/images/appagintalu-farewell.png',
+    image: '/images/weddingalbums-layflat-album.png',
     specs: ['Zero center gap gutter loss', 'Continuous 12×36 landscape', 'Reinforced stitch spine']
   }
 ];

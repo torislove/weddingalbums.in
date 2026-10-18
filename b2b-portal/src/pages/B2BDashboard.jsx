@@ -8,7 +8,18 @@ const B2BDashboard = () => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [supportWhatsapp, setSupportWhatsapp] = useState('919494845111');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  useEffect(() => {
+    fetch(`${API}/api/content?t=${Date.now()}`)
+      .then(r => r.json())
+      .then(d => {
+        const wa = d?.global?.siteSettings?.whatsapp || d?.siteSettings?.whatsapp || d?.global?.contact?.whatsapp || d?.contact?.whatsapp || '919494845111';
+        setSupportWhatsapp(String(wa).replace(/[^0-9]/g, ''));
+      })
+      .catch(() => {});
+  }, []);
 
   const fetchData = React.useCallback(async () => {
     setLoading(true);
@@ -45,43 +56,56 @@ const B2BDashboard = () => {
   const [calcVideo, setCalcVideo] = useState('none');
   const [clientQuote, setClientQuote] = useState(18500);
 
-  // Studio Pricing Catalog Data
+  // Studio Orientation Filter for Calculator: 'all' | 'landscape' | 'portrait'
+  const [calcOrientation, setCalcOrientation] = useState('all');
+
+  // Studio Pricing Catalog Data (All Indian Landscape & Portrait Formats)
   const ALBUM_SIZES = [
-    { id: '14x40', name: '14×40 Magnum Royal Mandap', wholesaleBase: 10500, retailRef: 16500 },
-    { id: '12x36', name: '12×36 Grand Imperial (AP Standard)', wholesaleBase: 7800, retailRef: 12500 },
-    { id: '12x30', name: '12×30 Panoramic Cinema', wholesaleBase: 6800, retailRef: 10500 },
-    { id: '10x30', name: '10×30 Slim Cinema', wholesaleBase: 5900, retailRef: 9200 },
-    { id: '12x24', name: '12×24 Square Celebration', wholesaleBase: 5400, retailRef: 8500 },
-    { id: '10x20', name: '10×20 Compact Square', wholesaleBase: 4600, retailRef: 7200 },
-    { id: '12x18-vert', name: '12×18 Royal Vertical Portrait', wholesaleBase: 6200, retailRef: 9800 },
-    { id: '10x15-vert', name: '10×15 Editorial Vertical', wholesaleBase: 4900, retailRef: 7600 },
-    { id: '8x12-vert', name: '8×12 Traditional Vertical', wholesaleBase: 3800, retailRef: 5800 },
-    { id: '6x9-pocket', name: '6×9 Companion Pocket Parent Book', wholesaleBase: 2100, retailRef: 3200 },
+    // Landscape
+    { id: '14x40', name: '14×40 Grand Imperial Panoramic', orientation: 'landscape', wholesalePerSheet: 220, retailPerSheet: 320, coverCharge: 1400, coverChargeRetail: 2200 },
+    { id: '12x36', name: '12×36 Royal Spread (Panoramic)', orientation: 'landscape', wholesalePerSheet: 180, retailPerSheet: 260, coverCharge: 1100, coverChargeRetail: 1700 },
+    { id: '12x30', name: '12×30 Classic Landscape', orientation: 'landscape', wholesalePerSheet: 160, retailPerSheet: 230, coverCharge: 1000, coverChargeRetail: 1600 },
+    { id: '10x30', name: '10×30 Slim Panoramic', orientation: 'landscape', wholesalePerSheet: 145, retailPerSheet: 210, coverCharge: 900, coverChargeRetail: 1400 },
+    { id: '15x30', name: '15×30 Grand Square Spread', orientation: 'landscape', wholesalePerSheet: 195, retailPerSheet: 280, coverCharge: 1250, coverChargeRetail: 1900 },
+    { id: '12x24', name: '12×24 Compact Landscape', orientation: 'landscape', wholesalePerSheet: 130, retailPerSheet: 185, coverCharge: 850, coverChargeRetail: 1350 },
+    { id: '10x24', name: '10×24 Compact Feast Landscape', orientation: 'landscape', wholesalePerSheet: 115, retailPerSheet: 165, coverCharge: 750, coverChargeRetail: 1200 },
+    { id: '12x18', name: '12×18 Traditional Landscape', orientation: 'landscape', wholesalePerSheet: 95, retailPerSheet: 140, coverCharge: 650, coverChargeRetail: 1050 },
+    { id: '6x9', name: '6×9 Companion Pocket Parent Book', orientation: 'landscape', wholesalePerSheet: 45, retailPerSheet: 70, coverCharge: 400, coverChargeRetail: 650 },
+
+    // Portrait
+    { id: '18x12', name: '18×12 Grand Vertical Portrait', orientation: 'portrait', wholesalePerSheet: 170, retailPerSheet: 245, coverCharge: 1050, coverChargeRetail: 1650 },
+    { id: '15x12', name: '15×12 Classic Vertical Portrait', orientation: 'portrait', wholesalePerSheet: 150, retailPerSheet: 215, coverCharge: 950, coverChargeRetail: 1500 },
+    { id: '14x11', name: '14×11 Fine Art Vertical Portrait', orientation: 'portrait', wholesalePerSheet: 135, retailPerSheet: 195, coverCharge: 850, coverChargeRetail: 1350 },
+    { id: '12x9', name: '12×9 Compact Vertical Portrait', orientation: 'portrait', wholesalePerSheet: 105, retailPerSheet: 150, coverCharge: 700, coverChargeRetail: 1100 },
+    { id: '10x8', name: '10×8 Family Gift Portrait', orientation: 'portrait', wholesalePerSheet: 85, retailPerSheet: 125, coverCharge: 600, coverChargeRetail: 950 },
+    { id: '8x12', name: '8×12 Traditional Vertical', orientation: 'portrait', wholesalePerSheet: 75, retailPerSheet: 110, coverCharge: 550, coverChargeRetail: 850 }
   ];
 
   const SHEET_TYPES = [
-    { id: 'karizma', name: 'Karizma Royal Luster', rate: 42, retailRate: 65, gsm: '280 GSM' },
-    { id: 'gloss', name: 'Crystal Ultra High-Gloss', rate: 55, retailRate: 85, gsm: '300 GSM' },
-    { id: 'velvet', name: 'Velvet Feather Touch', rate: 62, retailRate: 95, gsm: '320 GSM Scuff-Free' },
-    { id: 'metallic', name: 'Metallic Pearl Luxury Shimmer', rate: 72, retailRate: 110, gsm: '310 GSM Pearl' },
-    { id: 'nt', name: 'Non-Tearable Waterproof NT', rate: 58, retailRate: 90, gsm: '350 Micron Poly' }
+    { id: 'karizma', name: 'NTR Waterproof Feather Touch Matte (Base)', rate: 0, retailRate: 0, gsm: '250 Micron Non-Tearable Poly' },
+    { id: 'metallic', name: '24K Metallic Pearl Luxury Shimmer', rate: 30, retailRate: 50, gsm: '310 GSM Pearl Luster Core' },
+    { id: 'velvet', name: 'Royal Velvet Feather Touch Ultra-Matte', rate: 40, retailRate: 65, gsm: '320 GSM Scuff-Free Cashmere' },
+    { id: 'silk', name: 'Pure Silk Pattu Weave Organic Texture', rate: 45, retailRate: 75, gsm: '300 GSM Organic Texture' },
+    { id: 'silver_halide', name: 'Fuji Silver Halide True Chemical Photo', rate: 55, retailRate: 90, gsm: '280 GSM True Continuous Tone' }
   ];
 
   const VIDEO_OPTIONS = [
     { id: 'none', name: 'No Video Edit', wholesaleRate: 0, retailRef: 0 },
-    { id: 'reels', name: '5-Pack Viral 4K Reels', wholesaleRate: 2100, retailRef: 3500 },
-    { id: 'teaser', name: '3-5 Min 4K Teaser Trailer', wholesaleRate: 3600, retailRef: 6000 },
-    { id: 'feature', name: '4K Feature Film (15-20 min)', wholesaleRate: 6200, retailRef: 10000 },
-    { id: 'doc', name: 'Traditional 2-3h Documentary', wholesaleRate: 7500, retailRef: 12000 }
+    { id: 'reels', name: '5-Pack Viral 4K Reels (9:16)', wholesaleRate: 2400, retailRef: 3800 },
+    { id: 'teaser', name: '3-5 Min 4K Cinematic Teaser Trailer', wholesaleRate: 3800, retailRef: 6000 },
+    { id: 'highlights', name: '10-15 Min Cinematic Story Highlights', wholesaleRate: 5500, retailRef: 8500 },
+    { id: 'traditional', name: '2-3 Hour Traditional Documentary Film', wholesaleRate: 7000, retailRef: 11500 },
+    { id: 'sde', name: 'Same-Day Reception Edit (SDE)', wholesaleRate: 4800, retailRef: 7500 }
   ];
 
   // Derived calculation
+  const filteredSizes = ALBUM_SIZES.filter(s => calcOrientation === 'all' || s.orientation === calcOrientation);
   const selSizeObj = ALBUM_SIZES.find(s => s.id === calcSize) || ALBUM_SIZES[1];
   const selSheetObj = SHEET_TYPES.find(s => s.id === calcSheet) || SHEET_TYPES[0];
   const selVideoObj = VIDEO_OPTIONS.find(v => v.id === calcVideo) || VIDEO_OPTIONS[0];
 
-  const wholesaleLabCost = selSizeObj.wholesaleBase + (selSheetObj.rate * calcSheetsCount) + selVideoObj.wholesaleRate;
-  const suggestedRetail = selSizeObj.retailRef + (selSheetObj.retailRate * calcSheetsCount) + selVideoObj.retailRef;
+  const wholesaleLabCost = (calcSheetsCount * selSizeObj.wholesalePerSheet) + selSizeObj.coverCharge + (selSheetObj.rate * calcSheetsCount) + selVideoObj.wholesaleRate;
+  const suggestedRetail = (calcSheetsCount * selSizeObj.retailPerSheet) + selSizeObj.coverChargeRetail + (selSheetObj.retailRate * calcSheetsCount) + selVideoObj.retailRef;
   const studioProfit = Math.max(0, Number(clientQuote) - wholesaleLabCost);
   const studioMarginPercent = clientQuote > 0 ? Math.round((studioProfit / Number(clientQuote)) * 100) : 0;
 
@@ -170,18 +194,51 @@ const B2BDashboard = () => {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
-          {/* Size Selector */}
+          {/* Size Selector with Orientation Filter */}
           <div>
-            <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>1. Album Dimension</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>1. Album Dimension</label>
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: 'landscape', label: '↔️ Land' },
+                  { id: 'portrait', label: '↕️ Port' }
+                ].map(f => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => {
+                      setCalcOrientation(f.id);
+                      const matching = ALBUM_SIZES.filter(s => f.id === 'all' || s.orientation === f.id);
+                      if (matching.length && !matching.some(s => s.id === calcSize)) {
+                        setCalcSize(matching[0].id);
+                      }
+                    }}
+                    style={{
+                      padding: '2px 8px',
+                      fontSize: '10px',
+                      borderRadius: '4px',
+                      border: calcOrientation === f.id ? '1px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.1)',
+                      background: calcOrientation === f.id ? 'rgba(212,175,55,0.2)' : 'transparent',
+                      color: calcOrientation === f.id ? 'var(--gold-primary)' : 'var(--text-muted)',
+                      cursor: 'pointer',
+                      fontWeight: 700
+                    }}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <select 
               value={calcSize} 
               onChange={e => setCalcSize(e.target.value)}
               className="form-control"
               style={{ width: '100%', padding: '10px 12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--paper)', borderRadius: '8px', outline: 'none', fontSize: '13px' }}
             >
-              {ALBUM_SIZES.map(s => (
+              {filteredSizes.map(s => (
                 <option key={s.id} value={s.id} style={{ background: 'var(--n-900)', color: 'var(--paper)' }}>
-                  {s.name} (Lab: ₹{s.wholesaleBase.toLocaleString('en-IN')})
+                  {s.name} (₹{s.wholesalePerSheet}/sheet · Cover ₹{s.coverCharge})
                 </option>
               ))}
             </select>
@@ -361,7 +418,11 @@ const B2BDashboard = () => {
               <Link to="/wallet" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', padding: '1rem', textDecoration: 'none' }}>
                 <Wallet size={18} color="var(--text-secondary)" /> Withdraw Wallet
               </Link>
-              <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', padding: '1rem', width: '100%', background: 'rgba(37,211,102,0.05)', borderColor: 'rgba(37,211,102,0.3)', cursor: 'pointer' }}>
+              <button 
+                onClick={() => window.open(`https://wa.me/${supportWhatsapp}?text=${encodeURIComponent(`నమస్కారం! నేను Studio Partner: ${user.name || user.studioName || ''} (ID: ${user.id || ''}) నుండి WhatsApp VIP సపోర్ట్ కోసం సంప్రదిస్తున్నాను.`)}`, '_blank')}
+                className="btn-outline" 
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'flex-start', padding: '1rem', width: '100%', background: 'rgba(37,211,102,0.05)', borderColor: 'rgba(37,211,102,0.3)', cursor: 'pointer' }}
+              >
                 <MessageSquare size={18} color="#25D366" /> WhatsApp Support
               </button>
             </div>

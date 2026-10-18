@@ -1,9 +1,38 @@
+# ==============================================================================
+# weddingalbums.in - Robots Configuration
+# Andhra Pradesh & Telangana Premier Heirloom Wedding Albums & Post-Production
+# ==============================================================================
+
 User-agent: *
 Allow: /
-
-# Sitemaps
-Sitemap: https://weddingalbums.in/sitemap.xml
-
-# Block admin and API
+Allow: /shop
+Allow: /albums
+Allow: /services
+Allow: /pricing
+Allow: /portfolio
+Allow: /b2b
+Allow: /b2c
+Allow: /contact
+Allow: /about
+Allow: /blog
+Allow: /muhurtham
+Allow: /images/
 Disallow: /api/
 Disallow: /admin/
+Disallow: /client/settings
+Disallow: /checkout
+
+User-agent: Googlebot
+Allow: /
+Allow: /images/
+
+User-agent: Googlebot-Image
+Allow: /images/
+
+User-agent: Bingbot
+Allow: /
+Allow: /images/
+
+# Sitemaps & Host
+Sitemap: https://weddingalbums.in/sitemap.xml
+Host: https://weddingalbums.in
