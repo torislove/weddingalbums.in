@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     }}>
       {/* Brand */}
       <div style={{ height: 72, padding: '0 16px', boxSizing: 'border-box', borderBottom: '1px solid rgba(14,165,233,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Logo size={32} portalTag="Ops Center" />
+        <Logo size={32} portalTag="Ops Center" to="/" onClick={onClose} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '3px 8px', borderRadius: 20, background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.2)' }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22d3ee', boxShadow: '0 0 6px #22d3ee', animation: 'blink 1.5s infinite' }} />
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 700, color: '#22d3ee', letterSpacing: 1 }}>ONLINE</span>

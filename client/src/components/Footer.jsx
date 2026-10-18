@@ -58,7 +58,7 @@ const Footer = () => {
           {/* Brand & Description */}
           <div className="footer-col">
             <div style={{ marginBottom: '1.25rem' }}>
-              <Logo size={36} />
+              <Logo size={36} to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
             </div>
             <p className="footer-desc">
               {description}

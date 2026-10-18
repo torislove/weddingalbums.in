@@ -21,6 +21,7 @@
     "smoke:api": "node tools/smoke-api.mjs",
     "smoke:pages": "node tools/smoke-pages.mjs",
     "smoke:pages:live": "node tools/smoke-pages.mjs --live",
+    "smoke:live": "node tools/smoke_all.mjs --live",
     "smoke": "npm run test:pricing && npm run audit:ui && npm run audit:connectivity && npm run smoke:pages && npm run smoke:api"
   },
   "keywords": [

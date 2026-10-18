@@ -157,7 +157,7 @@ const Sidebar = ({ isDirty, onSave, saving, isOpen, onClose, isMobile }) => {
       }}>
       {/* Brand */}
       <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', height: 72, boxSizing: 'border-box' }}>
-        <Logo size={32} portalTag="CMS Studio" />
+        <Logo size={32} portalTag="CMS Studio" to="/" onClick={onClose} />
       </div>
 
       {/* User */}
@@ -282,7 +282,7 @@ function AppInner() {
                     >
                       {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
                     </button>
-                    <Logo size={28} portalTag="CMS Studio" />
+                    <Logo size={28} portalTag="CMS Studio" to="/" onClick={() => setSidebarOpen(false)} />
                     <div style={{ width: 38 }} />
                   </div>
                 )}

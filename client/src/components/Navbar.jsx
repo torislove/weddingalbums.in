@@ -43,7 +43,7 @@ const Navbar = () => {
     : defaultLinks;
 
   const ctaText = navData.ctaText || (lang === 'TE' ? 'ఆర్డర్ చేయండి' : 'Order Album');
-  const ctaLink = navData.ctaLink || '/order';
+  const ctaLink = navData.ctaLink || '/shop';
   const progressRef = React.useRef(null);
   const isScrolledRef = React.useRef(false);
 
@@ -97,7 +97,15 @@ const Navbar = () => {
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Logo */}
-          <Link to="/" className="nav-logo" style={{ textDecoration: 'none' }}>
+          <Link 
+            to="/" 
+            className="nav-logo" 
+            style={{ textDecoration: 'none' }}
+            onClick={() => {
+              setMenuOpen(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
             <Logo size={38} />
           </Link>
 

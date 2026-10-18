@@ -57,7 +57,7 @@ const AppShell = () => {
                   >
                     {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
                   </button>
-                  <Logo size={28} portalTag="Ops Center" />
+                  <Logo size={28} portalTag="Ops Center" to="/" onClick={() => setSidebarOpen(false)} />
                   <div style={{ width: 38 }} />
                 </div>
               )}

@@ -1,16 +1,53 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Logo = ({ size = 38, showText = true, portalTag = '', className = '', href = '/' }) => {
+const Logo = ({ 
+  size = 38, 
+  showText = true, 
+  portalTag = '', 
+  className = '', 
+  href = '/', 
+  to,
+  onClick,
+  style = {} 
+}) => {
+  let navigate = null;
+  try {
+    navigate = useNavigate();
+  } catch {
+    navigate = null;
+  }
+
+  const destination = to || href || '/';
+
+  const handleClick = (e) => {
+    if (onClick) onClick(e);
+    if (!e.defaultPrevented) {
+      if (navigate && destination) {
+        navigate(destination);
+      } else if (destination) {
+        window.location.href = destination;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div 
       className={`brand-logo-wrap ${className}`}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { handleClick(e); } }}
       style={{ 
         display: 'inline-flex', 
         alignItems: 'center', 
         gap: '11px', 
         textDecoration: 'none',
         userSelect: 'none',
-        flexShrink: 0
+        flexShrink: 0,
+        cursor: 'pointer',
+        ...style
       }}
     >
       {/* Animated Gold Aperture Emblem */}
@@ -132,7 +169,7 @@ const Logo = ({ size = 38, showText = true, portalTag = '', className = '', href
                 fontSize: '8.5px',
                 fontWeight: 700,
                 letterSpacing: '1.8px',
-                color: 'var(--brand)',
+                color: 'var(--brand, #0ea5e9)',
                 opacity: 0.75,
                 textTransform: 'uppercase',
                 fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -164,6 +201,13 @@ const Logo = ({ size = 38, showText = true, portalTag = '', className = '', href
         }
         .brand-logo-pulse-center {
           animation: brandLogoPulseCenter 2.8s ease-in-out infinite;
+        }
+        .brand-logo-wrap {
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+        }
+        .brand-logo-wrap:hover {
+          transform: translateY(-1px) scale(1.02);
+          filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
         }
         .brand-logo-wrap:hover .brand-logo-spin-slow {
           animation-duration: 4s;

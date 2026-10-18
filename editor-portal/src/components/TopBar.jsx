@@ -44,7 +44,7 @@ const TopBar = ({ title = '', onToggleSidebar = () => {} }) => {
         </button>
 
         <div className="mobile-only-logo">
-          <Logo size={28} portalTag="Creator Suite" />
+          <Logo size={28} portalTag="Creator Suite" to="/dashboard" />
         </div>
 
         {title && <h1 style={{ margin: 0, fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)', fontWeight: '600', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</h1>}
