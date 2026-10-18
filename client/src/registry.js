@@ -19,6 +19,7 @@ import VisualPillarsShowcase from './components/blocks/VisualPillarsShowcase';
 import InteractiveBeforeAfter from './components/blocks/InteractiveBeforeAfter';
 import CraftsmanshipDetails from './components/blocks/CraftsmanshipDetails';
 import InstantEstimator from './components/blocks/InstantEstimator';
+import HowItWorks from './components/blocks/HowItWorks';
 
 // Registry maps component string names to the actual React components
 const componentRegistry = {
@@ -46,6 +47,7 @@ const componentRegistry = {
   Testimonials: TestimonialsCarousel,
   TestimonialsCarousel,
   InstantEstimator,
+  HowItWorks,
 };
 
 export default componentRegistry;

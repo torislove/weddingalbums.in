@@ -67,7 +67,7 @@
           "btn1Text": "Browse All Products & Prices",
           "btn1Link": "/shop",
           "btn2Text": "Per-Sheet Price Calculator",
-          "btn2Link": "/shop",
+          "btn2Link": "#estimator",
           "bgImage": "/images/opt/weddingalbums-home-herow1600.webp"
         }
       },
@@ -127,31 +127,48 @@
           "pillars": [
             {
               "number": "01",
-              "badge": "100% Lay-Flat Binding · Non-Tearable Archival Core",
-              "title": "Heirloom Karizma & Lay-Flat Albums",
-              "telugu": "కరిజ్మా & లే-ఫ్లాట్ వెడ్డింగ్ ఆల్బమ్స్",
-              "subtitle": "Printed on state-of-the-art European digital presses with archival inks guaranteed to retain rich color fidelity for 100+ years.",
-              "image": "/images/opt/luxury-album-craftsmanshipw800.webp",
-              "tag": "AP & Telangana #1 Choice",
-              "ctaText": "Explore Album Specs & Finishes",
-              "ctaLink": "/albums",
+              "badge": "Micro-Pore Preservation · 24K Gold Specular Shine",
+              "title": "Photo Editing & Album Designing",
+              "telugu": "హై-ఎండ్ ఫొటో రీటచింగ్ & ఆల్బమ్ డిజైనింగ్",
+              "subtitle": "Pure digital post-production. Our 20-member unit performs high-end frequency separation to preserve authentic skin micro-texture, flawless color grading, and Telugu magazine spread layouts.",
+              "image": "/images/opt/weddingalbums-talambraluw800.webp",
+              "tag": "Batch RAW Discounts for Studios",
+              "ctaText": "Browse Photo Editing in Store",
+              "ctaLink": "/shop?tab=editing",
               "features": [
-                "12×36 Royal Panoramic spreads with seamless zero-gutter binding",
-                "4mm diamond-polished Crystal Acrylic 3D glass covers",
-                "Plush Royal Velvet Touch fabric covers with gold foil typography",
-                "Non-Tearable (NT) waterproof synthetic composite core sheets"
+                "Natural skin retouching eliminating blemishes while preserving authentic micro-pores",
+                "Specular highlight boost on 22K/24K temple gold and diamond bridal jewelry",
+                "Vibrant color restoration for Kanjeevaram and Dharmavaram silk pattu sarees",
+                "Mandap venue cleanup: removal of distracting cables, clutter & harsh shadows"
               ]
             },
             {
               "number": "02",
+              "badge": "100% Lay-Flat Binding · Non-Tearable Archival Core",
+              "title": "Heirloom Karizma & Lay-Flat Albums (Print & Bind)",
+              "telugu": "కరిజ్మా & లే-ఫ్లాట్ వెడ్డింగ్ ఆల్బమ్స్ ప్రింటింగ్",
+              "subtitle": "Printed on state-of-the-art European digital presses with archival inks guaranteed to retain rich color fidelity for 100+ years.",
+              "image": "/images/opt/luxury-album-craftsmanshipw800.webp",
+              "tag": "AP & Telangana #1 Choice",
+              "ctaText": "Configure & Price Albums",
+              "ctaLink": "/shop?tab=albums",
+              "features": [
+                "12×36 & 14×40 Royal Panoramic spreads with seamless zero-gutter binding",
+                "4mm diamond-polished Crystal Acrylic 3D glass and Italian Leatherette covers",
+                "Plush Royal Velvet Touch fabric covers with gold foil typography",
+                "Non-Tearable (NT) waterproof synthetic composite core sheets (₹0 standard)"
+              ]
+            },
+            {
+              "number": "03",
               "badge": "Netflix-Grade Color Grading · Licensed Telugu Audio",
-              "title": "4K Cinematic Wedding Films & Reels",
+              "title": "4K Cinematic Wedding Films & Video Services",
               "telugu": "4K సినిమాటిక్ వీడియో ఎడిటింగ్ & రీల్స్",
               "subtitle": "Story-driven post-production crafted specifically for Telugu rituals, highlighting vows, emotional moments, and family traditions.",
               "image": "/images/opt/cinematic-video-suitew800.webp",
               "tag": "Rapid 48-Hour Rush Available",
-              "ctaText": "Browse Video Editing Packages",
-              "ctaLink": "/services",
+              "ctaText": "Explore Video Packages",
+              "ctaLink": "/shop?tab=video",
               "features": [
                 "Multi-camera ceremony synchronization (Talambralu, Mangala Snanam, Jeelakarra)",
                 "Cinematic LUT-based warm golden color grading & noise reduction",
@@ -160,23 +177,34 @@
               ]
             },
             {
-              "number": "03",
-              "badge": "Micro-Pore Preservation · 24K Gold Jewelry Specular Shine",
-              "title": "High-End Photo Retouching & Color Correction",
-              "telugu": "హై-ఎండ్ ఫొటో రీటచింగ్ & కలర్ గ్రేడింగ్",
-              "subtitle": "No cheap blur filters. Our 20-member unit performs high-end frequency separation to preserve authentic skin micro-texture while perfecting tones.",
-              "image": "/images/opt/weddingalbums-talambraluw800.webp",
-              "tag": "Batch RAW Discounts for Studios",
-              "ctaText": "Order Custom Retouching",
-              "ctaLink": "/order",
+              "number": "04",
+              "badge": "High-Res Event Media · Custom Dimensions Per Sq.Ft",
+              "title": "Venue Flex & Large Format Printing of All Sizes",
+              "telugu": "వెడ్డింగ్ ఫ్లెక్స్ & రోల్-అప్ స్టాండీస్",
+              "subtitle": "From grand mandap entrance banners to stage backdrops and welcome roll-up standees. Order standard sizes or custom dimensions calculated instantly per square foot.",
+              "image": "/images/opt/weddingalbums-home-herow1600.webp",
+              "tag": "Same-Day Dispatch in AP/TG",
+              "ctaText": "Order Flex & Custom Sizes",
+              "ctaLink": "/shop?tab=flex",
               "features": [
-                "Natural skin retouching eliminating blemishes while preserving authentic texture",
-                "Specular highlight boost on 22K/24K temple gold and diamond jewelry",
-                "Vibrant color restoration for Kanjeevaram and Dharmavaram silk sarees",
-                "Mandap venue cleanup: removal of distracting cables, clutter & harsh shadows"
+                "Standard sizes: 6×3 ft Roll-up Standee, 10×8 ft Mandap, 20×10 ft Stage Backdrop",
+                "Interactive Custom Dimensions Calculator (any Width ft × Height ft)",
+                "Heavy-duty 440 GSM blackout matte flex and eco-solvent cloth canvas",
+                "Brass eyelets, reinforced hems, and aluminum retractable stand options"
               ]
             }
           ]
+        }
+      },
+      {
+        "id": "block-how-it-works",
+        "type": "HowItWorks",
+        "props": {
+          "eyebrow": "✦ SEAMLESS PRODUCTION WORKFLOW ✦",
+          "title": "How It Works: From RAW Frames to Master Heirlooms",
+          "subtitle": "Whether you need pure digital editing, complete album printing, cinematic video grading, or venue flex of any size — our 4-step lab journey ensures flawless execution.",
+          "ctaText": "Browse Services in Store",
+          "ctaLink": "/shop"
         }
       },
       {
@@ -191,7 +219,7 @@
           "rawLabel": "RAW Unedited (DSLR Sensor)",
           "polishedLabel": "Master Polished (22K Gold Luster)",
           "ctaText": "Order Custom Retouching",
-          "ctaLink": "/shop"
+          "ctaLink": "/shop?tab=editing"
         }
       },
       {
@@ -202,18 +230,7 @@
           "title": "Anatomy of an Heirloom Wedding Album",
           "subtitle": "Every volume is precision-assembled by master bookbinders using archival-grade materials built to outlast generations.",
           "ctaText": "View Complete Swatch Kit",
-          "ctaLink": "/albums"
-        }
-      },
-      {
-        "id": "block-instant-estimator",
-        "type": "InstantEstimator",
-        "props": {
-          "eyebrow": "✦ ANDHRA PRADESH #1 POST-PRODUCTION HUB ✦",
-          "title": "Wedding Album & Video — Instant Quote",
-          "subtitle": "Album Editing, Album Printing, Pages & Sheet Types, Video Services — each in its own section. Get an honest, itemised price.",
-          "ctaText": "Start My Order",
-          "ctaLink": "/booking"
+          "ctaLink": "/shop?tab=albums"
         }
       },
       {
@@ -286,31 +303,31 @@
           "btnLink": "/shop",
           "services": [
             {
-              "icon": "BookOpen",
-              "title": "Landscape Albums (↔️)",
-              "sub": "12×36, 14×40, 12×30, 15×30 • from ₹160/sh",
-              "path": "/shop?cat=albums&orientation=landscape",
+              "icon": "Camera",
+              "title": "Photo Editing & Design",
+              "sub": "Skin Retouching & Telugu Spreads • from ₹30/photo",
+              "path": "/shop?tab=editing",
               "color": "#D4AF37"
             },
             {
               "icon": "BookOpen",
-              "title": "Portrait Albums (↕️)",
-              "sub": "18×12, 15×12, 14×11 • from ₹120/sh",
-              "path": "/shop?cat=albums&orientation=portrait",
+              "title": "Album Editing + Printing",
+              "sub": "12×36, 18×12, 14×40 Heirlooms • from ₹105/sh",
+              "path": "/shop?tab=albums",
               "color": "#C5A059"
             },
             {
               "icon": "Video",
-              "title": "Cinematic Video Editing",
-              "sub": "Reels, Teasers & Full Multi-Cam • from ₹3,500",
-              "path": "/shop?cat=video",
+              "title": "Cinematic Video Services",
+              "sub": "4K Teasers, Multi-Cam & Reels • from ₹3,500",
+              "path": "/shop?tab=video",
               "color": "#9C27B0"
             },
             {
               "icon": "Gift",
-              "title": "WhatsApp Invites & Flex",
-              "sub": "Animated Invites & Mandap Standees • from ₹1,800",
-              "path": "/shop?cat=flex",
+              "title": "Flex of All Sizes & Standees",
+              "sub": "Mandap Banners & Custom Sq.Ft • from ₹30/sq.ft",
+              "path": "/shop?tab=flex",
               "color": "#2E7D32"
             }
           ]
@@ -452,6 +469,10 @@
         {
           "name": "Home",
           "path": "/"
+        },
+        {
+          "name": "Store & Pricing",
+          "path": "/shop"
         },
         {
           "name": "About",
@@ -774,7 +795,9 @@
             "orientation": "landscape",
             "category": "Grand Landscape",
             "clientPricePerSheet": 550,
+            "studioPricePerSheet": 350,
             "clientBasePrice": 16500,
+            "studioBasePrice": 10500,
             "baseSheets": 30,
             "popular": false,
             "badge": "Grand Mega Mandap",
@@ -790,7 +813,9 @@
             "orientation": "landscape",
             "category": "Most Popular in AP",
             "clientPricePerSheet": 260,
+            "studioPricePerSheet": 180,
             "clientBasePrice": 9500,
+            "studioBasePrice": 7800,
             "baseSheets": 30,
             "popular": true,
             "badge": "⭐ India #1 Best Seller",
@@ -806,7 +831,9 @@
             "orientation": "landscape",
             "category": "Cinema Landscape",
             "clientPricePerSheet": 230,
+            "studioPricePerSheet": 155,
             "clientBasePrice": 8500,
+            "studioBasePrice": 6800,
             "baseSheets": 30,
             "popular": false,
             "badge": "Widescreen Spreads",
@@ -822,7 +849,9 @@
             "orientation": "landscape",
             "category": "Slim Landscape",
             "clientPricePerSheet": 210,
+            "studioPricePerSheet": 145,
             "clientBasePrice": 7800,
+            "studioBasePrice": 5900,
             "baseSheets": 30,
             "popular": false,
             "badge": "Pre-Wedding Favorite",
@@ -838,7 +867,9 @@
             "orientation": "landscape",
             "category": "Royal Square",
             "clientPricePerSheet": 320,
+            "studioPricePerSheet": 210,
             "clientBasePrice": 13200,
+            "studioBasePrice": 8500,
             "baseSheets": 30,
             "popular": false,
             "badge": "Contemporary Square",
@@ -854,7 +885,9 @@
             "orientation": "landscape",
             "category": "Square Classic",
             "clientPricePerSheet": 200,
+            "studioPricePerSheet": 140,
             "clientBasePrice": 7500,
+            "studioBasePrice": 5400,
             "baseSheets": 30,
             "popular": false,
             "badge": "Modern Square",
@@ -870,7 +903,9 @@
             "orientation": "landscape",
             "category": "Compact Feast",
             "clientPricePerSheet": 180,
+            "studioPricePerSheet": 125,
             "clientBasePrice": 5800,
+            "studioBasePrice": 4200,
             "baseSheets": 30,
             "popular": false,
             "badge": "Family Friendly",
@@ -886,7 +921,9 @@
             "orientation": "landscape",
             "category": "Traditional Horizontal",
             "clientPricePerSheet": 160,
+            "studioPricePerSheet": 115,
             "clientBasePrice": 5200,
+            "studioBasePrice": 3800,
             "baseSheets": 30,
             "popular": false,
             "badge": "Classic Heritage",
@@ -902,7 +939,9 @@
             "orientation": "landscape",
             "category": "Parent Mini Book",
             "clientPricePerSheet": 105,
+            "studioPricePerSheet": 70,
             "clientBasePrice": 3200,
+            "studioBasePrice": 2100,
             "baseSheets": 30,
             "popular": false,
             "badge": "Matching Parent Gift",
@@ -918,7 +957,9 @@
             "orientation": "portrait",
             "category": "Vertical Portrait",
             "clientPricePerSheet": 240,
+            "studioPricePerSheet": 165,
             "clientBasePrice": 9000,
+            "studioBasePrice": 6200,
             "baseSheets": 30,
             "popular": true,
             "badge": "⭐ Royal Vertical Magazine",
@@ -934,7 +975,9 @@
             "orientation": "portrait",
             "category": "Vertical Portrait",
             "clientPricePerSheet": 210,
+            "studioPricePerSheet": 145,
             "clientBasePrice": 7800,
+            "studioBasePrice": 5400,
             "baseSheets": 30,
             "popular": false,
             "badge": "Bridal Portrait Standard",
@@ -950,7 +993,9 @@
             "orientation": "portrait",
             "category": "Vertical Editorial",
             "clientPricePerSheet": 190,
+            "studioPricePerSheet": 135,
             "clientBasePrice": 7200,
+            "studioBasePrice": 4900,
             "baseSheets": 30,
             "popular": false,
             "badge": "Editorial Fashion",
@@ -966,7 +1011,9 @@
             "orientation": "portrait",
             "category": "Vertical Compact",
             "clientPricePerSheet": 160,
+            "studioPricePerSheet": 115,
             "clientBasePrice": 5500,
+            "studioBasePrice": 3900,
             "baseSheets": 30,
             "popular": false,
             "badge": "Intimate Ceremony",
@@ -982,7 +1029,9 @@
             "orientation": "portrait",
             "category": "Family Gift",
             "clientPricePerSheet": 130,
+            "studioPricePerSheet": 95,
             "clientBasePrice": 4500,
+            "studioBasePrice": 3200,
             "baseSheets": 30,
             "popular": false,
             "badge": "Relative Keepsake",
@@ -998,7 +1047,9 @@
             "orientation": "portrait",
             "category": "Vertical Compact",
             "clientPricePerSheet": 120,
+            "studioPricePerSheet": 85,
             "clientBasePrice": 3800,
+            "studioBasePrice": 2600,
             "baseSheets": 30,
             "popular": false,
             "badge": "Guest Signing Book",
@@ -1012,7 +1063,9 @@
             "telugu": "నాన్-టియరబుల్ మ్యాట్ (100% వాటర్‌ప్రూఫ్)",
             "tier": "standard",
             "clientPricePerSheet": 0,
+            "studioPricePerSheet": 0,
             "clientPriceBadge": "Included (₹0)",
+            "studioPriceBadge": "Standard (₹0)",
             "color": "#7B8794",
             "gsm": "350 GSM Lay-Flat",
             "bestFor": "Stage Groups & Extended Family",
@@ -1024,7 +1077,9 @@
             "telugu": "క్రిస్టల్ అల్ట్రా మిర్రర్ గ్లోస్",
             "tier": "standard",
             "clientPricePerSheet": 0,
+            "studioPricePerSheet": 0,
             "clientPriceBadge": "Included (₹0)",
+            "studioPriceBadge": "Standard (₹0)",
             "color": "#2F86D6",
             "gsm": "350 GSM Lay-Flat",
             "bestFor": "Outdoor Daylight & Bright Stage",
@@ -1036,7 +1091,9 @@
             "telugu": "24K మెటాలిక్ పెర్ల్ గోల్డ్ గ్లోస్",
             "tier": "luxury",
             "clientPricePerSheet": 25,
+            "studioPricePerSheet": 18,
             "clientPriceBadge": "+₹25 / sheet",
+            "studioPriceBadge": "+₹18 / sheet (Trade)",
             "color": "#D4AF37",
             "gsm": "350 GSM Archival",
             "bestFor": "Muhurtham & 22K Gold Jewelry",
@@ -1048,7 +1105,9 @@
             "telugu": "రాయల్ వెల్వెట్ ఫెదర్ టచ్ (స్కఫ్-ఫ్రీ)",
             "tier": "luxury",
             "clientPricePerSheet": 35,
+            "studioPricePerSheet": 22,
             "clientPriceBadge": "+₹35 / sheet",
+            "studioPriceBadge": "+₹22 / sheet (Trade)",
             "color": "#722F37",
             "gsm": "400 GSM Rigid Core",
             "bestFor": "Zero-Glare Candid Couple Portraits",
@@ -1060,7 +1119,9 @@
             "telugu": "ప్యూర్ సిల్క్ టెక్స్చర్ (పట్టు నేత)",
             "tier": "luxury",
             "clientPricePerSheet": 45,
+            "studioPricePerSheet": 25,
             "clientPriceBadge": "+₹45 / sheet",
+            "studioPriceBadge": "+₹25 / sheet (Trade)",
             "color": "#C5A059",
             "gsm": "380 GSM Textured",
             "bestFor": "Kanyadaanam & Saptapadi Rituals",
@@ -1072,7 +1133,9 @@
             "telugu": "స్పార్కల్ / డైమండ్ గ్లిటర్ షీట్",
             "tier": "luxury",
             "clientPricePerSheet": 50,
+            "studioPricePerSheet": 32,
             "clientPriceBadge": "+₹50 / sheet",
+            "studioPriceBadge": "+₹32 / sheet (Trade)",
             "color": "#D9C98A",
             "gsm": "320 GSM Sparkle Coat",
             "bestFor": "Reception & Sangeet Fireworks",
@@ -1084,7 +1147,9 @@
             "telugu": "లస్టర్ / శాటిన్ మైక్రో-గ్రెయిన్",
             "tier": "luxury",
             "clientPricePerSheet": 30,
+            "studioPricePerSheet": 18,
             "clientPriceBadge": "+₹30 / sheet",
+            "studioPriceBadge": "+₹18 / sheet (Trade)",
             "color": "#A0AEC0",
             "gsm": "320 GSM Photographic",
             "bestFor": "Balanced Contrast Fine Portraits",
@@ -1096,7 +1161,9 @@
             "telugu": "ట్రూ సిల్వర్ హాలైడ్ కెమికల్ పేపర్",
             "tier": "archival",
             "clientPricePerSheet": 40,
+            "studioPricePerSheet": 25,
             "clientPriceBadge": "+₹40 / sheet",
+            "studioPriceBadge": "+₹25 / sheet (Trade)",
             "color": "#4A5568",
             "gsm": "320 GSM Optical Chemistry",
             "bestFor": "Darkroom Master Photographers",
@@ -1108,7 +1175,9 @@
             "telugu": "100% కాటన్ రాగ్ మ్యూజియం ఫైన్ ఆర్ట్",
             "tier": "archival",
             "clientPricePerSheet": 60,
+            "studioPricePerSheet": 40,
             "clientPriceBadge": "+₹60 / sheet",
+            "studioPriceBadge": "+₹40 / sheet (Trade)",
             "color": "#E2E8F0",
             "gsm": "310 GSM Museum Grade",
             "bestFor": "Museum Conservation & Heirlooms",
@@ -1168,7 +1237,9 @@
           "title": "AI RAW Photo Culling & Highlight Tagging",
           "telugu": "రా ఫొటోల కల్లింగ్ & సెలెక్షన్",
           "clientPrice": 15,
+          "studioPrice": 8,
           "clientPriceBadge": "₹15 / photo",
+          "studioPriceBadge": "₹8 / photo (Trade)",
           "turnaround": "24-48 Hrs",
           "desc": "Send 2,000+ camera files. We filter blinks, blur, misfires, and flag the top hero photos for album spreads."
         },
@@ -1177,7 +1248,9 @@
           "title": "Telugu Pelli Skin Retouching & Beauty Clean-up",
           "telugu": "స్కిన్ రీటచింగ్ & బ్యూటీ క్లీనప్",
           "clientPrice": 60,
+          "studioPrice": 35,
           "clientPriceBadge": "₹60 / photo",
+          "studioPriceBadge": "₹35 / photo (Trade)",
           "turnaround": "48 Hrs",
           "desc": "Frequency separation skin smoothing, micro-pore retention, eye brightening, and 24K jewelry specular shine."
         },
@@ -1186,7 +1259,9 @@
           "title": "Traditional Karizma PSD Creative Designing",
           "telugu": "కరిజ్మా క్రియేటివ్ డిజైనింగ్ (300 DPI)",
           "clientPrice": 45,
+          "studioPrice": 25,
           "clientPriceBadge": "₹45 / spread",
+          "studioPriceBadge": "₹25 / spread (Trade)",
           "turnaround": "48-72 Hrs",
           "desc": "Custom Karizma PSD spreads with Telugu ritual borders, mandap typography, and 300 DPI lab-ready files."
         },
@@ -1195,7 +1270,9 @@
           "title": "Cinematic Color Grading & Wedding LUTs",
           "telugu": "సినిమాటిక్ కలర్ గ్రేడింగ్ & LUTs",
           "clientPrice": 30,
+          "studioPrice": 18,
           "clientPriceBadge": "₹30 / photo",
+          "studioPriceBadge": "₹18 / photo (Trade)",
           "turnaround": "24-48 Hrs",
           "desc": "Warm golden Andhra wedding palette, Kanjeevaram silk vibrancy restoration, and ambient hall cleanup."
         }
@@ -1206,7 +1283,9 @@
           "title": "Viral Instagram Reels & Shorts 5-Pack (9:16)",
           "telugu": "వైరల్ ఇన్‌స్టాగ్రామ్ రీల్స్ 5-ప్యాక్",
           "clientPrice": 3500,
+          "studioPrice": 2100,
           "clientPriceBadge": "₹3,500 / pack",
+          "studioPriceBadge": "₹2,100 / pack (Trade)",
           "turnaround": "48 Hours",
           "desc": "Five 9:16 vertical reels (1080×1920) beat-synced to trending Telugu audio — WhatsApp status & Instagram ready."
         },
@@ -1215,7 +1294,9 @@
           "title": "4K Cinematic Wedding Teaser Trailer (1-3 min)",
           "telugu": "4K సినిమాటిక్ టీజర్ ట్రైలర్ (1-3 నిమి)",
           "clientPrice": 6000,
+          "studioPrice": 3600,
           "clientPriceBadge": "₹6,000",
+          "studioPriceBadge": "₹3,600 (Trade)",
           "turnaround": "48-72 Hours",
           "desc": "Fast-paced emotional story cut across all wedding rituals with licensed cinematic score and colour grading."
         },
@@ -1224,7 +1305,9 @@
           "title": "Story Highlights Film (10-15 min)",
           "telugu": "స్టోరీ హైలైట్స్ ఫిలిం (10-15 నిమి)",
           "clientPrice": 10000,
+          "studioPrice": 6200,
           "clientPriceBadge": "₹10,000",
+          "studioPriceBadge": "₹6,200 (Trade)",
           "turnaround": "5-7 Days",
           "desc": "Emotional story-driven film synchronizing couple vows, Purohit mantras, and family speeches."
         },
@@ -1233,7 +1316,9 @@
           "title": "Full Traditional Multi-Cam Video (60-120 min)",
           "telugu": "ఫుల్ ట్రెడిషనల్ మల్టీ-క్యామ్ వీడియో",
           "clientPrice": 12000,
+          "studioPrice": 7500,
           "clientPriceBadge": "₹12,000",
+          "studioPriceBadge": "₹7,500 (Trade)",
           "turnaround": "7-10 Days",
           "desc": "Complete sacred ritual documentary: Mangalasnanam, Talambralu, Agni Sakshi, and Kanyadaanam multi-cam."
         },
@@ -1242,7 +1327,9 @@
           "title": "Same-Day Edit (SDE) Reception Screening",
           "telugu": "సేమ్-డే ఎడిట్ (రిసెప్షన్ LED స్క్రీన్)",
           "clientPrice": 12000,
+          "studioPrice": 8000,
           "clientPriceBadge": "₹12,000",
+          "studioPriceBadge": "₹8,000 (Trade)",
           "turnaround": "Same Evening",
           "desc": "Morning wedding ceremony edited on-site and screened on the LED wall the same reception evening."
         },
@@ -1251,7 +1338,9 @@
           "title": "Pre-Wedding Romantic Love Story Film",
           "telugu": "ప్రీ-వెడ్డింగ్ లవ్ స్టోరీ ఫిలిం",
           "clientPrice": 5000,
+          "studioPrice": 3200,
           "clientPriceBadge": "₹5,000",
+          "studioPriceBadge": "₹3,200 (Trade)",
           "turnaround": "3-5 Days",
           "desc": "Romantic outdoor couple film with drone overlays, slow motion poetry, and licensed background score."
         }
@@ -1262,7 +1351,9 @@
           "title": "60s Animated 4K WhatsApp Video Invitation",
           "telugu": "వాట్సాప్ 4K వీడియో ఆహ్వానం (సన్నాయి మేళం)",
           "clientPrice": 1999,
+          "studioPrice": 950,
           "clientPriceBadge": "₹1,999",
+          "studioPriceBadge": "₹950 (Trade)",
           "turnaround": "24-48 Hours",
           "desc": "Animated Telugu wedding invitation with auspicious Sannai Melam BGM, temple motifs, and venue Google Map QR."
         },
@@ -1271,7 +1362,9 @@
           "title": "Retractable Welcome Roll-Up Standee (6×3 ft)",
           "telugu": "వెల్‌కమ్ రోల్-అప్ స్టాండీ (6×3 అడుగులు)",
           "clientPrice": 1800,
+          "studioPrice": 850,
           "clientPriceBadge": "₹1,800",
+          "studioPriceBadge": "₹850 (Trade)",
           "turnaround": "2 Days",
           "desc": "Entrance standee with anodized aluminum retractable stand, high-density non-tearable media, and carry bag."
         },
@@ -1280,7 +1373,9 @@
           "title": "Grand Mandap Entrance Flex Banner (10×8 ft)",
           "telugu": "మండపం ఎంట్రన్స్ ఫ్లెక్స్ (10×8 అడుగులు)",
           "clientPrice": 2400,
+          "studioPrice": 1100,
           "clientPriceBadge": "₹2,400",
+          "studioPriceBadge": "₹1,100 (Trade)",
           "turnaround": "2 Days",
           "desc": "Heavy Star Flex 340 GSM with brass eyelets and reinforced hemmed edges for grand hall entrances."
         },
@@ -1289,7 +1384,9 @@
           "title": "Roadside & Highway Wedding Hoarding (40×20 ft)",
           "telugu": "రోడ్‌సైడ్ వెడ్డింగ్ హోర్డింగ్ (40×20 అడుగులు)",
           "clientPrice": 12000,
+          "studioPrice": 6500,
           "clientPriceBadge": "₹12,000",
+          "studioPriceBadge": "₹6,500 (Trade)",
           "turnaround": "3 Days",
           "desc": "Ultra-high visibility large format solvent press on heavy-duty outdoor vinyl flex."
         },
@@ -1298,7 +1395,9 @@
           "title": "Personalized 12-Month Tabletop Desk Calendar",
           "telugu": "12-నెలల టేబుల్‌టాప్ డెస్క్ క్యాలెండర్",
           "clientPrice": 1200,
+          "studioPrice": 650,
           "clientPriceBadge": "₹1,200",
+          "studioPriceBadge": "₹650 (Trade)",
           "turnaround": "2-3 Days",
           "desc": "12 Couple photos with wooden easel stand and metallic pearl paper print."
         }

@@ -4,7 +4,8 @@ import {
   BookOpen, Video, Gift, Layers, ShoppingBag, 
   ArrowRight, Sparkles, Filter, Flame, X, Sliders, UploadCloud,
   Check, Film, Music, Palette, CheckSquare, Square, ShieldCheck,
-  Clock, Truck, HardDrive, Info, ChevronDown, ChevronUp, Copy, CheckCircle2
+  Clock, Truck, HardDrive, Info, ChevronDown, ChevronUp, Copy, CheckCircle2,
+  Camera, Phone, MessageCircle, ExternalLink
 } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -139,11 +140,11 @@ export default function Shop() {
   const [searchParams] = useSearchParams();
 
   const labSettings = content?.global?.siteSettings || content?.global?.footer || content?.global?.navbar || {};
-  const labPhone = labSettings.phone || '+91 94948 45111';
-  const labWhatsapp = labSettings.whatsapp || '919494845111';
+  const labPhone = labSettings.phone || '+91 9346793364';
+  const labWhatsapp = labSettings.whatsapp || '919346793364';
   const labAddress = labSettings.address || 'Door No. 4-12-88, Ring Road, Near Collectorate, Guntur - 522006, AP';
 
-  const [activeTab, setActiveTab] = useState('albums'); // 'all' | 'albums' | 'sheets' | 'video' | 'flex'
+  const [activeTab, setActiveTab] = useState('editing'); // 'editing' | 'albums' | 'video' | 'flex' | 'all'
   const [orientationFilter, setOrientationFilter] = useState('all'); // 'all' | 'landscape' | 'portrait'
 
   // Modal State
@@ -191,18 +192,34 @@ export default function Shop() {
   const [inviteScope, setInviteScope] = useState('single');
   const [inviteLanguage, setInviteLanguage] = useState('telugu');
 
+  // 5. Photo Editing & Designing Modal Configuration State
+  const [photoQuantity, setPhotoQuantity] = useState(30);
+
   // Catalog Data
   const catalog = content?.global?.servicesCatalog || {};
   const albumSizes = catalog?.albumPrinting?.albumSizes || [];
   const sheetStyles = catalog?.albumPrinting?.sheetStyles || [];
+  const photoServices = catalog?.photoEditing || [];
   const videoServices = catalog?.videoEditing || [];
   const flexServices = catalog?.invitationsAndFlex || [];
+
+  // Support Action Handlers
+  const handleWhatsAppSupport = (customText = '') => {
+    const text = customText || 'Hi WeddingAlbums.in, I need assistance choosing services or custom sizing for my wedding album/flex/video.';
+    const cleanNumber = labWhatsapp.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const handlePhoneSupport = () => {
+    const cleanNumber = labPhone.replace(/\s+/g, '');
+    window.location.href = `tel:${cleanNumber}`;
+  };
 
   // Deep-linking: auto-open tab or configurator modal if ?tab=... or ?size=... query param is passed
   useEffect(() => {
     const tabParam = searchParams.get('tab');
-    if (tabParam && ['all', 'albums', 'sheets', 'video', 'flex'].includes(tabParam)) {
-      setActiveTab(tabParam);
+    if (tabParam && ['all', 'editing', 'albums', 'sheets', 'video', 'flex'].includes(tabParam)) {
+      setActiveTab(tabParam === 'sheets' ? 'albums' : tabParam);
     }
     const sizeParam = searchParams.get('size');
     if (sizeParam && albumSizes.length > 0) {
@@ -265,10 +282,18 @@ export default function Shop() {
       setInviteTheme('temple');
       setInviteScope('single');
       setInviteLanguage('telugu');
+    } else if (type === 'photo') {
+      setPhotoQuantity(service.defaultQty || 30);
     }
   };
 
   // ── Real-Time Math Calculations ───────────────────────────────────────────
+  const calculateConfiguredPhotoPrice = () => {
+    if (!selectedService) return 0;
+    const unitPrice = selectedService.clientPrice || 45;
+    const qty = Math.max(1, parseInt(photoQuantity) || 30);
+    return unitPrice * qty;
+  };
   const calculateConfiguredAlbumPrice = () => {
     if (!selectedAlbum) return 0;
     const baseRate = selectedAlbum.clientPricePerSheet || Math.round((selectedAlbum.clientBasePrice || 4500) / 30);
@@ -293,8 +318,8 @@ export default function Shop() {
     const width = isCustom ? Math.max(1, parseFloat(customWidthFt) || 1) : 0;
     const height = isCustom ? Math.max(1, parseFloat(customHeightFt) || 1) : 0;
     const sqft = isCustom ? (width * height) : (chosenSize.sqft || 80);
-
-    const basePrice = isCustom ? Math.max(450, Math.round(sqft * 30)) : chosenSize.price;
+    const sqftRate = catalog.ratePerSqFtClient || 30;
+    const basePrice = isCustom ? Math.max(450, Math.round(sqft * sqftRate)) : chosenSize.price;
     const designAddon = flexDesignOption === 'design_needed' ? 499 : 0;
     const materialAddon = flexMaterial === '440gsm_blackout' 
       ? (isCustom ? Math.round(sqft * 5) : 250) 
@@ -620,10 +645,50 @@ export default function Shop() {
     else if (toggleCart) toggleCart();
   };
 
+  const handleAddToCartPhoto = (goToCheckout = false) => {
+    if (!selectedService) return;
+    const unitPrice = selectedService.clientPrice || 45;
+    const qty = Math.max(1, parseInt(photoQuantity) || 30);
+    const finalPrice = unitPrice * qty;
+    const unitLabel = selectedService.unit || 'units';
+
+    const assetConfigBadge = assetMethod === 'courier'
+      ? `Asset Delivery: 📦 Courier Pen Drive to Lab (${courierCompany || 'Carrier Pending'}${courierTracking ? ` - #${courierTracking}` : ''})`
+      : `Asset Delivery: ☁️ Cloud Link (${driveLink ? 'Attached' : 'Pending Link'})`;
+
+    const item = {
+      id: `photo-${selectedService.id}-${Date.now()}`,
+      title: `${selectedService.title || selectedService.name} (${qty} ${unitLabel})`,
+      name: `${selectedService.title || selectedService.name} (${qty} ${unitLabel})`,
+      telugu: selectedService.telugu,
+      category: 'Photo Editing & Designing',
+      image: '/images/opt/weddingalbums-talambraluw800.webp',
+      price: finalPrice,
+      quantity: 1,
+      configDetails: [
+        `Quantity: ${qty} ${unitLabel}`,
+        `Rate: ₹${unitPrice} per ${unitLabel}`,
+        `SLA: ${selectedService.turnaround || '24-48 Hours'}`,
+        `Special Instructions: ${instructions || 'Skin smoothing, frequency separation & color grading'}`,
+        assetConfigBadge
+      ],
+      assetMethod,
+      courierCompany,
+      courierTracking,
+      driveLink,
+      instructions
+    };
+    if (addToCart) addToCart(item);
+    setSelectedService(null);
+    if (goToCheckout) navigate('/checkout');
+    else if (toggleCart) toggleCart();
+  };
+
   return (
     <div className="shop-page">
       <div className="container">
         
+        {/* Hero Section */}
         {/* Hero Section */}
         <header className="shop-hero">
           <div className="shop-badge">
@@ -632,34 +697,62 @@ export default function Shop() {
           </div>
           <h1 className="shop-title">
             {lang === 'TE' 
-              ? 'వెడ్డింగ్ ఆల్బమ్స్, వీడియో & ఈవెంట్ ఫ్లెక్స్' 
-              : 'Wedding Albums, Video & Event Media'}
+              ? 'ఫొటో ఎడిటింగ్, వెడ్డింగ్ ఆల్బమ్స్, వీడియో & ఫ్లెక్స్' 
+              : 'Photo Editing, Heirloom Albums, 4K Video & Event Flex'}
           </h1>
           <p className="shop-subtitle">
             {lang === 'TE'
-              ? 'ప్రతి ఆల్బమ్‌పై పారదర్శక పర్-షీట్ (Per-Sheet) ధరలు. ల్యాండ్‌స్కేప్ & పోర్ట్రెయిట్ సైజులు, 4K సినిమాటిక్ వీడియో ఎడిటింగ్ మరియు యానిమేటెడ్ ఆహ్వానాలు.'
-              : 'Transparent Per-Sheet pricing on all Indian wedding album sizes. Handcrafted lay-flat binding, 4K cinematic video editing, and custom event media.'}
+              ? 'ప్రత్యేకమైన 100% ఇన్-హౌస్ పోస్ట్-ప్రొడక్షన్ & ల్యాబ్ ప్రింటింగ్. ఫొటో రీటచింగ్, రాయల్ కరిజ్మా ఆల్బమ్స్, 4K సినిమాటిక్ వీడియోలు మరియు ఏ సైజులోనైనా ఫ్లెక్స్ బ్యానర్లు.'
+              : 'Direct studio e-commerce store with transparent per-sheet & upfront pricing. Order pure digital photo editing, handcrafted lay-flat albums, 4K video post-production, or custom flex of all sizes.'}
           </p>
         </header>
 
+        {/* Universal Support & Consultation Bar */}
+        <aside className="shop-support-bar glass-3d" aria-label="Customer Support">
+          <div className="shop-support-info">
+            <div className="support-badge">
+              <Sparkles size={14} /> Need Help or Custom Sizing?
+            </div>
+            <h3 className="support-title">Talk Directly to Our Lab Specialists & Designers</h3>
+            <p className="support-desc">
+              Need custom album dimensions, bulk studio editing discounts, or specific flex venue framing? We are available via WhatsApp and phone 7 days a week.
+            </p>
+          </div>
+          <div className="shop-support-actions">
+            <button
+              type="button"
+              className="btn-whatsapp-direct"
+              onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm browsing your services store and need support choosing the right package.`)}
+            >
+              <MessageCircle size={18} /> Chat on WhatsApp
+            </button>
+            <a
+              href={`tel:${labPhone.replace(/\s+/g, '')}`}
+              className="btn-phone-direct"
+            >
+              <Phone size={18} /> Call: {labPhone}
+            </a>
+          </div>
+        </aside>
+
         {/* Main Category Tabs */}
         <nav className="shop-tabs" aria-label="Catalog Categories">
+          <button 
+            type="button" 
+            className={`shop-tab-btn ${activeTab === 'editing' ? 'active' : ''}`}
+            onClick={() => setActiveTab('editing')}
+          >
+            <Camera size={18} />
+            {lang === 'TE' ? 'ఫొటో ఎడిటింగ్ & డిజైనింగ్' : 'Photo Editing & Designing'}
+          </button>
+
           <button 
             type="button" 
             className={`shop-tab-btn ${activeTab === 'albums' ? 'active' : ''}`}
             onClick={() => setActiveTab('albums')}
           >
             <BookOpen size={18} />
-            {lang === 'TE' ? 'ఆల్బమ్స్ (పర్-షీట్ ధరలు)' : 'Wedding Albums (Per Sheet)'}
-          </button>
-
-          <button 
-            type="button" 
-            className={`shop-tab-btn ${activeTab === 'sheets' ? 'active' : ''}`}
-            onClick={() => setActiveTab('sheets')}
-          >
-            <Layers size={18} />
-            {lang === 'TE' ? 'షీట్ల రకాలు & సర్ఫేస్' : 'Paper Finishes & Surfaces'}
+            {lang === 'TE' ? 'ఆల్బమ్స్ (ఎడిటింగ్ + ప్రింటింగ్)' : 'Album Editing + Printing'}
           </button>
 
           <button 
@@ -668,7 +761,7 @@ export default function Shop() {
             onClick={() => setActiveTab('video')}
           >
             <Video size={18} />
-            {lang === 'TE' ? 'సినిమాటిక్ వీడియో ఎడిటింగ్' : 'Cinematic Video Editing'}
+            {lang === 'TE' ? 'సినిమాటిక్ వీడియో సర్వీసెస్' : 'Cinematic Video Services'}
           </button>
 
           <button 
@@ -677,7 +770,7 @@ export default function Shop() {
             onClick={() => setActiveTab('flex')}
           >
             <Gift size={18} />
-            {lang === 'TE' ? 'వాట్సాప్ ఆహ్వానాలు & ఫ్లెక్స్' : 'WhatsApp Invites & Flex'}
+            {lang === 'TE' ? 'ఫ్లెక్స్ & కస్టమ్ సైజులు' : 'Flex of All Sizes & Invites'}
           </button>
 
           <button 
@@ -718,6 +811,86 @@ export default function Shop() {
             >
               ↕️ Portrait Royal Magazine ({albumSizes.filter(s => s.orientation === 'portrait').length})
             </button>
+          </div>
+        )}
+
+        {/* 0. PHOTO EDITING & ALBUM DESIGNING (PURE DIGITAL POST-PRODUCTION) */}
+        {(activeTab === 'editing' || activeTab === 'all') && (
+          <div style={{ marginBottom: '4rem' }} id="dept-editing">
+            {activeTab === 'all' && (
+              <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '1.5rem', borderLeft: '4px solid var(--gold-primary)', paddingLeft: '1rem' }}>
+                🎨 {lang === 'TE' ? 'ఫొటో ఎడిటింగ్ & ఆల్బమ్ డిజైనింగ్' : 'Photo Editing & Album Designing (Digital)'}
+              </h2>
+            )}
+
+            {/* Photo Editing Market Standards & Info Bar */}
+            <div className="market-info-bar">
+              <div className="market-badges-row">
+                <span className="market-badge">✨ High-End Frequency Separation (Authentic Skin Micro-Pores)</span>
+                <span className="market-badge">👑 24K Temple Gold & Diamond Jewelry Specular Shine</span>
+                <span className="market-badge">📐 300 DPI Lab-Ready PSD Spreads (Zero Gutter Loss)</span>
+                <span className="market-badge">⚡ 24 to 48 Hours Rapid Turnaround</span>
+              </div>
+            </div>
+
+            <div className="shop-grid">
+              {photoServices.map((photo) => {
+                const price = photo.clientPrice || 45;
+                const unit = photo.unit || (photo.id?.includes('psd') || photo.id?.includes('spread') ? 'per spread' : 'per photo');
+
+                return (
+                  <article key={photo.id} className="product-card">
+                    <div className="product-card-image-wrapper" style={{ height: '160px' }}>
+                      <img src="/images/opt/weddingalbums-talambraluw800.webp" alt={photo.title} className="product-card-image" loading="lazy" />
+                      <div className="card-image-gradient" />
+                      <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
+                        <span className="orientation-tag landscape" style={{ color: 'var(--gold-primary)', borderColor: 'rgba(212,175,55,0.3)' }}>
+                          ⏱️ {photo.turnaround || '24-48h SLA'}
+                        </span>
+                        <span className="product-badge">
+                          Digital Post-Production
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
+                      <div className="card-service-type-badge complete-suite">
+                        🎨 100% IN-HOUSE EDITING UNIT
+                      </div>
+                      <h3 className="product-name">{photo.title}</h3>
+                      {photo.telugu && <div className="product-telugu">{photo.telugu}</div>}
+                      <p className="product-desc">{photo.desc}</p>
+
+                      <ul className="card-checklist">
+                        <li><span className="card-checklist-check">✓</span> <span>Frequency Separation & Blemish Cleanup</span></li>
+                        <li><span className="card-checklist-check">✓</span> <span>22K/24K Gold Jewelry Luster & Saree Contrast</span></li>
+                        <li><span className="card-checklist-check">✓</span> <span>Telugu Ritual Pacing & Elegant Typography</span></li>
+                      </ul>
+
+                      <div className="price-strip">
+                        <div className="per-sheet-highlight">
+                          <span className="per-sheet-label">Direct Rate</span>
+                          <span className="per-sheet-rate">
+                            ₹{price} <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ {unit}</small>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="product-card-footer">
+                      <button 
+                        type="button" 
+                        onClick={() => openServiceModal(photo, 'photo')} 
+                        className="btn-customize"
+                      >
+                        <Sliders size={16} />
+                        {lang === 'TE' ? 'కాన్ఫిగర్ & ఆర్డర్ చేయండి' : 'Configure & Order Editing'} <ArrowRight size={16} />
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
         )}
 
@@ -1082,7 +1255,96 @@ export default function Shop() {
               </div>
             )}
 
+            {/* Custom Sizing & Direct Support Callout */}
+            <div className="flex-custom-callout glass-3d" style={{ marginBottom: '2rem', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(74,222,128,0.3)', background: 'rgba(74,222,128,0.04)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#4ade80', fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.35rem' }}>
+                  <Sparkles size={16} /> Need Any Custom Venue Dimensions or Stage Framing?
+                </div>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', maxWidth: '650px', lineHeight: 1.5 }}>
+                  We print any custom Width (ft) × Height (ft) at ₹30/sq.ft! Or contact our lab specialist directly for custom scaffolding banners, truss framing, and same-day delivery.
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="btn btn-whatsapp-direct"
+                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I need a custom flex size for my event venue. Can you provide pricing and delivery timeline?`)}
+                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                >
+                  <MessageCircle size={16} /> Ask Custom Size on WhatsApp
+                </button>
+                <a
+                  href={`tel:${labPhone.replace(/\s+/g, '')}`}
+                  className="btn btn-phone-direct"
+                  style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+                >
+                  <Phone size={16} /> Call: {labPhone}
+                </a>
+              </div>
+            </div>
+
             <div className="shop-grid">
+              {/* Feature: Custom Size Interactive Card */}
+              <article className="product-card" style={{ border: '2px dashed rgba(74,222,128,0.5)', background: 'rgba(74,222,128,0.02)' }}>
+                <div className="product-card-image-wrapper" style={{ height: '160px', background: 'radial-gradient(circle, rgba(74,222,128,0.15) 0%, rgba(0,0,0,0.6) 100%)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#4ade80' }}>
+                    <Sliders size={36} style={{ marginBottom: '0.5rem' }} />
+                    <span style={{ fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.05em' }}>ANY CUSTOM SIZE YOU WANT</span>
+                  </div>
+                  <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
+                    <span className="orientation-tag landscape" style={{ color: '#4ade80', borderColor: 'rgba(74,222,128,0.3)' }}>
+                      📐 Width ft × Height ft
+                    </span>
+                    <span className="product-badge" style={{ background: 'rgba(74,222,128,0.2)', color: '#4ade80' }}>
+                      ₹30 / sq.ft
+                    </span>
+                  </div>
+                </div>
+
+                <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
+                  <div className="card-service-type-badge flex-badge">
+                    ✨ CUSTOM DIMENSION ENGINE
+                  </div>
+                  <h3 className="product-name">Custom Dimensions Flex Banner</h3>
+                  <div className="product-telugu">మీకు కావలసిన ఏ సైజులోనైనా ఫ్లెక్స్ బ్యానర్</div>
+                  <p className="product-desc">
+                    Enter any Width in Feet and Height in Feet for live square-foot math. Ideal for odd stage backdrops, entrance arches, and photo walls.
+                  </p>
+
+                  <ul className="card-checklist">
+                    <li><span className="card-checklist-check">✓</span> <span>Input Exact Width (ft) & Height (ft)</span></li>
+                    <li><span className="card-checklist-check">✓</span> <span>Heavy 440 GSM Blackout or Standard 340 GSM</span></li>
+                    <li><span className="card-checklist-check">✓</span> <span>Brass Eyelets, Pole Pockets & Retractable Stand</span></li>
+                  </ul>
+
+                  <div className="price-strip">
+                    <div className="per-sheet-highlight">
+                      <span className="per-sheet-label">Base Rate</span>
+                      <span className="per-sheet-rate">
+                        ₹30 <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ sq.ft</small>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="product-card-footer">
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      const flexItem = flexServices.find(f => !f.id?.includes('invite')) || flexServices[0] || { id: 'flex-custom', title: 'Custom Flex Banner' };
+                      openServiceModal(flexItem, 'flex');
+                      setFlexSize('custom');
+                    }} 
+                    className="btn-customize"
+                    style={{ background: 'linear-gradient(135deg, #15803d, #22c55e)', color: '#fff' }}
+                  >
+                    <Sliders size={16} />
+                    {lang === 'TE' ? 'కస్టమ్ సైజును ఎంటర్ చేయండి' : 'Enter Custom Size & Price'} <ArrowRight size={16} />
+                  </button>
+                </div>
+              </article>
+
               {flexServices.map((flex) => {
                 const price = flex.clientPrice || flex.price || 0;
                 const isInvite = flex.id?.includes('invite') || flex.title?.toLowerCase().includes('whatsapp');
@@ -1316,6 +1578,18 @@ export default function Shop() {
 
               {/* 5. Dual Asset Handover (Cloud vs Courier Pen Drive to Lab) */}
               {renderAssetHandoverSection('RAW Wedding Photos')}
+
+              {/* Consultation & Custom Sizing Support */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(212,175,55,0.06)', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#f3e7c4' }}>Need guidance picking the right paper finish or luxury cover?</span>
+                <button
+                  type="button"
+                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm customizing ${selectedAlbum?.name} with ${sheets} sheets and need advice on finishes.`)}
+                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+                >
+                  <MessageCircle size={15} /> Ask on WhatsApp
+                </button>
+              </div>
             </div>
 
             <div className="modal-footer">
@@ -1411,7 +1685,7 @@ export default function Shop() {
                       </div>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: '#e4e4e7', marginTop: '0.5rem' }}>
-                      Calculated Area: <strong>{Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0))} sq.ft</strong> · Base Print Cost: <strong>₹{Math.max(450, Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0) * 30)).toLocaleString('en-IN')}</strong> (₹30/sq.ft)
+                      Calculated Area: <strong>{Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0))} sq.ft</strong> · Base Print Cost: <strong>₹{Math.max(450, Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0) * (catalog.ratePerSqFtClient || 30))).toLocaleString('en-IN')}</strong> (₹{catalog.ratePerSqFtClient || 30}/sq.ft)
                     </div>
                   </div>
                 )}
@@ -1488,6 +1762,18 @@ export default function Shop() {
 
               {/* 5. Dual Asset Handover (Cloud vs Courier Pen Drive to Lab) */}
               {renderAssetHandoverSection('Couple Photos or Design File')}
+
+              {/* Consultation & Custom Venue Sizing Support */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(74,222,128,0.06)', borderRadius: '8px', border: '1px solid rgba(74,222,128,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#dcfce7' }}>Need an unusual venue dimension, truss arch, or bulk standees?</span>
+                <button
+                  type="button"
+                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I need a custom flex banner of size: ${flexSize === 'custom' ? `${customWidthFt}ft x ${customHeightFt}ft` : flexSize}. Please confirm pricing and delivery.`)}
+                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+                >
+                  <MessageCircle size={15} /> Ask on WhatsApp
+                </button>
+              </div>
             </div>
 
             <div className="modal-footer">
@@ -1651,6 +1937,18 @@ export default function Shop() {
 
               {/* 6. Dual Asset Handover (Cloud vs Courier Pen Drive to Lab) */}
               {renderAssetHandoverSection('RAW Video Footage / Cards')}
+
+              {/* Consultation & Custom Songs / Multi-Cam Support */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(168,85,247,0.06)', borderRadius: '8px', border: '1px solid rgba(168,85,247,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#f3e8ff' }}>Need custom multi-camera sync (4+ cams), drone grading, or custom songs?</span>
+                <button
+                  type="button"
+                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm customizing ${selectedService?.title} and have a custom multi-cam/song requirement.`)}
+                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+                >
+                  <MessageCircle size={15} /> Ask on WhatsApp
+                </button>
+              </div>
             </div>
 
             <div className="modal-footer">
@@ -1799,6 +2097,133 @@ export default function Shop() {
           </div>
         </div>
       )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          5. ADVANCED PHOTO EDITING CONFIGURATOR MODAL
+          ───────────────────────────────────────────────────────────── */}
+      {selectedService && selectedService.serviceType === 'photo' && (
+        <div className="configurator-overlay" onClick={() => setSelectedService(null)}>
+          <div className="configurator-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h2>🎨 {selectedService.title}</h2>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.25rem' }}>
+                  <span className="orientation-tag landscape" style={{ color: 'var(--gold-primary)', borderColor: 'rgba(212,175,55,0.3)' }}>
+                    ⏱️ Turnaround: {selectedService.turnaround || '24-48 Hours'}
+                  </span>
+                  <span style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>
+                    100% In-House Post-Production
+                  </span>
+                </div>
+              </div>
+              <button type="button" className="modal-close-btn" onClick={() => setSelectedService(null)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              {/* 1. Number of Units / Quantity */}
+              <div>
+                <div className="config-section-title">
+                  <Sliders size={16} /> 1. Quantity ({selectedService.unit || 'Sheets / Photos'})
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <button
+                    type="button"
+                    onClick={() => setPhotoQuantity(Math.max(1, photoQuantity - 5))}
+                    style={{ width: '42px', height: '42px', borderRadius: '8px', background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold-primary)', fontSize: '1.4rem', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    -
+                  </button>
+                  <div style={{ textAlign: 'center', flex: 1 }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--gold-primary)' }}>
+                      {photoQuantity} <small style={{ fontSize: '0.9rem', color: '#a1a1aa' }}>{selectedService.unit || 'units'}</small>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>
+                      Rate: ₹{selectedService.clientPrice || 45} / {selectedService.unit || 'unit'}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPhotoQuantity(photoQuantity + 5)}
+                    style={{ width: '42px', height: '42px', borderRadius: '8px', background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold-primary)', fontSize: '1.4rem', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. Specific Instructions */}
+              <div style={{ marginTop: '1rem' }}>
+                <div className="config-section-title">
+                  📝 Specific Retouching & Design Guidelines
+                </div>
+                <textarea 
+                  className="config-input" 
+                  style={{ minHeight: '80px', resize: 'vertical' }}
+                  placeholder="e.g., Retouch bride's skin, remove hall reflections, emphasize 24K jewelry shine, ritual-based Telugu border layout..."
+                  value={instructions}
+                  onChange={e => setInstructions(e.target.value)}
+                />
+              </div>
+
+              {/* 3. Dual Asset Handover */}
+              {renderAssetHandoverSection('RAW Photos / Event Assets')}
+
+              {/* 4. WhatsApp Support */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(212,175,55,0.06)', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#f3e7c4' }}>Need bulk studio volume discounts or custom editing scope?</span>
+                <button
+                  type="button"
+                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm customizing ${selectedService?.title} (${photoQuantity} units) and have a custom editing requirement.`)}
+                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+                >
+                  <MessageCircle size={15} /> Ask on WhatsApp
+                </button>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <div className="modal-total-box">
+                <span className="modal-total-label">Total Amount:</span>
+                <span className="modal-total-price">
+                  ₹{calculateConfiguredPhotoPrice().toLocaleString('en-IN')}
+                </span>
+                <span style={{ fontSize: '0.75rem', color: '#a1a1aa' }}>
+                  ({photoQuantity} × ₹{selectedService.clientPrice || 45})
+                </span>
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={() => handleAddToCartPhoto(false)} className="btn-modal-add-cart">
+                  <ShoppingBag size={18} /> Add to Cart
+                </button>
+                <button type="button" onClick={() => handleAddToCartPhoto(true)} className="btn-buy-now">
+                  Order & Checkout <ArrowRight size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SEO Schema.org JSON-LD structured data for Google Shopping & Search */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Wedding Album Store & Post-Production Services",
+        "description": "Direct e-commerce storefront for wedding album editing and printing, 4K video editing, event flex of all sizes, and photo retouching across AP and Telangana.",
+        "provider": {
+          "@type": "LocalBusiness",
+          "name": "WeddingAlbums.in",
+          "telephone": "+919346793364",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Vijayawada",
+            "addressRegion": "Andhra Pradesh",
+            "addressCountry": "IN"
+          }
+        }
+      })}} />
 
     </div>
   );

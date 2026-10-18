@@ -803,6 +803,48 @@ export default function HubCatalogEditor({ adminState }) {
             </button>
           </div>
 
+          {/* Custom Size Dimension Rate Configuration */}
+          <div style={{ background: 'rgba(74,222,128,0.05)', border: '1px solid rgba(74,222,128,0.25)', borderRadius: 12, padding: 16, marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#4ade80', fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
+              <Sparkles size={16} /> Interactive Custom Dimension Sizing Engine (Per Sq.Ft Rates)
+            </div>
+            <p style={{ margin: 0, fontSize: 12, color: 'var(--n-300)', marginBottom: 12 }}>
+              When customers enter custom Width (ft) × Height (ft) on the store, these live rates per square foot are dynamically calculated.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, color: 'var(--warn)', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>
+                  Client Retail Rate (₹ / sq.ft)
+                </label>
+                <input
+                  type="number"
+                  value={catalog.ratePerSqFtClient || 30}
+                  onChange={e => {
+                    const updated = JSON.parse(JSON.stringify(catalog));
+                    updated.ratePerSqFtClient = Number(e.target.value);
+                    handleCatalogUpdate(updated);
+                  }}
+                  style={{ width: '100%', padding: '8px 10px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 11, color: '#38bdf8', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>
+                  Studio Wholesale Rate (₹ / sq.ft)
+                </label>
+                <input
+                  type="number"
+                  value={catalog.ratePerSqFtStudio || 18}
+                  onChange={e => {
+                    const updated = JSON.parse(JSON.stringify(catalog));
+                    updated.ratePerSqFtStudio = Number(e.target.value);
+                    handleCatalogUpdate(updated);
+                  }}
+                  style={{ width: '100%', padding: '8px 10px', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: 8, color: 'var(--paper)', fontSize: 14, fontWeight: 700, boxSizing: 'border-box' }}
+                />
+              </div>
+            </div>
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
             {invitationsAndFlex.map((f, idx) => (
               <div key={f.id || idx} style={{ background: 'var(--n-950)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 18 }}>
