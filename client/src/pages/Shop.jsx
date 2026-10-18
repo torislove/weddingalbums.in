@@ -174,6 +174,8 @@ export default function Shop() {
   const [flexSize, setFlexSize] = useState('10x8');
   const [customWidthFt, setCustomWidthFt] = useState(10);
   const [customHeightFt, setCustomHeightFt] = useState(8);
+  const [customFlexNotes, setCustomFlexNotes] = useState('');
+  const [showCustomFlexModal, setShowCustomFlexModal] = useState(false);
   const [flexDesignOption, setFlexDesignOption] = useState('design_needed');
   const [flexMaterial, setFlexMaterial] = useState('340gsm');
   const [flexFinishing, setFlexFinishing] = useState('eyelets');
@@ -214,6 +216,82 @@ export default function Shop() {
     const cleanNumber = labPhone.replace(/\s+/g, '');
     window.location.href = `tel:${cleanNumber}`;
   };
+
+  const handleWhatsAppCustomFlex = (customW, customH, notes) => {
+    const w = customW !== undefined ? customW : customWidthFt;
+    const h = customH !== undefined ? customH : customHeightFt;
+    const sqft = Math.round((parseFloat(w) || 10) * (parseFloat(h) || 8));
+    const rate = catalog.ratePerSqFtClient || 30;
+    const estPrice = Math.max(450, Math.round(sqft * rate));
+    const notesText = notes || customFlexNotes || 'Custom event banner';
+    const text = `Hi WeddingAlbums.in, I'd like to ask for a custom flex banner size: ${w}ft x ${h}ft (${sqft} sq.ft, est. ₹${estPrice.toLocaleString('en-IN')}). Notes / Venue: ${notesText}. Please confirm quote and delivery!`;
+    handleWhatsAppSupport(text);
+  };
+
+  const renderCardSupportPrompt = (title, type = 'general') => {
+    let prompt = 'Need custom size or guidance?';
+    let waText = `Hi WeddingAlbums.in, I'm inquiring about ${title}. Can you guide me on options?`;
+    if (type === 'flex') {
+      prompt = 'Need any custom size or venue frame?';
+      waText = `Hi WeddingAlbums.in, I need a custom flex size or advice for ${title}.`;
+    } else if (type === 'video') {
+      prompt = 'Need custom runtime or multi-cam sync?';
+      waText = `Hi WeddingAlbums.in, I'm inquiring about 4K video editing for ${title}.`;
+    } else if (type === 'photo') {
+      prompt = 'Need studio bulk editing or test retouch?';
+      waText = `Hi WeddingAlbums.in, I'm inquiring about photo editing rates for ${title}.`;
+    }
+    return (
+      <div className="card-support-strip">
+        <span className="card-support-label">{prompt}</span>
+        <div className="card-support-btns">
+          <button
+            type="button"
+            className="card-support-btn-wa"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleWhatsAppSupport(waText);
+            }}
+            title="Chat on WhatsApp"
+          >
+            <MessageCircle size={13} /> WhatsApp
+          </button>
+          <a
+            href={`tel:${labPhone.replace(/\s+/g, '')}`}
+            className="card-support-btn-tel"
+            onClick={(e) => e.stopPropagation()}
+            title={`Call ${labPhone}`}
+          >
+            <Phone size={13} /> Call
+          </a>
+        </div>
+      </div>
+    );
+  };
+
+  const renderModalSupportStrip = (serviceTitle = '', prefillText = '') => (
+    <div className="modal-support-strip">
+      <div className="modal-support-info">
+        <span className="modal-support-title">Need custom specifications or instant guidance?</span>
+        <span className="modal-support-desc">Our lab specialists are ready to help via WhatsApp and Phone.</span>
+      </div>
+      <div className="modal-support-actions">
+        <button
+          type="button"
+          className="btn-modal-wa"
+          onClick={() => handleWhatsAppSupport(prefillText || `Hi WeddingAlbums.in, I'm customizing ${serviceTitle} and have questions.`)}
+        >
+          <MessageCircle size={15} /> Chat on WhatsApp
+        </button>
+        <a
+          href={`tel:${labPhone.replace(/\s+/g, '')}`}
+          className="btn-modal-tel"
+        >
+          <Phone size={15} /> Call: {labPhone}
+        </a>
+      </div>
+    </div>
+  );
 
   // Deep-linking: auto-open tab or configurator modal if ?tab=... or ?size=... query param is passed
   useEffect(() => {
@@ -545,6 +623,7 @@ export default function Shop() {
       quantity: 1,
       configDetails: [
         `Size: ${sizeTitle}`,
+        ...(isCustom && customFlexNotes ? [`Venue/Notes: ${customFlexNotes}`] : []),
         `Design: ${flexDesignOption === 'design_needed' ? 'Custom Telugu Design Included (+₹499)' : 'Print-Ready File Provided (₹0)'}`,
         `Material: ${flexMaterial === '440gsm_blackout' ? '440 GSM Blackout Matte Flex' : flexMaterial === 'cloth_fabric' ? 'Eco-Solvent Cloth Fabric Banner' : 'Standard 340 GSM Star Gloss Flex'}`,
         `Finishing: ${flexFinishing === 'pole_pockets' ? 'Top/Bottom Pole Pockets' : flexFinishing === 'rollup_stand' ? 'Aluminum Roll-Up Stand' : 'Heavy Brass Eyelets'}`,
@@ -554,10 +633,11 @@ export default function Shop() {
       courierCompany: courierCompany,
       courierTracking: courierTracking,
       driveLink: driveLink,
-      instructions: instructions
+      instructions: `${instructions ? `${instructions} | ` : ''}${customFlexNotes ? `Custom Notes: ${customFlexNotes}` : ''}`
     };
     if (addToCart) addToCart(item);
     setSelectedService(null);
+    setShowCustomFlexModal(false);
     if (goToCheckout) navigate('/checkout');
     else if (toggleCart) toggleCart();
   };
@@ -715,14 +795,44 @@ export default function Shop() {
             </div>
             <h3 className="support-title">Talk Directly to Our Lab Specialists & Designers</h3>
             <p className="support-desc">
-              Need custom album dimensions, bulk studio editing discounts, or specific flex venue framing? We are available via WhatsApp and phone 7 days a week.
+              Have questions about wedding albums, 4K video editing, photo retouching, or custom flex sizes of any dimension? We are available via WhatsApp and phone 7 days a week.
             </p>
+            <div className="support-topic-chips">
+              <button 
+                type="button" 
+                className="support-topic-chip"
+                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like to ask about digital photo editing & retouching rates.")}
+              >
+                🎨 Photo Editing Support
+              </button>
+              <button 
+                type="button" 
+                className="support-topic-chip"
+                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like to ask about custom heirloom album sizes, paper finishes and luxury covers.")}
+              >
+                📖 Custom Album Sizing
+              </button>
+              <button 
+                type="button" 
+                className="support-topic-chip"
+                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like to ask about 4K cinematic video editing packages and multicam sync.")}
+              >
+                🎬 4K Video Packages
+              </button>
+              <button 
+                type="button" 
+                className="support-topic-chip"
+                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I need a custom flex banner size for my event venue. Can you provide pricing for custom dimensions?")}
+              >
+                🚩 Custom Flex of Any Size
+              </button>
+            </div>
           </div>
           <div className="shop-support-actions">
             <button
               type="button"
               className="btn-whatsapp-direct"
-              onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm browsing your services store and need support choosing the right package.`)}
+              onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm browsing your services store and need support choosing the right package or custom sizing.`)}
             >
               <MessageCircle size={18} /> Chat on WhatsApp
             </button>
@@ -875,6 +985,8 @@ export default function Shop() {
                           </span>
                         </div>
                       </div>
+
+                      {renderCardSupportPrompt(photo.title, 'photo')}
                     </div>
 
                     <div className="product-card-footer">
@@ -1001,6 +1113,8 @@ export default function Shop() {
                           <strong style={{ color: '#fff' }}>₹{Number(basePrice).toLocaleString('en-IN')}</strong>
                         </div>
                       </div>
+
+                      {renderCardSupportPrompt(size.name, 'album')}
                     </div>
 
                     <div className="product-card-footer">
@@ -1185,6 +1299,8 @@ export default function Shop() {
                           </span>
                         </div>
                       </div>
+
+                      {renderCardSupportPrompt(video.title, 'video')}
                     </div>
 
                     <div className="product-card-footer">
@@ -1262,17 +1378,25 @@ export default function Shop() {
                   <Sparkles size={16} /> Need Any Custom Venue Dimensions or Stage Framing?
                 </div>
                 <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', maxWidth: '650px', lineHeight: 1.5 }}>
-                  We print any custom Width (ft) × Height (ft) at ₹30/sq.ft! Or contact our lab specialist directly for custom scaffolding banners, truss framing, and same-day delivery.
+                  Ask for whatever custom sizes you want (Width ft × Height ft at ₹{catalog.ratePerSqFtClient || 30}/sq.ft)! Or contact our lab specialist directly for custom scaffolding banners, truss framing, and same-day delivery.
                 </p>
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setShowCustomFlexModal(true)}
+                  style={{ background: 'rgba(212,175,55,0.18)', color: 'var(--gold-primary)', border: '1px solid rgba(212,175,55,0.45)', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                >
+                  <Sliders size={16} /> 📐 Ask for Custom Size
+                </button>
                 <button
                   type="button"
                   className="btn btn-whatsapp-direct"
                   onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I need a custom flex size for my event venue. Can you provide pricing and delivery timeline?`)}
                   style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
                 >
-                  <MessageCircle size={16} /> Ask Custom Size on WhatsApp
+                  <MessageCircle size={16} /> Ask on WhatsApp
                 </button>
                 <a
                   href={`tel:${labPhone.replace(/\s+/g, '')}`}
@@ -1297,7 +1421,7 @@ export default function Shop() {
                       📐 Width ft × Height ft
                     </span>
                     <span className="product-badge" style={{ background: 'rgba(74,222,128,0.2)', color: '#4ade80' }}>
-                      ₹30 / sq.ft
+                      ₹{catalog.ratePerSqFtClient || 30} / sq.ft
                     </span>
                   </div>
                 </div>
@@ -1309,11 +1433,11 @@ export default function Shop() {
                   <h3 className="product-name">Custom Dimensions Flex Banner</h3>
                   <div className="product-telugu">మీకు కావలసిన ఏ సైజులోనైనా ఫ్లెక్స్ బ్యానర్</div>
                   <p className="product-desc">
-                    Enter any Width in Feet and Height in Feet for live square-foot math. Ideal for odd stage backdrops, entrance arches, and photo walls.
+                    Enter whatever custom Width in Feet and Height in Feet you want for live square-foot math. Ideal for odd stage backdrops, entrance arches, and photo walls.
                   </p>
 
                   <ul className="card-checklist">
-                    <li><span className="card-checklist-check">✓</span> <span>Input Exact Width (ft) & Height (ft)</span></li>
+                    <li><span className="card-checklist-check">✓</span> <span>Specify Any Exact Width (ft) & Height (ft)</span></li>
                     <li><span className="card-checklist-check">✓</span> <span>Heavy 440 GSM Blackout or Standard 340 GSM</span></li>
                     <li><span className="card-checklist-check">✓</span> <span>Brass Eyelets, Pole Pockets & Retractable Stand</span></li>
                   </ul>
@@ -1322,13 +1446,15 @@ export default function Shop() {
                     <div className="per-sheet-highlight">
                       <span className="per-sheet-label">Base Rate</span>
                       <span className="per-sheet-rate">
-                        ₹30 <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ sq.ft</small>
+                        ₹{catalog.ratePerSqFtClient || 30} <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ sq.ft</small>
                       </span>
                     </div>
                   </div>
+
+                  {renderCardSupportPrompt('Custom Flex Dimensions', 'flex')}
                 </div>
 
-                <div className="product-card-footer">
+                <div className="product-card-footer" style={{ gap: '0.5rem', flexWrap: 'wrap' }}>
                   <button 
                     type="button" 
                     onClick={() => {
@@ -1337,10 +1463,19 @@ export default function Shop() {
                       setFlexSize('custom');
                     }} 
                     className="btn-customize"
-                    style={{ background: 'linear-gradient(135deg, #15803d, #22c55e)', color: '#fff' }}
+                    style={{ background: 'linear-gradient(135deg, #15803d, #22c55e)', color: '#fff', flex: 1 }}
                   >
                     <Sliders size={16} />
                     {lang === 'TE' ? 'కస్టమ్ సైజును ఎంటర్ చేయండి' : 'Enter Custom Size & Price'} <ArrowRight size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowCustomFlexModal(true)}
+                    className="btn"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+                    title="Ask for whatever custom size you want"
+                  >
+                    Ask Custom Size
                   </button>
                 </div>
               </article>
@@ -1385,6 +1520,8 @@ export default function Shop() {
                           </span>
                         </div>
                       </div>
+
+                      {renderCardSupportPrompt(flex.title, 'flex')}
                     </div>
 
                     <div className="product-card-footer">
@@ -1580,16 +1717,7 @@ export default function Shop() {
               {renderAssetHandoverSection('RAW Wedding Photos')}
 
               {/* Consultation & Custom Sizing Support */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(212,175,55,0.06)', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: '#f3e7c4' }}>Need guidance picking the right paper finish or luxury cover?</span>
-                <button
-                  type="button"
-                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm customizing ${selectedAlbum?.name} with ${sheets} sheets and need advice on finishes.`)}
-                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
-                >
-                  <MessageCircle size={15} /> Ask on WhatsApp
-                </button>
-              </div>
+              {renderModalSupportStrip(selectedAlbum?.name, `Hi WeddingAlbums.in, I'm customizing ${selectedAlbum?.name} with ${sheets} sheets and need advice on custom sizes, paper finishes or luxury covers.`)}
             </div>
 
             <div className="modal-footer">
@@ -1658,34 +1786,67 @@ export default function Shop() {
                 {flexSize === 'custom' && (
                   <div style={{ marginTop: '0.85rem', padding: '1rem', background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: 10 }}>
                     <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--gold-primary)', marginBottom: '0.5rem' }}>
-                      ✨ Enter Custom Dimensions (Any Width × Height in Feet):
+                      ✨ Enter Whatever Custom Dimensions You Want (Width × Height in Feet):
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
                       <div>
-                        <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>Width in Feet (e.g. 15):</label>
+                        <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>Width in Feet (e.g. 15 or 12.5):</label>
                         <input 
                           type="number" 
                           min="1" 
                           max="100"
+                          step="0.5"
                           value={customWidthFt} 
                           onChange={e => setCustomWidthFt(e.target.value)}
                           className="config-input"
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>Height in Feet (e.g. 9):</label>
+                        <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>Height in Feet (e.g. 9 or 8.5):</label>
                         <input 
                           type="number" 
                           min="1" 
                           max="100"
+                          step="0.5"
                           value={customHeightFt} 
                           onChange={e => setCustomHeightFt(e.target.value)}
                           className="config-input"
                         />
                       </div>
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: '#e4e4e7', marginTop: '0.5rem' }}>
-                      Calculated Area: <strong>{Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0))} sq.ft</strong> · Base Print Cost: <strong>₹{Math.max(450, Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0) * (catalog.ratePerSqFtClient || 30))).toLocaleString('en-IN')}</strong> (₹{catalog.ratePerSqFtClient || 30}/sq.ft)
+
+                    <div style={{ marginBottom: '0.75rem' }}>
+                      <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>
+                        Custom Dimensions & Venue Requirements (what size or shape do you need?):
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 15×8.5 ft entrance arch, curved stage frame, pole pockets top & bottom, circular cutout..."
+                        value={customFlexNotes}
+                        onChange={e => setCustomFlexNotes(e.target.value)}
+                        className="config-input"
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', background: 'rgba(0,0,0,0.25)', padding: '0.75rem 0.85rem', borderRadius: '8px' }}>
+                      <div style={{ fontSize: '0.85rem', color: '#e4e4e7' }}>
+                        Calculated Area: <strong>{Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0))} sq.ft</strong> · Base Print Cost: <strong>₹{Math.max(450, Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0) * (catalog.ratePerSqFtClient || 30))).toLocaleString('en-IN')}</strong> (₹{catalog.ratePerSqFtClient || 30}/sq.ft)
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          onClick={() => handleWhatsAppCustomFlex()}
+                          style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.35rem 0.75rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer' }}
+                        >
+                          <MessageCircle size={14} /> Ask This Size on WhatsApp
+                        </button>
+                        <a
+                          href={`tel:${labPhone.replace(/\s+/g, '')}`}
+                          style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.35rem 0.75rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}
+                        >
+                          <Phone size={14} /> Call
+                        </a>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1764,16 +1925,7 @@ export default function Shop() {
               {renderAssetHandoverSection('Couple Photos or Design File')}
 
               {/* Consultation & Custom Venue Sizing Support */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(74,222,128,0.06)', borderRadius: '8px', border: '1px solid rgba(74,222,128,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: '#dcfce7' }}>Need an unusual venue dimension, truss arch, or bulk standees?</span>
-                <button
-                  type="button"
-                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I need a custom flex banner of size: ${flexSize === 'custom' ? `${customWidthFt}ft x ${customHeightFt}ft` : flexSize}. Please confirm pricing and delivery.`)}
-                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
-                >
-                  <MessageCircle size={15} /> Ask on WhatsApp
-                </button>
-              </div>
+              {renderModalSupportStrip('Wedding Flex Banner', `Hi WeddingAlbums.in, I need a custom flex banner of size: ${flexSize === 'custom' ? `${customWidthFt}ft x ${customHeightFt}ft` : flexSize}. Notes: ${customFlexNotes || 'Custom event banner'}. Please confirm quote, turnaround & delivery.`)}
             </div>
 
             <div className="modal-footer">
@@ -1939,16 +2091,7 @@ export default function Shop() {
               {renderAssetHandoverSection('RAW Video Footage / Cards')}
 
               {/* Consultation & Custom Songs / Multi-Cam Support */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(168,85,247,0.06)', borderRadius: '8px', border: '1px solid rgba(168,85,247,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: '#f3e8ff' }}>Need custom multi-camera sync (4+ cams), drone grading, or custom songs?</span>
-                <button
-                  type="button"
-                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm customizing ${selectedService?.title} and have a custom multi-cam/song requirement.`)}
-                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
-                >
-                  <MessageCircle size={15} /> Ask on WhatsApp
-                </button>
-              </div>
+              {renderModalSupportStrip(selectedService?.title, `Hi WeddingAlbums.in, I'm customizing ${selectedService?.title} and have a custom multi-cam or special soundtrack requirement.`)}
             </div>
 
             <div className="modal-footer">
@@ -2076,6 +2219,9 @@ export default function Shop() {
                   />
                 </div>
               </div>
+
+              {/* Consultation & Support */}
+              {renderModalSupportStrip('Animated WhatsApp Video Invite', `Hi WeddingAlbums.in, I'm customizing a WhatsApp video invitation and have specific event/caricature details.`)}
             </div>
 
             <div className="modal-footer">
@@ -2170,17 +2316,8 @@ export default function Shop() {
               {/* 3. Dual Asset Handover */}
               {renderAssetHandoverSection('RAW Photos / Event Assets')}
 
-              {/* 4. WhatsApp Support */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', background: 'rgba(212,175,55,0.06)', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.25)', marginTop: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: '#f3e7c4' }}>Need bulk studio volume discounts or custom editing scope?</span>
-                <button
-                  type="button"
-                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm customizing ${selectedService?.title} (${photoQuantity} units) and have a custom editing requirement.`)}
-                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
-                >
-                  <MessageCircle size={15} /> Ask on WhatsApp
-                </button>
-              </div>
+              {/* 4. Consultation & Support */}
+              {renderModalSupportStrip(selectedService?.title, `Hi WeddingAlbums.in, I'm customizing ${selectedService?.title} (${photoQuantity} units) and have questions on rates or instructions.`)}
             </div>
 
             <div className="modal-footer">
@@ -2205,6 +2342,185 @@ export default function Shop() {
           </div>
         </div>
       )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          6. DEDICATED CUSTOM FLEX SIZING MODAL (Ask for Any Dimensions)
+          ───────────────────────────────────────────────────────────── */}
+      {showCustomFlexModal && (
+        <div className="configurator-overlay" onClick={() => setShowCustomFlexModal(false)}>
+          <div className="configurator-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '620px' }}>
+            <div className="modal-header">
+              <div>
+                <h2>📐 Ask for Custom Flex Sizing (Any Dimension)</h2>
+                <span style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>
+                  Whatever size, circular arch, stage backdrop, or venue frame you need
+                </span>
+              </div>
+              <button type="button" className="modal-close-btn" onClick={() => setShowCustomFlexModal(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div style={{ padding: '0.85rem 1rem', background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.25)', borderRadius: '10px', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#dcfce7', lineHeight: 1.5, display: 'block' }}>
+                  Our commercial flex lab prints any custom dimensions at <strong>₹{catalog.ratePerSqFtClient || 30} per square foot</strong>. Tell us what you want or speak directly with our production specialists.
+                </span>
+              </div>
+
+              {/* Dimensions */}
+              <div>
+                <div className="config-section-title">
+                  <Sliders size={16} /> 1. Desired Dimensions (in Feet)
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>Width in Feet (e.g. 15 or 12.5):</label>
+                    <input 
+                      type="number" 
+                      min="1" 
+                      max="100"
+                      step="0.5"
+                      value={customWidthFt} 
+                      onChange={e => setCustomWidthFt(e.target.value)}
+                      className="config-input"
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#a1a1aa', display: 'block', marginBottom: '0.25rem' }}>Height in Feet (e.g. 9 or 8.5):</label>
+                    <input 
+                      type="number" 
+                      min="1" 
+                      max="100"
+                      step="0.5"
+                      value={customHeightFt} 
+                      onChange={e => setCustomHeightFt(e.target.value)}
+                      className="config-input"
+                    />
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#e4e4e7', marginTop: '0.5rem' }}>
+                  Calculated Area: <strong>{Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0))} sq.ft</strong> · Approximate Cost: <strong>₹{Math.max(450, Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0) * (catalog.ratePerSqFtClient || 30))).toLocaleString('en-IN')}</strong> (@ ₹{catalog.ratePerSqFtClient || 30}/sq.ft)
+                </div>
+              </div>
+
+              {/* Free-form size/venue requirement description */}
+              <div style={{ marginTop: '1rem' }}>
+                <div className="config-section-title">
+                  📝 2. Describe Whatever Custom Size or Venue Requirements You Want
+                </div>
+                <textarea
+                  className="config-input"
+                  style={{ minHeight: '80px', resize: 'vertical' }}
+                  placeholder="e.g. 15×8.5 ft entrance arch, curved stage frame, truss pipe hanging pockets, circle 8ft diameter, or 4 welcome standees..."
+                  value={customFlexNotes}
+                  onChange={e => setCustomFlexNotes(e.target.value)}
+                />
+              </div>
+
+              {/* Substrate Material */}
+              <div style={{ marginTop: '1rem' }}>
+                <div className="config-section-title">
+                  <Layers size={16} /> 3. Preferred Substrate Material
+                </div>
+                <div className="options-grid">
+                  {FLEX_MATERIALS.map(mat => (
+                    <button
+                      key={mat.id}
+                      type="button"
+                      onClick={() => setFlexMaterial(mat.id)}
+                      className={`option-card-btn ${flexMaterial === mat.id ? 'selected' : ''}`}
+                    >
+                      <div className="option-title">{mat.name}</div>
+                      <div className="option-subtitle">{mat.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Finishing */}
+              <div style={{ marginTop: '1rem' }}>
+                <div className="config-section-title">
+                  <ShieldCheck size={16} /> 4. Finishing Options
+                </div>
+                <div className="options-grid">
+                  {FLEX_FINISHING.map(fin => (
+                    <button
+                      key={fin.id}
+                      type="button"
+                      onClick={() => setFlexFinishing(fin.id)}
+                      className={`option-card-btn ${flexFinishing === fin.id ? 'selected' : ''}`}
+                    >
+                      <div className="option-title">{fin.name}</div>
+                      <div className="option-subtitle">{fin.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Support Actions */}
+              {renderModalSupportStrip('Custom Flex Sizing', `Hi WeddingAlbums.in, I need a custom flex banner of size: ${customWidthFt}ft x ${customHeightFt}ft (${Math.round(customWidthFt * customHeightFt)} sq.ft). Notes: ${customFlexNotes || 'Custom event banner'}. Please confirm quote & delivery!`)}
+            </div>
+
+            <div className="modal-footer">
+              <div className="modal-total-box">
+                <span className="modal-total-label">Estimated Rate:</span>
+                <span className="modal-total-price">
+                  ₹{Math.max(450, Math.round((parseFloat(customWidthFt) || 0) * (parseFloat(customHeightFt) || 0) * (catalog.ratePerSqFtClient || 30))).toLocaleString('en-IN')}
+                </span>
+              </div>
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  onClick={() => handleWhatsAppCustomFlex()}
+                  className="btn-modal-add-cart"
+                  style={{ background: 'linear-gradient(135deg, #25D366, #128C7E)', color: '#fff', border: 'none' }}
+                >
+                  <MessageCircle size={18} /> Ask on WhatsApp
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const flexItem = flexServices.find(f => !f.id?.includes('invite')) || flexServices[0] || { id: 'flex-custom', title: 'Custom Flex Banner' };
+                    setSelectedService({ ...flexItem, serviceType: 'flex' });
+                    setFlexSize('custom');
+                    setShowCustomFlexModal(false);
+                    handleAddToCartFlex(false);
+                  }}
+                  className="btn-buy-now"
+                >
+                  <ShoppingBag size={18} /> Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Universal Floating Support Dock (Bottom-Right) */}
+      <aside className="store-floating-support" aria-label="Quick Store Support">
+        <div className="floating-support-badge">
+          <Sparkles size={13} /> Store Support & Custom Sizing
+        </div>
+        <div className="floating-support-text">
+          Have questions about albums, video, photo editing or custom flex?
+        </div>
+        <div className="floating-support-buttons">
+          <button
+            type="button"
+            className="floating-support-btn wa"
+            onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'm browsing your store and have questions about services/custom sizing.")}
+          >
+            <MessageCircle size={15} /> WhatsApp Us
+          </button>
+          <a
+            href={`tel:${labPhone.replace(/\s+/g, '')}`}
+            className="floating-support-btn tel"
+          >
+            <Phone size={15} /> Call: {labPhone}
+          </a>
+        </div>
+      </aside>
 
       {/* SEO Schema.org JSON-LD structured data for Google Shopping & Search */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

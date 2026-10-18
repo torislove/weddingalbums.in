@@ -19,8 +19,10 @@ const CTABanner = (props) => {
     whatsappMessage = "Hi, I'd like to check availability"
   } = props;
 
-  const rawWa = whatsappNumber || content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919494845111';
-  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919494845111';
+  const rawWa = whatsappNumber || content?.siteSettings?.whatsapp || content?.global?.siteSettings?.whatsapp || content?.global?.navbar?.whatsapp || '919346793364';
+  const cleanWa = String(rawWa).replace(/[^0-9]/g, '') || '919346793364';
+  const rawPhone = content?.siteSettings?.phone || content?.global?.siteSettings?.phone || content?.global?.navbar?.phone || '+91 9346793364';
+  const cleanPhone = String(rawPhone).replace(/\s+/g, '');
   const encodedMessage = encodeURIComponent(whatsappMessage);
   
   return (
@@ -42,10 +44,13 @@ const CTABanner = (props) => {
           <p className="text-muted" style={{ maxWidth: '500px', margin: '0 auto 2.5rem' }}>
             {subtitle}
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.85rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to={btn1Link} className="btn btn-gold">{btn1Text} <ArrowRight size={16} /></Link>
-            <a href={`https://wa.me/${cleanWa}?text=${encodedMessage}`} target="_blank" rel="noopener noreferrer" className="btn btn-white">
-              {btn2Text}
+            <a href={`https://wa.me/${cleanWa}?text=${encodedMessage}`} target="_blank" rel="noopener noreferrer" className="btn btn-white" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              💬 {btn2Text}
+            </a>
+            <a href={`tel:${cleanPhone}`} className="btn" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              📞 Call: {rawPhone}
             </a>
           </div>
         </ScrollReveal>

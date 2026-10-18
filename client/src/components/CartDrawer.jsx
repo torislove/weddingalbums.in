@@ -75,6 +75,27 @@ const CartDrawer = () => {
             <button className="btn btn-gold-3d w-100" onClick={handleCheckout}>
               Proceed to Checkout
             </button>
+
+            {/* Direct Support Strip */}
+            <div className="cart-support-strip">
+              <span className="cart-support-text">Need help or custom specifications?</span>
+              <div className="cart-support-actions">
+                <a 
+                  href="https://wa.me/919346793364?text=Hi%20WeddingAlbums.in%2C%20I%20have%20questions%20about%20my%20cart%20items%20or%20custom%20requirements." 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="cart-support-btn wa"
+                >
+                  💬 WhatsApp
+                </a>
+                <a 
+                  href="tel:+919346793364" 
+                  className="cart-support-btn tel"
+                >
+                  📞 Call: +91 9346793364
+                </a>
+              </div>
+            </div>
           </div>
         )}
       </div>
