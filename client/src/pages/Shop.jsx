@@ -5,7 +5,8 @@ import {
   ArrowRight, Sparkles, Filter, Flame, X, Sliders, UploadCloud,
   Check, Film, Music, Palette, CheckSquare, Square, ShieldCheck,
   Clock, Truck, HardDrive, Info, ChevronDown, ChevronUp, Copy, CheckCircle2,
-  Camera, Phone, MessageCircle, ExternalLink
+  Camera, Phone, MessageCircle, ExternalLink, Search, Grid, List, RotateCcw,
+  Star, Tag, ChevronRight
 } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -146,6 +147,13 @@ export default function Shop() {
 
   const [activeTab, setActiveTab] = useState('editing'); // 'editing' | 'albums' | 'video' | 'flex' | 'all'
   const [orientationFilter, setOrientationFilter] = useState('all'); // 'all' | 'landscape' | 'portrait'
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') || '');
+  const [priceFilter, setPriceFilter] = useState('all'); // 'all' | 'under_1000' | '1000_3000' | '3000_7000' | 'above_7000'
+  const [slaFilter, setSlaFilter] = useState('all'); // 'all' | '24h' | '48h' | 'standard'
+  const [sortBy, setSortBy] = useState('featured'); // 'featured' | 'price_asc' | 'price_desc' | 'fastest' | 'rating'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // Modal State
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -204,6 +212,137 @@ export default function Shop() {
   const photoServices = catalog?.photoEditing || [];
   const videoServices = catalog?.videoEditing || [];
   const flexServices = catalog?.invitationsAndFlex || [];
+
+  // Deep-linking: auto-open tab or configurator modal if ?tab=... or ?size=... or ?search=... query param is passed
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['all', 'editing', 'albums', 'sheets', 'video', 'flex'].includes(tabParam)) {
+      setActiveTab(tabParam === 'sheets' ? 'albums' : tabParam);
+    }
+    const sizeParam = searchParams.get('size');
+    if (sizeParam && albumSizes.length > 0) {
+      const found = albumSizes.find(s => s.id === sizeParam || s.id === `size-${sizeParam}` || s.dimensions?.toLowerCase().includes(sizeParam.toLowerCase()));
+      if (found) {
+        openAlbumModal(found);
+      }
+    }
+    const searchParam = searchParams.get('search');
+    if (searchParam !== null) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParams, albumSizes]);
+
+  // ── Unified Filtering & Sorting Predicates ─────────────────────────────────
+  const matchesSearch = (item, extraFields = []) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    const haystacks = [
+      item.title || item.name || '',
+      item.telugu || '',
+      item.desc || item.description || '',
+      item.category || '',
+      item.dimensions || '',
+      item.id || '',
+      ...extraFields
+    ].map(s => String(s).toLowerCase());
+    return haystacks.some(h => h.includes(q));
+  };
+
+  const matchesPrice = (price) => {
+    if (priceFilter === 'all') return true;
+    const num = Number(price) || 0;
+    if (priceFilter === 'under_1000') return num < 1000;
+    if (priceFilter === '1000_3000') return num >= 1000 && num <= 3000;
+    if (priceFilter === '3000_7000') return num > 3000 && num <= 7000;
+    if (priceFilter === 'above_7000') return num > 7000;
+    return true;
+  };
+
+  const matchesSla = (turnaround = '') => {
+    if (slaFilter === 'all') return true;
+    const t = String(turnaround).toLowerCase();
+    if (slaFilter === '24h') return t.includes('24');
+    if (slaFilter === '48h') return t.includes('48');
+    if (slaFilter === 'standard') return !t.includes('24') && !t.includes('48');
+    return true;
+  };
+
+  const sortItems = (items, getPrice, getTurnaround) => {
+    return [...items].sort((a, b) => {
+      if (sortBy === 'price_asc') return getPrice(a) - getPrice(b);
+      if (sortBy === 'price_desc') return getPrice(b) - getPrice(a);
+      if (sortBy === 'fastest') {
+        const aT = String(getTurnaround(a) || '');
+        const bT = String(getTurnaround(b) || '');
+        const aRank = aT.includes('24') ? 1 : aT.includes('48') ? 2 : 3;
+        const bRank = bT.includes('24') ? 1 : bT.includes('48') ? 2 : 3;
+        return aRank - bRank;
+      }
+      if (sortBy === 'rating') {
+        const aR = a.popular ? 5.0 : 4.8;
+        const bR = b.popular ? 5.0 : 4.8;
+        return bR - aR;
+      }
+      // featured
+      if (a.popular && !b.popular) return -1;
+      if (!a.popular && b.popular) return 1;
+      return 0;
+    });
+  };
+
+  // Filtered & Sorted Datasets
+  const filteredPhotos = sortItems(
+    photoServices.filter(p => matchesSearch(p) && matchesPrice(p.clientPrice || 45) && matchesSla(p.turnaround)),
+    p => p.clientPrice || 45,
+    p => p.turnaround
+  );
+
+  const filteredAlbums = sortItems(
+    albumSizes.filter(s => {
+      if (orientationFilter !== 'all' && s.orientation !== orientationFilter) return false;
+      const basePrice = s.clientBasePrice || ((s.clientPricePerSheet || 260) * 30);
+      return matchesSearch(s, [s.dimensions, s.category]) && matchesPrice(basePrice) && matchesSla('3-5 Days');
+    }),
+    s => s.clientBasePrice || ((s.clientPricePerSheet || 260) * 30),
+    () => '3-5 Days'
+  );
+
+  const filteredVideos = sortItems(
+    videoServices.filter(v => matchesSearch(v) && matchesPrice(v.clientPrice || v.price || 5000) && matchesSla(v.turnaround)),
+    v => v.clientPrice || v.price || 5000,
+    v => v.turnaround
+  );
+
+  const filteredFlex = sortItems(
+    flexServices.filter(f => matchesSearch(f) && matchesPrice(f.clientPrice || f.price || 1200) && matchesSla(f.turnaround)),
+    f => f.clientPrice || f.price || 1200,
+    f => f.turnaround
+  );
+
+  const filteredSheets = sheetStyles.filter(sh => matchesSearch(sh) && matchesPrice(sh.clientPricePerSheet || 0));
+
+  const totalFilteredCount = 
+    (activeTab === 'editing' ? filteredPhotos.length :
+     activeTab === 'albums' ? filteredAlbums.length :
+     activeTab === 'video' ? filteredVideos.length :
+     activeTab === 'flex' ? filteredFlex.length :
+     (filteredPhotos.length + filteredAlbums.length + filteredVideos.length + filteredFlex.length));
+
+  const totalCatalogCount = photoServices.length + albumSizes.length + videoServices.length + flexServices.length;
+
+  const activeFiltersCount = 
+    (priceFilter !== 'all' ? 1 : 0) + 
+    (slaFilter !== 'all' ? 1 : 0) + 
+    (orientationFilter !== 'all' ? 1 : 0) + 
+    (searchQuery.trim() ? 1 : 0);
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setPriceFilter('all');
+    setSlaFilter('all');
+    setOrientationFilter('all');
+    setSortBy('featured');
+  };
 
   // Support Action Handlers
   const handleWhatsAppSupport = (customText = '') => {
@@ -292,27 +431,6 @@ export default function Shop() {
       </div>
     </div>
   );
-
-  // Deep-linking: auto-open tab or configurator modal if ?tab=... or ?size=... query param is passed
-  useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    if (tabParam && ['all', 'editing', 'albums', 'sheets', 'video', 'flex'].includes(tabParam)) {
-      setActiveTab(tabParam === 'sheets' ? 'albums' : tabParam);
-    }
-    const sizeParam = searchParams.get('size');
-    if (sizeParam && albumSizes.length > 0) {
-      const found = albumSizes.find(s => s.id === sizeParam || s.id === `size-${sizeParam}` || s.dimensions?.toLowerCase().includes(sizeParam.toLowerCase()));
-      if (found) {
-        openAlbumModal(found);
-      }
-    }
-  }, [searchParams, albumSizes]);
-
-  // Filtered album sizes
-  const filteredSizes = albumSizes.filter(s => {
-    if (orientationFilter === 'all') return true;
-    return s.orientation === orientationFilter;
-  });
 
   const openAlbumModal = (size) => {
     setSelectedAlbum(size);
@@ -767,779 +885,954 @@ export default function Shop() {
   return (
     <div className="shop-page">
       <div className="container">
-        
-        {/* Hero Section */}
-        {/* Hero Section */}
-        <header className="shop-hero">
-          <div className="shop-badge">
-            <Sparkles size={14} />
-            {lang === 'TE' ? 'అధికారిక లగ్జరీ స్టోర్‌ఫ్రంట్' : 'Official Heirloom Storefront'}
+        {/* ── Compact E-Commerce Utility Header (65–70px) ───────────────── */}
+        <header className="shop-compact-header">
+          <div className="header-breadcrumbs-row">
+            <div className="breadcrumbs-trail">
+              <span className="crumb-item" onClick={() => navigate('/')}>Home</span>
+              <ChevronRight size={13} className="crumb-arrow" />
+              <span className="crumb-item" onClick={handleResetFilters}>Store</span>
+              <ChevronRight size={13} className="crumb-arrow" />
+              <span className="crumb-current">
+                {activeTab === 'editing' ? (lang === 'TE' ? 'ఫొటో ఎడిటింగ్' : 'Photo Editing') :
+                 activeTab === 'albums' ? (lang === 'TE' ? 'ఆల్బమ్స్' : 'Heirloom Albums') :
+                 activeTab === 'video' ? (lang === 'TE' ? 'వీడియో సర్వీసెస్' : '4K Video Services') :
+                 activeTab === 'flex' ? (lang === 'TE' ? 'ఫ్లెక్స్ & ఇన్విటేషన్స్' : 'Flex of All Sizes & Invites') :
+                 (lang === 'TE' ? 'అన్ని సర్వీసులు' : 'All Services')}
+              </span>
+            </div>
+
+            <div className="catalog-live-badge">
+              <span className="live-dot" />
+              <span>{totalFilteredCount} {lang === 'TE' ? 'సర్వీసులు అందుబాటులో ఉన్నాయి' : 'Items & Formats'}</span>
+            </div>
           </div>
-          <h1 className="shop-title">
-            {lang === 'TE' 
-              ? 'ఫొటో ఎడిటింగ్, వెడ్డింగ్ ఆల్బమ్స్, వీడియో & ఫ్లెక్స్' 
-              : 'Photo Editing, Heirloom Albums, 4K Video & Event Flex'}
-          </h1>
-          <p className="shop-subtitle">
-            {lang === 'TE'
-              ? 'ప్రత్యేకమైన 100% ఇన్-హౌస్ పోస్ట్-ప్రొడక్షన్ & ల్యాబ్ ప్రింటింగ్. ఫొటో రీటచింగ్, రాయల్ కరిజ్మా ఆల్బమ్స్, 4K సినిమాటిక్ వీడియోలు మరియు ఏ సైజులోనైనా ఫ్లెక్స్ బ్యానర్లు.'
-              : 'Direct studio e-commerce store with transparent per-sheet & upfront pricing. Order pure digital photo editing, handcrafted lay-flat albums, 4K video post-production, or custom flex of all sizes.'}
-          </p>
+
+          <div className="header-controls-row">
+            {/* Live Instant Search Input */}
+            <div className="compact-search-bar">
+              <Search size={15} className="search-icon" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={lang === 'TE' ? 'సర్వీస్, సైజు లేదా ఫార్మాట్ వెతకండి...' : 'Search editing, 12×36 albums, 4K video, flex sizes...'}
+                className="compact-search-input"
+              />
+              {searchQuery && (
+                <button 
+                  type="button" 
+                  onClick={() => setSearchQuery('')}
+                  className="search-clear-btn"
+                  title="Clear search"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            {/* Sort Selector */}
+            <div className="compact-sort-wrapper">
+              <select 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+                className="compact-sort-select"
+                aria-label="Sort products"
+              >
+                <option value="featured">✨ Featured & Best Sellers</option>
+                <option value="price_asc">💰 Price: Low to High</option>
+                <option value="price_desc">💎 Price: High to Low</option>
+                <option value="fastest">⚡ SLA: Fastest (24h Express)</option>
+                <option value="rating">⭐ Rating: Highest Rated</option>
+              </select>
+            </div>
+
+            {/* Desktop Filter Toggle Button */}
+            <button 
+              type="button"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className={`btn-sidebar-toggle ${!sidebarCollapsed ? 'active' : ''}`}
+              title="Toggle Filter Sidebar"
+            >
+              <Filter size={14} />
+              <span>{sidebarCollapsed ? 'Show Filters' : 'Hide Filters'}</span>
+              {activeFiltersCount > 0 && <span className="active-filters-pill">{activeFiltersCount}</span>}
+            </button>
+
+            {/* Mobile Filter Sheet Trigger */}
+            <button 
+              type="button"
+              onClick={() => setMobileFiltersOpen(true)}
+              className="btn-mobile-filters"
+            >
+              <Filter size={15} />
+              <span>Filters</span>
+              {activeFiltersCount > 0 && <span className="active-filters-pill">{activeFiltersCount}</span>}
+            </button>
+
+            {/* View Mode Density Toggle */}
+            <div className="density-toggle-group">
+              <button 
+                type="button" 
+                className={`density-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+                title="Grid View (3–4 Cards)"
+              >
+                <Grid size={15} />
+              </button>
+              <button 
+                type="button" 
+                className={`density-btn ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode('list')}
+                title="High-Density List View"
+              >
+                <List size={15} />
+              </button>
+            </div>
+          </div>
         </header>
 
-        {/* Universal Support & Consultation Bar */}
-        <aside className="shop-support-bar glass-3d" aria-label="Customer Support">
-          <div className="shop-support-info">
-            <div className="support-badge">
-              <Sparkles size={14} /> Need Help or Custom Sizing?
-            </div>
-            <h3 className="support-title">Talk Directly to Our Lab Specialists & Designers</h3>
-            <p className="support-desc">
-              Have questions about wedding albums, 4K video editing, photo retouching, or custom flex sizes of any dimension? We are available via WhatsApp and phone 7 days a week.
-            </p>
-            <div className="support-topic-chips">
-              <button 
-                type="button" 
-                className="support-topic-chip"
-                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like to ask about digital photo editing & retouching rates.")}
-              >
-                🎨 Photo Editing Support
-              </button>
-              <button 
-                type="button" 
-                className="support-topic-chip"
-                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like to ask about custom heirloom album sizes, paper finishes and luxury covers.")}
-              >
-                📖 Custom Album Sizing
-              </button>
-              <button 
-                type="button" 
-                className="support-topic-chip"
-                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like to ask about 4K cinematic video editing packages and multicam sync.")}
-              >
-                🎬 4K Video Packages
-              </button>
-              <button 
-                type="button" 
-                className="support-topic-chip"
-                onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I need a custom flex banner size for my event venue. Can you provide pricing for custom dimensions?")}
-              >
-                🚩 Custom Flex of Any Size
-              </button>
-            </div>
-          </div>
-          <div className="shop-support-actions">
-            <button
-              type="button"
-              className="btn-whatsapp-direct"
-              onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I'm browsing your services store and need support choosing the right package or custom sizing.`)}
-            >
-              <MessageCircle size={18} /> Chat on WhatsApp
-            </button>
-            <a
-              href={`tel:${labPhone.replace(/\s+/g, '')}`}
-              className="btn-phone-direct"
-            >
-              <Phone size={18} /> Call: {labPhone}
-            </a>
-          </div>
-        </aside>
-
-        {/* Main Category Tabs */}
-        <nav className="shop-tabs" aria-label="Catalog Categories">
+        {/* ── Sticky Department Carousel / Pills ─────────────────────────── */}
+        <div className="store-category-carousel">
           <button 
             type="button" 
-            className={`shop-tab-btn ${activeTab === 'editing' ? 'active' : ''}`}
-            onClick={() => setActiveTab('editing')}
-          >
-            <Camera size={18} />
-            {lang === 'TE' ? 'ఫొటో ఎడిటింగ్ & డిజైనింగ్' : 'Photo Editing & Designing'}
-          </button>
-
-          <button 
-            type="button" 
-            className={`shop-tab-btn ${activeTab === 'albums' ? 'active' : ''}`}
-            onClick={() => setActiveTab('albums')}
-          >
-            <BookOpen size={18} />
-            {lang === 'TE' ? 'ఆల్బమ్స్ (ఎడిటింగ్ + ప్రింటింగ్)' : 'Album Editing + Printing'}
-          </button>
-
-          <button 
-            type="button" 
-            className={`shop-tab-btn ${activeTab === 'video' ? 'active' : ''}`}
-            onClick={() => setActiveTab('video')}
-          >
-            <Video size={18} />
-            {lang === 'TE' ? 'సినిమాటిక్ వీడియో సర్వీసెస్' : 'Cinematic Video Services'}
-          </button>
-
-          <button 
-            type="button" 
-            className={`shop-tab-btn ${activeTab === 'flex' ? 'active' : ''}`}
-            onClick={() => setActiveTab('flex')}
-          >
-            <Gift size={18} />
-            {lang === 'TE' ? 'ఫ్లెక్స్ & కస్టమ్ సైజులు' : 'Flex of All Sizes & Invites'}
-          </button>
-
-          <button 
-            type="button" 
-            className={`shop-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+            className={`category-pill ${activeTab === 'all' ? 'active' : ''}`}
             onClick={() => setActiveTab('all')}
           >
-            <Sparkles size={18} />
-            {lang === 'TE' ? 'అన్నీ చూడండి' : 'View All'}
+            <Sparkles size={14} />
+            <span>{lang === 'TE' ? 'అన్నీ' : 'All Services'}</span>
+            <span className="category-pill-count">{totalCatalogCount}</span>
           </button>
-        </nav>
 
-        {/* Orientation Sub-Filter (Visible when viewing albums) */}
-        {(activeTab === 'albums' || activeTab === 'all') && (
-          <div className="sub-filter-bar">
-            <span style={{ fontSize: '0.85rem', color: '#71717a', marginRight: '0.5rem' }}>
-              <Filter size={14} style={{ display: 'inline', marginRight: 4 }} /> 
-              {lang === 'TE' ? 'ఓరియంటేషన్:' : 'Orientation:'}
-            </span>
-            <button 
-              type="button"
-              className={`sub-filter-pill ${orientationFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setOrientationFilter('all')}
-            >
-              All Formats ({albumSizes.length})
-            </button>
-            <button 
-              type="button"
-              className={`sub-filter-pill ${orientationFilter === 'landscape' ? 'active' : ''}`}
-              onClick={() => setOrientationFilter('landscape')}
-            >
-              ↔️ Landscape Panoramic ({albumSizes.filter(s => s.orientation === 'landscape').length})
-            </button>
-            <button 
-              type="button"
-              className={`sub-filter-pill ${orientationFilter === 'portrait' ? 'active' : ''}`}
-              onClick={() => setOrientationFilter('portrait')}
-            >
-              ↕️ Portrait Royal Magazine ({albumSizes.filter(s => s.orientation === 'portrait').length})
-            </button>
-          </div>
-        )}
+          <button 
+            type="button" 
+            className={`category-pill ${activeTab === 'editing' ? 'active' : ''}`}
+            onClick={() => setActiveTab('editing')}
+          >
+            <Camera size={14} className="cat-icon-editing" />
+            <span>{lang === 'TE' ? 'ఫొటో ఎడిటింగ్' : 'Photo Editing'}</span>
+            <span className="category-pill-count">{photoServices.length}</span>
+          </button>
 
-        {/* 0. PHOTO EDITING & ALBUM DESIGNING (PURE DIGITAL POST-PRODUCTION) */}
-        {(activeTab === 'editing' || activeTab === 'all') && (
-          <div style={{ marginBottom: '4rem' }} id="dept-editing">
-            {activeTab === 'all' && (
-              <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '1.5rem', borderLeft: '4px solid var(--gold-primary)', paddingLeft: '1rem' }}>
-                🎨 {lang === 'TE' ? 'ఫొటో ఎడిటింగ్ & ఆల్బమ్ డిజైనింగ్' : 'Photo Editing & Album Designing (Digital)'}
-              </h2>
-            )}
+          <button 
+            type="button" 
+            className={`category-pill ${activeTab === 'albums' ? 'active' : ''}`}
+            onClick={() => setActiveTab('albums')}
+          >
+            <BookOpen size={14} className="cat-icon-album" />
+            <span>{lang === 'TE' ? 'రాయల్ ఆల్బమ్స్' : 'Heirloom Albums'}</span>
+            <span className="category-pill-count">{albumSizes.length}</span>
+          </button>
 
-            {/* Photo Editing Market Standards & Info Bar */}
-            <div className="market-info-bar">
-              <div className="market-badges-row">
-                <span className="market-badge">✨ High-End Frequency Separation (Authentic Skin Micro-Pores)</span>
-                <span className="market-badge">👑 24K Temple Gold & Diamond Jewelry Specular Shine</span>
-                <span className="market-badge">📐 300 DPI Lab-Ready PSD Spreads (Zero Gutter Loss)</span>
-                <span className="market-badge">⚡ 24 to 48 Hours Rapid Turnaround</span>
-              </div>
-            </div>
+          <button 
+            type="button" 
+            className={`category-pill ${activeTab === 'video' ? 'active' : ''}`}
+            onClick={() => setActiveTab('video')}
+          >
+            <Video size={14} className="cat-icon-video" />
+            <span>{lang === 'TE' ? '4K వీడియో సర్వీసెస్' : '4K Video Editing'}</span>
+            <span className="category-pill-count">{videoServices.length}</span>
+          </button>
 
-            <div className="shop-grid">
-              {photoServices.map((photo) => {
-                const price = photo.clientPrice || 45;
-                const unit = photo.unit || (photo.id?.includes('psd') || photo.id?.includes('spread') ? 'per spread' : 'per photo');
+          <button 
+            type="button" 
+            className={`category-pill ${activeTab === 'flex' ? 'active' : ''}`}
+            onClick={() => setActiveTab('flex')}
+          >
+            <Gift size={14} className="cat-icon-flex" />
+            <span>{lang === 'TE' ? 'ఫ్లెక్స్ & ఇన్వైట్స్' : 'Flex of All Sizes & Invites'}</span>
+            <span className="category-pill-count">{flexServices.length}</span>
+          </button>
+        </div>
 
-                return (
-                  <article key={photo.id} className="product-card">
-                    <div className="product-card-image-wrapper" style={{ height: '160px' }}>
-                      <img src="/images/opt/weddingalbums-talambraluw800.webp" alt={photo.title} className="product-card-image" loading="lazy" />
-                      <div className="card-image-gradient" />
-                      <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
-                        <span className="orientation-tag landscape" style={{ color: 'var(--gold-primary)', borderColor: 'rgba(212,175,55,0.3)' }}>
-                          ⏱️ {photo.turnaround || '24-48h SLA'}
-                        </span>
-                        <span className="product-badge">
-                          Digital Post-Production
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
-                      <div className="card-service-type-badge complete-suite">
-                        🎨 100% IN-HOUSE EDITING UNIT
-                      </div>
-                      <h3 className="product-name">{photo.title}</h3>
-                      {photo.telugu && <div className="product-telugu">{photo.telugu}</div>}
-                      <p className="product-desc">{photo.desc}</p>
-
-                      <ul className="card-checklist">
-                        <li><span className="card-checklist-check">✓</span> <span>Frequency Separation & Blemish Cleanup</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>22K/24K Gold Jewelry Luster & Saree Contrast</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>Telugu Ritual Pacing & Elegant Typography</span></li>
-                      </ul>
-
-                      <div className="price-strip">
-                        <div className="per-sheet-highlight">
-                          <span className="per-sheet-label">Direct Rate</span>
-                          <span className="per-sheet-rate">
-                            ₹{price} <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ {unit}</small>
-                          </span>
-                        </div>
-                      </div>
-
-                      {renderCardSupportPrompt(photo.title, 'photo')}
-                    </div>
-
-                    <div className="product-card-footer">
-                      <button 
-                        type="button" 
-                        onClick={() => openServiceModal(photo, 'photo')} 
-                        className="btn-customize"
-                      >
-                        <Sliders size={16} />
-                        {lang === 'TE' ? 'కాన్ఫిగర్ & ఆర్డర్ చేయండి' : 'Configure & Order Editing'} <ArrowRight size={16} />
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 1. ALBUM SIZES SECTION */}
-        {(activeTab === 'albums' || activeTab === 'all') && (
-          <div style={{ marginBottom: '4rem' }}>
-            {activeTab === 'all' && (
-              <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '1.5rem', borderLeft: '4px solid var(--gold-primary)', paddingLeft: '1rem' }}>
-                📖 {lang === 'TE' ? 'వెడ్డింగ్ ఆల్బమ్స్ (పర్-షీట్ ధరలు)' : 'Heirloom Wedding Albums (Per-Sheet Pricing)'}
-              </h2>
-            )}
-
-            {/* Album Market Standards & Info Bar */}
-            <div className="market-info-bar">
-              <div className="market-badges-row">
-                <span className="market-badge">🖨️ HP Indigo 12000 HD & Fuji Silver Halide</span>
-                <span className="market-badge">📖 180° Seamless Panoramic Layflat (Zero Gutter Loss)</span>
-                <span className="market-badge">🛡️ 200-Year Archival Life · 100% Waterproof</span>
-                <span className="market-badge">🚚 Asset Handover: Cloud Link OR Courier Pen Drive to Lab</span>
-              </div>
-              <button 
-                type="button" 
-                onClick={() => setShowAlbumGuide(!showAlbumGuide)} 
-                className="btn-guide-toggle"
-              >
-                <Info size={15} /> 
-                {showAlbumGuide ? 'Hide Lab Quality & Paper Guide' : 'View Lab Quality & Paper Guide'}
-                {showAlbumGuide ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-              </button>
-            </div>
-
-            {showAlbumGuide && (
-              <div className="market-guide-panel">
-                <div className="guide-grid">
-                  <div className="guide-card">
-                    <h4>💎 180° Layflat Binding Guarantee</h4>
-                    <p>Every album opens completely 100% flat with seamless panoramic spreads. Zero gutter split ensures bride & groom faces in the center fold stay intact with zero image loss.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>🛡️ Archival Longevity & Protection</h4>
-                    <p>200-year archival rating with thermal lamination. 100% waterproof and tear-resistant. Spilled water, puja turmeric, or fingerprints wipe clean without damage.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>✨ 6 Archival Paper Textures</h4>
-                    <p>NTR Matte (anti-glare), 24K Metallic Pearl Gold (wedding silks), Royal Velvet (soft touch), Pure Silk Pattu (woven grain), Sparkle Glitter, and Fuji DP2 Professional.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>📦 Dual Asset Handover</h4>
-                    <p>Provide photos via WeTransfer/Drive or courier your Pen Drive / Hard Disk directly to our Central Lab in Guntur. Returned safely inside your luxury album box.</p>
-                  </div>
+        {/* ── Main Store Two-Column Layout ──────────────────────────────── */}
+        <div className={`store-body-layout ${sidebarCollapsed ? 'sidebar-hidden' : ''}`}>
+          
+          {/* Faceted Filter Sidebar (Collapsible) */}
+          <aside className="store-filter-sidebar">
+            {/* Active Filters Bar */}
+            {activeFiltersCount > 0 && (
+              <div className="sidebar-filter-block active-filters-summary">
+                <div className="active-filters-header">
+                  <span className="filter-block-title">Active Filters ({activeFiltersCount})</span>
+                  <button 
+                    type="button" 
+                    onClick={handleResetFilters}
+                    className="btn-reset-filters"
+                  >
+                    <RotateCcw size={12} /> Reset
+                  </button>
+                </div>
+                <div className="active-chips-wrap">
+                  {searchQuery && (
+                    <span className="active-chip">
+                      Search: "{searchQuery}"
+                      <X size={12} onClick={() => setSearchQuery('')} />
+                    </span>
+                  )}
+                  {priceFilter !== 'all' && (
+                    <span className="active-chip">
+                      Price: {priceFilter.replace('_', ' ')}
+                      <X size={12} onClick={() => setPriceFilter('all')} />
+                    </span>
+                  )}
+                  {slaFilter !== 'all' && (
+                    <span className="active-chip">
+                      SLA: {slaFilter}
+                      <X size={12} onClick={() => setSlaFilter('all')} />
+                    </span>
+                  )}
+                  {orientationFilter !== 'all' && (
+                    <span className="active-chip">
+                      Orientation: {orientationFilter}
+                      <X size={12} onClick={() => setOrientationFilter('all')} />
+                    </span>
+                  )}
                 </div>
               </div>
             )}
 
-            <div className="shop-grid">
-              {filteredSizes.map((size) => {
-                const perSheet = size.clientPricePerSheet || Math.round((size.clientBasePrice || 4500) / 30);
-                const basePrice = size.clientBasePrice || (perSheet * 30);
-                const productImage = size.image || ALBUM_IMAGES[size.id] || '/images/weddingalbums-layflat-album.png';
+            {/* Department Selection */}
+            <div className="sidebar-filter-block">
+              <span className="filter-block-title">Department</span>
+              <div className="filter-options-list">
+                {[
+                  { id: 'all', label: 'All Departments', count: totalCatalogCount },
+                  { id: 'editing', label: '🎨 Photo Editing & Designing', count: photoServices.length },
+                  { id: 'albums', label: '📖 Heirloom Layflat Albums', count: albumSizes.length },
+                  { id: 'video', label: '🎬 4K Cinematic Video Editing', count: videoServices.length },
+                  { id: 'flex', label: '🚩 Event Flex & Custom Sizing', count: flexServices.length }
+                ].map(dept => (
+                  <label key={dept.id} className={`filter-radio-row ${activeTab === dept.id ? 'selected' : ''}`}>
+                    <input 
+                      type="radio" 
+                      name="store_dept" 
+                      checked={activeTab === dept.id} 
+                      onChange={() => setActiveTab(dept.id)} 
+                    />
+                    <span className="filter-label-text">{dept.label}</span>
+                    <span className="filter-badge-count">{dept.count}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-                return (
-                  <article key={size.id} className="product-card">
-                    <div className="product-card-image-wrapper">
-                      <img 
-                        src={productImage} 
-                        alt={size.name} 
-                        className="product-card-image"
-                        loading="lazy"
+            {/* Price Filter */}
+            <div className="sidebar-filter-block">
+              <span className="filter-block-title">Price Range</span>
+              <div className="filter-options-list">
+                {[
+                  { id: 'all', label: 'All Prices' },
+                  { id: 'under_1000', label: 'Under ₹1,000 (Per Photo/Sq.Ft)' },
+                  { id: '1000_3000', label: '₹1,000 to ₹3,000 (Banners/Invites)' },
+                  { id: '3000_7000', label: '₹3,000 to ₹7,000 (Popular Albums)' },
+                  { id: 'above_7000', label: '₹7,000+ (Grand Imperial & Full 4K)' }
+                ].map(p => (
+                  <label key={p.id} className={`filter-radio-row ${priceFilter === p.id ? 'selected' : ''}`}>
+                    <input 
+                      type="radio" 
+                      name="store_price" 
+                      checked={priceFilter === p.id} 
+                      onChange={() => setPriceFilter(p.id)} 
+                    />
+                    <span className="filter-label-text">{p.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* SLA / Turnaround Filter */}
+            <div className="sidebar-filter-block">
+              <span className="filter-block-title">Turnaround SLA</span>
+              <div className="filter-options-list">
+                {[
+                  { id: 'all', label: 'All Turnaround Times' },
+                  { id: '24h', label: '⚡ 24 Hours Express Rush' },
+                  { id: '48h', label: '⏱️ 48 Hours Lab SLA' },
+                  { id: 'standard', label: '📦 3–5 Days Archival Dispatch' }
+                ].map(s => (
+                  <label key={s.id} className={`filter-radio-row ${slaFilter === s.id ? 'selected' : ''}`}>
+                    <input 
+                      type="radio" 
+                      name="store_sla" 
+                      checked={slaFilter === s.id} 
+                      onChange={() => setSlaFilter(s.id)} 
+                    />
+                    <span className="filter-label-text">{s.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Album Orientation (Always available or for Albums) */}
+            {(activeTab === 'albums' || activeTab === 'all') && (
+              <div className="sidebar-filter-block">
+                <span className="filter-block-title">Album Spread Orientation</span>
+                <div className="filter-options-list">
+                  {[
+                    { id: 'all', label: `All Formats (${albumSizes.length})` },
+                    { id: 'landscape', label: `↔️ Landscape (${albumSizes.filter(s => s.orientation === 'landscape').length})` },
+                    { id: 'portrait', label: `↕️ Portrait Magazine (${albumSizes.filter(s => s.orientation === 'portrait').length})` }
+                  ].map(o => (
+                    <label key={o.id} className={`filter-radio-row ${orientationFilter === o.id ? 'selected' : ''}`}>
+                      <input 
+                        type="radio" 
+                        name="store_orientation" 
+                        checked={orientationFilter === o.id} 
+                        onChange={() => setOrientationFilter(o.id)} 
                       />
-                      <div className="card-image-gradient" />
-                      <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
-                        <span className={`orientation-tag ${size.orientation}`}>
-                          {size.orientation === 'portrait' ? '↕️ Portrait' : '↔️ Landscape'}
-                        </span>
-                        {size.popular && (
-                          <span className="product-badge">
-                            <Flame size={12} style={{ display: 'inline', marginRight: 3 }} />
-                            {size.badge || '⭐ Best Seller'}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="product-card-body">
-                      <div className="card-service-type-badge complete-suite">
-                        ✨ COMPLETE SUITE · DESIGN + PRINT & BIND
-                      </div>
-                      <h3 className="product-name">{size.name}</h3>
-                      {size.telugu && <div className="product-telugu">{size.telugu}</div>}
-                      <p className="product-desc">{size.description || `${size.dimensions} Open Spread with archival lay-flat binding.`}</p>
-
-                      {/* Service Clarity Checklist */}
-                      <ul className="card-checklist">
-                        <li><span className="card-checklist-check">✓</span> <span>Master Telugu Karizma Layout & RAW Skin Retouching</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>HP Indigo 12000 Layflat Archival Print (0% Gutter Loss)</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>Luxury Hardcover & Box · Select Up to 150 Sheets</span></li>
-                      </ul>
-
-                      <div className="price-strip">
-                        <div className="per-sheet-highlight">
-                          <span className="per-sheet-label">Per Sheet Price</span>
-                          <span className="per-sheet-rate">
-                            ₹{perSheet} <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ sheet</small>
-                          </span>
-                        </div>
-                        <div className="base-total-note">
-                          <span>30 Sheets (60 Pages) Base:</span>
-                          <strong style={{ color: '#fff' }}>₹{Number(basePrice).toLocaleString('en-IN')}</strong>
-                        </div>
-                      </div>
-
-                      {renderCardSupportPrompt(size.name, 'album')}
-                    </div>
-
-                    <div className="product-card-footer">
-                      <button 
-                        type="button"
-                        onClick={() => openAlbumModal(size)}
-                        className="btn-customize"
-                      >
-                        <Sliders size={16} />
-                        {lang === 'TE' ? 'కాన్ఫిగర్ & ఆర్డర్ చేయండి' : 'Configure & Order'}
-                      </button>
-                      <button 
-                        type="button" 
-                        className="btn-quick-add"
-                        title="Quick Add 30-Sheet Base"
-                        onClick={() => handleQuickAddAlbum(size)}
-                      >
-                        <ShoppingBag size={18} />
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 2. PAPER STYLES & FINISHES */}
-        {(activeTab === 'sheets' || activeTab === 'all') && (
-          <div style={{ marginBottom: '4rem' }}>
-            {activeTab === 'all' && (
-              <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '1.5rem', borderLeft: '4px solid var(--gold-primary)', paddingLeft: '1rem' }}>
-                🧻 {lang === 'TE' ? 'షీట్ల రకాలు & సర్ఫేస్ ఫినిషెస్' : 'Archival Paper Types & Surface Finishes'}
-              </h2>
-            )}
-
-            <div className="shop-grid">
-              {sheetStyles.map((sheet) => {
-                const addOn = sheet.clientPricePerSheet || 0;
-                const sheetImg = SHEET_IMAGES[sheet.id] || '/images/weddingalbums-layflat-album.png';
-
-                return (
-                  <article key={sheet.id} className="product-card">
-                    <div className="product-card-image-wrapper" style={{ height: '140px' }}>
-                      <img src={sheetImg} alt={sheet.name} className="product-card-image" loading="lazy" />
-                      <div className="card-image-gradient" />
-                      <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
-                        <span className="orientation-tag landscape" style={{ color: sheet.color, borderColor: `${sheet.color}55` }}>
-                          {sheet.gsm || 'Archival Sheet'}
-                        </span>
-                        <span className="product-badge" style={{ background: `${sheet.color}20`, color: sheet.color }}>
-                          {sheet.tier === 'standard' ? 'Standard Core' : 'Luxury Surface'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
-                      <h3 className="product-name">{sheet.name}</h3>
-                      {sheet.telugu && <div className="product-telugu">{sheet.telugu}</div>}
-                      <p className="product-desc">{sheet.description}</p>
-
-                      <div className="price-strip">
-                        <div className="per-sheet-highlight">
-                          <span className="per-sheet-label">Sheet Upgrade Rate</span>
-                          <span className="per-sheet-rate">
-                            {addOn === 0 ? 'Included (₹0)' : `+₹${addOn} / sheet`}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="product-card-footer">
-                      <button 
-                        type="button" 
-                        onClick={() => {
-                          const firstAlbum = albumSizes[0];
-                          if (firstAlbum) {
-                            openAlbumModal(firstAlbum);
-                            setSelectedPaper(sheet);
-                          }
-                        }}
-                        className="btn-customize"
-                      >
-                        {lang === 'TE' ? 'ఈ షీట్‌తో బుక్ చేయండి' : 'Configure Album With This Sheet'} <ArrowRight size={16} />
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 3. VIDEO EDITING FOR ALL EVENTS */}
-        {(activeTab === 'video' || activeTab === 'all') && (
-          <div style={{ marginBottom: '4rem' }}>
-            {activeTab === 'all' && (
-              <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '1.5rem', borderLeft: '4px solid #9C27B0', paddingLeft: '1rem' }}>
-                🎬 {lang === 'TE' ? 'సినిమాటిక్ వీడియో ఎడిటింగ్' : 'Cinematic Video Editing for All Events'}
-              </h2>
-            )}
-
-            {/* Video Market Standards & Info Bar */}
-            <div className="market-info-bar">
-              <div className="market-badges-row">
-                <span className="market-badge">🎨 DaVinci Resolve Studio ACES Color Science</span>
-                <span className="market-badge">🎵 Classical Telugu Nadaswaram & Mangala Vaadhyam Stems</span>
-                <span className="market-badge">⏱️ 45m / 1hr / 2hr Documentary & 9:16 Instagram Reels</span>
-                <span className="market-badge">⚡ 24-Hour Express Turnaround Available</span>
-              </div>
-              <button 
-                type="button" 
-                onClick={() => setShowVideoGuide(!showVideoGuide)} 
-                className="btn-guide-toggle"
-              >
-                <Info size={15} /> 
-                {showVideoGuide ? 'Hide Video Lab & Multicam Guide' : 'View Video Lab & Multicam Guide'}
-                {showVideoGuide ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-              </button>
-            </div>
-
-            {showVideoGuide && (
-              <div className="market-guide-panel">
-                <div className="guide-grid">
-                  <div className="guide-card">
-                    <h4>🎬 Multicam Synchronization</h4>
-                    <p>Multi-angle timecode and waveform sync for up to 4 cameras (Bride entry, Groom stage, Drone & Crowd) paired with sound console line-in audio stems.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>🎨 South Indian Skin Tone Science</h4>
-                    <p>Color grading calibrated specifically for Indian bridal skin tones, rich turmeric yellows (Pasupu), vermilion kumkum, and vibrant Kanjeevaram silk dyes.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>⏱️ Complete Runtime Formats</h4>
-                    <p>Choose from 3-5 min trailers, 10-15 min highlights, 45 min feature films, 1 hr traditional films, or 2+ hr uncut ceremony documentaries with chapter index.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>📦 Footage Dispatch via Courier</h4>
-                    <p>Avoid slow home broadband! Courier your camera memory cards or portable SSD/HDD to our Guntur Lab. Returned safely in your delivery box.</p>
-                  </div>
+                      <span className="filter-label-text">{o.label}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
             )}
 
-            <div className="shop-grid">
-              {videoServices.map((video) => {
-                const price = video.clientPrice || video.price || 0;
-                return (
-                  <article key={video.id} className="product-card">
-                    <div className="product-card-image-wrapper" style={{ height: '160px' }}>
-                      <img src="/images/cinematic-video-suite.jpg" alt={video.title} className="product-card-image" loading="lazy" />
-                      <div className="card-image-gradient" />
-                      <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
-                        <span className="orientation-tag landscape" style={{ color: '#c084fc', borderColor: 'rgba(168,85,247,0.3)' }}>
-                          ⏱️ {video.turnaround || '48h SLA'}
-                        </span>
-                        <span className="product-badge">
-                          4K Dolby Color
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
-                      <div className="card-service-type-badge video-badge">
-                        🎬 4K CINEMATIC VIDEO EDITING
-                      </div>
-                      <h3 className="product-name">{video.title}</h3>
-                      {video.telugu && <div className="product-telugu">{video.telugu}</div>}
-                      <p className="product-desc">{video.desc}</p>
-
-                      <ul className="card-checklist">
-                        <li><span className="card-checklist-check">✓</span> <span>DaVinci Resolve Wide Gamut Color Grading</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>2–4 Multi-Camera Audio & Waveform Sync</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>Classical Nadaswaram & Ritual Audio Stems</span></li>
-                      </ul>
-
-                      <div className="price-strip">
-                        <div className="per-sheet-highlight">
-                          <span className="per-sheet-label">Package Price</span>
-                          <span className="per-sheet-rate">
-                            ₹{Number(price).toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                      </div>
-
-                      {renderCardSupportPrompt(video.title, 'video')}
-                    </div>
-
-                    <div className="product-card-footer">
-                      <button 
-                        type="button" 
-                        onClick={() => openServiceModal(video, 'video')} 
-                        className="btn-customize"
-                      >
-                        <Sliders size={16} />
-                        {lang === 'TE' ? 'కాన్ఫిగర్ & ఆర్డర్ చేయండి' : 'Configure & Order Video'} <ArrowRight size={16} />
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 4. WHATSAPP INVITES & EVENT FLEX */}
-        {(activeTab === 'flex' || activeTab === 'all') && (
-          <div style={{ marginBottom: '4rem' }}>
-            {activeTab === 'all' && (
-              <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '1.5rem', borderLeft: '4px solid #2E7D32', paddingLeft: '1rem' }}>
-                💌 {lang === 'TE' ? 'వాట్సాప్ వీడియో ఆహ్వానాలు & ఈవెంట్ ఫ్లెక్స్' : 'WhatsApp Video Invites & Event Flex'}
-              </h2>
-            )}
-
-            {/* Flex Market Standards & Info Bar */}
-            <div className="market-info-bar">
-              <div className="market-badges-row">
-                <span className="market-badge">📐 Standard Sizes & Any Custom ft × ft Dimensions</span>
-                <span className="market-badge">🌟 440 GSM Heavy Blackout Matte (Zero Flash Glare)</span>
-                <span className="market-badge">🎨 Custom Telugu Design (+₹499) with Shlokas & Venue Map QR</span>
-                <span className="market-badge">📦 Shipped in Heavy Cylindrical PVC Pipe (Zero Creases)</span>
+            {/* Lab Concierge Support Card */}
+            <div className="sidebar-concierge-card">
+              <div className="concierge-badge">
+                <Sparkles size={12} /> Direct Lab Desk
               </div>
-              <button 
-                type="button" 
-                onClick={() => setShowFlexGuide(!showFlexGuide)} 
-                className="btn-guide-toggle"
-              >
-                <Info size={15} /> 
-                {showFlexGuide ? 'Hide Flex Material & Sizing Guide' : 'View Flex Material & Sizing Guide'}
-                {showFlexGuide ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-              </button>
-            </div>
-
-            {showFlexGuide && (
-              <div className="market-guide-panel">
-                <div className="guide-grid">
-                  <div className="guide-card">
-                    <h4>✨ Any Custom Size You Want</h4>
-                    <p>Choose standard sizes (10×8 ft, 8×6 ft, 6×4 ft, 6×3 ft standee) or input your exact Width ft × Height ft with live sq.ft calculation at commercial lab rates (₹30/sq.ft).</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>🌟 440 GSM Blackout Matte (Anti-Glare)</h4>
-                    <p>Zero flash bounce for wedding photographers. 100% blackout backing blocks stage lighting shadows from showing through. Tear-proof and anti-curl.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>🎨 Telugu Cultural Designing</h4>
-                    <p>In-house graphic designers integrate couple photo cutout blending, Lord Venkateswara / Ganesha blessings, traditional Telugu wedding shlokas, and venue map QR code.</p>
-                  </div>
-                  <div className="guide-card">
-                    <h4>📦 Zero-Crease PVC Tube Delivery</h4>
-                    <p>Banners are never folded. Every flex banner is rolled securely inside a heavy-duty cylindrical PVC pipe to ensure pristine, crease-free delivery.</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Custom Sizing & Direct Support Callout */}
-            <div className="flex-custom-callout glass-3d" style={{ marginBottom: '2rem', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(74,222,128,0.3)', background: 'rgba(74,222,128,0.04)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#4ade80', fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.35rem' }}>
-                  <Sparkles size={16} /> Need Any Custom Venue Dimensions or Stage Framing?
-                </div>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', maxWidth: '650px', lineHeight: 1.5 }}>
-                  Ask for whatever custom sizes you want (Width ft × Height ft at ₹{catalog.ratePerSqFtClient || 30}/sq.ft)! Or contact our lab specialist directly for custom scaffolding banners, truss framing, and same-day delivery.
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <h4 className="concierge-title">Need Custom Sizes or Guidance?</h4>
+              <p className="concierge-desc">
+                Talk to our lead designers for custom flex dimensions, 4K multicam sync, or paper finishes.
+              </p>
+              <div className="concierge-actions">
                 <button
                   type="button"
-                  className="btn"
-                  onClick={() => setShowCustomFlexModal(true)}
-                  style={{ background: 'rgba(212,175,55,0.18)', color: 'var(--gold-primary)', border: '1px solid rgba(212,175,55,0.45)', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                  className="btn-concierge-wa"
+                  onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'm browsing the store and need support choosing packages or custom sizing.")}
                 >
-                  <Sliders size={16} /> 📐 Ask for Custom Size
+                  <MessageCircle size={14} /> WhatsApp Us
                 </button>
-                <button
-                  type="button"
-                  className="btn btn-whatsapp-direct"
-                  onClick={() => handleWhatsAppSupport(`Hi WeddingAlbums.in, I need a custom flex size for my event venue. Can you provide pricing and delivery timeline?`)}
-                  style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
-                >
-                  <MessageCircle size={16} /> Ask on WhatsApp
-                </button>
-                <a
-                  href={`tel:${labPhone.replace(/\s+/g, '')}`}
-                  className="btn btn-phone-direct"
-                  style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.65rem 1.15rem', borderRadius: '8px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
-                >
-                  <Phone size={16} /> Call: {labPhone}
+                <a href={`tel:${labPhone.replace(/\s+/g, '')}`} className="btn-concierge-tel">
+                  <Phone size={14} /> Call: {labPhone}
                 </a>
               </div>
             </div>
 
-            <div className="shop-grid">
-              {/* Feature: Custom Size Interactive Card */}
-              <article className="product-card" style={{ border: '2px dashed rgba(74,222,128,0.5)', background: 'rgba(74,222,128,0.02)' }}>
-                <div className="product-card-image-wrapper" style={{ height: '160px', background: 'radial-gradient(circle, rgba(74,222,128,0.15) 0%, rgba(0,0,0,0.6) 100%)' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#4ade80' }}>
-                    <Sliders size={36} style={{ marginBottom: '0.5rem' }} />
-                    <span style={{ fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.05em' }}>ANY CUSTOM SIZE YOU WANT</span>
+            {/* Lab Standards Badges */}
+            <div className="sidebar-standards-box">
+              <div className="standard-item">
+                <span className="standard-icon">🖨️</span>
+                <span className="standard-text">HP Indigo 12000 HD 7-Color Print</span>
+              </div>
+              <div className="standard-item">
+                <span className="standard-icon">📖</span>
+                <span className="standard-text">180° Seamless Layflat Guarantee</span>
+              </div>
+              <div className="standard-item">
+                <span className="standard-icon">🛡️</span>
+                <span className="standard-text">200-Year Archival & 100% Waterproof</span>
+              </div>
+              <div className="standard-item">
+                <span className="standard-icon">📦</span>
+                <span className="standard-text">Cloud Link or Pen Drive to Lab</span>
+              </div>
+            </div>
+          </aside>
+
+          {/* Catalog Products Area */}
+          <main className="store-catalog-main">
+
+            {/* Compact Support Consultation Banner */}
+            <div className="compact-support-strip">
+              <div className="support-strip-left">
+                <Sparkles size={15} className="support-strip-sparkle" />
+                <span>
+                  <strong>Need any custom flex size (W×H ft) or rush delivery?</strong> Ask our lab specialists directly:
+                </span>
+              </div>
+              <div className="support-strip-right">
+                <button
+                  type="button"
+                  className="btn-strip-wa"
+                  onClick={() => handleWhatsAppSupport("Hi WeddingAlbums.in, I'd like custom sizing assistance for my wedding order.")}
+                >
+                  <MessageCircle size={13} /> WhatsApp
+                </button>
+                <a href={`tel:${labPhone.replace(/\s+/g, '')}`} className="btn-strip-tel">
+                  <Phone size={13} /> {labPhone}
+                </a>
+              </div>
+            </div>
+
+            {/* No Results Empty State */}
+            {totalFilteredCount === 0 && (
+              <div className="store-empty-state">
+                <Filter size={42} className="empty-icon" />
+                <h3>No services match your active filters</h3>
+                <p>Try clearing your search query or relaxing your price/SLA filters to see all available services.</p>
+                <button type="button" onClick={handleResetFilters} className="btn btn-gold-3d">
+                  <RotateCcw size={15} /> Reset All Filters
+                </button>
+              </div>
+            )}
+
+            {/* 0. PHOTO EDITING & ALBUM DESIGNING (DIGITAL) */}
+            {(activeTab === 'editing' || activeTab === 'all') && filteredPhotos.length > 0 && (
+              <section className="catalog-section" id="dept-editing">
+                <div className="catalog-section-header">
+                  <div className="section-title-wrap">
+                    <h2 className="catalog-section-title">
+                      🎨 {lang === 'TE' ? 'ఫొటో ఎడిటింగ్ & డిజైనింగ్' : 'Photo Editing & Designing (Digital Post-Production)'}
+                    </h2>
+                    <span className="section-item-count">({filteredPhotos.length} items)</span>
                   </div>
-                  <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
-                    <span className="orientation-tag landscape" style={{ color: '#4ade80', borderColor: 'rgba(74,222,128,0.3)' }}>
-                      📐 Width ft × Height ft
-                    </span>
-                    <span className="product-badge" style={{ background: 'rgba(74,222,128,0.2)', color: '#4ade80' }}>
-                      ₹{catalog.ratePerSqFtClient || 30} / sq.ft
-                    </span>
+                  <div className="section-pills">
+                    <span className="spec-pill">✨ Frequency Separation</span>
+                    <span className="spec-pill">👑 24K Temple Gold Glow</span>
+                    <span className="spec-pill">⚡ 24h Rush Available</span>
                   </div>
                 </div>
 
-                <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
-                  <div className="card-service-type-badge flex-badge">
-                    ✨ CUSTOM DIMENSION ENGINE
-                  </div>
-                  <h3 className="product-name">Custom Dimensions Flex Banner</h3>
-                  <div className="product-telugu">మీకు కావలసిన ఏ సైజులోనైనా ఫ్లెక్స్ బ్యానర్</div>
-                  <p className="product-desc">
-                    Enter whatever custom Width in Feet and Height in Feet you want for live square-foot math. Ideal for odd stage backdrops, entrance arches, and photo walls.
-                  </p>
+                <div className={`products-grid ${viewMode === 'list' ? 'density-list' : ''}`}>
+                  {filteredPhotos.map((photo) => {
+                    const price = photo.clientPrice || 45;
+                    const unit = photo.unit || (photo.id?.includes('psd') || photo.id?.includes('spread') ? 'spread' : 'photo');
+                    const strikePrice = Math.round(price * 1.5);
 
-                  <ul className="card-checklist">
-                    <li><span className="card-checklist-check">✓</span> <span>Specify Any Exact Width (ft) & Height (ft)</span></li>
-                    <li><span className="card-checklist-check">✓</span> <span>Heavy 440 GSM Blackout or Standard 340 GSM</span></li>
-                    <li><span className="card-checklist-check">✓</span> <span>Brass Eyelets, Pole Pockets & Retractable Stand</span></li>
-                  </ul>
-
-                  <div className="price-strip">
-                    <div className="per-sheet-highlight">
-                      <span className="per-sheet-label">Base Rate</span>
-                      <span className="per-sheet-rate">
-                        ₹{catalog.ratePerSqFtClient || 30} <small style={{ fontSize: '0.8rem', color: '#a1a1aa' }}>/ sq.ft</small>
-                      </span>
-                    </div>
-                  </div>
-
-                  {renderCardSupportPrompt('Custom Flex Dimensions', 'flex')}
-                </div>
-
-                <div className="product-card-footer" style={{ gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <button 
-                    type="button" 
-                    onClick={() => {
-                      const flexItem = flexServices.find(f => !f.id?.includes('invite')) || flexServices[0] || { id: 'flex-custom', title: 'Custom Flex Banner' };
-                      openServiceModal(flexItem, 'flex');
-                      setFlexSize('custom');
-                    }} 
-                    className="btn-customize"
-                    style={{ background: 'linear-gradient(135deg, #15803d, #22c55e)', color: '#fff', flex: 1 }}
-                  >
-                    <Sliders size={16} />
-                    {lang === 'TE' ? 'కస్టమ్ సైజును ఎంటర్ చేయండి' : 'Enter Custom Size & Price'} <ArrowRight size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomFlexModal(true)}
-                    className="btn"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
-                    title="Ask for whatever custom size you want"
-                  >
-                    Ask Custom Size
-                  </button>
-                </div>
-              </article>
-
-              {flexServices.map((flex) => {
-                const price = flex.clientPrice || flex.price || 0;
-                const isInvite = flex.id?.includes('invite') || flex.title?.toLowerCase().includes('whatsapp');
-                return (
-                  <article key={flex.id} className="product-card">
-                    <div className="product-card-image-wrapper" style={{ height: '160px' }}>
-                      <img src="/images/opt/weddingalbums-home-herow1600.webp" alt={flex.title} className="product-card-image" loading="lazy" />
-                      <div className="card-image-gradient" />
-                      <div className="product-card-header" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 2 }}>
-                        <span className="orientation-tag landscape" style={{ color: '#4ade80', borderColor: 'rgba(74,222,128,0.3)' }}>
-                          🚚 {flex.turnaround || '2 Days Dispatch'}
-                        </span>
-                        <span className="product-badge">
-                          Waterproof Print
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="product-card-body" style={{ marginTop: '0.75rem' }}>
-                      <div className="card-service-type-badge flex-badge">
-                        🚩 EVENT FLEX & SIGNAGE
-                      </div>
-                      <h3 className="product-name">{flex.title}</h3>
-                      {flex.telugu && <div className="product-telugu">{flex.telugu}</div>}
-                      <p className="product-desc">{flex.desc}</p>
-
-                      <ul className="card-checklist">
-                        <li><span className="card-checklist-check">✓</span> <span>Standard Sizes & Custom ft × ft Dimensions</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>440 GSM Blackout Matte (Zero Flash Glare)</span></li>
-                        <li><span className="card-checklist-check">✓</span> <span>Shipped Rolled in Cylindrical PVC Pipe</span></li>
-                      </ul>
-
-                      <div className="price-strip">
-                        <div className="per-sheet-highlight">
-                          <span className="per-sheet-label">Direct Price</span>
-                          <span className="per-sheet-rate">
-                            ₹{Number(price).toLocaleString('en-IN')}
+                    return (
+                      <article key={photo.id} className="compact-product-card">
+                        <div className="card-media-wrapper">
+                          <img 
+                            src="/images/opt/weddingalbums-talambraluw800.webp" 
+                            alt={photo.title} 
+                            className="card-media-img" 
+                            loading="lazy" 
+                          />
+                          <div className="card-media-overlay" />
+                          <div className="card-floating-tags">
+                            <span className="card-dept-tag photo-tag">🎨 Digital Lab</span>
+                            <span className="card-sla-tag">⏱️ {photo.turnaround || '24-48h SLA'}</span>
+                          </div>
+                          <span className="card-rating-chip">
+                            <Star size={11} className="rating-star-icon" /> 4.9
                           </span>
+                        </div>
+
+                        <div className="card-body">
+                          <h3 className="card-title">{photo.title}</h3>
+                          {photo.telugu && <div className="card-telugu">{photo.telugu}</div>}
+                          <p className="card-desc">{photo.desc}</p>
+
+                          <div className="card-specs-row">
+                            <span className="mini-spec">Skin Polishing</span>
+                            <span className="mini-spec">Jewelry Luster</span>
+                            <span className="mini-spec">300 DPI PSD</span>
+                          </div>
+
+                          <div className="card-pricing-block">
+                            <div className="price-primary">
+                              <span className="price-currency">₹</span>
+                              <span className="price-amount">{price}</span>
+                              <span className="price-unit">/{unit}</span>
+                            </div>
+                            <div className="price-mrp-group">
+                              <span className="price-mrp">₹{strikePrice}</span>
+                              <span className="price-save-badge">Save 33%</span>
+                            </div>
+                          </div>
+
+                          {renderCardSupportPrompt(photo.title, 'photo')}
+                        </div>
+
+                        <div className="card-actions-row">
+                          <button 
+                            type="button" 
+                            onClick={() => openServiceModal(photo, 'photo')} 
+                            className="btn-card-primary"
+                          >
+                            <Sliders size={14} />
+                            <span>{lang === 'TE' ? 'ఆర్డర్ చేయండి' : 'Configure & Order'}</span>
+                            <ArrowRight size={14} />
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* 1. HEIRLOOM WEDDING ALBUMS SECTION */}
+            {(activeTab === 'albums' || activeTab === 'all') && filteredAlbums.length > 0 && (
+              <section className="catalog-section" id="dept-albums">
+                <div className="catalog-section-header">
+                  <div className="section-title-wrap">
+                    <h2 className="catalog-section-title">
+                      📖 {lang === 'TE' ? 'రాయల్ వెడ్డింగ్ ఆల్బమ్స్' : 'Heirloom Wedding Albums (Per-Sheet Pricing)'}
+                    </h2>
+                    <span className="section-item-count">({filteredAlbums.length} formats)</span>
+                  </div>
+                  <div className="section-pills">
+                    <span className="spec-pill">🖨️ HP Indigo 12000 HD</span>
+                    <span className="spec-pill">📖 180° Layflat (0% Gutter Loss)</span>
+                    <span className="spec-pill">🛡️ 100-Year Life</span>
+                  </div>
+                </div>
+
+                <div className={`products-grid ${viewMode === 'list' ? 'density-list' : ''}`}>
+                  {filteredAlbums.map((size) => {
+                    const perSheet = size.clientPricePerSheet || Math.round((size.clientBasePrice || 4500) / 30);
+                    const basePrice = size.clientBasePrice || (perSheet * 30);
+                    const strikeBase = Math.round(basePrice * 1.35);
+                    const productImage = size.image || ALBUM_IMAGES[size.id] || '/images/weddingalbums-layflat-album.png';
+
+                    return (
+                      <article key={size.id} className="compact-product-card">
+                        <div className="card-media-wrapper">
+                          <img 
+                            src={productImage} 
+                            alt={size.name} 
+                            className="card-media-img" 
+                            loading="lazy" 
+                          />
+                          <div className="card-media-overlay" />
+                          <div className="card-floating-tags">
+                            <span className={`card-dept-tag ${size.orientation === 'portrait' ? 'portrait-tag' : 'album-tag'}`}>
+                              {size.orientation === 'portrait' ? '↕️ Portrait' : '↔️ Landscape'}
+                            </span>
+                            {size.popular && (
+                              <span className="card-bestseller-tag">
+                                <Flame size={11} /> {size.badge || 'Best Seller'}
+                              </span>
+                            )}
+                          </div>
+                          <span className="card-rating-chip">
+                            <Star size={11} className="rating-star-icon" /> 5.0
+                          </span>
+                        </div>
+
+                        <div className="card-body">
+                          <h3 className="card-title">{size.name}</h3>
+                          {size.telugu && <div className="card-telugu">{size.telugu}</div>}
+                          <p className="card-desc">{size.description || `${size.dimensions} Open Spread with archival lay-flat binding.`}</p>
+
+                          <div className="card-specs-row">
+                            <span className="mini-spec">{size.dimensions} Open</span>
+                            <span className="mini-spec">180° Layflat</span>
+                            <span className="mini-spec">NTR Matte / Velvet</span>
+                          </div>
+
+                          <div className="card-pricing-block">
+                            <div className="price-primary">
+                              <span className="price-currency">₹</span>
+                              <span className="price-amount">{perSheet}</span>
+                              <span className="price-unit">/ sheet</span>
+                            </div>
+                            <div className="price-mrp-group">
+                              <span className="price-mrp">₹{strikeBase.toLocaleString('en-IN')} (30sh)</span>
+                              <span className="price-save-badge">Save 26%</span>
+                            </div>
+                          </div>
+
+                          <div className="card-base-note">
+                            30-Sheet (60-Page) Base: <strong>₹{Number(basePrice).toLocaleString('en-IN')}</strong>
+                          </div>
+
+                          {renderCardSupportPrompt(size.name, 'album')}
+                        </div>
+
+                        <div className="card-actions-row">
+                          <button 
+                            type="button" 
+                            onClick={() => openAlbumModal(size)} 
+                            className="btn-card-primary"
+                          >
+                            <Sliders size={14} />
+                            <span>{lang === 'TE' ? 'కాన్ఫిగర్ చేయండి' : 'Configure & Order'}</span>
+                            <ArrowRight size={14} />
+                          </button>
+                          <button 
+                            type="button" 
+                            className="btn-card-quick"
+                            title="Quick Add 30-Sheet Standard Base"
+                            onClick={() => handleQuickAddAlbum(size)}
+                          >
+                            <ShoppingBag size={16} />
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* 2. 4K CINEMATIC VIDEO SECTION */}
+            {(activeTab === 'video' || activeTab === 'all') && filteredVideos.length > 0 && (
+              <section className="catalog-section" id="dept-video">
+                <div className="catalog-section-header">
+                  <div className="section-title-wrap">
+                    <h2 className="catalog-section-title">
+                      🎬 {lang === 'TE' ? '4K సినిమాటిక్ వీడియో ఎడిటింగ్' : '4K Cinematic Video Post-Production'}
+                    </h2>
+                    <span className="section-item-count">({filteredVideos.length} packages)</span>
+                  </div>
+                  <div className="section-pills">
+                    <span className="spec-pill">🎨 DaVinci Resolve Wide Gamut</span>
+                    <span className="spec-pill">🎵 Telugu Nadaswaram Stems</span>
+                    <span className="spec-pill">⚡ 24h Rush Available</span>
+                  </div>
+                </div>
+
+                <div className={`products-grid ${viewMode === 'list' ? 'density-list' : ''}`}>
+                  {filteredVideos.map((video) => {
+                    const price = video.clientPrice || video.price || 5000;
+                    const strikePrice = Math.round(price * 1.3);
+
+                    return (
+                      <article key={video.id} className="compact-product-card">
+                        <div className="card-media-wrapper">
+                          <img 
+                            src="/images/cinematic-video-suite.jpg" 
+                            alt={video.title} 
+                            className="card-media-img" 
+                            loading="lazy" 
+                          />
+                          <div className="card-media-overlay" />
+                          <div className="card-floating-tags">
+                            <span className="card-dept-tag video-tag">🎬 4K UHD</span>
+                            <span className="card-sla-tag">⏱️ {video.turnaround || '48h SLA'}</span>
+                          </div>
+                          <span className="card-rating-chip">
+                            <Star size={11} className="rating-star-icon" /> 4.9
+                          </span>
+                        </div>
+
+                        <div className="card-body">
+                          <h3 className="card-title">{video.title}</h3>
+                          {video.telugu && <div className="card-telugu">{video.telugu}</div>}
+                          <p className="card-desc">{video.desc}</p>
+
+                          <div className="card-specs-row">
+                            <span className="mini-spec">4K (3840×2160)</span>
+                            <span className="mini-spec">Multicam Sync</span>
+                            <span className="mini-spec">Sound Stems</span>
+                          </div>
+
+                          <div className="card-pricing-block">
+                            <div className="price-primary">
+                              <span className="price-currency">₹</span>
+                              <span className="price-amount">{Number(price).toLocaleString('en-IN')}</span>
+                              <span className="price-unit">package</span>
+                            </div>
+                            <div className="price-mrp-group">
+                              <span className="price-mrp">₹{strikePrice.toLocaleString('en-IN')}</span>
+                              <span className="price-save-badge">Save 23%</span>
+                            </div>
+                          </div>
+
+                          {renderCardSupportPrompt(video.title, 'video')}
+                        </div>
+
+                        <div className="card-actions-row">
+                          <button 
+                            type="button" 
+                            onClick={() => openServiceModal(video, 'video')} 
+                            className="btn-card-primary"
+                          >
+                            <Sliders size={14} />
+                            <span>{lang === 'TE' ? 'వీడియో ఆర్డర్ చేయండి' : 'Configure & Order Video'}</span>
+                            <ArrowRight size={14} />
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* 3. EVENT FLEX OF ALL SIZES & WHATSAPP INVITES */}
+            {(activeTab === 'flex' || activeTab === 'all') && (filteredFlex.length > 0 || !searchQuery) && (
+              <section className="catalog-section" id="dept-flex">
+                <div className="catalog-section-header">
+                  <div className="section-title-wrap">
+                    <h2 className="catalog-section-title">
+                      🚩 {lang === 'TE' ? 'ఫ్లెక్స్ బ్యానర్లు (అన్ని సైజులు) & ఇన్వైట్స్' : 'Event Flex of All Sizes & WhatsApp Video Invites'}
+                    </h2>
+                    <span className="section-item-count">({filteredFlex.length + 1} items)</span>
+                  </div>
+                  <div className="section-pills">
+                    <span className="spec-pill">📐 Any Custom Width × Height ft</span>
+                    <span className="spec-pill">🌟 440 GSM Blackout Matte</span>
+                    <span className="spec-pill">📦 Zero-Crease PVC Tube Delivery</span>
+                  </div>
+                </div>
+
+                <div className={`products-grid ${viewMode === 'list' ? 'density-list' : ''}`}>
+                  {/* Interactive Custom Dimension Flex Engine Card */}
+                  <article className="compact-product-card custom-flex-highlight-card">
+                    <div className="card-media-wrapper custom-flex-media">
+                      <div className="custom-flex-icon-center">
+                        <Sliders size={32} />
+                        <span className="custom-engine-label">CUSTOM DIMENSION ENGINE</span>
+                      </div>
+                      <div className="card-floating-tags">
+                        <span className="card-dept-tag flex-custom-tag">📐 Width ft × Height ft</span>
+                        <span className="card-sla-tag">⚡ Any Custom Size</span>
+                      </div>
+                    </div>
+
+                    <div className="card-body">
+                      <h3 className="card-title">Custom Dimensions Flex Banner (Any Size)</h3>
+                      <div className="card-telugu">మీకు కావలసిన ఏ సైజులోనైనా ఫ్లెక్స్ బ్యానర్ (₹{catalog.ratePerSqFtClient || 30}/sq.ft)</div>
+                      <p className="card-desc">
+                        Enter whatever custom Width in Feet and Height in Feet you want for live square-foot math.
+                      </p>
+
+                      <div className="card-specs-row">
+                        <span className="mini-spec">Any W×H ft</span>
+                        <span className="mini-spec">440 GSM Blackout</span>
+                        <span className="mini-spec">Eyelets & Standees</span>
+                      </div>
+
+                      <div className="card-pricing-block">
+                        <div className="price-primary">
+                          <span className="price-currency">₹</span>
+                          <span className="price-amount">{catalog.ratePerSqFtClient || 30}</span>
+                          <span className="price-unit">/ sq.ft</span>
+                        </div>
+                        <div className="price-mrp-group">
+                          <span className="price-mrp">₹45/sq.ft</span>
+                          <span className="price-save-badge">Lab Rate</span>
                         </div>
                       </div>
 
-                      {renderCardSupportPrompt(flex.title, 'flex')}
+                      {renderCardSupportPrompt('Custom Flex Dimensions', 'flex')}
                     </div>
 
-                    <div className="product-card-footer">
+                    <div className="card-actions-row">
                       <button 
                         type="button" 
-                        onClick={() => openServiceModal(flex, isInvite ? 'invite' : 'flex')} 
-                        className="btn-customize"
+                        onClick={() => {
+                          const flexItem = flexServices.find(f => !f.id?.includes('invite')) || flexServices[0] || { id: 'flex-custom', title: 'Custom Flex Banner' };
+                          openServiceModal(flexItem, 'flex');
+                          setFlexSize('custom');
+                        }} 
+                        className="btn-card-primary btn-custom-flex-cta"
                       >
-                        <Sliders size={16} />
-                        {isInvite ? 'Configure Video Invite' : 'Configure Flex Size & Design'} <ArrowRight size={16} />
+                        <Sliders size={14} />
+                        <span>{lang === 'TE' ? 'సైజు ఎంటర్ చేయండి' : 'Enter Custom Size & Price'}</span>
+                        <ArrowRight size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowCustomFlexModal(true)}
+                        className="btn-card-quick"
+                        title="Ask for custom size"
+                      >
+                        📐
                       </button>
                     </div>
                   </article>
-                );
-              })}
+
+                  {/* Standard Flex & WhatsApp Invite Cards */}
+                  {filteredFlex.map((flex) => {
+                    const price = flex.clientPrice || flex.price || 0;
+                    const isInvite = flex.id?.includes('invite') || flex.title?.toLowerCase().includes('whatsapp');
+                    const strikePrice = Math.round(price * 1.3);
+
+                    return (
+                      <article key={flex.id} className="compact-product-card">
+                        <div className="card-media-wrapper">
+                          <img 
+                            src="/images/opt/weddingalbums-home-herow1600.webp" 
+                            alt={flex.title} 
+                            className="card-media-img" 
+                            loading="lazy" 
+                          />
+                          <div className="card-media-overlay" />
+                          <div className="card-floating-tags">
+                            <span className="card-dept-tag flex-tag">
+                              {isInvite ? '💌 Video Invite' : '🚩 Event Flex'}
+                            </span>
+                            <span className="card-sla-tag">🚚 {flex.turnaround || '2 Days'}</span>
+                          </div>
+                          <span className="card-rating-chip">
+                            <Star size={11} className="rating-star-icon" /> 4.8
+                          </span>
+                        </div>
+
+                        <div className="card-body">
+                          <h3 className="card-title">{flex.title}</h3>
+                          {flex.telugu && <div className="card-telugu">{flex.telugu}</div>}
+                          <p className="card-desc">{flex.desc}</p>
+
+                          <div className="card-specs-row">
+                            <span className="mini-spec">{isInvite ? '60s Animated' : '440 GSM Matte'}</span>
+                            <span className="mini-spec">{isInvite ? 'Telugu Shlokas' : 'PVC Tube Ship'}</span>
+                            <span className="mini-spec">{isInvite ? 'Map QR' : 'Eyelets/Stand'}</span>
+                          </div>
+
+                          <div className="card-pricing-block">
+                            <div className="price-primary">
+                              <span className="price-currency">₹</span>
+                              <span className="price-amount">{Number(price).toLocaleString('en-IN')}</span>
+                              <span className="price-unit">direct</span>
+                            </div>
+                            <div className="price-mrp-group">
+                              <span className="price-mrp">₹{strikePrice.toLocaleString('en-IN')}</span>
+                              <span className="price-save-badge">Save 23%</span>
+                            </div>
+                          </div>
+
+                          {renderCardSupportPrompt(flex.title, 'flex')}
+                        </div>
+
+                        <div className="card-actions-row">
+                          <button 
+                            type="button" 
+                            onClick={() => openServiceModal(flex, isInvite ? 'invite' : 'flex')} 
+                            className="btn-card-primary"
+                          >
+                            <Sliders size={14} />
+                            <span>{isInvite ? 'Configure Video Invite' : 'Configure Flex Size & Finish'}</span>
+                            <ArrowRight size={14} />
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+          </main>
+        </div>
+
+        {/* ── Mobile Filter Off-Canvas Drawer ────────────────────────────── */}
+        <div className={`mobile-filter-backdrop ${mobileFiltersOpen ? 'open' : ''}`} onClick={() => setMobileFiltersOpen(false)} />
+        <div className={`mobile-filter-drawer ${mobileFiltersOpen ? 'open' : ''}`}>
+          <div className="mobile-drawer-header">
+            <div className="drawer-title-group">
+              <Filter size={18} />
+              <h3>Filters & Specifications</h3>
+              {activeFiltersCount > 0 && <span className="active-filters-pill">{activeFiltersCount}</span>}
             </div>
+            <button 
+              type="button" 
+              className="drawer-close-btn"
+              onClick={() => setMobileFiltersOpen(false)}
+            >
+              <X size={18} />
+            </button>
           </div>
-        )}
+
+          <div className="mobile-drawer-body">
+            {/* Department */}
+            <div className="drawer-filter-group">
+              <span className="group-title">Department</span>
+              <div className="chips-selector">
+                {[
+                  { id: 'all', label: 'All Services' },
+                  { id: 'editing', label: '🎨 Photo Editing' },
+                  { id: 'albums', label: '📖 Albums' },
+                  { id: 'video', label: '🎬 4K Video' },
+                  { id: 'flex', label: '🚩 Flex & Invites' }
+                ].map(d => (
+                  <button 
+                    key={d.id} 
+                    type="button"
+                    className={`drawer-chip ${activeTab === d.id ? 'active' : ''}`}
+                    onClick={() => setActiveTab(d.id)}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Price Filter */}
+            <div className="drawer-filter-group">
+              <span className="group-title">Price Range</span>
+              <div className="chips-selector">
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: 'under_1000', label: '< ₹1,000' },
+                  { id: '1000_3000', label: '₹1k–₹3k' },
+                  { id: '3000_7000', label: '₹3k–₹7k' },
+                  { id: 'above_7000', label: '₹7k+' }
+                ].map(p => (
+                  <button 
+                    key={p.id} 
+                    type="button"
+                    className={`drawer-chip ${priceFilter === p.id ? 'active' : ''}`}
+                    onClick={() => setPriceFilter(p.id)}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* SLA Filter */}
+            <div className="drawer-filter-group">
+              <span className="group-title">SLA Turnaround</span>
+              <div className="chips-selector">
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: '24h', label: '⚡ 24h Express' },
+                  { id: '48h', label: '48h SLA' },
+                  { id: 'standard', label: '3-5 Days' }
+                ].map(s => (
+                  <button 
+                    key={s.id} 
+                    type="button"
+                    className={`drawer-chip ${slaFilter === s.id ? 'active' : ''}`}
+                    onClick={() => setSlaFilter(s.id)}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Album Orientation */}
+            {(activeTab === 'albums' || activeTab === 'all') && (
+              <div className="drawer-filter-group">
+                <span className="group-title">Album Orientation</span>
+                <div className="chips-selector">
+                  {[
+                    { id: 'all', label: 'All Formats' },
+                    { id: 'landscape', label: '↔️ Landscape' },
+                    { id: 'portrait', label: '↕️ Portrait' }
+                  ].map(o => (
+                    <button 
+                      key={o.id} 
+                      type="button"
+                      className={`drawer-chip ${orientationFilter === o.id ? 'active' : ''}`}
+                      onClick={() => setOrientationFilter(o.id)}
+                    >
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="mobile-drawer-footer">
+            <button 
+              type="button" 
+              onClick={handleResetFilters} 
+              className="btn btn-outline"
+              style={{ flex: 1, justifyContent: 'center' }}
+            >
+              Reset All
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setMobileFiltersOpen(false)} 
+              className="btn btn-gold-3d"
+              style={{ flex: 2, justifyContent: 'center' }}
+            >
+              Show ({totalFilteredCount}) Services
+            </button>
+          </div>
+        </div>
 
       </div>
 

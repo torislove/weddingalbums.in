@@ -122,6 +122,131 @@ router.get('/album-sizes', async (req, res) => {
   }
 });
 
+/* ── Unified E-Commerce Products & Catalog Endpoint ─────────────────── */
+router.get('/products', async (req, res) => {
+  try {
+    const isB2B = isStudioOrAdmin(req);
+    const { category, search, minPrice, maxPrice, sort, orientation } = req.query || {};
+
+    const [services, sizes, sheets, packages] = await Promise.all([
+      Service.find({}).catch(() => []),
+      AlbumSize.find({}).catch(() => []),
+      SheetType.find({}).catch(() => []),
+      Package.find({}).catch(() => [])
+    ]);
+
+    let products = [];
+
+    // 1. Album Formats
+    (sizes || []).forEach(sz => {
+      const item = sz.toObject ? sz.toObject() : { ...sz };
+      if (item.isActive === false) return;
+      const basePrice = item.clientBasePrice || ((item.clientPricePerSheet || 260) * 30);
+      const studioPrice = item.studioBasePrice || ((item.studioPricePerSheet || 180) * 30);
+
+      products.push({
+        id: item.id || `album-${item._id}`,
+        type: 'album',
+        category: 'albums',
+        name: item.name,
+        telugu: item.telugu || '',
+        dimensions: item.dimensions || '',
+        orientation: item.orientation || 'landscape',
+        clientPrice: basePrice,
+        studioPrice: isB2B ? studioPrice : undefined,
+        perSheetClient: item.clientPricePerSheet || 260,
+        perSheetStudio: isB2B ? (item.studioPricePerSheet || 180) : undefined,
+        turnaround: '3-5 Days',
+        badge: item.popular ? 'Best Seller' : (item.badge || 'Archival Layflat'),
+        popular: Boolean(item.popular),
+        description: item.description || `${item.dimensions} Seamless 180° Layflat Album with HP Indigo Archival Binding.`,
+        image: item.image || '/images/weddingalbums-layflat-album.png'
+      });
+    });
+
+    // 2. Photo & Video & Flex Services
+    (services || []).forEach(svc => {
+      const item = svc.toObject ? svc.toObject() : { ...svc };
+      if (item.isActive === false) return;
+      const cat = String(item.category || '').toLowerCase();
+      let normCat = 'editing';
+      if (cat.includes('video') || cat.includes('film') || cat.includes('cinematic')) normCat = 'video';
+      else if (cat.includes('flex') || cat.includes('banner') || cat.includes('invite')) normCat = 'flex';
+
+      products.push({
+        id: item.id || `service-${item._id}`,
+        type: 'service',
+        category: normCat,
+        name: item.title || item.name,
+        telugu: item.telugu || '',
+        clientPrice: item.clientPrice || item.price || 45,
+        studioPrice: isB2B ? (item.studioPrice || item.studioBasePrice) : undefined,
+        unit: item.unit || 'unit',
+        turnaround: item.turnaround || '24-48h SLA',
+        badge: item.badge || (normCat === 'video' ? '4K UHD' : normCat === 'flex' ? 'Custom Sizing' : '24h SLA'),
+        popular: Boolean(item.popular),
+        description: item.desc || item.description || '',
+        image: item.image || (normCat === 'video' ? '/images/cinematic-video-suite.jpg' : normCat === 'flex' ? '/images/opt/weddingalbums-home-herow1600.webp' : '/images/opt/weddingalbums-talambraluw800.webp')
+      });
+    });
+
+    // Apply Filtering
+    if (category && category !== 'all') {
+      products = products.filter(p => p.category === category);
+    }
+
+    if (orientation && orientation !== 'all') {
+      products = products.filter(p => !p.orientation || p.orientation === orientation);
+    }
+
+    if (minPrice) {
+      const min = Number(minPrice) || 0;
+      products = products.filter(p => (p.clientPrice || 0) >= min);
+    }
+
+    if (maxPrice) {
+      const max = Number(maxPrice) || Infinity;
+      products = products.filter(p => (p.clientPrice || 0) <= max);
+    }
+
+    if (search && String(search).trim()) {
+      const q = String(search).toLowerCase().trim();
+      products = products.filter(p => 
+        (p.name && p.name.toLowerCase().includes(q)) ||
+        (p.telugu && p.telugu.toLowerCase().includes(q)) ||
+        (p.description && p.description.toLowerCase().includes(q)) ||
+        (p.dimensions && p.dimensions.toLowerCase().includes(q))
+      );
+    }
+
+    // Apply Sorting
+    if (sort === 'price_asc') {
+      products.sort((a, b) => (a.clientPrice || 0) - (b.clientPrice || 0));
+    } else if (sort === 'price_desc') {
+      products.sort((a, b) => (b.clientPrice || 0) - (a.clientPrice || 0));
+    } else if (sort === 'fastest') {
+      products.sort((a, b) => {
+        const aT = String(a.turnaround || '');
+        const bT = String(b.turnaround || '');
+        const aRank = aT.includes('24') ? 1 : aT.includes('48') ? 2 : 3;
+        const bRank = bT.includes('24') ? 1 : bT.includes('48') ? 2 : 3;
+        return aRank - bRank;
+      });
+    } else if (sort === 'rating') {
+      products.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+    }
+
+    res.json({
+      success: true,
+      count: products.length,
+      isB2B,
+      products
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message, products: [] });
+  }
+});
+
 /* ── Muhurtham Auspicious Wedding Dates ─────────────────────────────── */
 router.get('/muhurtham', async (req, res) => {
   try {
